@@ -28,11 +28,16 @@ GEMDigiMatcher::GEMDigiMatcher(SimHitMatcher& sh)
   maxBXGEMCoPad_ = gemCoPad_.getParameter<int>("maxBX");
   verboseCoPad_ = gemCoPad_.getParameter<int>("verbose");
   runGEMCoPad_ = gemCoPad_.getParameter<bool>("run");
+
+  addFakeGE21DigiPad_ =  conf().getParameter<bool>("addFakeGE21DigiPad");
+  fakeGE21Digi_input = conf().getParameter<edm::InputTag>("fakeGE21Digi_input");
+
   if (hasGEMGeometry_) {
     edm::Handle<GEMDigiCollection> gem_digis;
     if (gemvalidation::getByLabel(gemDigiInput_, gem_digis, event()) and runGEMDigi_) {
       if(verbose()) std::cout <<" to do matchDigisToSimTrack"<< std::endl;
       matchDigisToSimTrack(*gem_digis.product());
+      addFakeGEMPad2(*gem_digis.product());
     }
     
     edm::Handle<GEMCSCPadDigiCollection> gem_pads;
@@ -48,6 +53,16 @@ GEMDigiMatcher::GEMDigiMatcher(SimHitMatcher& sh)
 	if (verbose()) std::cout <<" to do matchCoPadsToSimTrack" << std::endl;
 	matchCoPadsToSimTrack(*gem_co_pads.product());
     }
+
+    edm::Handle< GEMDigiCollection > hFakeGEMDigis;
+    if (addFakeGE21DigiPad_){
+       //if(verbose()) 
+	   std::cout <<" to add fake GEMDigi due to neutron background"<< std::endl;
+       if (event().getByLabel(fakeGE21Digi_input, hFakeGEMDigis))
+	   addFakeGEMPad2(*hFakeGEMDigis.product());
+       else std::cout <<"no fake GE21 digi "<< std::endl;
+    }
+
   }
 }
 
@@ -93,8 +108,11 @@ GEMDigiMatcher::matchDigisToSimTrack(const GEMDigiCollection& digis)
       //std::cout <<" strip "<< d->strip()<<" 2-strip pad "<<(d->strip()+1)/2 << " bx "<< d->bx() << std::endl;
       detid_to_gemdigis_[id].push_back(*d);
       GEMCSCPadDigi pad = GEMCSCPadDigi((d->strip()+1)/2, d->bx());
-      if (std::find(detid_to_gempads_2strip_[id].begin(), detid_to_gempads_2strip_[id].end(), pad) == detid_to_gempads_2strip_[id].end())
+      if (std::find(detid_to_gempads_2strip_[id].begin(), detid_to_gempads_2strip_[id].end(), pad) == detid_to_gempads_2strip_[id].end()){
+	//if (verboseDigi_) 
+	    cout <<"GEMid " << p_id << " matched 2strip pad, pad "<< pad.pad()<<" bx "<< pad.bx() << std::endl;
       	detid_to_gempads_2strip_[id].push_back(pad);
+      }
       chamber_to_gemdigis_[ p_id.chamberId().rawId() ].push_back(*d);
       superchamber_to_gemdigis_[ superch_id() ].push_back(*d);
 
@@ -192,6 +210,29 @@ GEMDigiMatcher::matchCoPadsToSimTrack(const GEMCSCPadDigiCollection& co_pads)
   }
 }
 
+void 
+GEMDigiMatcher::addFakeGEMPad2(const GEMDigiCollection& digis)
+{
+  for(auto cItr = digis.begin(); cItr != digis.end(); ++cItr) {
+    GEMDetId id = (*cItr).first;
+    if (id.station() != 3) continue;
+    if (id.region()*trk().momentum().eta() < 0) continue;//not in one endcap 
+    if (verboseDigi_) std::cout <<"GEM id "<< id <<"  before adding fake GE21 pad size "<< detid_to_gempads_2strip_[id].size() << std::endl;
+
+    for (auto  d = (*cItr).second.first; d != (*cItr).second.second; d++){
+       //if (verbosePad_)
+	   //std::cout <<"add fakeGE21 pad to detid_to_gempads_2strip_, strip "<< d->strip() <<" pad "<< (d->strip()+1)/2 <<" bx "<< d->bx() << std::endl;
+       if (d->bx() < minBXGEMPad_ || d->bx() > maxBXGEMPad_) continue;
+       GEMCSCPadDigi pad = GEMCSCPadDigi((d->strip()+1)/2, d->bx());
+       if (std::find(detid_to_gempads_2strip_[id].begin(), detid_to_gempads_2strip_[id].end(), pad) == detid_to_gempads_2strip_[id].end())
+	   detid_to_gempads_2strip_[id].push_back(pad);
+       else if (verboseDigi_)
+	   std::cout <<"already found this pad, pad "<< pad.pad() <<" bx "<< pad.bx() << std::endl;
+    }
+     
+    if (verbosePad_) std::cout <<"\t after adding fake GE21 pad size "<< detid_to_gempads_2strip_[id].size() << std::endl;
+  }
+}
 
 std::set<unsigned int>
 GEMDigiMatcher::selectDetIds(const Id2DigiContainer &digis, int gem_type) const
