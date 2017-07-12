@@ -21,6 +21,7 @@ L1TrackTriggerVeto::L1TrackTriggerVeto(const edm::ParameterSet& ps,
 
   edm::Handle< std::vector< TTTrack< Ref_PixelDigi_ > > > TTTrackHandle;
   if (gemvalidation::getByLabel(trackInput_, TTTrackHandle, ev_) and run_) {
+      //std::cout <<"start to run Tracker track veto "<< std::endl;
       es_.get<IdealMagneticFieldRecord>().get(magfield_);
       es_.get<TrackingComponentsRecord>().get("SteppingHelixPropagatorAlong", propagator_);
       es_.get<TrackingComponentsRecord>().get("SteppingHelixPropagatorOpposite", propagatorOpposite_);
@@ -32,6 +33,7 @@ L1TrackTriggerVeto::L1TrackTriggerVeto(const edm::ParameterSet& ps,
 
 void L1TrackTriggerVeto::calculateTTIsolation(const std::vector< TTTrack< Ref_PixelDigi_ > >& TTTracks)
 {
+    //std::cout <<"TTTrack size "<< TTTracks.size() << std::endl;
   for (unsigned int j=0; j<TTTracks.size(); ++j) {
     auto l1Tk = TTTracks[j];
     const double l1Tk_pt = l1Tk.getMomentum().perp();
