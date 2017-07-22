@@ -28,23 +28,24 @@ TFTrack::TFTrack(const l1t::EMTFTrack *t)
 {
 
   trackType_ = EMTF_Track;
-  trackHits_ = t->PtrHits();
+  trackHits_copy_ = t->Hits(); // do a copy
+  trackHits_ = &trackHits_copy_;  // hold the address of the above copy
   l1track_ = t;
   pt_ = t->Pt();
   eta_ = t->Eta();
-  phi_ = t->Phi_glob_rad();
-  phi_local_ = t->Phi_loc_rad();
+  phi_ = emtf::deg_to_rad(t->Phi_glob());
+  phi_local_ = emtf::deg_to_rad(t->Phi_loc());
   charge_ = t->Charge();
   if (charge_>0) chargesign_ = 1;
   else chargesign_ = 0;
-  dPhi12_ = (unsigned)t->DPhi_12();
-  dPhi23_ = (unsigned)t->DPhi_23();
-  quality_ = t->Quality();
+  //dPhi12_ = (unsigned)t->DPhi_12();  //FIXME
+  //dPhi23_ = (unsigned)t->DPhi_23();  //FIXME
+  quality_ = t->GMT_quality();
   bx_ = t->BX();
   nstubs = 0;
   dr_ = 10.0;
   for (auto hit : *trackHits_)
-      if (hit.Is_CSC_hit()) nstubs++;
+      if (hit.Is_CSC()) nstubs++;
 
 }
 
@@ -60,6 +61,7 @@ TFTrack::~TFTrack()
   // triggerStubs_.clear();
   mplcts_.clear();
   ids_.clear(); // chamber ids_
+  trackHits_copy_.clear();
   trackHits_ = NULL;
 
 }
@@ -106,7 +108,7 @@ TFTrack::hasStubEndcap(int st) const
 {
   if (trackType_ == EMTF_Track){
     for (auto stub : *trackHits_)
-      if (stub.Is_CSC_hit() and stub.Station() == st) return true;
+      if (stub.Is_CSC() and stub.Station() == st) return true;
   }
   return false;
 }
@@ -222,7 +224,7 @@ unsigned int TFTrack::digiInME(int st, int ring) const
   }else if (trackType_ == EMTF_Track){
       unsigned int i =0;
       for (auto hit : *trackHits_){
-     	if (hit.Station() == st and hit.Ring() == ring and hit.Is_CSC_hit())
+     	if (hit.Station() == st and hit.Ring() == ring and hit.Is_CSC())
 	    return i;
 	i++;
       }

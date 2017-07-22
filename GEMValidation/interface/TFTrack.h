@@ -22,6 +22,7 @@
 /* #include "DataFormats/L1CSCTrackFinder/interface/L1CSCTrackCollection.h" */
 #include "DataFormats/L1TMuon/interface/EMTFTrack.h"
 #include "DataFormats/L1TMuon/interface/EMTFHit.h"
+#include "L1Trigger/L1TMuonEndCap/interface/TrackTools.h"
 
 #include "DataFormats/CSCDigi/interface/CSCCorrelatedLCTDigiCollection.h"
 
@@ -123,6 +124,7 @@ class TFTrack
   int trackType_;
   const l1t::EMTFTrack* l1track_;
   std::vector<const CSCCorrelatedLCTDigi*> triggerDigis_;
+  l1t::EMTFHitCollection trackHits_copy_;
   const l1t::EMTFHitCollection * trackHits_; //similar to triggerDigis_ + triggerDigis_
   std::vector<CSCDetId> triggerIds_;
   std::vector<std::pair<float, float>> triggerEtaPhis_;

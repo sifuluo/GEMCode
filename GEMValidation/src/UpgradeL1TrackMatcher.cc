@@ -77,10 +77,10 @@ UpgradeL1TrackMatcher::matchEmtfTrackToSimTrack(const l1t::EMTFTrackCollection& 
       std::cout <<"propaget position to st2 eta "<< float(gp_st2.eta()) <<" phi "<< float(gp_st2.phi()) << std::endl;
   for (const auto& trk : tracks) {
     if (verboseEMTFTrack_)
-	std::cout <<"track BX "<< trk.BX() <<  " pt "<< trk.Pt() <<" eta "<< trk.Eta() <<" phi "<< trk.Phi_glob_rad()<<" phi_local "<< trk.Phi_loc_rad() << std::endl;
+	std::cout <<"track BX "<< trk.BX() <<  " pt "<< trk.Pt() <<" eta "<< trk.Eta() <<" phi "<< emtf::deg_to_rad(trk.Phi_glob())<<" phi_local "<< emtf::deg_to_rad(trk.Phi_loc()) << std::endl;
     if (trk.BX() < minBXEMTFTrack_ or trk.BX() > maxBXEMTFTrack_) continue;
     float dR = 10.0;
-    dR = deltaR(float(gp_st2.eta()), float(gp_st2.phi()), trk.Eta(), trk.Phi_glob_rad());
+    dR = deltaR(float(gp_st2.eta()), float(gp_st2.phi()), trk.Eta(), emtf::deg_to_rad(trk.Phi_glob()));
     if (verboseEMTFTrack_)
 	std::cout <<"dR (track, sim) "<< dR <<" deltaREMTFTrack_ "<< deltaREMTFTrack_ << std::endl;
     if (dR < deltaREMTFTrack_){

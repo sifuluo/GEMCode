@@ -14,6 +14,7 @@
 #include "DataFormats/L1TMuon/interface/RegionalMuonCand.h"
 #include "DataFormats/L1TMuon/interface/EMTFTrack.h"
 #include "DataFormats/L1TMuon/interface/EMTFHit.h"
+#include "L1Trigger/L1TMuonEndCap/interface/TrackTools.h"
 #include "DataFormats/L1Trigger/interface/Muon.h"
 
 class UpgradeL1TrackMatcher : public BaseMatcher
