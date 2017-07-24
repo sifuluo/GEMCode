@@ -328,7 +328,7 @@ struct MyTrackEff
   UInt_t rank;
   UInt_t nstubs;
   UInt_t deltaphi12, deltaphi23;
-  Bool_t hasME1,hasME2;
+  Bool_t hasME1,hasME2, hasME3, hasME4;
   Char_t chamberME1,chamberME2;//bit1: odd, bit2: even
   Int_t ME1_ring, ME2_ring;
   Int_t ME1_hs, ME2_hs, ME1_wg,ME2_wg;
@@ -426,7 +426,8 @@ struct MyTrackEff
   Float_t deltay12_test, deltay23_test, deltay123_test;
   Float_t eta_st2_sh, eta_st2_L1, eta_st1_L1;
   Bool_t isMe0Region;
-  Int_t npar_L1;
+  Int_t npar_L1, npar_sim;
+  Float_t eta_st1_sim, eta_st2_sim;
   Float_t pt_position_sh, pt_direction_sh;
   Float_t pt_position, pt_direction_gemcsc, pt_direction_gemcsc_central, pt_direction_xfactor;
   Float_t pt_position_fit;
@@ -747,6 +748,8 @@ void MyTrackEff::init()
   deltaphi23 = 0;;
   hasME1 = false;
   hasME2 = false;
+  hasME3 = false;
+  hasME4 = false;
   ME1_ring = -1;
   ME2_ring = -1;
   chamberME1 = 0;
@@ -854,6 +857,9 @@ void MyTrackEff::init()
   npar_lct = -1;
   meRing = -1;
   npar_L1 = -1;
+  npar_sim = -1;
+  eta_st1_sim = -9;
+  eta_st2_sim = -9;
   eta_st2_L1 = -9;
   eta_st1_L1 = -9;
   eta_st2_sh = -9;
@@ -1206,6 +1212,8 @@ TTree* MyTrackEff::book(TTree *t, const std::string & name)
   t->Branch("deltaphi23",&deltaphi23);
   t->Branch("hasME1",&hasME1);
   t->Branch("hasME2",&hasME2);
+  t->Branch("hasME3",&hasME3);
+  t->Branch("hasME4",&hasME4);
   t->Branch("ME1_ring",&ME1_ring);
   t->Branch("ME2_ring",&ME2_ring);
   t->Branch("chamberME1",&chamberME1);
@@ -1319,6 +1327,9 @@ TTree* MyTrackEff::book(TTree *t, const std::string & name)
   t->Branch("meRing", &meRing);
   t->Branch("npar", &npar);
   t->Branch("npar_L1", &npar_L1);
+  t->Branch("npar_sim", &npar_sim);
+  t->Branch("eta_st2_sim", &eta_st2_sim);
+  t->Branch("eta_st1_sim", &eta_st1_sim);
   t->Branch("eta_st2_L1", &eta_st2_L1);
   t->Branch("eta_st1_L1", &eta_st1_L1);
   t->Branch("eta_st2_sh", &eta_st2_sh);
@@ -3230,6 +3241,7 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
         gp2=gp_sh_even[6];
         gv1=gv_sh_odd[1];
         gv2=gv_sh_even[6];
+	etrk_[0].npar_sim = 0;
 	if ((etrk_[1].has_gem_sh&1)>0)
 	    gp_ge11 = gp_gemsh_odd[1];
 	if ((etrk_[6].has_gem_sh&2)>0)
@@ -3241,6 +3253,7 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
         gp2=gp_sh_odd[6];
         gv1=gv_sh_odd[1];
         gv2=gv_sh_odd[6];
+	etrk_[0].npar_sim = 1;
 	if ((etrk_[1].has_gem_sh&1)>0)
 	    gp_ge11 = gp_gemsh_odd[1];
 	if ((etrk_[6].has_gem_sh&1)>0)
@@ -3252,6 +3265,7 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
         gp2=gp_sh_even[6];
         gv1=gv_sh_even[1];
         gv2=gv_sh_even[6];
+	etrk_[0].npar_sim = 2;
 	if ((etrk_[1].has_gem_sh&2)>0)
 	    gp_ge11 = gp_gemsh_even[1];
 	if ((etrk_[6].has_gem_sh&2)>0)
@@ -3263,6 +3277,7 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
         gp2=gp_sh_odd[6];
         gv1=gv_sh_even[1];
         gv2=gv_sh_odd[6];
+	etrk_[0].npar_sim = 3;
 	if ((etrk_[1].has_gem_sh&2)>0)
 	    gp_ge11 = gp_gemsh_even[1];
 	if ((etrk_[6].has_gem_sh&1)>0)
@@ -3270,6 +3285,8 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
 	if ((etrk_[8].has_csc_sh&1)>0)
 	    gp3=gp_sh_odd[8];
      }
+     etrk_[0].eta_st1_sim = gp1.eta();
+     etrk_[0].eta_st2_sim = gp2.eta();
   }
      //low eta region , ME12, ME22
   if (etrk_[4].has_csc_sh>0 and etrk_[7].has_csc_sh>0){
@@ -3279,6 +3296,7 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
         gp2=gp_sh_even[7];
         gv1=gv_sh_odd[4];
         gv2=gv_sh_even[7];
+	etrk_[0].npar_sim = 0;
 	if ((etrk_[9].has_csc_sh&2)>0)
  	    gp3=gp_sh_even[9];
      }else if ((etrk_[4].has_csc_sh&1)>0 and (etrk_[7].has_csc_sh&1)>0){
@@ -3286,6 +3304,7 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
         gp2=gp_sh_odd[7];
         gv1=gv_sh_odd[4];
         gv2=gv_sh_odd[7];
+	etrk_[0].npar_sim = 1;
 	if ((etrk_[9].has_csc_sh&1)>0)
 	    gp3=gp_sh_odd[9];
      }else if ((etrk_[4].has_csc_sh&2)>0 and (etrk_[7].has_csc_sh&2)>0){
@@ -3293,6 +3312,7 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
         gp2=gp_sh_even[7];
         gv1=gv_sh_even[4];
         gv2=gv_sh_even[7];
+	etrk_[0].npar_sim = 2;
 	if ((etrk_[9].has_csc_sh&2)>0)
 	    gp3=gp_sh_even[9];
      }else if ((etrk_[4].has_csc_sh&2)>0 and (etrk_[7].has_csc_sh&1)>0){
@@ -3300,9 +3320,12 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
         gp2=gp_sh_odd[7];
         gv1=gv_sh_even[4];
         gv2=gv_sh_odd[7];
+	etrk_[0].npar_sim = 3;
 	if ((etrk_[9].has_csc_sh&1)>0)
 	    gp3=gp_sh_odd[9];
      }
+     etrk_[0].eta_st1_sim = gp1.eta();
+     etrk_[0].eta_st2_sim = gp2.eta();
   }
 
   if (etrk_[0].meRing > 0){
@@ -3665,6 +3688,8 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
    etrk_[0].deltaphi23 = besttrack->dPhi23();
    etrk_[0].hasME1 = besttrack->hasStubEndcap(1);
    etrk_[0].hasME2 = besttrack->hasStubEndcap(2);
+   etrk_[0].hasME3 = besttrack->hasStubEndcap(3);
+   etrk_[0].hasME4 = besttrack->hasStubEndcap(4);
    etrk_[0].nstubs = besttrack->nStubs();
    etrk_[0].deltaR = besttrack->dr();
    etrk_[0].chargesign = besttrack->chargesign();
