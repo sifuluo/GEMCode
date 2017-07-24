@@ -74,6 +74,8 @@ DisplacedMuonTriggerPtassignment::DisplacedMuonTriggerPtassignment(std::map<unsi
     //check the ring number that muon is flying through, 2nd station as reference
     //later use this one to check whether we should use GE21 or ME21only
     if (chid.station()==2) meRing = chid.ring();
+    //record ring number in station1
+    if (chid.station()==1) meRing_st1 = chid.ring();
     //chamber parity in station3 should be the same as in station2,
     //if there is already qualified one, the skip stubs in station 3
     if (chid.station()==2 and hasStub_st[1] and hasStub_st[2] and
@@ -864,6 +866,9 @@ float DisplacedMuonTriggerPtassignment::deltadeltaYcalculation(GlobalPoint gp1, 
    float deltay23 = newyst3-newyst2;
    //std::cout <<" angle in st2 "<< anglea <<" newyst1 "<< newyst1 <<" newyst2 "<< newyst2 << " newyst3 "<< newyst3 << std::endl;
    int neta = PtassignmentHelper::GetEtaPartition(eta);
+
+   if (meRing_st1 == 1 and neta == 1) neta =2;
+   if (meRing_st1 == 2 and neta == 2) neta =1;
 
    if (par<0 or par>3 or neta==-1) return -99;
    return (deltay23-PtassignmentHelper::PositionEpLUT[par][neta][0]*deltay12);

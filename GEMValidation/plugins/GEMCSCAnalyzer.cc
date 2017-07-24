@@ -3288,6 +3288,55 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
      etrk_[0].eta_st1_sim = gp1.eta();
      etrk_[0].eta_st2_sim = gp2.eta();
   }
+
+  //intermediate, ME11, ME22
+  if (etrk_[1].has_csc_sh>0 and etrk_[7].has_csc_sh>0){
+     etrk_[0].meRing =2;
+     if ((etrk_[1].has_csc_sh&1)>0 and (etrk_[7].has_csc_sh&2)>0){
+        gp1=gp_sh_odd[1];
+        gp2=gp_sh_even[7];
+        gv1=gv_sh_odd[1];
+        gv2=gv_sh_even[7];
+	etrk_[0].npar_sim = 0;
+	if ((etrk_[1].has_gem_sh&1)>0)
+	    gp_ge11 = gp_gemsh_odd[1];
+	if ((etrk_[9].has_csc_sh&2)>0)
+	    gp3=gp_sh_even[9];
+     }else if ((etrk_[1].has_csc_sh&1)>0 and (etrk_[7].has_csc_sh&1)>0 ){
+        gp1=gp_sh_odd[1];
+        gp2=gp_sh_odd[7];
+        gv1=gv_sh_odd[1];
+        gv2=gv_sh_odd[7];
+	etrk_[0].npar_sim = 1;
+	if ((etrk_[1].has_gem_sh&1)>0)
+	    gp_ge11 = gp_gemsh_odd[1];
+	if ((etrk_[9].has_csc_sh&1)>0)
+	    gp3=gp_sh_odd[9];
+     }else if ((etrk_[1].has_csc_sh&2)>0 and (etrk_[7].has_csc_sh&2)>0 ){
+        gp1=gp_sh_even[1];
+        gp2=gp_sh_even[7];
+        gv1=gv_sh_even[1];
+        gv2=gv_sh_even[7];
+	etrk_[0].npar_sim = 2;
+	if ((etrk_[1].has_gem_sh&2)>0)
+	    gp_ge11 = gp_gemsh_even[1];
+	if ((etrk_[9].has_csc_sh&2)>0)
+	    gp3=gp_sh_even[9];
+     }else if ((etrk_[1].has_csc_sh&2)>0 and (etrk_[7].has_csc_sh&1)>0 ){
+        gp1=gp_sh_even[1];
+        gp2=gp_sh_odd[7];
+        gv1=gv_sh_even[1];
+        gv2=gv_sh_odd[7];
+	etrk_[0].npar_sim = 3;
+	if ((etrk_[1].has_gem_sh&2)>0)
+	    gp_ge11 = gp_gemsh_even[1];
+	if ((etrk_[9].has_csc_sh&1)>0)
+	    gp3=gp_sh_odd[9];
+     }
+     etrk_[0].eta_st1_sim = gp1.eta();
+     etrk_[0].eta_st2_sim = gp2.eta();
+  }
+
      //low eta region , ME12, ME22
   if (etrk_[4].has_csc_sh>0 and etrk_[7].has_csc_sh>0){
      etrk_[0].meRing =2;
