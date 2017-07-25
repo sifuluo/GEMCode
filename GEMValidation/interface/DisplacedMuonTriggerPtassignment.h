@@ -313,6 +313,7 @@ public:
   float eta_st2;
   int npar;
   int meRing ;
+  int meRing_st1 ;
   float eta_st[4] = {-9, -9, -9, -9};
   float phi_gem[2] = {-9, -9};
   float phi_me0 = -9;
