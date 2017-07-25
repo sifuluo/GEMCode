@@ -454,7 +454,7 @@ SimTrackMatching = cms.PSet(
         deltaR = cms.double(0.2),
     ),
     l1track = cms.PSet(
-        verbose = cms.int32(0),
+        verbose = cms.int32(1),
         run = cms.bool(True),
         validInputTags = cms.InputTag("TTTracksFromTracklet","Level1TTTracks"),
     ),

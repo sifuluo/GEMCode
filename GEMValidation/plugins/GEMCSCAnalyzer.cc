@@ -1497,6 +1497,7 @@ private:
 
 
   int verboseSimTrack_;
+  int verboseL1Track_;
   double simTrackMinPt_;
   double simTrackMinEta_;
   double simTrackMaxEta_;
@@ -1717,6 +1718,7 @@ GEMCSCAnalyzer::GEMCSCAnalyzer(const edm::ParameterSet& ps)
 
   const auto& l1Track = cfg_.getParameter<edm::ParameterSet>("l1track");
   trackInputLabel_ = consumes<std::vector< TTTrack< Ref_Phase2TrackerDigi_ > >>(l1Track.getParameter<edm::InputTag>("validInputTags"));
+  verboseL1Track_ = l1Track.getParameter<int>("verbose");
 
   const auto& recoTrackExtra = cfg_.getParameter<edm::ParameterSet>("recoTrackExtra");
   recoTrackExtraInputLabel_ = consumes<reco::TrackExtraCollection>(recoTrackExtra.getParameter<edm::InputTag>("validInputTags"));
@@ -1800,6 +1802,14 @@ void GEMCSCAnalyzer::analyze(const edm::Event& ev, const edm::EventSetup& es)
 
   if (verboseSimTrack_){
     std::cout << "Total number of SimTrack in this event: " << sim_track.size() << std::endl;
+  }
+
+  edm::Handle< std::vector< TTTrack< Ref_Phase2TrackerDigi_ > > > TTTrackHandle;
+  ev.getByToken(trackInputLabel_, TTTrackHandle);
+  const std::vector< TTTrack< Ref_Phase2TrackerDigi_ > >& TTTracks = *TTTrackHandle.product();
+
+  if (verboseL1Track_){
+    std::cout << "Total number of L1Track in this event: " << TTTracks.size() << std::endl;
   }
 
   int trk_no=0;
