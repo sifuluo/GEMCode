@@ -25,8 +25,6 @@
 #include "DataFormats/L1TrackTrigger/interface/TTCluster.h"
 #include "DataFormats/L1TrackTrigger/interface/TTStub.h"
 #include "DataFormats/L1TrackTrigger/interface/TTTypes.h"
-/* #include "DataFormats/L1TrackTrigger/interface/L1TkMuonParticle.h" */
-/* #include "DataFormats/L1TrackTrigger/interface/L1TkMuonParticleFwd.h" */
 
 class L1TrackTriggerVeto
 {
@@ -43,6 +41,7 @@ class L1TrackTriggerVeto
   bool isLooseVeto() const {return isLooseVeto_;}
   bool isMediumVeto() const {return isMediumVeto_;}
   bool isTightVeto() const {return isTightVeto_;}
+  int getNTrackTriggers() const {return nTrackTriggers_;}
 
  private:
   const edm::ParameterSet& ps_;
@@ -63,6 +62,7 @@ class L1TrackTriggerVeto
   bool isLooseVeto_;
   bool isMediumVeto_;
   bool isTightVeto_;
+  int nTrackTriggers_;
 
 
   // propagators

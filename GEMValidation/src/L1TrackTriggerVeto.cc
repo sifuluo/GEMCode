@@ -11,12 +11,11 @@ L1TrackTriggerVeto::L1TrackTriggerVeto(const edm::ParameterSet& ps,
   : ps_(ps), ev_(ev), es_(es), etaReference_(eta), phiReference_(phi)
 {
 
-  isLooseVeto_ = 0;
-  isMediumVeto_ = 0;
-  isTightVeto_ = 0;
+  isLooseVeto_ = false;
+  isMediumVeto_ = false;
+  isTightVeto_ = false;
 
   auto l1track = ps_.getParameter<edm::ParameterSet>("l1track");
-  // trackInput_ = l1track.getParameter<edm::InputTag>("validInputTags");
   verbose_ = l1track.getParameter<int>("verbose");
   run_ = l1track.getParameter<bool>("run");
 
@@ -34,7 +33,12 @@ L1TrackTriggerVeto::L1TrackTriggerVeto(const edm::ParameterSet& ps,
 
 void L1TrackTriggerVeto::calculateTTIsolation(const std::vector< TTTrack< Ref_Phase2TrackerDigi_ > >& TTTracks)
 {
-    //std::cout <<"TTTrack size "<< TTTracks.size() << std::endl;
+  if (verbose_) {
+    std::cout <<"L1TrackTriggerVeto::calculateTTIsolation " << std::endl;
+    std::cout << "TTTrack size "<< TTTracks.size() << std::endl;
+  }
+  nTrackTriggers_ = TTTracks.size();
+
   for (unsigned int j=0; j<TTTracks.size(); ++j) {
     auto l1Tk = TTTracks[j];
     const double l1Tk_pt = l1Tk.getMomentum().perp();
@@ -48,10 +52,17 @@ void L1TrackTriggerVeto::calculateTTIsolation(const std::vector< TTTrack< Ref_Ph
       const double dR_l1Mu_l1Tk_prop = reco::deltaR(l1Tk_eta_prop, l1Tk_phi_prop,
                                                     etaReference_, phiReference_);
 
-      if (dR_l1Mu_l1Tk_prop <= 0.12 and l1Tk_pt >= 4) isLooseVeto_ = 1;
-      if (dR_l1Mu_l1Tk_prop <= 0.12 and l1Tk_pt >= 3) isMediumVeto_ = 1;
-      if (dR_l1Mu_l1Tk_prop <= 0.12 and l1Tk_pt >= 2) isTightVeto_ = 1;
+      if (dR_l1Mu_l1Tk_prop <= 0.12 and l1Tk_pt >= 4) isLooseVeto_ = true;
+      if (dR_l1Mu_l1Tk_prop <= 0.12 and l1Tk_pt >= 3) isMediumVeto_ = true;
+      if (dR_l1Mu_l1Tk_prop <= 0.12 and l1Tk_pt >= 2) isTightVeto_ = true;
     }
+  }
+
+  if (verbose_) {
+    std::cout << "eta ref " << etaReference_ << " phi ref " << phiReference_ << std::endl;
+    if (isLooseVeto_)  std::cout << "This muon has loose veto" << std::endl;
+    if (isMediumVeto_) std::cout << "This muon has medium veto" << std::endl;
+    if (isTightVeto_)  std::cout << "This muon has tight veto" << std::endl;
   }
 }
 
