@@ -48,16 +48,7 @@ process.GEMCSCAnalyzer = cms.EDAnalyzer("GEMCSCAnalyzer",
 matching = process.GEMCSCAnalyzer.simTrackMatching
 matching.simTrack.minPt = 1.5
 matching.matchprint = cms.bool(False)
-matching.me0DigiPreReco.validInputTags = cms.InputTag("simMuonME0ReDigis384")
-matching.me0RecHit.validInputTags = cms.InputTag("me0RecHits384")
-matching.me0Segment.validInputTags = cms.InputTag("me0Segments384")
-"""
-matching.gemRecHit.input = ""
-matching.cscTfTrack.input = ""
-matching.tfCand.input = ""
-matching.gmtCand.input = ""
-matching.l1Extra.input = ""
-"""
+
 doGem = True
 if doGem:
   matching.cscSimHit.minNHitsChamber = 3
