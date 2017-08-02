@@ -28,8 +28,7 @@ process.maxEvents = cms.untracked.PSet(
 
 # Input source
 process.source = cms.Source("PoolSource",
-#    fileNames = cms.untracked.vstring('file:/uscms_data/d3/dildick/work/ME0TDRStudies/Setup20170124/forCrossCheckCentralProduction/CMSSW_9_1_1_patch3/src/CrabJobs/step2.root'),
-    fileNames = cms.untracked.vstring('file:/uscms/home/dildick/nobackup/work/ME0TDRStudies/Setup20170124/forCrossCheckCentralProduction/reTestTemp20170728/CMSSW_9_1_1_patch3/src/out_digi_l1_l1cluster.root'),
+    fileNames = cms.untracked.vstring('file:/uscms_data/d3/dildick/work/ME0TDRStudies/Setup20170124/newCMSSW_9_1_0_pre3_ForTao/CMSSW_9_1_1_patch1/src/out_digi_l1_l1cluster.root'),
     secondaryFileNames = cms.untracked.vstring()
 )
 
@@ -56,18 +55,28 @@ process.FEVTDEBUGHLToutput = cms.OutputModule("PoolOutputModule",
     outputCommands = process.FEVTDEBUGHLTEventContent.outputCommands,
     splitLevel = cms.untracked.int32(0)
 )
+
+## keep only relevant collections!!!
 process.FEVTDEBUGHLToutput.outputCommands.append('keep *_TTTrack*_Level1TTTracks_*')
-process.FEVTDEBUGHLToutput.outputCommands.append('keep *_TTCluster*_*_*')
-process.FEVTDEBUGHLToutput.outputCommands.append('keep *_TTStub*_*_*')
+process.FEVTDEBUGHLToutput.outputCommands.append('drop *_TTCluster*_*_*')
+process.FEVTDEBUGHLToutput.outputCommands.append('drop *_TTStub*_*_*')
 process.FEVTDEBUGHLToutput.outputCommands.append('keep *_L1TkMuons_*_*')
 process.FEVTDEBUGHLToutput.outputCommands.append('keep *_*Muon*_*_*')
 process.FEVTDEBUGHLToutput.outputCommands.append('keep *_me0*_*_*')
-
+process.FEVTDEBUGHLToutput.outputCommands.append('drop CSCDetIdCSCStripDigiMuonDigiCollection_simMuonCSCDigis_MuonCSCStripDigi_L1TrackTrigger')
+process.FEVTDEBUGHLToutput.outputCommands.append('drop PileupSummaryInfos_addPileupInfo__L1TrackTrigger')
+process.FEVTDEBUGHLToutput.outputCommands.append('drop StripDigiSimLinkedmDetSetVector_simMuonCSCDigis_MuonCSCStripDigiSimLinks_L1TrackTrigger')
+process.FEVTDEBUGHLToutput.outputCommands.append('drop GEMDigiSimLinkedmDetSetVector_simMuonGEMDigis_GEM_L1TrackTrigger')
 
 # Additional output definition
 ## ME0 segments
 process.load("L1Trigger.ME0Trigger.me0TriggerPseudoDigis_cff")
 process.simMuonME0PseudoReDigisCoarse.inputCollection = cms.string("simMuonME0Digis")
+
+## TT track
+process.load("L1Trigger.TrackFindingTracklet.L1TrackletTracks_cff")
+
+## TT Track+muon
 process.load("L1Trigger.L1TTrackMatch.L1TkObjectProducers_cff")
 
 # Other statements
@@ -75,8 +84,10 @@ from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, '91X_upgrade2023_realistic_v3', '')
 
 # Path and EndPath definitions
-process.L1simulation_step = cms.Path(process.SimL1TMuon*process.me0TriggerPseudoDigiSequence)
-process.L1TrackTrigger_step = cms.Path(process.L1TrackTrigger)
+process.L1simulation_step = cms.Path(process.SimL1TMuon*
+                                     process.me0TriggerPseudoDigiSequence)
+process.L1TrackTrigger_step = cms.Path(process.TTStubsFromPhase2TrackerDigis *
+                                       process.L1TrackletTracks)
 process.endjob_step = cms.EndPath(process.endOfProcess)
 process.FEVTDEBUGHLToutput_step = cms.EndPath(process.FEVTDEBUGHLToutput)
 
