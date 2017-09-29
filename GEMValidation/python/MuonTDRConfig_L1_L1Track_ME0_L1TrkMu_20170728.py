@@ -23,12 +23,14 @@ process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(10)
+    input = cms.untracked.int32(100)
 )
 
 # Input source
-process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring('file:/uscms_data/d3/dildick/work/ME0TDRStudies/Setup20170124/newCMSSW_9_1_0_pre3_ForTao/CMSSW_9_1_1_patch1/src/out_digi_l1_l1cluster.root'),
+process.source = cms.Source(
+    "PoolSource",
+    #fileNames = cms.untracked.vstring('file:/eos/uscms/store/user/dildick/DarkSUSY_mH_125_mGammaD_20_cT_0_14TeV/DarkSUSY_mH_125_mGammaD_20_cT_0_14TeV_DIGI_L1_TTCluster/170807_164940/0000/out_digi_l1_l1cluster_134.root'),
+    fileNames = cms.untracked.vstring('file:004002D8-8D8C-E711-8A16-0025905C3DD0.root'),
     secondaryFileNames = cms.untracked.vstring()
 )
 
@@ -78,6 +80,8 @@ process.load("L1Trigger.TrackFindingTracklet.L1TrackletTracks_cff")
 
 ## TT Track+muon
 process.load("L1Trigger.L1TTrackMatch.L1TkObjectProducers_cff")
+## use the new L1Mu
+process.L1TkMuons.L1MuonInputTag = cms.InputTag("simGmtStage2Digis","","ReL1TrackTrigger")
 
 # Other statements
 from Configuration.AlCa.GlobalTag import GlobalTag
