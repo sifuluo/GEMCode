@@ -1473,23 +1473,12 @@ private:
   edm::EDGetTokenT<RPCDigiCollection> rpcDigiInput_;
   edm::EDGetTokenT<RPCRecHitCollection> rpcRecHitInput_;
 
-  //edm::EDGetTokenT<L1CSCTrackCollection> cscTfTrackInputLabel_;
-  //edm::EDGetTokenT<L1MuRegionalCandCollection> cscTfCandInputLabel_;
   edm::EDGetTokenT<l1t::EMTFTrackCollection> emtfTrackInputLabel_;
   edm::EDGetTokenT<BXVector<l1t::RegionalMuonCand>> regMuonCandInputLabel_;
   edm::EDGetTokenT<BXVector<l1t::Muon>> gmtInputLabel_;
-  edm::EDGetTokenT<L1MuRegionalCandCollection> dtTfCandInputLabel_;
-  edm::EDGetTokenT<L1MuRegionalCandCollection> rpcfTfCandInputLabel_;
-  edm::EDGetTokenT<L1MuRegionalCandCollection> rpcbTfCandInputLabel_;
 
-  edm::EDGetTokenT<L1MuRegionalCandCollection> gmtRegCandCSCInputLabel_;
-  edm::EDGetTokenT<L1MuRegionalCandCollection> gmtRegCandDTInputLabel_;
-  edm::EDGetTokenT<L1MuRegionalCandCollection> gmtRegCandRPCfInputLabel_;
-  edm::EDGetTokenT<L1MuRegionalCandCollection> gmtRegCandRPCbInputLabel_;
-  edm::EDGetTokenT<L1MuGMTCandCollection> gmtCandInputLabel_;
-  edm::EDGetTokenT<l1extra::L1MuonParticleCollection> l1ExtraMuonInputLabel_;
-
-  edm::EDGetTokenT<std::vector< TTTrack< Ref_Phase2TrackerDigi_ > > > trackInputLabel_;
+  edm::EDGetTokenT<L1TTTrackCollectionType> trackInputLabel_;
+  edm::EDGetTokenT<l1t::L1TkMuonParticleCollection> trackMuonInputLabel_;
 
   edm::EDGetTokenT<reco::TrackExtraCollection> recoTrackExtraInputLabel_;
   edm::EDGetTokenT<reco::TrackCollection> recoTrackInputLabel_;
@@ -1680,45 +1669,21 @@ GEMCSCAnalyzer::GEMCSCAnalyzer(const edm::ParameterSet& ps)
   const auto& rpcRecHit_= cfg_.getParameter<edm::ParameterSet>("rpcRecHit");
   rpcRecHitInput_ = consumes<RPCRecHitCollection>(rpcRecHit_.getParameter<edm::InputTag>("validInputTags"));
 
-  //const auto& tfTrack = cfg_.getParameter<edm::ParameterSet>("cscTfTrack");
-  //cscTfTrackInputLabel_ = consumes<L1CSCTrackCollection>(tfTrack.getParameter<edm::InputTag>("validInputTags"));
   const auto& emtfTrack = cfg_.getParameter<edm::ParameterSet>("upgradeEmtfTrack");
   emtfTrackInputLabel_ = consumes<l1t::EMTFTrackCollection>(emtfTrack.getParameter<edm::InputTag>("validInputTags"));
 
-  //const auto& tfCand = cfg_.getParameter<edm::ParameterSet>("cscTfCand");
-  //cscTfCandInputLabel_ = consumes<L1MuRegionalCandCollection>(tfCand.getParameter<edm::InputTag>("validInputTags"));
   const auto& upgradeemtfCand = cfg_.getParameter<edm::ParameterSet>("upgradeEmtfCand");
   regMuonCandInputLabel_ = consumes< BXVector<l1t::RegionalMuonCand> >(upgradeemtfCand.getParameter<edm::InputTag>("validInputTags"));
 
   const auto& upgradegmt = cfg_.getParameter<edm::ParameterSet>("upgradeGMT");
   gmtInputLabel_ = consumes< BXVector<l1t::Muon> >(upgradegmt.getParameter<edm::InputTag>("validInputTags"));
 
-  const auto& dtTfCand = cfg_.getParameter<edm::ParameterSet>("dtTfCand");
-  dtTfCandInputLabel_ = consumes<L1MuRegionalCandCollection>(dtTfCand.getParameter<edm::InputTag>("validInputTags"));
-
-  const auto& rpcfTfCand = cfg_.getParameter<edm::ParameterSet>("rpcfTfCand");
-  rpcfTfCandInputLabel_ = consumes<L1MuRegionalCandCollection>(rpcfTfCand.getParameter<edm::InputTag>("validInputTags"));
-
-  const auto& rpcbTfCand = cfg_.getParameter<edm::ParameterSet>("rpcbTfCand");
-  rpcbTfCandInputLabel_ = consumes<L1MuRegionalCandCollection>(rpcbTfCand.getParameter<edm::InputTag>("validInputTags"));
-
-  const auto& gmtRegCandCSC = cfg_.getParameter<edm::ParameterSet>("gmtRegCandCSC");
-  const auto& gmtRegCandDT = cfg_.getParameter<edm::ParameterSet>("gmtRegCandDT");
-  const auto& gmtRegCandRPCf = cfg_.getParameter<edm::ParameterSet>("gmtRegCandRPCf");
-  const auto& gmtRegCandRPCb = cfg_.getParameter<edm::ParameterSet>("gmtRegCandRPCb");
-  const auto& gmtCand = cfg_.getParameter<edm::ParameterSet>("gmtCand");
-  const auto& l1ExtraMuonParticle = cfg_.getParameter<edm::ParameterSet>("l1ExtraMuonParticle");
-
-  gmtRegCandCSCInputLabel_ = consumes<L1MuRegionalCandCollection>(gmtRegCandCSC.getParameter<edm::InputTag>("validInputTags"));
-  gmtRegCandDTInputLabel_ = consumes<L1MuRegionalCandCollection>(gmtRegCandDT.getParameter<edm::InputTag>("validInputTags"));
-  gmtRegCandRPCfInputLabel_ = consumes<L1MuRegionalCandCollection>(gmtRegCandRPCf.getParameter<edm::InputTag>("validInputTags"));
-  gmtRegCandRPCbInputLabel_ = consumes<L1MuRegionalCandCollection>(gmtRegCandRPCb.getParameter<edm::InputTag>("validInputTags"));
-  gmtCandInputLabel_ = consumes<L1MuGMTCandCollection>(gmtCand.getParameter<edm::InputTag>("validInputTags"));
-  l1ExtraMuonInputLabel_ = consumes<l1extra::L1MuonParticleCollection>(l1ExtraMuonParticle.getParameter<edm::InputTag>("validInputTags"));
-
   const auto& l1Track = cfg_.getParameter<edm::ParameterSet>("l1track");
-  trackInputLabel_ = consumes<std::vector< TTTrack< Ref_Phase2TrackerDigi_ > >>(l1Track.getParameter<edm::InputTag>("validInputTags"));
+  trackInputLabel_ = consumes<L1TTTrackCollectionType>(l1Track.getParameter<edm::InputTag>("validInputTags"));
   verboseL1Track_ = l1Track.getParameter<int>("verbose");
+
+  const auto& l1TrackMuon = cfg_.getParameter<edm::ParameterSet>("l1tkmuon");
+  trackMuonInputLabel_ = consumes<l1t::L1TkMuonParticleCollection>(l1TrackMuon.getParameter<edm::InputTag>("validInputTags"));
 
   const auto& recoTrackExtra = cfg_.getParameter<edm::ParameterSet>("recoTrackExtra");
   recoTrackExtraInputLabel_ = consumes<reco::TrackExtraCollection>(recoTrackExtra.getParameter<edm::InputTag>("validInputTags"));
@@ -1856,20 +1821,11 @@ void GEMCSCAnalyzer::analyze(const edm::Event& ev, const edm::EventSetup& es)
                                dtRecSegment4DInput_,
                                rpcDigiInput_,
                                rpcRecHitInput_,
-                               //cscTfTrackInputLabel_,
-                               //cscTfCandInputLabel_,
                                emtfTrackInputLabel_,
                                regMuonCandInputLabel_,
                                gmtInputLabel_,
-                               dtTfCandInputLabel_,
-                               rpcfTfCandInputLabel_,
-                               rpcbTfCandInputLabel_,
-                               gmtRegCandCSCInputLabel_,
-                               gmtRegCandDTInputLabel_,
-                               gmtRegCandRPCfInputLabel_,
-                               gmtRegCandRPCbInputLabel_,
-                               gmtCandInputLabel_,
-                               l1ExtraMuonInputLabel_,
+                               trackInputLabel_,
+                               trackMuonInputLabel_,
                                recoTrackExtraInputLabel_,
                                recoTrackInputLabel_,
                                recoChargedCandidateInputLabel_
@@ -1908,9 +1864,8 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
   const ME0DigiMatcher& match_me0digi = match.me0Digis();
   const CSCStubMatcher& match_lct = match.cscStubs();
   const ME0RecHitMatcher& match_me0rh = match.me0RecHits();
-  //const L1TrackMatcher& match_track = match.l1Tracks();
+  const UpgradeL1MuMatcher& match_muon = match.l1Muons();
   const UpgradeL1TrackMatcher& match_track = match.l1Tracks();
-  //const L1GlobalMuonTriggerMatcher& match_l1_gmt = match.l1GMTCands();
   //const HLTTrackMatcher& match_hlt_track = match.hltTracks();
   const SimTrack &t = match_sh.trk();
 
@@ -3735,9 +3690,9 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
 	              {etrk_[s].eta_interStat13 = propagate_interstat_odd[13].eta();
 	               etrk_[s].phi_interStat13 = propagate_interstat_odd[13].phi();}
   }*/
-  if (match_track.tfTracks().size()) {
+  if (match_muon.tfTracks().size()) {
     etrk_[0].has_tfTrack = 1;
-    TFTrack* besttrack = match_track.bestTFTrack();
+    TFTrack* besttrack = match_muon.bestTFTrack();
     //std::cout <<"tfTracks size "<< match_track.tfTracks().size() <<" bestTrack "; besttrack->print();
     etrk_[0].trackpt = besttrack->pt();
     etrk_[0].tracketa = besttrack->eta();
@@ -3910,11 +3865,11 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
     }*/
   }
 
-  const auto& l1GmtCands(match_track.gmts());
-  if (l1GmtCands.size() and match_track.bestGMTCand()) {
+  const auto& l1GmtCands(match_muon.gmts());
+  if (l1GmtCands.size() and match_muon.bestGMTCand()) {
 
     etrk_[0].has_gmtCand = 1;
-    TFCand* bestGmtCand = match_track.bestGMTCand();
+    TFCand* bestGmtCand = match_muon.bestGMTCand();
     //std::cout <<"size of l1GMTs "<< l1GmtCands.size() <<" bestGMTCand in GEMCSC "; bestGmtCand->print();
     etrk_[0].bestdRGmtCand = bestGmtCand->dr();
     etrk_[0].L1Mu_pt = bestGmtCand->pt();
@@ -3984,17 +3939,17 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
   }
 
 
-  /*if (match_track.tfCands().size()) {
+  /*if (match_muon.tfCands().size()) {
     etrk_[0].has_tfCand = 1;
     std::cout << "SimTrack has matched CSCTF Cand" << std::endl;
   }
 
-  if (match_track.gmtRegCands().size()) {
+  if (match_muon.gmtRegCands().size()) {
     etrk_[0].has_gmtRegCand = 1;
     std::cout << "SimTrack has GMTRegCand" << std::endl;
   }
 
-  if (match_track.gmtCands().size()) {
+  if (match_muon.gmtCands().size()) {
     etrk_[0].has_gmtCand = 1;
     std::cout << "SimTrack has GMTCand" << std::endl;
   }
@@ -4403,8 +4358,7 @@ void GEMCSCAnalyzer::bookSimTracksDeltaTree()
   const RPCDigiMatcher& match_rd = match.rpcDigis();
   const CSCDigiMatcher& match_cd = match.cscDigis();
   const CSCStubMatcher& match_lct = match.cscStubs();
-  //const L1TrackMatcher& match_track = match.l1Tracks();
-  const UpgradeL1TrackMatcher& match_track = match.l1Tracks();
+  const UpgradeL1MuMatcher& match_muon = match.l1Muons();
   const SimTrack &t = match_sh.trk();
 
 
@@ -4591,8 +4545,8 @@ void GEMCSCAnalyzer::bookSimTracksDeltaTree()
 
 
   std::cout << "######  matching Tracks to Simtrack " << std::endl;
-  if (match_track.tfTracks().size()) {
-     TFTrack* besttrack = match_track.bestTFTrack();
+  if (match_muon.tfTracks().size()) {
+     TFTrack* besttrack = match_muon.bestTFTrack();
      std::cout << "       Best TFTrack                  " << std::endl;
      besttrack->print();
 	 /*for (unsigned int i=0; i<triggerDigiIds.size(); i++)
