@@ -27,8 +27,11 @@ class SimHitMatcher : public BaseMatcher
 {
 public:
 
-  SimHitMatcher(const SimTrack& t, const SimVertex& v,
-                const edm::ParameterSet& ps, const edm::Event& ev, const edm::EventSetup& es,
+  SimHitMatcher(const SimTrack& t,
+                const SimVertex& v,
+                const edm::ParameterSet& ps,
+                const edm::Event& ev,
+                const edm::EventSetup& es,
                 edm::EDGetTokenT<edm::SimVertexContainer>& simVertexInput_,
                 edm::EDGetTokenT<edm::SimTrackContainer>& simTrackInput_,
                 edm::EDGetTokenT<edm::PSimHitContainer>& gemSimHitInput_,
@@ -165,7 +168,8 @@ public:
   /// calculate average wg number for a provided collection of simhits (for DT)
   float simHitsMeanWire(const edm::PSimHitContainer& sim_hits) const;
 
-
+  /// calculate the average position at the second station
+  GlobalPoint simHitsMeanPositionSecondStation() const;
 
   std::set<int> hitStripsInDetId(unsigned int, int margin_n_strips = 0) const;  // GEM/ME0 or CSC
   std::set<int> hitWiregroupsInDetId(unsigned int, int margin_n_wg = 0) const; // CSC

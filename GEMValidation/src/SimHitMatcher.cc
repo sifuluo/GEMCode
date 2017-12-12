@@ -293,7 +293,7 @@ SimHitMatcher::matchCSCSimHitsToSimTrack(std::vector<unsigned int> track_ids, co
       if (simMuOnlyCSC_ && std::abs(pdgid) != 13) continue;
       // discard electron hits in the CSC chambers
       if (discardEleHitsCSC_ && pdgid == 11) continue;
-      LocalPoint lp = h.entryPoint();
+      const LocalPoint& lp = h.entryPoint();
       GlobalPoint gp;
       if (gemvalidation::is_csc(h.detUnitId()))
        {
@@ -364,7 +364,7 @@ SimHitMatcher::matchGEMSimHitsToSimTrack(std::vector<unsigned int> track_ids, co
     //int max_npads = roll->npads();
     set<int> pads;
     for (auto& h: hits) {
-      LocalPoint lp = h.entryPoint();
+      const LocalPoint& lp = h.entryPoint();
       pads.insert( 1 + static_cast<int>(roll->padTopology().channel(lp)) );
     }
     gem_detids_to_pads_[d] = pads;
@@ -383,7 +383,7 @@ SimHitMatcher::matchGEMSimHitsToSimTrack(std::vector<unsigned int> track_ids, co
     set<int> copads;
 
     for (auto& h: hits1) {
-      LocalPoint lp = h.entryPoint();
+      const LocalPoint& lp = h.entryPoint();
       pads1.insert( 1 + static_cast<int>(roll1->padTopology().channel(lp)) );
       std::cout <<"GEMHits detid1 "<<id1 <<" pad1 "<< 1 + static_cast<int>(roll1->padTopology().channel(lp)) << std::endl;
     }
@@ -393,12 +393,12 @@ SimHitMatcher::matchGEMSimHitsToSimTrack(std::vector<unsigned int> track_ids, co
 	//staggered geometry???? improve here !!
 	GEMDetId id2(d2);
 	// does layer 2 has simhits?
-	if (id2.layer() !=2 or id2.region() != id1.region() or id2.ring()!=id1.ring() or id2.station()!=id1.station() or abs(id2.roll()-id1.roll())>1) 
+	if (id2.layer() !=2 or id2.region() != id1.region() or id2.ring()!=id1.ring() or id2.station()!=id1.station() or abs(id2.roll()-id1.roll())>1)
 	    continue;
 	auto hits2 = hitsInDetId(id2());
 	auto roll2 = getGEMGeometry()->etaPartition(id2);
 	for (auto& h: hits2) {
-	  LocalPoint lp = h.entryPoint();
+	  const LocalPoint& lp = h.entryPoint();
 	  pads2.insert( 1 + static_cast<int>(roll2->padTopology().channel(lp)) );
 	  std::cout <<"GEMHits detid2 "<<id2 <<" pad2 "<< 1 + static_cast<int>(roll2->padTopology().channel(lp)) << std::endl;
 	}
@@ -407,7 +407,7 @@ SimHitMatcher::matchGEMSimHitsToSimTrack(std::vector<unsigned int> track_ids, co
 
     for (auto pad1 : pads1)
 	for (auto pad2 : pads2){
-	    if (abs(pad1-pad2) <= 1) 
+	    if (abs(pad1-pad2) <= 1)
 	    {
 		if (copads.find(pad1) == copads.end())
 		    copads.insert(pad1);
@@ -427,9 +427,9 @@ SimHitMatcher::matchGEMSimHitsToSimTrack(std::vector<unsigned int> track_ids, co
 void
 SimHitMatcher::matchME0SimHitsToSimTrack(std::vector<unsigned int> track_ids, const edm::PSimHitContainer& me0_hits)
 {
-  for (auto& track_id: track_ids)
+  for (const auto& track_id: track_ids)
   {
-    for (auto& h: me0_hits)
+    for (const auto& h: me0_hits)
     {
       if (h.trackId() != track_id) continue;
       if (verboseME0_) cout <<"simhit in ME0 detid "<< ME0DetId(h.detUnitId()) <<" id "<< h.particleType() <<" position x "<< h.entryPoint().x()<<" y "<< h.entryPoint().y()<< endl;
@@ -451,9 +451,9 @@ SimHitMatcher::matchME0SimHitsToSimTrack(std::vector<unsigned int> track_ids, co
 void
 SimHitMatcher::matchDTSimHitsToSimTrack(std::vector<unsigned int> track_ids, const edm::PSimHitContainer& dt_hits)
 {
-  for (auto& track_id: track_ids)
+  for (const auto& track_id: track_ids)
   {
-    for (auto& h: dt_hits)
+    for (const auto& h: dt_hits)
     {
       if (h.trackId() != track_id) continue;
       int pdgid = h.particleType();
@@ -495,7 +495,7 @@ std::set<unsigned int>
 SimHitMatcher::detIdsGEM(int gem_type) const
 {
   std::set<unsigned int> result;
-  for (auto& p: gem_detid_to_hits_)
+  for (const auto& p: gem_detid_to_hits_)
   {
     auto id = p.first;
     if (gem_type > 0)
@@ -513,7 +513,7 @@ std::set<unsigned int>
 SimHitMatcher::detIdsRPC(int rpc_type) const
 {
   std::set<unsigned int> result;
-  for (auto& p: rpc_detid_to_hits_)
+  for (const auto& p: rpc_detid_to_hits_)
   {
     auto id = p.first;
     if (rpc_type > 0)
@@ -531,7 +531,7 @@ std::set<unsigned int>
 SimHitMatcher::detIdsME0() const
 {
   std::set<unsigned int> result;
-  for (auto& p: me0_detid_to_hits_) result.insert(p.first);
+  for (const auto& p: me0_detid_to_hits_) result.insert(p.first);
   return result;
 }
 
@@ -540,7 +540,7 @@ std::set<unsigned int>
 SimHitMatcher::detIdsCSC(int csc_type) const
 {
   std::set<unsigned int> result;
-  for (auto& p: csc_detid_to_hits_)
+  for (const auto& p: csc_detid_to_hits_)
   {
     auto id = p.first;
     if (csc_type > 0)
@@ -558,7 +558,7 @@ std::set<unsigned int>
 SimHitMatcher::detIdsDT(int dt_type) const
 {
   std::set<unsigned int> result;
-  for (auto& p: dt_detid_to_hits_)
+  for (const auto& p: dt_detid_to_hits_)
   {
     auto id = p.first;
     if (dt_type > 0)
@@ -576,7 +576,7 @@ std::set<unsigned int>
 SimHitMatcher::detIdsGEMCoincidences() const
 {
   std::set<unsigned int> result;
-  for (auto& p: gem_detids_to_copads_) result.insert(p.first);
+  for (const auto& p: gem_detids_to_copads_) result.insert(p.first);
   return result;
 }
 
@@ -594,7 +594,7 @@ SimHitMatcher::detIdsME0Coincidences(int min_n_layers) const
   //   }
   //   return result;
 
-  //   for (auto& p: me0_detids_to_copads_) result.insert(p.first);
+  //   for (const auto& p: me0_detids_to_copads_) result.insert(p.first);
   return result;
 }
 
@@ -603,7 +603,7 @@ std::set<unsigned int>
 SimHitMatcher::chamberIdsGEM(int gem_type) const
 {
   std::set<unsigned int> result;
-  for (auto& p: gem_chamber_to_hits_)
+  for (const auto& p: gem_chamber_to_hits_)
   {
     auto id = p.first;
     if (gem_type > 0)
@@ -621,7 +621,7 @@ std::set<unsigned int>
 SimHitMatcher::chamberIdsRPC(int rpc_type) const
 {
   std::set<unsigned int> result;
-  for (auto& p: rpc_chamber_to_hits_)
+  for (const auto& p: rpc_chamber_to_hits_)
   {
     auto id = p.first;
     if (rpc_type > 0)
@@ -639,7 +639,7 @@ std::set<unsigned int>
 SimHitMatcher::chamberIdsME0() const
 {
   std::set<unsigned int> result;
-  for (auto& p: me0_chamber_to_hits_) result.insert(p.first);
+  for (const auto& p: me0_chamber_to_hits_) result.insert(p.first);
   return result;
 }
 
@@ -648,7 +648,7 @@ std::set<unsigned int>
 SimHitMatcher::chamberIdsCSC(int csc_type) const
 {
   std::set<unsigned int> result;
-  for (auto& p: csc_chamber_to_hits_)
+  for (const auto& p: csc_chamber_to_hits_)
   {
     auto id = p.first;
     if (csc_type > 0)
@@ -665,7 +665,7 @@ std::set<unsigned int>
 SimHitMatcher::chamberIdsDT(int dt_type) const
 {
   std::set<unsigned int> result;
-  for (auto& p: dt_chamber_to_hits_)
+  for (const auto& p: dt_chamber_to_hits_)
   {
     auto id = p.first;
     if (dt_type > 0)
@@ -682,7 +682,7 @@ std::set<unsigned int>
 SimHitMatcher::superChamberIdsGEM() const
 {
   std::set<unsigned int> result;
-  for (auto& p: gem_superchamber_to_hits_) result.insert(p.first);
+  for (const auto& p: gem_superchamber_to_hits_) result.insert(p.first);
   return result;
 }
 
@@ -691,7 +691,7 @@ std::set<unsigned int>
 SimHitMatcher::superChamberIdsME0() const
 {
   std::set<unsigned int> result;
-  for (auto& p: me0_superchamber_to_hits_) result.insert(p.first);
+  for (const auto& p: me0_superchamber_to_hits_) result.insert(p.first);
   return result;
 }
 
@@ -700,7 +700,7 @@ std::set<unsigned int>
 SimHitMatcher::superChamberIdsGEMCoincidences() const
 {
   std::set<unsigned int> result;
-  for (auto& p: gem_detids_to_copads_)
+  for (const auto& p: gem_detids_to_copads_)
   {
     GEMDetId p_id(p.first);
     GEMDetId superch_id(p_id.region(), p_id.ring(), p_id.station(), 0, p_id.chamber(), 0);
@@ -714,7 +714,7 @@ std::set<unsigned int>
 SimHitMatcher::layerIdsDT() const
 {
   std::set<unsigned int> result;
-  for (auto& p: dt_layer_to_hits_) result.insert(p.first);
+  for (const auto& p: dt_layer_to_hits_) result.insert(p.first);
   return result;
 }
 
@@ -722,7 +722,7 @@ std::set<unsigned int>
 SimHitMatcher::superlayerIdsDT() const
 {
   std::set<unsigned int> result;
-  for (auto& p: dt_superlayer_to_hits_) result.insert(p.first);
+  for (const auto& p: dt_superlayer_to_hits_) result.insert(p.first);
   return result;
 }
 
@@ -849,8 +849,8 @@ int
 SimHitMatcher::nLayersWithHitsInSuperChamber(unsigned int detid) const
 {
   set<int> layers_with_hits;
-  const auto hits = hitsInSuperChamber(detid);
-  for (auto& h: hits)
+  const auto& hits = hitsInSuperChamber(detid);
+  for (const auto& h: hits)
   {
     if (gemvalidation::is_gem(detid))
     {
@@ -947,7 +947,7 @@ bool
 SimHitMatcher::hitStationDT(int st, int nsuperlayers, int nlayers) const
 {
   int nst=0;
-  for(auto ddt: chamberIdsDT()) {
+  for(const auto& ddt: chamberIdsDT()) {
 
     const DTChamberId id(ddt);
     if (id.station()!=st) continue;
@@ -997,7 +997,7 @@ SimHitMatcher::nCellsWithHitsInLayerDT(unsigned int detid) const
 {
   set<int> layers_with_hits;
   const auto hits = hitsInLayerDT(detid);
-  for (auto& h: hits) {
+  for (const auto& h: hits) {
     if (gemvalidation::is_dt(detid)) {
       const DTWireId idd(h.detUnitId());
       layers_with_hits.insert(idd.wire());
@@ -1011,7 +1011,7 @@ SimHitMatcher::nLayersWithHitsInSuperLayerDT(unsigned int detid) const
 {
   set<int> layers_with_hits;
   const auto hits = hitsInSuperLayerDT(detid);
-  for (auto& h: hits) {
+  for (const auto& h: hits) {
     if (gemvalidation::is_dt(detid)) {
       const DTLayerId idd(h.detUnitId());
       layers_with_hits.insert(idd.layer());
@@ -1025,7 +1025,7 @@ SimHitMatcher::nSuperLayersWithHitsInChamberDT(unsigned int detid) const
 {
   set<int> sl_with_hits;
   const auto hits = hitsInChamber(detid);
-  for (auto& h: hits) {
+  for (const auto& h: hits) {
     if (gemvalidation::is_dt(detid)) {
       const DTSuperLayerId idd(h.detUnitId());
       sl_with_hits.insert(idd.superLayer());
@@ -1055,7 +1055,7 @@ SimHitMatcher::simHitsMeanPosition(const edm::PSimHitContainer& sim_hits) const
   size_t n = 0;
   for (auto& h: sim_hits)
   {
-    LocalPoint lp = h.entryPoint();
+    const LocalPoint& lp = h.entryPoint();
     GlobalPoint gp;
     if ( gemvalidation::is_gem(h.detUnitId()) )
     {
@@ -1068,7 +1068,6 @@ SimHitMatcher::simHitsMeanPosition(const edm::PSimHitContainer& sim_hits) const
     else if (gemvalidation::is_csc(h.detUnitId()))
     {
       gp = getCSCGeometry()->idToDet(h.detUnitId())->surface().toGlobal(lp);
-      //std::cout <<"In simHitsMeanPosition localPoint "<< lp<<" gloablPoint "<< gp  << std::endl;
     }
     else if (gemvalidation::is_rpc(h.detUnitId()))
     {
@@ -1101,7 +1100,7 @@ SimHitMatcher::simHitPositionKeyLayer(unsigned int chid) const
                             chamberId.ring(), chamberId.chamber(), 3);
   GlobalPoint returnValue;
 
-  const edm::PSimHitContainer keyLayerIdHits(hitsInDetId(keyLayerId.rawId()));
+  const edm::PSimHitContainer& keyLayerIdHits(hitsInDetId(keyLayerId.rawId()));
   //std::cout <<"CSC id "<< chamberId <<" keyLayerIdHits size "<< keyLayerIdHits.size() << " hitsInChamber "<< hitsInChamber(chid).size()<< std::endl;
   if (keyLayerIdHits.size()!=0) returnValue = simHitsMeanPosition(keyLayerIdHits);
   else{
@@ -1125,7 +1124,7 @@ SimHitMatcher::simHitPositionKeyLayer(unsigned int chid) const
                       chamberId.ring(), chamberId.chamber(), l);
         for (auto p: hitsInDetId(l_id.rawId())) {
 	  //std::cout <<"layerId "<< l_id;
-          LocalPoint lp = p.entryPoint();
+          const LocalPoint& lp = p.entryPoint();
 	  //std::cout <<" localPoint (x,y): "<<lp.x()<<" "<< lp.y();
           GlobalPoint gp = getCSCGeometry()->idToDet(p.detUnitId())->surface().toGlobal(lp);
 	 // std::cout <<" gp (x,y,z) "<< gp.x()<<" "<< gp.y()<<" "<< gp.z()<< std::endl;
@@ -1173,9 +1172,9 @@ SimHitMatcher::simHitsMeanMomentum(const edm::PSimHitContainer& sim_hits) const
   float sumx, sumy, sumz;
   sumx = sumy = sumz = 0.f;
   size_t n = 0;
-  for (auto& h: sim_hits)
+  for (const auto& h: sim_hits)
   {
-    LocalVector lv = h.momentumAtEntry();
+    const LocalVector& lv = h.momentumAtEntry();
     GlobalVector gv;
     if ( gemvalidation::is_gem(h.detUnitId()) )
     {
@@ -1303,9 +1302,9 @@ SimHitMatcher::simHitsMeanStrip(const edm::PSimHitContainer& sim_hits) const
 
   float sums = 0.f;
   size_t n = 0;
-  for (auto& h: sim_hits)
+  for (const auto& h: sim_hits)
   {
-    LocalPoint lp = h.entryPoint();
+    const LocalPoint& lp = h.entryPoint();
     float s;
     auto d = h.detUnitId();
     if ( gemvalidation::is_gem(d) )
@@ -1342,9 +1341,9 @@ SimHitMatcher::simHitsMeanWG(const edm::PSimHitContainer& sim_hits) const
 
   float sums = 0.f;
   size_t n = 0;
-  for (auto& h: sim_hits)
+  for (const auto& h: sim_hits)
   {
-    LocalPoint lp = h.entryPoint();
+    const LocalPoint& lp = h.entryPoint();
     float s;
     auto d = h.detUnitId();
     if (gemvalidation::is_csc(d))
@@ -1370,9 +1369,9 @@ SimHitMatcher::simHitsMeanWire(const edm::PSimHitContainer& sim_hits) const
 
   float sums = 0.f;
   size_t n = 0;
-  for (auto& h: sim_hits)
+  for (const auto& h: sim_hits)
   {
-    LocalPoint lp = h.entryPoint();
+    const LocalPoint& lp = h.entryPoint();
     float s;
     auto d = h.detUnitId();
     if (gemvalidation::is_dt(d))
@@ -1398,9 +1397,9 @@ SimHitMatcher::hitStripsInDetId(unsigned int detid, int margin_n_strips) const
   {
     GEMDetId id(detid);
     int max_nstrips = getGEMGeometry()->etaPartition(id)->nstrips();
-    for (auto& h: simhits)
+    for (const auto& h: simhits)
     {
-      LocalPoint lp = h.entryPoint();
+      const LocalPoint& lp = h.entryPoint();
       int central_strip = 1 + static_cast<int>(getGEMGeometry()->etaPartition(id)->topology().channel(lp));
       int smin = central_strip - margin_n_strips;
       smin = (smin > 0) ? smin : 1;
@@ -1413,9 +1412,9 @@ SimHitMatcher::hitStripsInDetId(unsigned int detid, int margin_n_strips) const
   {
     ME0DetId id(detid);
     int max_nstrips = getME0Geometry()->etaPartition(id)->nstrips();
-    for (auto& h: simhits)
+    for (const auto& h: simhits)
     {
-      LocalPoint lp = h.entryPoint();
+      const LocalPoint& lp = h.entryPoint();
       int central_strip = 1 + static_cast<int>(getME0Geometry()->etaPartition(id)->topology().channel(lp));
       int smin = central_strip - margin_n_strips;
       smin = (smin > 0) ? smin : 1;
@@ -1428,9 +1427,9 @@ SimHitMatcher::hitStripsInDetId(unsigned int detid, int margin_n_strips) const
   {
     CSCDetId id(detid);
     int max_nstrips = getCSCGeometry()->layer(id)->geometry()->numberOfStrips();
-    for (auto& h: simhits)
+    for (const auto& h: simhits)
     {
-      LocalPoint lp = h.entryPoint();
+      const LocalPoint& lp = h.entryPoint();
       int central_strip = getCSCGeometry()->layer(id)->geometry()->nearestStrip(lp);
       int smin = central_strip - margin_n_strips;
       smin = (smin > 0) ? smin : 1;
@@ -1442,10 +1441,10 @@ SimHitMatcher::hitStripsInDetId(unsigned int detid, int margin_n_strips) const
   else if ( gemvalidation::is_rpc(detid) )
   {
     RPCDetId id(detid);
-    for (auto roll: getRPCGeometry()->chamber(id)->rolls()) {
+    for (const auto& roll: getRPCGeometry()->chamber(id)->rolls()) {
       int max_nstrips = roll->nstrips();
-      for (auto& h: hitsInDetId(roll->id().rawId())) {
-        LocalPoint lp = h.entryPoint();
+      for (const auto& h: hitsInDetId(roll->id().rawId())) {
+        const LocalPoint& lp = h.entryPoint();
         // check how the RPC strip numbers start counting - Ask Piet!!!
         int central_strip = static_cast<int>(roll->topology().channel(lp));
         // int central_strip2 = 1 + static_cast<int>(getRPCGeometry()->roll(id)->strip(lp));
@@ -1471,7 +1470,7 @@ SimHitMatcher::hitWiregroupsInDetId(unsigned int detid, int margin_n_wg) const
     CSCDetId id(detid);
     int max_n_wg = getCSCGeometry()->layer(id)->geometry()->numberOfWireGroups();
     for (auto& h: simhits) {
-      LocalPoint lp = h.entryPoint();
+      const LocalPoint& lp = h.entryPoint();
       auto layer_geo = getCSCGeometry()->layer(id)->geometry();
       int central_wg = layer_geo->wireGroup(layer_geo->nearestWire(lp));
       int wg_min = central_wg - margin_n_wg;
@@ -1513,16 +1512,16 @@ SimHitMatcher::hitWiresInDTLayerId(unsigned int detid, int margin_n_wires) const
     for (int wn = 0; wn <= max_nwires; ++wn) {
       DTWireId wid(id,wn);
       for (auto& h: hitsInDetId(wid.rawId())) {
-	if (verboseDT_) cout << "central DTWireId "<< wid << " simhit " <<h<< endl;
-	int smin = wn - margin_n_wires;
-	smin = (smin > 0) ? smin : 1;
-	int smax = wn + margin_n_wires;
-	smax = (smax <= max_nwires) ? smax : max_nwires;
-	for (int ss = smin; ss <= smax; ++ss) {
-	  DTWireId widd(id, ss);
-	  if (verboseDT_) cout << "\tadding DTWireId to collection "<< widd << endl;
-	  result.insert(widd.rawId());
-	}
+        if (verboseDT_) cout << "central DTWireId "<< wid << " simhit " <<h<< endl;
+        int smin = wn - margin_n_wires;
+        smin = (smin > 0) ? smin : 1;
+        int smax = wn + margin_n_wires;
+        smax = (smax <= max_nwires) ? smax : max_nwires;
+        for (int ss = smin; ss <= smax; ++ss) {
+          DTWireId widd(id, ss);
+          if (verboseDT_) cout << "\tadding DTWireId to collection "<< widd << endl;
+          result.insert(widd.rawId());
+        }
       }
     }
   }
@@ -1637,37 +1636,37 @@ SimHitMatcher::chamberIdsCSCStation(int station) const
   set<unsigned int> result;
   switch(station){
   case 1: {
-    auto p1(chamberIdsCSC(CSC_ME1a));
-    auto p2(chamberIdsCSC(CSC_ME1b));
-      auto p3(chamberIdsCSC(CSC_ME12));
-      auto p4(chamberIdsCSC(CSC_ME13));
-      result.insert(p1.begin(),p1.end());
-      result.insert(p2.begin(),p2.end());
-      result.insert(p3.begin(),p3.end());
-      result.insert(p4.begin(),p4.end());
-  }
-    break;
-  case 2: {
-    auto p1(chamberIdsCSC(CSC_ME21));
-    auto p2(chamberIdsCSC(CSC_ME22));
+    const auto& p1(chamberIdsCSC(CSC_ME1a));
+    const auto& p2(chamberIdsCSC(CSC_ME1b));
+    const auto& p3(chamberIdsCSC(CSC_ME12));
+    const auto& p4(chamberIdsCSC(CSC_ME13));
     result.insert(p1.begin(),p1.end());
-      result.insert(p2.begin(),p2.end());
-  }
+    result.insert(p2.begin(),p2.end());
+    result.insert(p3.begin(),p3.end());
+    result.insert(p4.begin(),p4.end());
     break;
+  }
+  case 2: {
+    const auto& p1(chamberIdsCSC(CSC_ME21));
+    const auto& p2(chamberIdsCSC(CSC_ME22));
+    result.insert(p1.begin(),p1.end());
+    result.insert(p2.begin(),p2.end());
+    break;
+  }
   case 3: {
-      auto p1(chamberIdsCSC(CSC_ME31));
-      auto p2(chamberIdsCSC(CSC_ME32));
-      result.insert(p1.begin(),p1.end());
-      result.insert(p2.begin(),p2.end());
-  }
+    const auto& p1(chamberIdsCSC(CSC_ME31));
+    const auto& p2(chamberIdsCSC(CSC_ME32));
+    result.insert(p1.begin(),p1.end());
+    result.insert(p2.begin(),p2.end());
     break;
-  case 4: {
-    auto p1(chamberIdsCSC(CSC_ME41));
-      auto p2(chamberIdsCSC(CSC_ME42));
-      result.insert(p1.begin(),p1.end());
-      result.insert(p2.begin(),p2.end());
   }
-      break;
+  case 4: {
+    const auto& p1(chamberIdsCSC(CSC_ME41));
+    const auto& p2(chamberIdsCSC(CSC_ME42));
+    result.insert(p1.begin(),p1.end());
+    result.insert(p2.begin(),p2.end());
+    break;
+  }
   };
   return result;
 }
@@ -1679,57 +1678,94 @@ SimHitMatcher::chamberIdsDTStation(int station) const
   set<unsigned int> result;
   switch(station){
   case 1: {
-    auto p1(chamberIdsDT(DT_MB21p));
-    auto p2(chamberIdsDT(DT_MB11p));
-    auto p3(chamberIdsDT(DT_MB01));
-    auto p4(chamberIdsDT(DT_MB11n));
-    auto p5(chamberIdsDT(DT_MB21n));
+    const auto& p1(chamberIdsDT(DT_MB21p));
+    const auto& p2(chamberIdsDT(DT_MB11p));
+    const auto& p3(chamberIdsDT(DT_MB01));
+    const auto& p4(chamberIdsDT(DT_MB11n));
+    const auto& p5(chamberIdsDT(DT_MB21n));
     result.insert(p1.begin(),p1.end());
     result.insert(p2.begin(),p2.end());
     result.insert(p3.begin(),p3.end());
     result.insert(p4.begin(),p4.end());
     result.insert(p5.begin(),p5.end());
-  }
     break;
+  }
   case 2: {
-    auto p1(chamberIdsDT(DT_MB22p));
-    auto p2(chamberIdsDT(DT_MB12p));
-    auto p3(chamberIdsDT(DT_MB02));
-    auto p4(chamberIdsDT(DT_MB12n));
-    auto p5(chamberIdsDT(DT_MB22n));
+    const auto& p1(chamberIdsDT(DT_MB22p));
+    const auto& p2(chamberIdsDT(DT_MB12p));
+    const auto& p3(chamberIdsDT(DT_MB02));
+    const auto& p4(chamberIdsDT(DT_MB12n));
+    const auto& p5(chamberIdsDT(DT_MB22n));
     result.insert(p1.begin(),p1.end());
     result.insert(p2.begin(),p2.end());
     result.insert(p3.begin(),p3.end());
     result.insert(p4.begin(),p4.end());
     result.insert(p5.begin(),p5.end());
-  }
     break;
+  }
   case 3: {
-    auto p1(chamberIdsDT(DT_MB23p));
-    auto p2(chamberIdsDT(DT_MB13p));
-    auto p3(chamberIdsDT(DT_MB03));
-    auto p4(chamberIdsDT(DT_MB13n));
-    auto p5(chamberIdsDT(DT_MB23n));
+    const auto& p1(chamberIdsDT(DT_MB23p));
+    const auto& p2(chamberIdsDT(DT_MB13p));
+    const auto& p3(chamberIdsDT(DT_MB03));
+    const auto& p4(chamberIdsDT(DT_MB13n));
+    const auto& p5(chamberIdsDT(DT_MB23n));
     result.insert(p1.begin(),p1.end());
     result.insert(p2.begin(),p2.end());
     result.insert(p3.begin(),p3.end());
     result.insert(p4.begin(),p4.end());
     result.insert(p5.begin(),p5.end());
-  }
     break;
+  }
   case 4: {
-    auto p1(chamberIdsDT(DT_MB24p));
-    auto p2(chamberIdsDT(DT_MB14p));
-    auto p3(chamberIdsDT(DT_MB04));
-    auto p4(chamberIdsDT(DT_MB14n));
-    auto p5(chamberIdsDT(DT_MB24n));
+    const auto& p1(chamberIdsDT(DT_MB24p));
+    const auto& p2(chamberIdsDT(DT_MB14p));
+    const auto& p3(chamberIdsDT(DT_MB04));
+    const auto& p4(chamberIdsDT(DT_MB14n));
+    const auto& p5(chamberIdsDT(DT_MB24n));
     result.insert(p1.begin(),p1.end());
     result.insert(p2.begin(),p2.end());
     result.insert(p3.begin(),p3.end());
     result.insert(p4.begin(),p4.end());
     result.insert(p5.begin(),p5.end());
-  }
     break;
+  }
   };
   return result;
+}
+
+GlobalPoint
+SimHitMatcher::simHitsMeanPositionSecondStation() const
+{
+  // get the mean position in CSC
+  edm::PSimHitContainer cscHits;
+  const auto& cscIds(chamberIdsCSCStation(2));
+  for (const auto& p1 : cscIds){
+    const auto& hits = hitsInChamber(p1);
+    cscHits.insert(cscHits.end(), hits.begin(), hits.end());
+  }
+  const GlobalPoint& cscgp = simHitsMeanPosition(cscHits);
+
+  edm::PSimHitContainer dtHits;
+  const auto& dtIds(chamberIdsDTStation(2));
+  for (const auto& p1 : dtIds){
+    const auto& hits = hitsInChamber(p1);
+    dtHits.insert(dtHits.end(), hits.begin(), hits.end());
+  }
+  const GlobalPoint& dtgp = simHitsMeanPosition(dtHits);
+
+  // get the average
+  if (cscgp == GlobalPoint() and
+      dtgp == GlobalPoint()) return GlobalPoint();
+  if (!(cscgp == GlobalPoint()) and
+      dtgp == GlobalPoint()) return cscgp;
+  if (cscgp == GlobalPoint() and
+      !(dtgp == GlobalPoint())) return dtgp;
+
+  GlobalPoint average;
+  float x, y, z;
+  x = (cscgp.x() + dtgp.x())/2.;
+  y = (cscgp.y() + dtgp.y())/2.;
+  z = (cscgp.z() + dtgp.z())/2.;
+
+  return GlobalPoint(x,y,z);
 }

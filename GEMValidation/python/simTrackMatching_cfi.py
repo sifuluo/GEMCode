@@ -458,6 +458,11 @@ SimTrackMatching = cms.PSet(
         run = cms.bool(True),
         validInputTags = cms.InputTag("TTTracksFromTracklet","Level1TTTracks"),
     ),
+    l1tkmuon = cms.PSet(
+        verbose = cms.int32(1),
+        run = cms.bool(True),
+        validInputTags = cms.InputTag("L1TkMuons"),
+    ),
     ## HLT Tracks
     recoTrackExtra = cms.PSet(
         verbose = cms.int32(0),

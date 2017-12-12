@@ -19,23 +19,25 @@ typedef std::vector< L1TTTrackType > L1TTTrackCollectionType;
 class UpgradeL1TrackMatcher : public BaseMatcher
 {
  public:
+
   /// constructor
   UpgradeL1TrackMatcher(
       UpgradeL1MuMatcher&,
       edm::EDGetTokenT<L1TTTrackCollectionType>&,
       edm::EDGetTokenT<l1t::L1TkMuonParticleCollection>&);
+
   /// destructor
   ~UpgradeL1TrackMatcher();
 
-  TTTrack< Ref_Phase2TrackerDigi_ >* bestL1Track() const { return bestTrack_; }
+  L1TTTrackType* bestL1Track() const { return bestTrack_; }
   l1t::L1TkMuonParticle* bestTrackMuon() const { return bestTrackMuon_; }
 
  private:
 
   void clear();
 
-  /* void matchL1TrackToSimTrack(const l1t::EMTFTrackCollection&); */
-  /* void matchTrackMuonToSimTrack(const l1t::L1TkMuonParticleCollection&); */
+  void matchL1TrackToSimTrack(const L1TTTrackCollectionType&);
+  void matchTrackMuonToSimTrack(const l1t::L1TkMuonParticleCollection&);
 
   int minBXTrack_, maxBXTrack_;
   int verboseTrack_;
@@ -45,7 +47,7 @@ class UpgradeL1TrackMatcher : public BaseMatcher
   int verboseTrackMuon_;
   double deltaRTrackMuon_;
 
-  TTTrack< Ref_Phase2TrackerDigi_ >* bestTrack_;
+  L1TTTrackType* bestTrack_;
   l1t::L1TkMuonParticle* bestTrackMuon_;
   UpgradeL1MuMatcher* matcher_;
 };

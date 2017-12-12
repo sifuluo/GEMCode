@@ -127,13 +127,13 @@ void UpgradeL1MuMatcher::matchRegionalMuonCandToSimTrack(const BXVector<l1t::Reg
   mindRRegMuCand = deltaRRegMuCand_;
   for (int bx = regMuCands.getFirstBX(); bx <= regMuCands.getLastBX(); bx++ ){
     if ( bx < minBXRegMuCand_ or bx > maxBXRegMuCand_) continue;
-    for (std::vector<l1t::RegionalMuonCand>::const_iterator cand = regMuCands.begin(bx); cand != regMuCands.end(bx); ++cand ){
+    for (auto cand = regMuCands.begin(bx); cand != regMuCands.end(bx); ++cand ){
       TFCand *L1Mu = new TFCand(&(*cand));
       L1Mu->setBx(bx);
       float pt = L1Mu->pt();
       float phi = L1Mu->phi_local() ;
       float eta = L1Mu->eta();
-      for (auto trk : tfTracks_){
+      for (const auto& trk : tfTracks_){
         float dR = deltaR(trk->eta(), trk->phi_local(), eta, phi);
         float dPtRel = std::fabs(trk->pt() - pt)/pt;
         if (dR < deltaRRegMuCand_ and dPtRel < mindPtRel){
@@ -147,7 +147,7 @@ void UpgradeL1MuMatcher::matchRegionalMuonCandToSimTrack(const BXVector<l1t::Reg
         L1Mu->print();
     }
   }
-  for (auto cand : regMuCands_){
+  for (const auto& cand : regMuCands_){
     float phi = cand->phi_local();
     float eta = cand->eta();
     float dR = deltaR(bestTrack->eta(), bestTrack->phi_local(), eta, phi);
@@ -168,7 +168,7 @@ void UpgradeL1MuMatcher::matchGMTToSimTrack(const BXVector<l1t::Muon>& gmtCands)
   mindRGMT = deltaRGMT_;
   for (int bx = gmtCands.getFirstBX(); bx <= gmtCands.getLastBX(); bx++ ){
     if ( bx < minBXGMT_ or bx > maxBXGMT_) continue;
-    for (std::vector<l1t::Muon>::const_iterator cand = gmtCands.begin(bx); cand != gmtCands.end(bx); ++cand ){
+    for (auto cand = gmtCands.begin(bx); cand != gmtCands.end(bx); ++cand ){
       TFCand *L1Mu = new TFCand(&(*cand));
       L1Mu->setBx(bx);
       float pt = L1Mu->pt();
@@ -187,7 +187,7 @@ void UpgradeL1MuMatcher::matchGMTToSimTrack(const BXVector<l1t::Muon>& gmtCands)
         L1Mu->print();
     }
   }
-  for (auto cand : gmts_){
+  for (const auto& cand : gmts_){
     float phi = cand->phi();
     float eta = cand->eta();
     float dR = deltaR(bestTrack->eta(), bestTrack->phi(), eta, phi);
