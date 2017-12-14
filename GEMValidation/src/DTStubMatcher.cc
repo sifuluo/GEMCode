@@ -8,7 +8,7 @@ using namespace std;
 DTStubMatcher::DTStubMatcher(SimHitMatcher& sh, edm::EDGetTokenT<DTLocalTriggerCollection>& input_)
 : DigiMatcher(sh)
 {
-  auto dtStub_= conf().getParameter<edm::ParameterSet>("dtLocalTrigger");
+  const auto& dtStub_= conf().getParameter<edm::ParameterSet>("dtLocalTrigger");
   minBX_ = dtStub_.getParameter<int>("minBX");
   maxBX_ = dtStub_.getParameter<int>("maxBX");
   verbose_ = dtStub_.getParameter<int>("verbose");
@@ -26,13 +26,13 @@ DTStubMatcher::~DTStubMatcher() {}
 void
 DTStubMatcher::matchDTLocalTriggersToSimTrack(const DTLocalTriggerCollection& stubs)
 {
-  auto det_ids = simhit_matcher_->chamberIdsDT();
-  for (auto id: det_ids)
+  const auto& det_ids = simhit_matcher_->chamberIdsDT();
+  for (const auto& id: det_ids)
   {
     const DTChamberId c_id(id);
 
     // get stubs in this layer
-    auto stubs_in_det = stubs.get(c_id);
+    const auto& stubs_in_det = stubs.get(c_id);
 
     for (auto d = stubs_in_det.first; d != stubs_in_det.second; ++d)
     {
@@ -52,9 +52,9 @@ std::set<unsigned int>
 DTStubMatcher::selectDetIds(const std::map<unsigned int, DTStubMatcher::DTLocalTriggerContainer>&stubs, int dt_type) const
 {
   std::set<unsigned int> result;
-  for (auto& p: stubs)
+  for (const auto& p: stubs)
   {
-    auto id = p.first;
+    const auto& id = p.first;
     if (dt_type > 0)
     {
       DTChamberId detId(id);

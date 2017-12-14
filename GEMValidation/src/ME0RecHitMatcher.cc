@@ -10,13 +10,13 @@ ME0RecHitMatcher::ME0RecHitMatcher(ME0DigiMatcher& dg,
   : BaseMatcher(dg.trk(), dg.vtx(), dg.conf(), dg.event(), dg.eventSetup())
   , digi_matcher_(&dg)
 {
-  auto me0RecHit = conf().getParameter<edm::ParameterSet>("me0RecHit");
+  const auto& me0RecHit = conf().getParameter<edm::ParameterSet>("me0RecHit");
   maxBXME0RecHit_ = me0RecHit.getParameter<int>("maxBX");
   minBXME0RecHit_ = me0RecHit.getParameter<int>("minBX");
   verboseME0RecHit_ = me0RecHit.getParameter<int>("verbose");
   runME0RecHit_ = me0RecHit.getParameter<bool>("run");
 
-  auto me0Segment = conf().getParameter<edm::ParameterSet>("me0Segment");
+  const auto& me0Segment = conf().getParameter<edm::ParameterSet>("me0Segment");
   maxBXME0Segment_ = me0Segment.getParameter<int>("maxBX");
   minBXME0Segment_ = me0Segment.getParameter<int>("minBX");
   verboseME0Segment_ = me0Segment.getParameter<int>("verbose");
@@ -42,14 +42,14 @@ ME0RecHitMatcher::matchME0RecHitsToSimTrack(const ME0RecHitCollection& rechits)
 {
   if (verboseME0RecHit_) cout << "Matching simtrack to ME0 rechits" << endl;
   // fetch all detIds with digis
-  auto layer_ids = digi_matcher_->detIds();
+  const auto& layer_ids = digi_matcher_->detIds();
   if (verboseME0RecHit_) cout << "Number of matched me0 layer_ids " << layer_ids.size() << endl;
 
-  for (auto id: layer_ids) {
+  for (const auto& id: layer_ids) {
     ME0DetId p_id(id);
 
     // get the rechits
-    auto rechits_in_det = rechits.get(p_id);
+    const auto& rechits_in_det = rechits.get(p_id);
     for (auto rr = rechits_in_det.first; rr != rechits_in_det.second; ++rr) {
 
       // check that the rechit is within BX range
@@ -88,31 +88,31 @@ ME0RecHitMatcher::matchME0SegmentsToSimTrack(const ME0SegmentCollection& me0Segm
   if (verboseME0Segment_) cout << "Matching simtrack to segments" << endl;
   if (verboseME0Segment_)  dumpAllME0Segments(me0Segments);
   // fetch all chamberIds with digis
-  auto chamber_ids = digi_matcher_->superChamberIds();
+  const auto& chamber_ids = digi_matcher_->superChamberIds();
   if (verboseME0Segment_) cout << "Number of matched me0 segments " << chamber_ids.size() << endl;
-  for (auto id: chamber_ids) {
+  for (const auto& id: chamber_ids) {
     ME0DetId p_id(id);
 
     // print all ME0RecHit in the ME0SuperChamber
-    auto me0_rechits(me0RecHitsInSuperChamber(id));
+    const auto& me0_rechits(me0RecHitsInSuperChamber(id));
     if (verboseME0Segment_) {
       cout<<"hit me0 rechits" <<endl;
-      for (auto rh: me0_rechits) cout << "\t"<< rh.me0Id() <<" "<< rh << endl;
+      for (const auto& rh: me0_rechits) cout << "\t"<< rh.me0Id() <<" "<< rh << endl;
       cout<<endl;
     }
 
     // get the segments
     bool FoundME0Segment = false;
-    auto segments_in_det = me0Segments.get(p_id);
+    const auto& segments_in_det = me0Segments.get(p_id);
     for (auto d = segments_in_det.first; d != segments_in_det.second; ++d) {
       if (verboseME0Segment_) cout<<"segment "<<p_id<<" "<<*d  <<endl;
 
       //access the rechits
-      auto recHits(d->recHits());
+      const auto& recHits(d->recHits());
 
       int rechitsFound = 0;
       if (verboseME0Segment_) cout << "\t has " << recHits.size() << " me0 rechits"<<endl;
-      for (auto& rh: recHits) {
+      for (const auto& rh: recHits) {
         const ME0RecHit* me0rh(dynamic_cast<const ME0RecHit*>(rh));
         if (verboseME0Segment_) cout << "Candidate rechit " << *me0rh << endl;
        	if (isME0RecHitMatched(*me0rh)) {
@@ -131,41 +131,41 @@ ME0RecHitMatcher::matchME0SegmentsToSimTrack(const ME0SegmentCollection& me0Segm
     if ((not(FoundME0Segment) and nLayersWithRecHitsInSuperChamber(id)>= minNHitsSegment_)){
 	  cout <<"Failed to find Segment "<< endl;
 	  cout<<"Matched nlayer  "<< nLayersWithRecHitsInSuperChamber(id) <<" hit me0 rechits" <<endl;
-	  for (auto rh: me0_rechits) cout << "\t"<< rh.me0Id() <<" "<< rh << endl;
+	  for (const auto& rh: me0_rechits) cout << "\t"<< rh.me0Id() <<" "<< rh << endl;
 	  cout<<endl;
     }
   }
 
-  for (auto& p : superChamber_to_me0Segment_)
+  for (const auto& p : superChamber_to_me0Segment_)
     superChamber_to_bestME0Segment_[ p.first] = findbestME0Segment(p.second);
 }
 
 void
 ME0RecHitMatcher::matchME0SegmentsToSimTrackBydR(const ME0SegmentCollection& segments)
 {
-    if (verboseME0Segment_) cout <<"\t matchME0SegmentsToSimTrackBydR "<< endl;
-    if (verboseME0Segment_) dumpAllME0Segments( segments );
-    const int endcap((trk().momentum().eta() > 0.) ? 1 : -1);
-    GlobalPoint gp_propagated(propagateToZ(AVERAGE_ME0_Z*endcap));
-    for(auto iC = segments.id_begin(); iC != segments.id_end(); ++iC){
-	auto ch_segs = segments.get(*iC);
-	for(auto iS = ch_segs.first; iS != ch_segs.second; ++iS){
-	    GlobalPoint gpME0(globalPoint(*iS));
-	    if (verboseME0Segment_)
-		cout <<"ME0Detid "<< iS->me0DetId()<<" segment "<< *iS << std::endl;
-	    if (verboseME0Segment_)
-		cout <<"gp_propagated eta "<< gp_propagated.eta() <<" phi "<< gp_propagated.phi() <<" gpME0 eta "<< gpME0.eta()<<" phi "<< gpME0.phi() << endl;
-	    float dPhi = gpME0.phi()- gp_propagated.phi();
-	    float dEta = gpME0.eta() - gp_propagated.eta();
-	    float dR = std::sqrt(dPhi*dPhi + dEta*dEta);
-	    if (dR < 0.4){
-		if (verboseME0Segment_) cout << "\t matched "<< endl;
-		superChamber_to_me0Segment_bydR_[ iS->me0DetId().rawId() ].push_back(*iS);
-	    }
-        }
+  if (verboseME0Segment_) cout <<"\t matchME0SegmentsToSimTrackBydR "<< endl;
+  if (verboseME0Segment_) dumpAllME0Segments( segments );
+  const int endcap((trk().momentum().eta() > 0.) ? 1 : -1);
+  GlobalPoint gp_propagated(propagateToZ(AVERAGE_ME0_Z*endcap));
+  for(auto iC = segments.id_begin(); iC != segments.id_end(); ++iC){
+    const auto& ch_segs = segments.get(*iC);
+    for(auto iS = ch_segs.first; iS != ch_segs.second; ++iS){
+      const GlobalPoint& gpME0(globalPoint(*iS));
+      if (verboseME0Segment_)
+        cout <<"ME0Detid "<< iS->me0DetId()<<" segment "<< *iS << std::endl;
+      if (verboseME0Segment_)
+        cout <<"gp_propagated eta "<< gp_propagated.eta() <<" phi "<< gp_propagated.phi() <<" gpME0 eta "<< gpME0.eta()<<" phi "<< gpME0.phi() << endl;
+      float dPhi = gpME0.phi()- gp_propagated.phi();
+      float dEta = gpME0.eta() - gp_propagated.eta();
+      float dR = std::sqrt(dPhi*dPhi + dEta*dEta);
+      if (dR < 0.4){
+        if (verboseME0Segment_) cout << "\t matched "<< endl;
+        superChamber_to_me0Segment_bydR_[ iS->me0DetId().rawId() ].push_back(*iS);
+      }
     }
+  }
 
-  for (auto& p : superChamber_to_me0Segment_bydR_)
+  for (const auto& p : superChamber_to_me0Segment_bydR_)
     superChamber_to_bestME0Segment_bydR_[ p.first] = findbestME0Segment_bydR(p.second, gp_propagated);
 
 }
@@ -174,26 +174,25 @@ void ME0RecHitMatcher::dumpAllME0Segments(const ME0SegmentCollection& segments) 
 {
     cout <<"dumpt all ME0 Segments" << endl;
     for(auto iC = segments.id_begin(); iC != segments.id_end(); ++iC){
-	auto ch_segs = segments.get(*iC);
-	for(auto iS = ch_segs.first; iS != ch_segs.second; ++iS){
-	    GlobalPoint gpME0(globalPoint(*iS));
-	    cout <<"ME0Detid "<< iS->me0DetId()<<" segment "<< *iS <<" gp eta "<< gpME0.eta() <<" phi "<< gpME0.phi() << std::endl;
-	    auto recHits(iS->recHits());
-	    cout << "\t has " << recHits.size() << " me0 rechits"<<endl;
-            for (auto& rh: recHits) {
-	       const ME0RecHit* me0rh(dynamic_cast<const ME0RecHit*>(rh));
-	       cout <<"detid "<< me0rh->me0Id()<<" rechit "<< *me0rh << endl;
-	    }
+      const auto& ch_segs = segments.get(*iC);
+      for(auto iS = ch_segs.first; iS != ch_segs.second; ++iS){
+        const GlobalPoint& gpME0(globalPoint(*iS));
+        cout <<"ME0Detid "<< iS->me0DetId()<<" segment "<< *iS <<" gp eta "<< gpME0.eta() <<" phi "<< gpME0.phi() << std::endl;
+        const auto& recHits(iS->recHits());
+        cout << "\t has " << recHits.size() << " me0 rechits"<<endl;
+        for (const auto& rh: recHits) {
+          const ME0RecHit* me0rh(dynamic_cast<const ME0RecHit*>(rh));
+          cout <<"detid "<< me0rh->me0Id()<<" rechit "<< *me0rh << endl;
         }
+      }
     }
-
 }
 
 std::set<unsigned int>
 ME0RecHitMatcher::chamberIdsME0RecHit() const
 {
   std::set<unsigned int> result;
-  for (auto& p: chamber_to_me0RecHit_) result.insert(p.first);
+  for (const auto& p: chamber_to_me0RecHit_) result.insert(p.first);
   return result;
 }
 
@@ -202,7 +201,7 @@ std::set<unsigned int>
 ME0RecHitMatcher::superChamberIdsME0RecHit() const
 {
   std::set<unsigned int> result;
-  for (auto& p: superChamber_to_me0RecHit_) result.insert(p.first);
+  for (const auto& p: superChamber_to_me0RecHit_) result.insert(p.first);
   return result;
 }
 
@@ -211,7 +210,7 @@ std::set<unsigned int>
 ME0RecHitMatcher::superChamberIdsME0Segment() const
 {
   std::set<unsigned int> result;
-  for (auto& p: superChamber_to_me0Segment_) result.insert(p.first);
+  for (const auto& p: superChamber_to_me0Segment_) result.insert(p.first);
   return result;
 }
 
@@ -219,7 +218,7 @@ std::set<unsigned int>
 ME0RecHitMatcher::superChamberIdsME0Segment_bydR() const
 {
   std::set<unsigned int> result;
-  for (auto& p: superChamber_to_me0Segment_bydR_) result.insert(p.first);
+  for (const auto& p: superChamber_to_me0Segment_bydR_) result.insert(p.first);
   return result;
 }
 
@@ -286,8 +285,8 @@ const ME0RecHitMatcher::ME0RecHitContainer
 ME0RecHitMatcher::me0RecHits() const
 {
   ME0RecHitMatcher::ME0RecHitContainer result;
-  for (auto id: superChamberIdsME0RecHit()){
-    auto segmentsInSuperChamber(me0RecHitsInSuperChamber(id));
+  for (const auto& id: superChamberIdsME0RecHit()){
+    const auto& segmentsInSuperChamber(me0RecHitsInSuperChamber(id));
     result.insert(result.end(), segmentsInSuperChamber.begin(), segmentsInSuperChamber.end());
   }
   return result;
@@ -298,8 +297,8 @@ const ME0RecHitMatcher::ME0SegmentContainer
 ME0RecHitMatcher::me0Segments() const
 {
   ME0RecHitMatcher::ME0SegmentContainer result;
-  for (auto id: superChamberIdsME0Segment()){
-    auto segmentsInSuperChamber(me0SegmentsInSuperChamber(id));
+  for (const auto& id: superChamberIdsME0Segment()){
+    const auto& segmentsInSuperChamber(me0SegmentsInSuperChamber(id));
     result.insert(result.end(), segmentsInSuperChamber.begin(), segmentsInSuperChamber.end());
   }
   return result;
@@ -309,8 +308,8 @@ const ME0RecHitMatcher::ME0SegmentContainer
 ME0RecHitMatcher::me0Segments_bydR() const
 {
   ME0RecHitMatcher::ME0SegmentContainer result;
-  for (auto id: superChamberIdsME0Segment_bydR()){
-    auto segmentsInSuperChamber(me0SegmentsInSuperChamber_bydR(id));
+  for (const auto& id: superChamberIdsME0Segment_bydR()){
+    const auto& segmentsInSuperChamber(me0SegmentsInSuperChamber_bydR(id));
     result.insert(result.end(), segmentsInSuperChamber.begin(), segmentsInSuperChamber.end());
   }
   return result;
@@ -320,7 +319,7 @@ bool
 ME0RecHitMatcher::me0RecHitInContainer(const ME0RecHit& rh, const ME0RecHitContainer& c) const
 {
   bool isSame = false;
-  for (auto& rechit: c) if (areME0RecHitsSame(rh,rechit)) isSame = true;
+  for (const auto& rechit: c) if (areME0RecHitsSame(rh,rechit)) isSame = true;
   return isSame;
 }
 
@@ -329,7 +328,7 @@ bool
 ME0RecHitMatcher::me0SegmentInContainer(const ME0Segment& sg, const ME0SegmentContainer& c) const
 {
   bool isSame = false;
-  for (auto& segment: c) if (areME0SegmentsSame(sg,segment)) isSame = true;
+  for (const auto& segment: c) if (areME0SegmentsSame(sg,segment)) isSame = true;
   return isSame;
 }
 
@@ -352,8 +351,8 @@ int
 ME0RecHitMatcher::nME0RecHits() const
 {
   int n = 0;
-  auto ids = superChamberIdsME0RecHit();
-  for (auto id: ids) n += me0RecHitsInSuperChamber(id).size();
+  const auto& ids = superChamberIdsME0RecHit();
+  for (const auto& id: ids) n += me0RecHitsInSuperChamber(id).size();
   return n;
 }
 
@@ -362,8 +361,8 @@ int
 ME0RecHitMatcher::nME0Segments() const
 {
   int n = 0;
-  auto ids = superChamberIdsME0Segment();
-  for (auto id: ids) n += me0SegmentsInSuperChamber(id).size();
+  const auto& ids = superChamberIdsME0Segment();
+  for (const auto& id: ids) n += me0SegmentsInSuperChamber(id).size();
   return n;
 }
 
@@ -393,7 +392,7 @@ ME0RecHitMatcher::nLayersWithRecHitsInSuperChamber(unsigned int detid) const
   ME0DetId sch_id(detid);
   for (int iLayer=1; iLayer<=6; iLayer++){
     ME0DetId ch_id(sch_id.region(), iLayer, sch_id.chamber(), 0);
-    auto rechits = me0RecHitsInChamber(ch_id.rawId());
+    const auto& rechits = me0RecHitsInChamber(ch_id.rawId());
     if (rechits.size()>0){
       layers.insert(iLayer);
     }
@@ -424,7 +423,7 @@ ME0RecHitMatcher::findbestME0Segment(ME0SegmentContainer allSegs) const
   ME0Segment bestSegment;
   double chi2overNdf = 99;
 
-  for (auto& seg: allSegs){
+  for (const auto& seg: allSegs){
     double newChi2overNdf(seg.chi2()/seg.degreesOfFreedom());
     if (newChi2overNdf < chi2overNdf) {
       chi2overNdf = newChi2overNdf;
@@ -440,8 +439,8 @@ ME0RecHitMatcher::findbestME0Segment_bydR(ME0SegmentContainer allSegs, GlobalPoi
   ME0Segment bestSegment;
   float mindR = 0.4;
 
-  for (auto& seg: allSegs){
-    GlobalPoint gpME0(globalPoint(seg));
+  for (const auto& seg: allSegs){
+    const GlobalPoint& gpME0(globalPoint(seg));
     cout <<"gp_propagated eta "<< gp_propagated.eta() <<" phi "<< gp_propagated.phi() <<" gpME0 eta "<< gpME0.eta()<<" phi "<< gpME0.phi() << endl;
     float dPhi = gpME0.phi()- gp_propagated.phi();
     float dEta = gpME0.eta() - gp_propagated.eta();
@@ -464,7 +463,7 @@ ME0RecHitMatcher::globalPoint(const ME0Segment& c) const
 float
 ME0RecHitMatcher::me0DeltaPhi(ME0Segment Seg) const
 {
-  auto chamber = getME0Geometry()->chamber(Seg.me0DetId());
+  const auto& chamber = getME0Geometry()->chamber(Seg.me0DetId());
   float dPhi = chamber->computeDeltaPhi(Seg.localPosition(), Seg.localDirection());
   //std::cout <<"ME0detId "<< Seg.me0DetId()<<" Segment "<< Seg <<" dPhi here "<< dPhi << std::endl;
   return dPhi;

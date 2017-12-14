@@ -9,9 +9,9 @@ using namespace matching;
 
 
 CSCStubMatcher::CSCStubMatcher(SimHitMatcher& sh, CSCDigiMatcher& dg, GEMDigiMatcher& gem_dg, RPCDigiMatcher& rpc_dg,
-                               edm::EDGetTokenT<CSCCLCTDigiCollection>& clctInputs_, 
-                               edm::EDGetTokenT<CSCALCTDigiCollection>& alctInputs_, 
-                               edm::EDGetTokenT<CSCCorrelatedLCTDigiCollection>& lctInputs_, 
+                               edm::EDGetTokenT<CSCCLCTDigiCollection>& clctInputs_,
+                               edm::EDGetTokenT<CSCALCTDigiCollection>& alctInputs_,
+                               edm::EDGetTokenT<CSCCorrelatedLCTDigiCollection>& lctInputs_,
                                edm::EDGetTokenT<CSCCorrelatedLCTDigiCollection>& mplctInputs_)
 : DigiMatcher(sh)
 , digi_matcher_(&dg)
@@ -19,21 +19,21 @@ CSCStubMatcher::CSCStubMatcher(SimHitMatcher& sh, CSCDigiMatcher& dg, GEMDigiMat
 , rpc_digi_matcher_(&rpc_dg)
 , sh_matcher_(&sh)
 {
-  auto cscCLCT_ = conf().getParameter<edm::ParameterSet>("cscCLCT");
+  const auto& cscCLCT_ = conf().getParameter<edm::ParameterSet>("cscCLCT");
   minBXCLCT_ = cscCLCT_.getParameter<int>("minBX");
   maxBXCLCT_ = cscCLCT_.getParameter<int>("maxBX");
   verboseCLCT_ = cscCLCT_.getParameter<int>("verbose");
   minNHitsChamberCLCT_ = cscCLCT_.getParameter<int>("minNHitsChamber");
   runCLCT_ = cscCLCT_.getParameter<bool>("run");
 
-  auto cscALCT_ = conf().getParameter<edm::ParameterSet>("cscALCT");
+  const auto& cscALCT_ = conf().getParameter<edm::ParameterSet>("cscALCT");
   minBXALCT_ = cscALCT_.getParameter<int>("minBX");
   maxBXALCT_ = cscALCT_.getParameter<int>("maxBX");
   verboseALCT_ = cscALCT_.getParameter<int>("verbose");
   minNHitsChamberALCT_ = cscALCT_.getParameter<int>("minNHitsChamber");
   runALCT_ = cscCLCT_.getParameter<bool>("run");
 
-  auto cscLCT_ = conf().getParameter<edm::ParameterSet>("cscLCT");
+  const auto& cscLCT_ = conf().getParameter<edm::ParameterSet>("cscLCT");
   minBXLCT_ = cscLCT_.getParameter<int>("minBX");
   maxBXLCT_ = cscLCT_.getParameter<int>("maxBX");
   verboseLCT_ = cscLCT_.getParameter<int>("verbose");
@@ -48,7 +48,7 @@ CSCStubMatcher::CSCStubMatcher(SimHitMatcher& sh, CSCDigiMatcher& dg, GEMDigiMat
   hsFromSimHitMean_ = cscLCT_.getParameter<bool>("hsFromSimHitMean");
   runLCT_ = cscLCT_.getParameter<bool>("run");
 
-  auto cscMPLCT_ = conf().getParameter<edm::ParameterSet>("cscMPLCT");
+  const auto& cscMPLCT_ = conf().getParameter<edm::ParameterSet>("cscMPLCT");
   minBXMPLCT_ = cscMPLCT_.getParameter<int>("minBX");
   maxBXMPLCT_ = cscMPLCT_.getParameter<int>("maxBX");
   verboseMPLCT_ = cscMPLCT_.getParameter<int>("verbose");
@@ -60,16 +60,16 @@ CSCStubMatcher::CSCStubMatcher(SimHitMatcher& sh, CSCDigiMatcher& dg, GEMDigiMat
 
   if (hasCSCGeometry_) {
     edm::Handle<CSCCLCTDigiCollection> clcts;
-    if (gemvalidation::getByToken(clctInputs_, clcts, event())) if (runCLCT_) matchCLCTsToSimTrack(*clcts.product());    
-    
+    if (gemvalidation::getByToken(clctInputs_, clcts, event())) if (runCLCT_) matchCLCTsToSimTrack(*clcts.product());
+
     edm::Handle<CSCALCTDigiCollection> alcts;
-    if (gemvalidation::getByToken(alctInputs_, alcts, event())) if (runALCT_) matchALCTsToSimTrack(*alcts.product());    
-    
+    if (gemvalidation::getByToken(alctInputs_, alcts, event())) if (runALCT_) matchALCTsToSimTrack(*alcts.product());
+
     edm::Handle<CSCCorrelatedLCTDigiCollection> lcts;
-    if (gemvalidation::getByToken(lctInputs_, lcts, event())) if (runLCT_) matchLCTsToSimTrack(*lcts.product());    
-    
+    if (gemvalidation::getByToken(lctInputs_, lcts, event())) if (runLCT_) matchLCTsToSimTrack(*lcts.product());
+
     edm::Handle<CSCCorrelatedLCTDigiCollection> mplcts;
-    if (gemvalidation::getByToken(mplctInputs_, mplcts, event())) if (runMPLCT_) matchMPLCTsToSimTrack(*mplcts.product());    
+    if (gemvalidation::getByToken(mplctInputs_, mplcts, event())) if (runMPLCT_) matchMPLCTsToSimTrack(*mplcts.product());
   }
 }
 
@@ -83,22 +83,22 @@ CSCStubMatcher::matchCLCTsToSimTrack(const CSCCLCTDigiCollection& clcts)
   // only look for stub in chambers that have digis matching to this track
   setVerbose(verboseCLCT_);
 
-  auto cathode_ids = digi_matcher_->chamberIdsStrip(0);
+  const auto& cathode_ids = digi_matcher_->chamberIdsStrip(0);
   int n_minLayers = 0;
-  for (auto id: cathode_ids)
+  for (const auto& id: cathode_ids)
   {
     CSCDetId ch_id(id);
     if (digi_matcher_->nLayersWithStripInChamber(id) >= minNHitsChamberCLCT_) ++n_minLayers;
 
     // fill 1 half-strip wide gaps
-    auto digi_strips = digi_matcher_->stripsInChamber(id, 1);
+    const auto& digi_strips = digi_matcher_->stripsInChamber(id, 1);
     if (verbose())
     {
       cout<<"clct: digi_strips "<<ch_id<<" ";
       copy(digi_strips.begin(), digi_strips.end(), ostream_iterator<int>(cout, " ")); cout<<endl;
     }
 
-    auto clcts_in_det = clcts.get(ch_id);
+    const auto& clcts_in_det = clcts.get(ch_id);
     for (auto c = clcts_in_det.first; c != clcts_in_det.second; ++c)
     {
       if (!c->isValid()) continue;
@@ -109,7 +109,7 @@ CSCStubMatcher::matchCLCTsToSimTrack(const CSCCLCTDigiCollection& clcts)
       if (c->getBX() < minBXCLCT_ || c->getBX() > maxBXCLCT_) continue;
 
       int half_strip = c->getKeyStrip() + 1; // CLCT halfstrip numbers start from 0
-      auto mydigi = make_digi(id, half_strip, c->getBX(), CSC_CLCT, c->getQuality(), c->getPattern());
+      const auto& mydigi = make_digi(id, half_strip, c->getBX(), CSC_CLCT, c->getQuality(), c->getPattern());
 
       // store all CLCTs in this chamber
       chamber_to_clcts_all_[id].push_back(mydigi);
@@ -132,7 +132,7 @@ CSCStubMatcher::matchCLCTsToSimTrack(const CSCCLCTDigiCollection& clcts)
       {
         //cout<<"WARNING!!! there already was matching CLCT "<<chamber_to_clct_[id]<<endl;
         //cout<<"   new digi: "<<mydigi<<endl;
-	//sh_matcher_.	
+	//sh_matcher_.
 	//GlobalPoint keygp(sh_matcher_.simHitPositionKeyLayer(id));
   	//LocalPoint csc_intersect = layer_geo->intersectionOfStripAndWire(fractional_strip, wire);
   	//GlobalPoint csc_gp = cscGeometry_->idToDet(key_id)->surface().toGlobal(csc_intersect);
@@ -169,7 +169,7 @@ CSCStubMatcher::matchCLCTsToSimTrack(const CSCCLCTDigiCollection& clcts)
       {
         CSCDetId id(it.first);
         if (useCSCChamberType(id.iChamberType())) continue;
-        auto clcts_in_det = clcts.get(id);
+        const auto& clcts_in_det = clcts.get(id);
         for (auto c = clcts_in_det.first; c != clcts_in_det.second; ++c)
         {
           if (!c->isValid()) continue;
@@ -188,34 +188,34 @@ CSCStubMatcher::matchALCTsToSimTrack(const CSCALCTDigiCollection& alcts)
   setVerbose(verboseALCT_);
   // only look for stub in chambers that have digis matching to this track
 
-  auto anode_ids = digi_matcher_->chamberIdsWire(0);
+  const auto& anode_ids = digi_matcher_->chamberIdsWire(0);
   int n_minLayers = 0;
-  for (auto id: anode_ids)
+  for (const auto& id: anode_ids)
   {
     if (digi_matcher_->nLayersWithWireInChamber(id) >= minNHitsChamberALCT_) ++n_minLayers;
     CSCDetId ch_id(id);
 
     // fill 1 WG wide gaps
-    auto digi_wgs = digi_matcher_->wiregroupsInChamber(id, 1);
+    const auto& digi_wgs = digi_matcher_->wiregroupsInChamber(id, 1);
     if (verbose())
     {
       cout<<"alct: digi_wgs "<<ch_id<<" ";
       copy(digi_wgs.begin(), digi_wgs.end(), ostream_iterator<int>(cout, " ")); cout<<endl;
     }
 
-    auto alcts_in_det = alcts.get(ch_id);
+    const auto& alcts_in_det = alcts.get(ch_id);
     for (auto a = alcts_in_det.first; a != alcts_in_det.second; ++a)
     {
       if (!a->isValid()) continue;
 
-      if (verbose()) 
+      if (verbose())
 	  cout<<"alct "<<ch_id<<" "<<*a<<endl;
 
       // check that the BX for stub wasn't too early or too late
       if (a->getBX() < minBXALCT_ || a->getBX() > maxBXALCT_) continue;
 
       int wg = a->getKeyWG() + 1; // as ALCT wiregroups numbers start from 0
-      auto mydigi = make_digi(id, wg, a->getBX(), CSC_ALCT, a->getQuality());
+      const auto& mydigi = make_digi(id, wg, a->getBX(), CSC_ALCT, a->getQuality());
 
       // store all ALCTs in this chamber
       chamber_to_alcts_all_[id].push_back(mydigi);
@@ -264,7 +264,7 @@ CSCStubMatcher::matchALCTsToSimTrack(const CSCALCTDigiCollection& alcts)
       {
         CSCDetId id(it.first);
         if (useCSCChamberType(id.iChamberType())) continue;
-        auto alcts_in_det = alcts.get(id);
+        const auto& alcts_in_det = alcts.get(id);
         for (auto a = alcts_in_det.first; a != alcts_in_det.second; ++a)
         {
           if (!a->isValid()) continue;
@@ -282,8 +282,8 @@ CSCStubMatcher::matchLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& lcts)
 {
   setVerbose(verboseLCT_);
   // only look for stubs in chambers that already have CLCT and ALCT
-  auto cathode_ids = chamberIdsAllCLCT(0);
-  auto anode_ids = chamberIdsAllALCT(0);
+  const auto& cathode_ids = chamberIdsAllCLCT(0);
+  const auto& anode_ids = chamberIdsAllALCT(0);
 
   std::set<int> cathode_and_anode_ids;
   std::set_union(
@@ -293,12 +293,12 @@ CSCStubMatcher::matchLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& lcts)
   );
 
   int n_minLayers = 0;
-  for (auto id: cathode_and_anode_ids)
+  for (const auto& id: cathode_and_anode_ids)
   {
     if (digi_matcher_->nLayersWithStripInChamber(id) >= minNHitsChamberCLCT_ and digi_matcher_->nLayersWithWireInChamber(id) >= minNHitsChamberALCT_) ++n_minLayers;
     CSCDetId ch_id(id);
 
-    auto lcts_in_det = lcts.get(ch_id);
+    const auto& lcts_in_det = lcts.get(ch_id);
     DigiContainer lcts_tmp;
     CSCCorrelatedLCTDigiContainer cscLcts_tmp;
     map<int, DigiContainer> bx_to_lcts;
@@ -320,7 +320,7 @@ CSCStubMatcher::matchLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& lcts)
       //float dphi = lct->getGEMDPhi();
       float dphi = -9;
 
-      auto mydigi = make_digi(id, hs, bx, CSC_LCT, lct->getQuality(), lct->getPattern(), wg, dphi);
+      const auto& mydigi = make_digi(id, hs, bx, CSC_LCT, lct->getQuality(), lct->getPattern(), wg, dphi);
       lcts_tmp.push_back(mydigi);
       cscLcts_tmp.push_back(*lct);
       bx_to_lcts[bx].push_back(mydigi);
@@ -368,19 +368,19 @@ CSCStubMatcher::matchLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& lcts)
     if (verbose() and !(n_lct == 1 || n_lct == 2 || n_lct == 4 ) )
     {
       cout<<"WARNING!!! weird #LCTs="<<n_lct;
-      for (auto &s: lcts_tmp) cout<<"  "<<s<<endl;
+      for (const auto& s: lcts_tmp) cout<<"  "<<s<<endl;
       //continue;
     }
 
-    auto clct(clctsInChamber(id));
-    auto alct(alctsInChamber(id));
+    const auto& clct(clctsInChamber(id));
+    const auto& alct(alctsInChamber(id));
     const auto hits = sh_matcher_->hitsInChamber(id);
     bool hasPad = false;
     bool hasDigis = false;
     if ((ch_id.station()==1 or ch_id.station()==2) and ch_id.ring()==1){
 	// find a matching LCT
 	const GEMDetId gemDetId(GEMDetId(ch_id.zendcap(),1,ch_id.station(),0,ch_id.chamber(),0));
-	auto pads(gem_digi_matcher_->coPadsInSuperChamber(gemDetId.rawId()));
+	const auto& pads(gem_digi_matcher_->coPadsInSuperChamber(gemDetId.rawId()));
 	hasPad = (pads.size()>0);
 	if (verbose())
 	    std::cout <<"GEMDetId "<< gemDetId << (hasPad ? " has CoPad ":" has NO CoPad") << std::endl;
@@ -393,28 +393,28 @@ CSCStubMatcher::matchLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& lcts)
 	const int rpc_trig_sect((csc_trig_chid-1)/3+1);
 	const int rpc_trig_subsect((csc_trig_chid-1)%3+1);
 	const RPCDetId rpcDetId(RPCDetId(ch_id.zendcap(),1,ch_id.station(),rpc_trig_sect,1,rpc_trig_subsect,0));
-	auto rpcDigis(rpc_digi_matcher_->digisInChamber(rpcDetId));
+	const auto& rpcDigis(rpc_digi_matcher_->digisInChamber(rpcDetId));
 	hasDigis = (rpcDigis.size()>0);
     }
 
 
-    
-    
+
+
     int iLct = -1;
-    for (auto &lct: lcts_tmp)
+    for (const auto& lct: lcts_tmp)
     {
       iLct++;
       bool lct_matched(false);
       for (unsigned int j=0; j<alct.size();j++){
         for (unsigned int i=0; i<clct.size()+1;i++){
-          
-          if (verbose()) 
+
+          if (verbose())
             std::cout <<"lct size "<< lcts_tmp.size()<<" ilct "<< iLct << " available LCT " << lct << std::endl;
           if (verbose())
             std::cout <<"alcts size "<< alct.size() <<" jth "<<j<< " available ALCT " << alct[j] << std::endl;
-          if (verbose() and i<clct.size()) 
-            std::cout<<"clcts size"<< clct.size()<<" ith "<<i << " available CLCT " << clct[i] << std::endl; 
-          
+          if (verbose() and i<clct.size())
+            std::cout<<"clcts size"<< clct.size()<<" ith "<<i << " available CLCT " << clct[i] << std::endl;
+
           const bool caseAlctClct(j<alct.size() && i<clct.size());
           const bool caseAlctGem(is_valid(alct[j]) and i==clct.size() and (ch_id.station() == 1 or ch_id.station() == 2) and ch_id.ring()==1);
           //const bool caseClctGem(is_valid(clct[i]) and hasPad and !is_valid(alct[j]) and (ch_id.station() == 1 or ch_id.station() == 2));
@@ -427,16 +427,16 @@ CSCStubMatcher::matchLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& lcts)
             else if (caseAlctRpc and not(hasDigis)) cout <<" caseAlctRpc and not hasDigis "<< std::endl;
           }
           const CSCChamber* cscChamber(cscGeometry_->chamber(CSCDetId(id)));
-          
+
           const CSCLayer* cscKeyLayer(cscChamber->layer(3));
           const CSCLayerGeometry* cscKeyLayerGeometry(cscKeyLayer->geometry());
           const int nStrips(cscKeyLayerGeometry->numberOfStrips());
           const float averageZ((cscKeyLayer->centerOfStrip(0)).z());
-          auto GpME(propagateToZ(averageZ));
-          auto lpME(cscKeyLayer->toLocal(GpME));
-          
+          const auto& GpME(propagateToZ(averageZ));
+          const auto& lpME(cscKeyLayer->toLocal(GpME));
+
           const int my_hs_gem_propagate((nStrips-cscKeyLayerGeometry->nearestStrip(lpME))*2);
-          const auto hits = sh_matcher_->hitsInChamber(id);
+          const auto& hits = sh_matcher_->hitsInChamber(id);
           const float my_hs_gemrpc_mean(sh_matcher_->simHitsMeanStrip(hits));
           //const float my_wg_gemrpc_mean(sh_matcher_->simHitsMeanStrip(hits));
           bool matchAlctGem_((matchAlctGemME11_ and ch_id.station()==1 )||(matchAlctGemME21_ and ch_id.station()==2));
@@ -450,44 +450,44 @@ CSCStubMatcher::matchLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& lcts)
           float my_hs_gemrpc;
           if (hsFromSimHitMean_)  my_hs_gemrpc= my_hs_gemrpc_mean;
           else my_hs_gemrpc = my_hs_gem_propagate;
-          
+
           //All the matching information can go here.
-          
-          auto digi_strips = digi_matcher_->stripsInChamber(id, 1);
+
+          const auto& digi_strips = digi_matcher_->stripsInChamber(id, 1);
           int my_hs = -1 ;
           if ( i < clct.size() ) my_hs = digi_channel(clct[i]);
-          
+
           const int my_wg(digi_wg(alct[j]));
           const int my_bx(digi_bx(alct[j]));
-          auto digi_wgs = digi_matcher_->wiregroupsInChamber(id,1);
-          
+          const auto& digi_wgs = digi_matcher_->wiregroupsInChamber(id,1);
+
 	  if (not(caseAlctClct) and not(caseAlctGem) and not(caseAlctRpc)){
 	      if (verbose())
 	      	std::cout <<"this LCT can not be match AlctClct, AlctGem, AlctRpc, skip it: "<< lct<< std::endl;
 	      continue;
 	  }
-            
+
           if ( caseAlctClct and !((my_bx == digi_bx(lct) || 6 == digi_bx(lct)) and my_hs == digi_channel(lct) and my_wg == digi_wg(lct))){
             if (verbose()) cout<<"  BAD LCT in AlctClct case"<<endl;
             continue;
           }
-          
+
           //add hadPad here
           if (matchAlctGem_ and caseAlctGem and !(hasPad and  my_bx == digi_bx(lct) and std::abs(my_hs_gemrpc - digi_channel(lct))<4 and my_wg == digi_wg(lct) ) ){
             if (verbose()) cout<<"  BAD LCT in AlctGem case, my_hs_gemrpc "<< my_hs_gemrpc <<" LCT hs "<< digi_channel(lct) <<endl;
             continue;
           }
           else if (caseAlctGem and !matchAlctGem_) continue;
-          
+
           /* if (matchClctGem_ and caseClctGem and !(my_bx == digi_bx(lct) and my_hs == digi_channel(lct) and std::abs(my_wg_gemrpc_mean - digi_wg(lct))<3) ){
              if (verbose()) cout<<"  BAD"<<endl;
              continue;
              }*/
-          
+
           //if (matchAlctRpc_ and caseAlctRpc and !(my_bx == digi_bx(lct) and std::abs(my_hs_gemrpc - digi_channel(lct))<3 and my_wg == digi_wg(lct) ) ){
           if (matchAlctRpc_ and caseAlctRpc and !(hasDigis and  std::fabs(my_hs_gemrpc - digi_channel(lct))<3.0 and my_wg == digi_wg(lct) ) ){
             if (verbose()) cout<<"  BAD LCT in AlctRpc case"<<endl;
-            //std::cout << "my_hs_gemrpc " << my_hs_gemrpc << "  hs from LCT " << digi_channel(lct) 
+            //std::cout << "my_hs_gemrpc " << my_hs_gemrpc << "  hs from LCT " << digi_channel(lct)
             //        <<" my_wg " << my_wg << " wg in LCT "<<digi_wg(lct) <<std::endl;
             continue;
           }
@@ -496,11 +496,11 @@ CSCStubMatcher::matchLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& lcts)
              if (verbose()) cout<<"  BAD"<<endl;
              continue;
              }*/
-          
-          if (verbose() and ch_id.ring()==1 and (ch_id.station()==1 or ch_id.station()==2) and !caseAlctClct and !caseAlctGem) 
-            std::cout <<"ME11 or ME21: jth alct "<< j<<" ith clct "<<i <<"  not caseAlctClct caseAlctGem, LCT "<< lct << std::endl; 
+
+          if (verbose() and ch_id.ring()==1 and (ch_id.station()==1 or ch_id.station()==2) and !caseAlctClct and !caseAlctGem)
+            std::cout <<"ME11 or ME21: jth alct "<< j<<" ith clct "<<i <<"  not caseAlctClct caseAlctGem, LCT "<< lct << std::endl;
           if (chamber_to_lct_.find(id) == chamber_to_lct_.end())   chamber_to_lct_[id] = lct;
-          else if (chamber_to_lct_.find(id) != chamber_to_lct_.end() and 
+          else if (chamber_to_lct_.find(id) != chamber_to_lct_.end() and
                    fabs(digi_channel(chamber_to_lct_[id])-my_hs_gemrpc) > fabs(digi_channel(lct)-my_hs_gemrpc)){
             if (verbose()){
               cout<<"ALARM!!! here already was matching LCT "<<chamber_to_lct_[id]<<endl;
@@ -508,24 +508,24 @@ CSCStubMatcher::matchLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& lcts)
             }
             chamber_to_lct_[id] = lct;
           }
-          
+
           chamber_to_lcts_[id].push_back(lct);
           chamber_to_cscLcts_[id].push_back(cscLcts_tmp[iLct]);
           lct_matched = true;
-          
+
           if (verbose() and caseAlctClct)  std::cout << " this LCT is matched to simtrack in AlctClct case" << std::endl;
           if (verbose() and caseAlctGem)  std::cout << " this LCT is matched to simtrack in AlctGem case" << std::endl;
           if (verbose() and caseAlctRpc)  std::cout << " this LCT is matched to simtrack in AlctRpc case" << std::endl;
-	 
+
           break;
         } //clct loop over
         if (lct_matched) break;
       }// alct loop over
-      
+
     } // lct loop over
-    
+
   }
-  
+
   if (verbose() and n_minLayers > 0)
   {
     if (chamber_to_lct_.size() == 0)
@@ -535,7 +535,7 @@ CSCStubMatcher::matchLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& lcts)
       {
         CSCDetId id(it.first);
         if (useCSCChamberType(id.iChamberType())) continue;
-        auto lcts_in_det = lcts.get(id);
+        const auto& lcts_in_det = lcts.get(id);
         for (auto a = lcts_in_det.first; a != lcts_in_det.second; ++a)
         {
           if (!a->isValid()) continue;
@@ -554,8 +554,8 @@ CSCStubMatcher::matchMPLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& mplc
 {
   setVerbose(verboseMPLCT_);
   // only look for stubs in chambers that already have CLCT and ALCT
-  auto cathode_ids = chamberIdsAllCLCT(0);
-  auto anode_ids = chamberIdsAllALCT(0);
+  const auto& cathode_ids = chamberIdsAllCLCT(0);
+  const auto& anode_ids = chamberIdsAllALCT(0);
 
   std::set<int> cathode_and_anode_ids;
   std::set_union(
@@ -565,12 +565,12 @@ CSCStubMatcher::matchMPLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& mplc
   );
 
   int n_minLayers = 0;
-  for (auto id: cathode_and_anode_ids)
+  for (const auto& id: cathode_and_anode_ids)
   {
     if (digi_matcher_->nLayersWithStripInChamber(id) >= minNHitsChamberCLCT_ and digi_matcher_->nLayersWithWireInChamber(id) >= minNHitsChamberALCT_) ++n_minLayers;
     CSCDetId ch_id(id);
 
-    auto mplcts_in_det = mplcts.get(ch_id);
+    const auto& mplcts_in_det = mplcts.get(ch_id);
     DigiContainer mplcts_tmp;
     CSCCorrelatedLCTDigiContainer cscMplcts_tmp;
     map<int, DigiContainer> bx_to_mplcts;
@@ -592,7 +592,7 @@ CSCStubMatcher::matchMPLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& mplc
       //float dphi = lct->getGEMDPhi();
       float dphi = -9;
 
-      auto mydigi = make_digi(id, hs, bx, CSC_LCT, lct->getQuality(), lct->getPattern(), wg, dphi);
+      const auto& mydigi = make_digi(id, hs, bx, CSC_LCT, lct->getQuality(), lct->getPattern(), wg, dphi);
       mplcts_tmp.push_back(mydigi);
       cscMplcts_tmp.push_back(*lct);
       bx_to_mplcts[bx].push_back(mydigi);
@@ -602,8 +602,8 @@ CSCStubMatcher::matchMPLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& mplc
       // TODO: when GEMs would be used to resolve this, there might ned to be an option to turn this off!
       if (bx_to_mplcts[bx].size() == 2 and addGhostMPLCTs_)
       {
-        auto lct11 = bx_to_mplcts[bx][0];
-        auto lct22 = bx_to_mplcts[bx][1];
+        const auto& lct11 = bx_to_mplcts[bx][0];
+        const auto& lct22 = bx_to_mplcts[bx][1];
         int wg1 = digi_wg(lct11);
         int wg2 = digi_wg(lct22);
         int hs1 = digi_channel(lct11);
@@ -640,8 +640,8 @@ CSCStubMatcher::matchMPLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& mplc
 
     // find a matching LCT
 
-    auto clct(clctsInChamber(id));
-    auto alct(alctsInChamber(id));
+    const auto& clct(clctsInChamber(id));
+    const auto& alct(alctsInChamber(id));
 
     for (unsigned int i=0; i<clct.size();i++){
 
@@ -663,7 +663,7 @@ CSCStubMatcher::matchMPLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& mplc
               if ( is_valid(alct[j]) and is_valid(clct[i]) and !(my_bx == digi_bx(lct) and my_hs == digi_channel(lct) and my_wg == digi_wg(lct)) ){
               if (verbose()) cout<<"  BAD"<<endl;
                 continue;
-                 }  
+                 }
               if (verbose()) cout<<"  GOOD"<<endl;
 
               if (chamber_to_mplct_.find(id) != chamber_to_mplct_.end())
@@ -676,9 +676,9 @@ CSCStubMatcher::matchMPLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& mplc
       // assign the matching Mplcts
               chamber_to_mplcts_[id].push_back(lct);
             }
-        }//End of ALCT loop 
+        }//End of ALCT loop
     } // End of CLCT loop
-    
+
   }
 
   if (verbose() and n_minLayers > 0)
@@ -690,7 +690,7 @@ CSCStubMatcher::matchMPLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& mplc
       {
         CSCDetId id(it.first);
         if (useCSCChamberType(id.iChamberType())) continue;
-        auto mplcts_in_det = mplcts.get(id);
+        const auto& mplcts_in_det = mplcts.get(id);
         for (auto a = mplcts_in_det.first; a != mplcts_in_det.second; ++a)
         {
           if (!a->isValid()) continue;
@@ -845,11 +845,11 @@ const matching::DigiContainer
 CSCStubMatcher::lctsInStation(int st) const
 {
   DigiContainer lcts;
-  for (auto p : chamber_to_lcts_) 
+  for (const auto& p : chamber_to_lcts_)
   {
     CSCDetId id(p.first);
     if (id.station() == st) lcts.insert(lcts.end(), (p.second).begin(), (p.second).end());
-    else continue; 
+    else continue;
   }
   return lcts;
 }
@@ -911,11 +911,11 @@ CSCStubMatcher::cscMplctsInChamber(unsigned int detid) const
   return chamber_to_cscMplcts_.at(detid);
 }
 
-CSCCLCTDigi 
+CSCCLCTDigi
 CSCStubMatcher::bestCscClctInChamber(unsigned int detid) const
 {
   //sort stubs based on quality
-  auto input(cscClctsInChamber(detid));
+  const auto& input(cscClctsInChamber(detid));
   int bestQ = 0;
   int index = -1;
   for (unsigned int i=0; i<input.size(); ++i){
@@ -929,11 +929,11 @@ CSCStubMatcher::bestCscClctInChamber(unsigned int detid) const
   return CSCCLCTDigi();
 }
 
-CSCALCTDigi 
+CSCALCTDigi
 CSCStubMatcher::bestCscAlctInChamber(unsigned int detid) const
 {
   //sort stubs based on quality
-  auto input(cscAlctsInChamber(detid));
+  const auto& input(cscAlctsInChamber(detid));
   int bestQ = 0;
   int index = -1;
   for (unsigned int i=0; i<input.size(); ++i){
@@ -947,12 +947,12 @@ CSCStubMatcher::bestCscAlctInChamber(unsigned int detid) const
   return CSCALCTDigi();
 }
 
-CSCCorrelatedLCTDigi 
+CSCCorrelatedLCTDigi
 CSCStubMatcher::bestCscLctInChamber(unsigned int detid) const
 {
- 
+
   //sort stubs based on quality
-  auto input(cscLctsInChamber(detid));
+  const auto& input(cscLctsInChamber(detid));
   int bestQ = 0;
   int index = -1;
   for (unsigned int i=0; i<input.size(); ++i){
@@ -964,10 +964,10 @@ CSCStubMatcher::bestCscLctInChamber(unsigned int detid) const
   }
   if (index != -1) return input[index];
   return CSCCorrelatedLCTDigi();
-  /* 
+  /*
  // get the detid of the keylayer of this chamber
-  auto chamberId = CSCDetId(detid);
-  
+  const auto& chamberId = CSCDetId(detid);
+
   auto layer(cscGeometry_->chamber(chamberId)->layer(3));
   auto layerId(layer->id());
   auto hit_strips(sh_matcher_->hitStripsInDetId(layerId,0));
@@ -990,7 +990,7 @@ CSCStubMatcher::bestCscLctInChamber(unsigned int detid) const
   */
 }
 
-CSCComparatorDigiDetIdContainer 
+CSCComparatorDigiDetIdContainer
 CSCStubMatcher::matchingComparatorDigisLCT(unsigned int detid, const CSCCorrelatedLCTDigi& stub) const
 {
   //std::cout << "In function matchingComparatorDigisLCT" << std::endl;
@@ -999,24 +999,24 @@ CSCStubMatcher::matchingComparatorDigisLCT(unsigned int detid, const CSCCorrelat
   int keyStrip = stub.getStrip();
   int patternNumber = stub.getPattern();
   //2) loop on the layers
-  auto chamberId = CSCDetId(detid);
+  const auto& chamberId = CSCDetId(detid);
   if (chamberId.ring()==4 and verboseLCT_)
   	std::cout << chamberId << std::endl;
   for (int ilayer=1; ilayer<=6; ilayer++){
-    auto layer(cscGeometry_->chamber(chamberId)->layer(ilayer));
-    auto layerId(layer->id());
+    const auto& layer(cscGeometry_->chamber(chamberId)->layer(ilayer));
+    const auto& layerId(layer->id());
     //std::cout << "\t" << layerId << std::endl;
     // get the comparator digis in this layer
-    auto comps(digi_matcher_->cscComparatorDigisInDetId(layerId));
+    const auto& comps(digi_matcher_->cscComparatorDigisInDetId(layerId));
     // loop on the comparator digis
-    for (auto comp: comps){
+    for (const auto& comp: comps){
       //check if they match the LCT pattern
       int halfStrip = digi_matcher_->getHalfStrip(comp);
       if (chamberId.ring()==4 and verboseLCT_)
       	std::cout <<"layerid "<< layerId << "\t"<<comp<<" "<<halfStrip<<endl;
-      // auto pattern = CSCCathodeLCTProcessor::pattern2007[patternNumber];
+      // const auto& pattern = CSCCathodeLCTProcessor::pattern2007[patternNumber];
       // int actualLayer = ilayer - 1;
-      // auto subPatternL0 = 
+      // auto subPatternL0 =
       if (this->comparatorInCLCTPattern(keyStrip, patternNumber, ilayer, halfStrip)){
         output.push_back(std::make_pair(layerId.rawId(), comp));
         //std::cout << "\t\tIt's in!" << std::endl;
@@ -1029,7 +1029,7 @@ CSCStubMatcher::matchingComparatorDigisLCT(unsigned int detid, const CSCCorrelat
   return output;
 }
 
-bool 
+bool
 CSCStubMatcher::comparatorInCLCTPattern(int keyStrip, int pattern, int layer, int halfStrip) const
 {
   /*
@@ -1045,23 +1045,23 @@ CSCStubMatcher::comparatorInCLCTPattern(int keyStrip, int pattern, int layer, in
 }
 
 
-void 
+void
 CSCStubMatcher::positionsOfComparatorInLCT(unsigned int detid, const CSCCorrelatedLCTDigi& stub, std::vector<GlobalPoint>& gps) const
 {
-  auto digis = matchingComparatorDigisLCT (detid, stub);
-  auto id = CSCDetId(detid);
+  const auto& digis = matchingComparatorDigisLCT (detid, stub);
+  const auto& id = CSCDetId(detid);
   for (int l=1; l<=6; l++){
-     CSCDetId l_id(id.endcap(), id.station(), id.ring(), id.chamber(), l); 
-     float sum_x =0.0; 
+     CSCDetId l_id(id.endcap(), id.station(), id.ring(), id.chamber(), l);
+     float sum_x =0.0;
      float sum_y = 0.0;
      float sum_z = 0.0;
      int n=0;
      //float z_pos = cscGeometry_->chamber(id)->layer(l)->centerOfStrip(20).z();
-     for (auto p: digis){
+     for (const auto& p: digis){
 	if (p.first == l_id.rawId()){
-	    auto comp = p.second;
+	    const auto& comp = p.second;
 	    float fractional_strip = digi_matcher_->getFractionalStrip(comp);
-	    auto layer_geo(cscGeometry_->chamber(id)->layer(l)->geometry());
+	    const auto& layer_geo(cscGeometry_->chamber(id)->layer(l)->geometry());
 	    float wire = layer_geo->middleWireOfGroup(stub.getKeyWG() + 1);
 	    LocalPoint csc_intersect = layer_geo->intersectionOfStripAndWire(fractional_strip, wire);
 	    GlobalPoint csc_gp = cscGeometry_->idToDet(l_id)->surface().toGlobal(csc_intersect);
@@ -1076,15 +1076,15 @@ CSCStubMatcher::positionsOfComparatorInLCT(unsigned int detid, const CSCCorrelat
     // if (n>0 and verboseLCT_) std::cout <<"Digi cscid "<< l_id <<" n "<< n <<" x "<< sum_x/n <<" y "<< sum_y/n <<" z "<< sum_z/n << std::endl;
      if (n>0) gps.push_back(GlobalPoint(sum_x/n, sum_y/n, sum_z/n));
   }
-  
+
 }
 
-//to do 
-float 
+//to do
+float
 CSCStubMatcher::zpositionOfLayer(unsigned int detid, int layer) const{
 
-  auto id = CSCDetId(detid);
-  auto cscChamber(cscGeometry_->chamber(id));
+  const auto& id = CSCDetId(detid);
+  const auto& cscChamber(cscGeometry_->chamber(id));
   return fabs(cscChamber->layer(layer)->centerOfStrip(20).z());
 
 }
@@ -1093,10 +1093,10 @@ int
 CSCStubMatcher::nChambersWithCLCT(int min_quality) const
 {
   int result = 0;
-  auto chamber_ids = chamberIdsCLCT();
-  for (auto id: chamber_ids)
+  const auto& chamber_ids = chamberIdsCLCT();
+  for (const auto& id: chamber_ids)
   {
-    auto clct = clctInChamber(id);
+    const auto& clct = clctInChamber(id);
     if (!is_valid(clct)) continue;
     if (digi_quality(clct) >= min_quality) ++result;
   }
@@ -1107,10 +1107,10 @@ int
 CSCStubMatcher::nChambersWithALCT(int min_quality) const
 {
   int result = 0;
-  auto chamber_ids = chamberIdsALCT();
-  for (auto id: chamber_ids)
+  const auto& chamber_ids = chamberIdsALCT();
+  for (const auto& id: chamber_ids)
   {
-    auto alct = alctInChamber(id);
+    const auto& alct = alctInChamber(id);
     if (!is_valid(alct)) continue;
     if (digi_quality(alct) >= min_quality) ++result;
   }
@@ -1121,10 +1121,10 @@ int
 CSCStubMatcher::nChambersWithLCT(int min_quality) const
 {
   int result = 0;
-  auto chamber_ids = chamberIdsLCT();
-  for (auto id: chamber_ids)
+  const auto& chamber_ids = chamberIdsLCT();
+  for (const auto& id: chamber_ids)
   {
-    auto lct = lctInChamber(id);
+    const auto& lct = lctInChamber(id);
     if (!is_valid(lct)) continue;
     if (digi_quality(lct) >= min_quality) ++result;
   }
@@ -1135,10 +1135,10 @@ int
 CSCStubMatcher::nChambersWithMPLCT(int min_quality) const
 {
   int result = 0;
-  auto chamber_ids = chamberIdsMPLCT();
-  for (auto id: chamber_ids)
+  const auto& chamber_ids = chamberIdsMPLCT();
+  for (const auto& id: chamber_ids)
   {
-    auto mplct = mplctInChamber(id);
+    const auto& mplct = mplctInChamber(id);
     if (!is_valid(mplct)) continue;
     if (digi_quality(mplct) >= min_quality) ++result;
   }
@@ -1146,22 +1146,22 @@ CSCStubMatcher::nChambersWithMPLCT(int min_quality) const
 }
 
 
-bool 
+bool
 CSCStubMatcher::checkStubInChamber(CSCDetId id, CSCCorrelatedLCTDigi lct) const
 {
-  
+
   //    int hs = lct->getStrip() + 1; // LCT halfstrip and wiregoup numbers start from 0
   //    int wg = lct->getKeyWG() + 1;
   //    float dphi = lct->getGEMDPhi();
 //  std::cout << " checks Stubs, DetId " << id << std::endl;
       //fixedME
       float dphi = -9;
-  auto mydigi = make_digi(id.rawId(), lct.getStrip()+1, lct.getBX(), CSC_LCT, lct.getQuality(), lct.getPattern(),lct.getKeyWG()+1, dphi);
+  const auto& mydigi = make_digi(id.rawId(), lct.getStrip()+1, lct.getBX(), CSC_LCT, lct.getQuality(), lct.getPattern(),lct.getKeyWG()+1, dphi);
 //      std::cout << "                   mydigi " << mydigi << std::endl;
   try{
-  auto alldigis(chamber_to_lcts_all_.at(id.rawId()));
-  for (auto p : alldigis) 
-  {   
+  const auto& alldigis(chamber_to_lcts_all_.at(id.rawId()));
+  for (const auto& p : alldigis)
+  {
 //      std::cout << " digi matched to simtrack " << p << std::endl;
       if (p==mydigi) return true;
    }
@@ -1175,27 +1175,27 @@ CSCStubMatcher::checkStubInChamber(CSCDetId id, CSCCorrelatedLCTDigi lct) const
 }
 
 
-bool 
+bool
 CSCStubMatcher::wasStubMatchedInChamber(CSCDetId id, CSCCorrelatedLCTDigi lct) const
 {
-  auto stubs(cscLctsInChamber(id.rawId()));
-  for (auto stub: stubs){
+  const auto& stubs(cscLctsInChamber(id.rawId()));
+  for (const auto& stub: stubs){
     if (stub==lct) return true;
   }
   return false;
 }
 
 
-GlobalPoint 
+GlobalPoint
 CSCStubMatcher::getGlobalPosition(unsigned int rawId, const CSCCorrelatedLCTDigi& lct) const
 {
   // taken from https://github.com/cms-sw/cmssw/blob/dc9f78b6af4ad56c9342cf14041b6485a60b0691/L1Trigger/CSCTriggerPrimitives/src/CSCMotherboardME11GEM.cc
   CSCDetId cscId = CSCDetId(rawId);
-  CSCDetId key_id(cscId.endcap(), cscId.station(), cscId.ring(), 
+  CSCDetId key_id(cscId.endcap(), cscId.station(), cscId.ring(),
                   cscId.chamber(), CSCConstants::KEY_CLCT_LAYER);
-  auto cscChamber = getCSCGeometry()->chamber(cscId);
+  const auto& cscChamber = getCSCGeometry()->chamber(cscId);
   float fractional_strip = getFractionalStrip(lct);
-  auto layer_geo = cscChamber->layer(CSCConstants::KEY_CLCT_LAYER)->geometry();
+  const auto& layer_geo = cscChamber->layer(CSCConstants::KEY_CLCT_LAYER)->geometry();
   // LCT::getKeyWG() also starts from 0
   float wire = layer_geo->middleWireOfGroup(lct.getKeyWG() + 1);
   LocalPoint csc_intersect = layer_geo->intersectionOfStripAndWire(fractional_strip, wire);
@@ -1205,27 +1205,27 @@ CSCStubMatcher::getGlobalPosition(unsigned int rawId, const CSCCorrelatedLCTDigi
 }
 
 
-float 
+float
 CSCStubMatcher::getFractionalStrip(const CSCCorrelatedLCTDigi& lct) const
 {
   return 0.5 * (lct.getStrip() + 1) - 0.25;
 }
 
 
-float 
+float
 CSCStubMatcher::getAverageBendingLCT(unsigned int rawId, const CSCCorrelatedLCTDigi& lct) const
 {
   CSCDetId cscId = CSCDetId(rawId);
   float hsWidth(gemvalidation::cscHalfStripWidth(cscId));
-  
+
   // map the pattern number to min int bending, max int bending
   int maxBendList[CSCConstants::NUM_CLCT_PATTERNS] = {
     0, 11, 11, -11, 9, -9, 7, -7, 5, -5, 3};
   int minBendList[CSCConstants::NUM_CLCT_PATTERNS] = {
     0, 0,   7, -7,  5, -5, 3, -3, 0, 0, -3};
-  
+
   int averageBend = 0.5 * (minBendList[lct.getPattern()] + maxBendList[lct.getPattern()] );
-                   
+
   // return the average bending
   return averageBend * hsWidth;
 }

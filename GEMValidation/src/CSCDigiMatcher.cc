@@ -6,18 +6,18 @@ using namespace matching;
 
 
 CSCDigiMatcher::CSCDigiMatcher(SimHitMatcher& sh,
-                               edm::EDGetTokenT<CSCComparatorDigiCollection>& cscComparatorDigiInput_, 
+                               edm::EDGetTokenT<CSCComparatorDigiCollection>& cscComparatorDigiInput_,
                                edm::EDGetTokenT<CSCWireDigiCollection>& cscWireDigiInput_)
 : DigiMatcher(sh)
 {
-  auto cscWireDigi_ = conf().getParameter<edm::ParameterSet>("cscWireDigi");
+  const auto& cscWireDigi_ = conf().getParameter<edm::ParameterSet>("cscWireDigi");
   verboseWG_ = cscWireDigi_.getParameter<int>("verbose");
   minBXCSCWire_ = cscWireDigi_.getParameter<int>("minBX");
   maxBXCSCWire_ = cscWireDigi_.getParameter<int>("maxBX");
   matchDeltaWG_ = cscWireDigi_.getParameter<int>("matchDeltaWG");
   runWG_ = cscWireDigi_.getParameter<bool>("run");
 
-  auto cscComparatorDigi_ = conf().getParameter<edm::ParameterSet>("cscStripDigi");
+  const auto& cscComparatorDigi_ = conf().getParameter<edm::ParameterSet>("cscStripDigi");
   verboseStrip_ = cscComparatorDigi_.getParameter<int>("verbose");
   minBXCSCComp_ = cscComparatorDigi_.getParameter<int>("minBX");
   maxBXCSCComp_ = cscComparatorDigi_.getParameter<int>("maxBX");
@@ -27,7 +27,7 @@ CSCDigiMatcher::CSCDigiMatcher(SimHitMatcher& sh,
   if (hasCSCGeometry_) {
     edm::Handle<CSCComparatorDigiCollection> comp_digis;
     if(gemvalidation::getByToken(cscComparatorDigiInput_, comp_digis, event())) if (runWG_) matchStripsToSimTrack(*comp_digis.product());
-    
+
     edm::Handle<CSCWireDigiCollection> wire_digis;
     if (gemvalidation::getByToken(cscWireDigiInput_, wire_digis, event())) if (runStrip_) matchWiresToSimTrack(*wire_digis.product());
   }
@@ -40,12 +40,12 @@ CSCDigiMatcher::~CSCDigiMatcher() {}
 void
 CSCDigiMatcher::matchStripsToSimTrack(const CSCComparatorDigiCollection& comparators)
 {
-  auto det_ids = simhit_matcher_->detIdsCSC(0);
-  for (auto id: det_ids)
+  const auto& det_ids = simhit_matcher_->detIdsCSC(0);
+  for (const auto& id: det_ids)
   {
     CSCDetId layer_id(id);
 
-    auto hit_strips = simhit_matcher_->hitStripsInDetId(id, matchDeltaStrip_);
+    const auto& hit_strips = simhit_matcher_->hitStripsInDetId(id, matchDeltaStrip_);
     if (verboseStrip_)
     {
       cout<<"hit_strips_fat ";
@@ -53,7 +53,7 @@ CSCDigiMatcher::matchStripsToSimTrack(const CSCComparatorDigiCollection& compara
       cout<<endl;
     }
 
-    auto comp_digis_in_det = comparators.get(layer_id);
+    const auto& comp_digis_in_det = comparators.get(layer_id);
     for (auto c = comp_digis_in_det.first; c != comp_digis_in_det.second; ++c)
     {
       if (verboseStrip_) cout<<"sdigi "<<layer_id<<" "<<*c<<endl;
@@ -69,7 +69,7 @@ CSCDigiMatcher::matchStripsToSimTrack(const CSCComparatorDigiCollection& compara
       // get half-strip, counting from 1
       int half_strip = getHalfStrip(*c) + 1;
 
-      auto mydigi = make_digi(id, half_strip, c->getTimeBin(), CSC_STRIP);
+      const auto& mydigi = make_digi(id, half_strip, c->getTimeBin(), CSC_STRIP);
       detid_to_halfstrips_[id].push_back(mydigi);
       chamber_to_halfstrips_[ layer_id.chamberId().rawId() ].push_back(mydigi);
 
@@ -83,12 +83,12 @@ CSCDigiMatcher::matchStripsToSimTrack(const CSCComparatorDigiCollection& compara
 void
 CSCDigiMatcher::matchWiresToSimTrack(const CSCWireDigiCollection& wires)
 {
-  auto det_ids = simhit_matcher_->detIdsCSC(0);
-  for (auto id: det_ids)
+  const auto& det_ids = simhit_matcher_->detIdsCSC(0);
+  for (const auto& id: det_ids)
   {
     CSCDetId layer_id(id);
 
-    auto hit_wires = simhit_matcher_->hitWiregroupsInDetId(id, matchDeltaWG_);
+    const auto& hit_wires = simhit_matcher_->hitWiregroupsInDetId(id, matchDeltaWG_);
     if (verboseWG_)
     {
       cout<<"hit_wires ";
@@ -96,7 +96,7 @@ CSCDigiMatcher::matchWiresToSimTrack(const CSCWireDigiCollection& wires)
       cout<<endl;
     }
 
-    auto wire_digis_in_det = wires.get(layer_id);
+    const auto& wire_digis_in_det = wires.get(layer_id);
     for (auto w = wire_digis_in_det.first; w != wire_digis_in_det.second; ++w)
     {
       // check that the first BX for this digi wasn't too early or too late
@@ -106,7 +106,7 @@ CSCDigiMatcher::matchWiresToSimTrack(const CSCWireDigiCollection& wires)
       // check that it matches a strip that was hit by SimHits from our track
       if (hit_wires.find(wg) == hit_wires.end()) continue;
 
-      auto mydigi = make_digi(id, wg, w->getTimeBin(), CSC_WIRE);
+      const auto& mydigi = make_digi(id, wg, w->getTimeBin(), CSC_WIRE);
       detid_to_wires_[id].push_back(mydigi);
       chamber_to_wires_[ layer_id.chamberId().rawId() ].push_back(mydigi);
 
@@ -121,9 +121,9 @@ std::set<unsigned int>
 CSCDigiMatcher::selectDetIds(const Id2DigiContainer &digis, int csc_type) const
 {
   std::set<unsigned int> result;
-  for (auto& p: digis)
+  for (const auto& p: digis)
   {
-    auto id = p.first;
+    const auto& id = p.first;
     if (csc_type > 0)
     {
       CSCDetId detId(id);
@@ -231,8 +231,8 @@ int
 CSCDigiMatcher::nLayersWithStripInChamber(unsigned int detid) const
 {
   set<int> layers_with_hits;
-  auto digis = stripDigisInChamber(detid);
-  for (auto& d: digis)
+  const auto& digis = stripDigisInChamber(detid);
+  for (const auto& d: digis)
   {
     CSCDetId idd(digi_id(d));
     layers_with_hits.insert(idd.layer());
@@ -245,8 +245,8 @@ int
 CSCDigiMatcher::nLayersWithWireInChamber(unsigned int detid) const
 {
   set<int> layers_with_hits;
-  auto digis = wireDigisInChamber(detid);
-  for (auto& d: digis)
+  const auto& digis = wireDigisInChamber(detid);
+  for (const auto& d: digis)
   {
     CSCDetId idd(digi_id(d));
     layers_with_hits.insert(idd.layer());
@@ -259,8 +259,8 @@ int
 CSCDigiMatcher::nCoincidenceStripChambers(int min_n_layers) const
 {
   int result = 0;
-  auto chamber_ids = chamberIdsStrip();
-  for (auto id: chamber_ids)
+  const auto& chamber_ids = chamberIdsStrip();
+  for (const auto& id: chamber_ids)
   {
     if (nLayersWithStripInChamber(id) >= min_n_layers) result += 1;
   }
@@ -272,8 +272,8 @@ int
 CSCDigiMatcher::nCoincidenceWireChambers(int min_n_layers) const
 {
   int result = 0;
-  auto chamber_ids = chamberIdsWire();
-  for (auto id: chamber_ids)
+  const auto& chamber_ids = chamberIdsWire();
+  for (const auto& id: chamber_ids)
   {
     if (nLayersWithWireInChamber(id) >= min_n_layers) result += 1;
   }
@@ -285,8 +285,8 @@ std::set<int>
 CSCDigiMatcher::stripsInDetId(unsigned int detid) const
 {
   set<int> result;
-  auto digis = stripDigisInDetId(detid);
-  for (auto& d: digis)
+  const auto& digis = stripDigisInDetId(detid);
+  for (const auto& d: digis)
   {
     result.insert( digi_channel(d) );
   }
@@ -298,8 +298,8 @@ std::set<int>
 CSCDigiMatcher::wiregroupsInDetId(unsigned int detid) const
 {
   set<int> result;
-  auto digis = wireDigisInDetId(detid);
-  for (auto& d: digis)
+  const auto& digis = wireDigisInDetId(detid);
+  for (const auto& d: digis)
   {
     result.insert( digi_channel(d) );
   }
@@ -311,15 +311,15 @@ std::set<int>
 CSCDigiMatcher::stripsInChamber(unsigned int detid, int max_gap_to_fill) const
 {
   set<int> result;
-  auto digis = stripDigisInChamber(detid);
-  for (auto& d: digis)
+  const auto& digis = stripDigisInChamber(detid);
+  for (const auto& d: digis)
   {
     result.insert( digi_channel(d) );
   }
   if (max_gap_to_fill > 0)
   {
     int prev = -111;
-    for (auto s: result)
+    for (const auto& s: result)
     {
       //cout<<"gap "<<s<<" - "<<prev<<" = "<<s - prev<<"  added 0";
       if (s - prev > 1 && s - prev - 1 <= max_gap_to_fill)
@@ -340,15 +340,15 @@ std::set<int>
 CSCDigiMatcher::wiregroupsInChamber(unsigned int detid, int max_gap_to_fill) const
 {
   set<int> result;
-  auto digis = wireDigisInChamber(detid);
-  for (auto& d: digis)
+  const auto& digis = wireDigisInChamber(detid);
+  for (const auto& d: digis)
   {
     result.insert( digi_channel(d) );
   }
   if (max_gap_to_fill > 0)
   {
     int prev = -111;
-    for (auto w: result)
+    for (const auto& w: result)
     {
       if (w - prev > 1 && w - prev - 1 <= max_gap_to_fill)
       {
@@ -360,7 +360,7 @@ CSCDigiMatcher::wiregroupsInChamber(unsigned int detid, int max_gap_to_fill) con
   return result;
 }
 
-int 
+int
 CSCDigiMatcher::getHalfStrip(const CSCComparatorDigi&d) const
 {
   // Here, getStrip returns the strip number of a comparator digi
@@ -372,7 +372,7 @@ CSCDigiMatcher::getHalfStrip(const CSCComparatorDigi&d) const
   return 2*(d.getStrip()-1) + d.getComparator();
 }
 
-float 
+float
 CSCDigiMatcher::getFractionalStrip(const CSCComparatorDigi&d) const
 {
   return d.getStrip() + d.getComparator()/2. - 3/4.;

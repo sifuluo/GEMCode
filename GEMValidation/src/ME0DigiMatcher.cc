@@ -7,7 +7,7 @@ using namespace matching;
 ME0DigiMatcher::ME0DigiMatcher(SimHitMatcher& sh, edm::EDGetTokenT<ME0DigiPreRecoCollection>& me0DigiInput_)
 : DigiMatcher(sh)
 {
-  auto me0Digi_= conf().getParameter<edm::ParameterSet>("me0DigiPreReco");
+  const auto& me0Digi_= conf().getParameter<edm::ParameterSet>("me0DigiPreReco");
   minBXME0_ = me0Digi_.getParameter<int>("minBX");
   maxBXME0_ = me0Digi_.getParameter<int>("maxBX");
   matchDeltaStrip_ = me0Digi_.getParameter<int>("matchDeltaStrip");
@@ -28,12 +28,12 @@ ME0DigiMatcher::~ME0DigiMatcher()
 void
 ME0DigiMatcher::matchPreRecoDigisToSimTrack(const ME0DigiPreRecoCollection& digis)
 {
-  auto det_ids = simhit_matcher_->detIdsME0();
-  for (auto id: det_ids)
+  const auto& det_ids = simhit_matcher_->detIdsME0();
+  for (const auto& id: det_ids)
   {
     ME0DetId p_id(id);
 
-    auto digis_in_det = digis.get(ME0DetId(id));
+    const auto& digis_in_det = digis.get(ME0DetId(id));
 
     for (auto d = digis_in_det.first; d != digis_in_det.second; ++d)
     {
@@ -81,7 +81,7 @@ std::set<unsigned int>
 ME0DigiMatcher::detIds() const
 {
   std::set<unsigned int> result;
-  for (auto& p: detid_to_digis_) result.insert(p.first);
+  for (const auto& p: detid_to_digis_) result.insert(p.first);
   return result;
 }
 
@@ -90,7 +90,7 @@ std::set<unsigned int>
 ME0DigiMatcher::chamberIds() const
 {
   std::set<unsigned int> result;
-  for (auto& p: chamber_to_digis_) result.insert(p.first);
+  for (const auto& p: chamber_to_digis_) result.insert(p.first);
   return result;
 }
 
@@ -98,7 +98,7 @@ std::set<unsigned int>
 ME0DigiMatcher::superChamberIds() const
 {
   std::set<unsigned int> result;
-  for (auto& p: superchamber_to_digis_) result.insert(p.first);
+  for (const auto& p: superchamber_to_digis_) result.insert(p.first);
   return result;
 }
 
@@ -132,7 +132,7 @@ ME0DigiMatcher::nLayersWithDigisInSuperChamber(unsigned int detid) const
   for (int iLayer=1; iLayer<=6; iLayer++){
     ME0DetId ch_id(sch_id.region(), iLayer, sch_id.chamber(), 0);
     // get the digis in this chamber
-    auto digis = digisInChamber(ch_id.rawId());
+    const auto& digis = digisInChamber(ch_id.rawId());
     // at least one digi in this layer!
     if (digis.size()>0){
       layers.insert(iLayer);
@@ -146,7 +146,7 @@ std::set<int>
 ME0DigiMatcher::stripNumbersInDetId(unsigned int detid) const
 {
   set<int> result;
-  // auto digis = digisInDetId(detid);
+  // const auto& digis = digisInDetId(detid);
   // for (auto& d: digis)
   // {
   //   result.insert( digi_channel(d) );
@@ -159,8 +159,8 @@ ME0DigiMatcher::partitionNumbers() const
 {
   std::set<int> result;
 
-  auto detids = detIds();
-  for (auto id: detids)
+  const auto& detids = detIds();
+  for (const auto& id: detids)
   {
     ME0DetId idd(id);
     result.insert( idd.roll() );

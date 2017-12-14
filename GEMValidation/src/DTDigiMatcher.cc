@@ -9,7 +9,7 @@ using namespace matching;
 DTDigiMatcher::DTDigiMatcher(SimHitMatcher& sh, edm::EDGetTokenT<DTDigiCollection>& dtDigiInput_)
 : DigiMatcher(sh)
 {
-  auto dtDigi_= conf().getParameter<edm::ParameterSet>("dtDigi");
+  const auto& dtDigi_= conf().getParameter<edm::ParameterSet>("dtDigi");
   minBXDT_ = dtDigi_.getParameter<int>("minBX");
   maxBXDT_ = dtDigi_.getParameter<int>("maxBX");
   matchDeltaWire_ = dtDigi_.getParameter<int>("matchDeltaWire");
@@ -28,14 +28,14 @@ DTDigiMatcher::~DTDigiMatcher() {}
 void
 DTDigiMatcher::matchDigisToSimTrack(const DTDigiCollection& digis)
 {
-  auto det_ids = simhit_matcher_->detIdsDT();
-  for (auto id: det_ids)
+  const auto& det_ids = simhit_matcher_->detIdsDT();
+  for (const auto& id: det_ids)
   {
     const DTLayerId l_id(id);
     const DTSuperLayerId sl_id(l_id.superlayerId());
     const DTChamberId c_id(sl_id.chamberId());
 
-    auto hit_wires = simhit_matcher_->hitWiresInDTLayerId(l_id, matchDeltaWire_);
+    const auto& hit_wires = simhit_matcher_->hitWiresInDTLayerId(l_id, matchDeltaWire_);
     if (verboseDigi_)
     {
       cout<<"hit_wires_fat ";
@@ -43,7 +43,7 @@ DTDigiMatcher::matchDigisToSimTrack(const DTDigiCollection& digis)
       cout<<endl;
     }
     // get digis in this layer
-    auto digis_in_det = digis.get(l_id);
+    const auto& digis_in_det = digis.get(l_id);
 
     for (auto d = digis_in_det.first; d != digis_in_det.second; ++d)
     {
@@ -68,9 +68,9 @@ std::set<unsigned int>
 DTDigiMatcher::selectDetIds(const std::map<unsigned int, DTDigiContainer>& digis, int dt_type) const
 {
   std::set<unsigned int> result;
-  for (auto& p: digis)
+  for (const auto& p: digis)
   {
-    auto id = p.first;
+    const auto& id = p.first;
     if (dt_type > 0)
     {
       DTWireId detId(id);
@@ -142,7 +142,7 @@ DTDigiMatcher::digisInChamber(unsigned int detid) const
 }
 
 
-int 
+int
 DTDigiMatcher::nTubesWithDigisInLayer(unsigned int detid) const
 {
   set<int> tubes;
@@ -154,7 +154,7 @@ int
 DTDigiMatcher::nLayersWithDigisInSuperLayer(unsigned int detId) const
 {
   set<int> layers;
-  for (auto& l: getDTGeometry()->superLayer(DTSuperLayerId(detId))->layers())
+  for (const auto& l: getDTGeometry()->superLayer(DTSuperLayerId(detId))->layers())
   {
     DTLayerId lid(l->id());
     if (digisInLayer(lid.rawId()).size()!=0)
@@ -168,7 +168,7 @@ int
 DTDigiMatcher::nSuperLayersWithDigisInChamber(unsigned int detId) const
 {
   set<int> superLayers;
-  for (auto& sl: getDTGeometry()->chamber(DTChamberId(detId))->superLayers())
+  for (const auto& sl: getDTGeometry()->chamber(DTChamberId(detId))->superLayers())
   {
     DTSuperLayerId slid(sl->id());
     if (digisInSuperLayer(slid.rawId()).size()!=0)
@@ -182,7 +182,7 @@ std::set<int>
 DTDigiMatcher::wireNumbersInDetId(unsigned int detid) const
 {
   set<int> result;
-  // for (auto& d: digisInDetId(detid))
+  // for (const auto& d: digisInDetId(detid))
   // {
   //   result.insert( digi_channel(d) );
   // }

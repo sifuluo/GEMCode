@@ -8,7 +8,7 @@ RPCRecHitMatcher::RPCRecHitMatcher(SimHitMatcher& sh, edm::EDGetTokenT<RPCRecHit
   : BaseMatcher(sh.trk(), sh.vtx(), sh.conf(), sh.event(), sh.eventSetup())
   , simhit_matcher_(&sh)
 {
-  auto rpcRecHit_= conf().getParameter<edm::ParameterSet>("rpcRecHit");
+  const auto& rpcRecHit_= conf().getParameter<edm::ParameterSet>("rpcRecHit");
   minBXRPC_ = rpcRecHit_.getParameter<int>("minBX");
   maxBXRPC_ = rpcRecHit_.getParameter<int>("maxBX");
   matchDeltaStrip_ = rpcRecHit_.getParameter<int>("matchDeltaStrip");
@@ -16,7 +16,7 @@ RPCRecHitMatcher::RPCRecHitMatcher(SimHitMatcher& sh, edm::EDGetTokenT<RPCRecHit
   runRPCRecHit_ = rpcRecHit_.getParameter<bool>("run");
 
   if (hasRPCGeometry_) {
-    
+
     edm::Handle<RPCRecHitCollection> rpc_rechits;
     if (gemvalidation::getByToken(rpcRecHitInput_, rpc_rechits, event())) if (runRPCRecHit_) matchRecHitsToSimTrack(*rpc_rechits.product());
   }
@@ -27,26 +27,26 @@ RPCRecHitMatcher::~RPCRecHitMatcher() {}
 
 void
 RPCRecHitMatcher::matchRecHitsToSimTrack(const RPCRecHitCollection& rechits)
-{  
+{
   if (verboseRPCRecHit_) cout << "Matching simtrack to RPC rechits" << endl;
-  auto det_ids = simhit_matcher_->detIdsRPC();
-  for (auto id: det_ids) {
+  const auto& det_ids = simhit_matcher_->detIdsRPC();
+  for (const auto& id: det_ids) {
     RPCDetId p_id(id);
-    
-    auto hit_strips = simhit_matcher_->hitStripsInDetId(id, matchDeltaStrip_);
+
+    const auto& hit_strips = simhit_matcher_->hitStripsInDetId(id, matchDeltaStrip_);
     if (verboseRPCRecHit_) {
       cout<<"hit_strips_fat ";
       copy(hit_strips.begin(), hit_strips.end(), ostream_iterator<int>(cout, " "));
       cout<<endl;
     }
-    
-    auto rechits_in_det = rechits.get(RPCDetId(id));
+
+    const auto& rechits_in_det = rechits.get(RPCDetId(id));
     for (auto d = rechits_in_det.first; d != rechits_in_det.second; ++d) {
       if (verboseRPCRecHit_) cout<<"RPCRecHit "<<p_id<<" "<<*d<<endl;
       // check that the rechit is within BX range
       if (d->BunchX() < minBXRPC_ || d->BunchX() > maxBXRPC_) continue;
       // check that it matches a strip that was hit by SimHits from our track
-      
+
       int firstStrip = d->firstClusterStrip();
       int cls = d->clusterSize();
       bool stripFound = false;
@@ -57,8 +57,8 @@ RPCRecHitMatcher::matchRecHitsToSimTrack(const RPCRecHitCollection& rechits)
       }
       if (!stripFound) continue;
       if (verboseRPCRecHit_) cout<<"oki"<<endl;
-      
-      auto myrechit = make_digi(id, d->firstClusterStrip(), d->BunchX(), RPC_STRIP, d->clusterSize());
+
+      const auto& myrechit = make_digi(id, d->firstClusterStrip(), d->BunchX(), RPC_STRIP, d->clusterSize());
       detid_to_recHits_[id].push_back(myrechit);
       chamber_to_recHits_[ p_id.chamberId().rawId() ].push_back(myrechit);
       detid_to_rpcRecHits_[id].push_back(*d);
@@ -72,7 +72,7 @@ std::set<unsigned int>
 RPCRecHitMatcher::detIds() const
 {
   std::set<unsigned int> result;
-  for (auto& p: detid_to_recHits_) result.insert(p.first);
+  for (const auto& p: detid_to_recHits_) result.insert(p.first);
   return result;
 }
 
@@ -81,7 +81,7 @@ std::set<unsigned int>
 RPCRecHitMatcher::chamberIds() const
 {
   std::set<unsigned int> result;
-  for (auto& p: chamber_to_recHits_) result.insert(p.first);
+  for (const auto& p: chamber_to_recHits_) result.insert(p.first);
   return result;
 }
 
@@ -122,8 +122,8 @@ const RPCRecHitMatcher::RPCRecHitContainer
 RPCRecHitMatcher::rpcRecHits() const
 {
   RPCRecHitContainer result;
-  for (auto id: chamberIds()){
-    auto rechitsInChamber(rpcRecHitsInChamber(id));
+  for (const auto& id: chamberIds()){
+    const auto& rechitsInChamber(rpcRecHitsInChamber(id));
     result.insert(result.end(), rechitsInChamber.begin(), rechitsInChamber.end());
   }
   return result;
@@ -135,8 +135,8 @@ RPCRecHitMatcher::stripNumbersInDetId(unsigned int detid) const
 {
   set<int> result;
   /*
-  auto recHits = recHitsInDetId(detid);
-  for (auto& d: recHits)
+  const auto& recHits = recHitsInDetId(detid);
+  for (const auto& d: recHits)
   {
     result.insert( digi_channel(d) );
   }
@@ -150,8 +150,8 @@ RPCRecHitMatcher::partitionNumbers() const
 {
   std::set<int> result;
 
-  auto detids = detIds();
-  for (auto id: detids)
+  const auto& detids = detIds();
+  for (const auto& id: detids)
   {
     RPCDetId idd(id);
     result.insert( idd.roll() );
@@ -171,7 +171,7 @@ RPCRecHitMatcher::recHitPosition(const RecHit& rechit) const
   if ( t == RPC_STRIP )
   {
     RPCDetId idd(id);
-    LocalPoint lp = getRPCGeometry()->roll(idd)->centreOfStrip(strip);
+    const LocalPoint& lp = getRPCGeometry()->roll(idd)->centreOfStrip(strip);
     gp = getRPCGeometry()->idToDet(id)->surface().toGlobal(lp);
   }
 
@@ -188,7 +188,7 @@ RPCRecHitMatcher::recHitMeanPosition(const RecHitContainer& rechit) const
   float sumx, sumy, sumz;
   sumx = sumy = sumz = 0.f;
   size_t n = 0;
-  for (auto& d: rechit)
+  for (const auto& d: rechit)
   {
     GlobalPoint gp = recHitPosition(d);
     if (gp == point_zero) continue;
@@ -207,19 +207,19 @@ bool
 RPCRecHitMatcher::rpcRecHitInContainer(const RPCRecHit& rh, const RPCRecHitContainer& c) const
 {
   bool isSame = false;
-  for (auto& thisRH: c) if (areRPCRecHitSame(thisRH,rh)) isSame = true;
+  for (const auto& thisRH: c) if (areRPCRecHitSame(thisRH,rh)) isSame = true;
   return isSame;
 }
 
 
-bool 
+bool
 RPCRecHitMatcher::isRPCRecHitMatched(const RPCRecHit& thisRh) const
 {
   return rpcRecHitInContainer(thisRh, rpcRecHits());
 }
 
 
-bool 
+bool
 RPCRecHitMatcher::areRPCRecHitSame(const RPCRecHit& l, const RPCRecHit& r) const
 {
   return l.localPosition()==r.localPosition() and l.BunchX()==r.BunchX();

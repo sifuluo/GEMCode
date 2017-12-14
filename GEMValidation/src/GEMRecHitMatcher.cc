@@ -8,7 +8,7 @@ GEMRecHitMatcher::GEMRecHitMatcher(SimHitMatcher& sh, edm::EDGetTokenT<GEMRecHit
   : BaseMatcher(sh.trk(), sh.vtx(), sh.conf(), sh.event(), sh.eventSetup())
   , simhit_matcher_(&sh)
 {
-  auto gemRecHit_= conf().getParameter<edm::ParameterSet>("gemRecHit");
+  const auto& gemRecHit_= conf().getParameter<edm::ParameterSet>("gemRecHit");
   minBXGEM_ = gemRecHit_.getParameter<int>("minBX");
   maxBXGEM_ = gemRecHit_.getParameter<int>("maxBX");
   matchDeltaStrip_ = gemRecHit_.getParameter<int>("matchDeltaStrip");
@@ -27,14 +27,14 @@ GEMRecHitMatcher::~GEMRecHitMatcher() {}
 void
 GEMRecHitMatcher::matchRecHitsToSimTrack(const GEMRecHitCollection& rechits)
 {
-  
-  auto det_ids = simhit_matcher_->detIdsGEM();
-  for (auto id: det_ids)
+
+  const auto& det_ids = simhit_matcher_->detIdsGEM();
+  for (const auto& id: det_ids)
   {
     GEMDetId p_id(id);
     GEMDetId superch_id(p_id.region(), p_id.ring(), p_id.station(), 0, p_id.chamber(), 0);
 
-    auto hit_strips = simhit_matcher_->hitStripsInDetId(id, matchDeltaStrip_);
+    const auto& hit_strips = simhit_matcher_->hitStripsInDetId(id, matchDeltaStrip_);
     if (verboseGEMRecHit_)
     {
       cout<<"hit_strips_fat ";
@@ -42,7 +42,7 @@ GEMRecHitMatcher::matchRecHitsToSimTrack(const GEMRecHitCollection& rechits)
       cout<<endl;
     }
 
-    auto rechits_in_det = rechits.get(GEMDetId(id));
+    const auto& rechits_in_det = rechits.get(GEMDetId(id));
 
     for (auto d = rechits_in_det.first; d != rechits_in_det.second; ++d)
     {
@@ -59,13 +59,13 @@ GEMRecHitMatcher::matchRecHitsToSimTrack(const GEMRecHitCollection& rechits)
 
 	if (hit_strips.find(i) != hit_strips.end()) stripFound = true;
         //std::cout<<i<<" "<<firstStrip<<" "<<cls<<" "<<stripFound<<std::endl;
-	
+
       }
 
       if (!stripFound) continue;
       if (verboseGEMRecHit_) cout<<"oki"<<endl;
 
-      auto myrechit = make_digi(id, d->firstClusterStrip(), d->BunchX(), GEM_STRIP, d->clusterSize());
+      const auto& myrechit = make_digi(id, d->firstClusterStrip(), d->BunchX(), GEM_STRIP, d->clusterSize());
       detid_to_recHits_[id].push_back(myrechit);
       chamber_to_recHits_[ p_id.chamberId().rawId() ].push_back(myrechit);
       superchamber_to_recHits_[ superch_id() ].push_back(myrechit);
@@ -75,7 +75,7 @@ GEMRecHitMatcher::matchRecHitsToSimTrack(const GEMRecHitCollection& rechits)
       superchamber_to_gemRecHits_[ superch_id() ].push_back(*d);
     }
   }
-  
+
 }
 
 
@@ -83,7 +83,7 @@ std::set<unsigned int>
 GEMRecHitMatcher::detIds() const
 {
   std::set<unsigned int> result;
-  for (auto& p: detid_to_recHits_) result.insert(p.first);
+  for (const auto& p: detid_to_recHits_) result.insert(p.first);
   return result;
 }
 
@@ -92,7 +92,7 @@ std::set<unsigned int>
 GEMRecHitMatcher::chamberIds() const
 {
   std::set<unsigned int> result;
-  for (auto& p: chamber_to_recHits_) result.insert(p.first);
+  for (const auto& p: chamber_to_recHits_) result.insert(p.first);
   return result;
 }
 
@@ -100,7 +100,7 @@ std::set<unsigned int>
 GEMRecHitMatcher::superChamberIds() const
 {
   std::set<unsigned int> result;
-  for (auto& p: superchamber_to_recHits_) result.insert(p.first);
+  for (const auto& p: superchamber_to_recHits_) result.insert(p.first);
   return result;
 }
 
@@ -149,8 +149,8 @@ const GEMRecHitMatcher::GEMRecHitContainer
 GEMRecHitMatcher::gemRecHits() const
 {
   GEMRecHitContainer result;
-  for (auto id: chamberIds()){
-    auto rechitsInChamber(gemRecHitsInChamber(id));
+  for (const auto& id: chamberIds()){
+    const auto& rechitsInChamber(gemRecHitsInChamber(id));
     result.insert(result.end(), rechitsInChamber.begin(), rechitsInChamber.end());
   }
   return result;
@@ -162,8 +162,8 @@ GEMRecHitMatcher::nLayersWithRecHitsInSuperChamber(unsigned int detid) const
 {
   set<int> layers;
   /*
-  auto recHits = recHitsInSuperChamber(detid);
-  for (auto& d: recHits)
+  const auto& recHits = recHitsInSuperChamber(detid);
+  for (const auto& d: recHits)
   {
     GEMDetId idd(digi_id(d));
     layers.insert(idd.layer());
@@ -178,8 +178,8 @@ GEMRecHitMatcher::stripNumbersInDetId(unsigned int detid) const
 {
   set<int> result;
   /*
-  auto recHits = recHitsInDetId(detid);
-  for (auto& d: recHits)
+  const auto& recHits = recHitsInDetId(detid);
+  for (const auto& d: recHits)
   {
     result.insert( digi_channel(d) );
   }
@@ -192,8 +192,8 @@ GEMRecHitMatcher::partitionNumbers() const
 {
   std::set<int> result;
 
-  auto detids = detIds();
-  for (auto id: detids)
+  const auto& detids = detIds();
+  for (const auto& id: detids)
   {
     GEMDetId idd(id);
     result.insert( idd.roll() );
@@ -212,7 +212,7 @@ GEMRecHitMatcher::recHitPosition(const RecHit& rechit) const
   if ( t == GEM_STRIP )
   {
     GEMDetId idd(id);
-    LocalPoint lp = getGEMGeometry()->etaPartition(idd)->centreOfStrip(strip);
+    const LocalPoint& lp = getGEMGeometry()->etaPartition(idd)->centreOfStrip(strip);
     gp = getGEMGeometry()->idToDet(id)->surface().toGlobal(lp);
   }
 
@@ -229,9 +229,9 @@ GEMRecHitMatcher::recHitMeanPosition(const RecHitContainer& rechit) const
   float sumx, sumy, sumz;
   sumx = sumy = sumz = 0.f;
   size_t n = 0;
-  for (auto& d: rechit)
+  for (const auto& d: rechit)
   {
-    GlobalPoint gp = recHitPosition(d);
+    const GlobalPoint& gp = recHitPosition(d);
     if (gp == point_zero) continue;
 
     sumx += gp.x();
@@ -248,19 +248,19 @@ bool
 GEMRecHitMatcher::gemRecHitInContainer(const GEMRecHit& rh, const GEMRecHitContainer& c) const
 {
   bool isSame = false;
-  for (auto& thisRH: c) if (areGEMRecHitSame(thisRH,rh)) isSame = true;
+  for (const auto& thisRH: c) if (areGEMRecHitSame(thisRH,rh)) isSame = true;
   return isSame;
 }
 
 
-bool 
+bool
 GEMRecHitMatcher::isGEMRecHitMatched(const GEMRecHit& thisRh) const
 {
   return gemRecHitInContainer(thisRh, gemRecHits());
 }
 
 
-bool 
+bool
 GEMRecHitMatcher::areGEMRecHitSame(const GEMRecHit& l, const GEMRecHit& r) const
 {
   return l.localPosition()==r.localPosition() and l.BunchX()==r.BunchX();

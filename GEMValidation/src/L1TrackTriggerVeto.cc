@@ -15,7 +15,7 @@ L1TrackTriggerVeto::L1TrackTriggerVeto(const edm::ParameterSet& ps,
   isMediumVeto_ = false;
   isTightVeto_ = false;
 
-  auto l1track = ps_.getParameter<edm::ParameterSet>("l1track");
+  const auto& l1track = ps_.getParameter<edm::ParameterSet>("l1track");
   verbose_ = l1track.getParameter<int>("verbose");
   run_ = l1track.getParameter<bool>("run");
 
@@ -40,12 +40,12 @@ void L1TrackTriggerVeto::calculateTTIsolation(const std::vector< TTTrack< Ref_Ph
   nTrackTriggers_ = TTTracks.size();
 
   for (unsigned int j=0; j<TTTracks.size(); ++j) {
-    auto l1Tk = TTTracks[j];
+    const auto& l1Tk = TTTracks[j];
     const double l1Tk_pt = l1Tk.getMomentum().perp();
 
     double l1Tk_eta_prop = -99;
     double l1Tk_phi_prop = -99;
-    GlobalPoint ex_point(extrapolateGP(l1Tk));
+    const GlobalPoint& ex_point(extrapolateGP(l1Tk));
     if (!(ex_point == GlobalPoint())) {
       l1Tk_eta_prop = ex_point.eta();
       l1Tk_phi_prop = normalizedPhi((float)ex_point.phi());
@@ -71,8 +71,8 @@ GlobalPoint
 L1TrackTriggerVeto::extrapolateGP(const TTTrack< Ref_Phase2TrackerDigi_ > &tk, int station)
 {
   TrajectoryStateOnSurface tsos;
-  GlobalPoint inner_point(tk.getPOCA());
-  GlobalVector inner_vec (tk.getMomentum());
+  const GlobalPoint& inner_point(tk.getPOCA());
+  const GlobalVector& inner_vec (tk.getMomentum());
   double charge(tk.getRInv()>0? 1: -1);
   double R, Zmin, Zmax;
   if (station == 1){
@@ -100,7 +100,7 @@ L1TrackTriggerVeto::propagateToZ(const GlobalPoint &inner_point, const GlobalVec
 {
   Plane::PositionType pos(0.f, 0.f, z);
   Plane::RotationType rot;
-  Plane::PlanePointer my_plane(Plane::build(pos, rot));
+  const Plane::PlanePointer& my_plane(Plane::build(pos, rot));
 
   FreeTrajectoryState state_start(inner_point, inner_vec, charge, &*magfield_);
 
@@ -113,7 +113,7 @@ L1TrackTriggerVeto::propagateToZ(const GlobalPoint &inner_point, const GlobalVec
 TrajectoryStateOnSurface
 L1TrackTriggerVeto::propagateToR(const GlobalPoint &inner_point, const GlobalVector &inner_vec, double charge, double R) const
 {
-  Cylinder::CylinderPointer my_cyl(Cylinder::build(Surface::PositionType(0,0,0), Surface::RotationType(), R));
+  const Cylinder::CylinderPointer& my_cyl(Cylinder::build(Surface::PositionType(0,0,0), Surface::RotationType(), R));
 
   FreeTrajectoryState state_start(inner_point, inner_vec, charge, &*magfield_);
 
