@@ -16,7 +16,7 @@ BaseMatcher::BaseMatcher(const SimTrack& t, const SimVertex& v,
   // list of CSC chamber type numbers to use
   std::vector<int> csc_types = conf().getParameter<std::vector<int> >("cscStationsToUse");
   for (int i = CSC_ALL; i != CSC_ME42; i++) useCSCChamberTypes_[i] = false;
-  for (auto t: csc_types)
+  for (const auto& t: csc_types)
   {
     if (t >= 0 && t <= CSC_ME42) useCSCChamberTypes_[t] = true;
   }
@@ -26,7 +26,7 @@ BaseMatcher::BaseMatcher(const SimTrack& t, const SimVertex& v,
   // list of RPC chamber type numbers to use
   std::vector<int> rpc_types = conf().getParameter<std::vector<int> >("rpcStationsToUse");
   for (int i = RPC_ALL; i != RPC_MB24n; i++) useRPCChamberTypes_[i] = false;
-  for (auto t: rpc_types)
+  for (const auto& t: rpc_types)
   {
     if (t >= 0 && t <= RPC_MB24n) useRPCChamberTypes_[t] = true;
   }
@@ -36,7 +36,7 @@ BaseMatcher::BaseMatcher(const SimTrack& t, const SimVertex& v,
   // list of DT chamber type numbers to use
   std::vector<int> dt_types = conf().getParameter<std::vector<int> >("dtStationsToUse");
   for (int i = DT_ALL; i != DT_MB24n; i++) useDTChamberTypes_[i] = false;
-  for (auto t: dt_types)
+  for (const auto& t: dt_types)
   {
     if (t >= 0 && t <= DT_MB24n) useDTChamberTypes_[t] = true;
   }
@@ -46,7 +46,7 @@ BaseMatcher::BaseMatcher(const SimTrack& t, const SimVertex& v,
   // list of GEM chamber type numbers to use
   std::vector<int> gem_types = conf().getParameter<std::vector<int> >("gemStationsToUse");
   for (int i = GEM_ALL; i != GEM_ME21; i++) useGEMChamberTypes_[i] = false;
-  for (auto t: gem_types)
+  for (const auto& t: gem_types)
   {
     if (t >= 0 && t <= GEM_ME21) useGEMChamberTypes_[t] = true;
   }
@@ -67,44 +67,44 @@ BaseMatcher::BaseMatcher(const SimTrack& t, const SimVertex& v,
   hasME0Geometry_ = true;
   hasDTGeometry_ = true;
 
-  try {
-    es.get<MuonGeometryRecord>().get(gem_geom_);
+  es.get<MuonGeometryRecord>().get(gem_geom_);
+  if (gem_geom_.isValid()) {
     gemGeometry_ = &*gem_geom_;
-  } catch (edm::eventsetup::NoProxyException<GEMGeometry>& e) {
+  } else {
     hasGEMGeometry_ = false;
     std::cout << "+++ Info: GEM geometry is unavailable. +++\n";
   }
 
-  try {
-    es.get<MuonGeometryRecord>().get(me0_geom_);
+  es.get<MuonGeometryRecord>().get(me0_geom_);
+  if (me0_geom_.isValid()) {
     me0Geometry_ = &*me0_geom_;
-  } catch (edm::eventsetup::NoProxyException<ME0Geometry>& e) {
+  } else {
     hasME0Geometry_ = false;
     std::cout << "+++ Info: ME0 geometry is unavailable. +++\n";
   }
 
-  try {
-    es.get<MuonGeometryRecord>().get(csc_geom_);
-    cscGeometry_ = &*csc_geom_;
-  } catch (edm::eventsetup::NoProxyException<CSCGeometry>& e) {
-    hasCSCGeometry_ = false;
-    std::cout << "+++ Info: CSC geometry is unavailable. +++\n";
-  }
-
-  try {
-    es.get<MuonGeometryRecord>().get(rpc_geom_);
+  es.get<MuonGeometryRecord>().get(rpc_geom_);
+  if (rpc_geom_.isValid()) {
     rpcGeometry_ = &*rpc_geom_;
-  } catch (edm::eventsetup::NoProxyException<RPCGeometry>& e) {
+  } else {
     hasRPCGeometry_ = false;
     std::cout << "+++ Info: RPC geometry is unavailable. +++\n";
   }
 
-  try {
-    es.get<MuonGeometryRecord>().get(dt_geom_);
+  es.get<MuonGeometryRecord>().get(dt_geom_);
+  if (dt_geom_.isValid()) {
     dtGeometry_ = &*dt_geom_;
-  } catch (edm::eventsetup::NoProxyException<DTGeometry>& e) {
+  } else {
     hasDTGeometry_ = false;
     std::cout << "+++ Info: DT geometry is unavailable. +++\n";
+  }
+
+  es.get<MuonGeometryRecord>().get(csc_geom_);
+  if (csc_geom_.isValid()) {
+    cscGeometry_ = &*csc_geom_;
+  } else {
+    hasCSCGeometry_ = false;
+    std::cout << "+++ Info: CSC geometry is unavailable. +++\n";
   }
 
   simTrackPSet_ = conf().getParameter<edm::ParameterSet>("simTrack");
@@ -269,10 +269,10 @@ BaseMatcher::propagateFromME0ToCSC(ME0Segment segment,float pt, int charge, int 
   const GlobalPoint gp_csc = csclayer->centerOfWireGroup(10);
   //float propagate_z = (evenodd ? AVERAGE_ME11_ODD_Z : AVERAGE_ME11_EVEN_Z) * me0Id.region();
   float propagate_z = gp_csc.z();
-  LocalPoint lp(segment.localPosition());
+  const LocalPoint& lp(segment.localPosition());
   GlobalPoint SegPos(me0Chamber->toGlobal(lp));
-  LocalVector lv(segment.localDirection());
-  GlobalVector SegDir(me0Chamber->toGlobal(lv));
+  const LocalVector& lv(segment.localDirection());
+  const GlobalVector& SegDir(me0Chamber->toGlobal(lv));
   float ratio = pt/SegDir.perp();
   GlobalVector SegVec(SegDir.x()*ratio, SegDir.y()*ratio, SegDir.z()*ratio);
   //std::cout <<"CSC z "<< propagate_z <<" ME0 GP "<< SegPos << " GV "<< SegVec <<" GV.mag "<< SegVec.mag() <<" ratio "<< ratio << std::endl;

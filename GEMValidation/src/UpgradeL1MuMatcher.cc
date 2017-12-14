@@ -12,19 +12,19 @@ UpgradeL1MuMatcher::UpgradeL1MuMatcher(CSCStubMatcher& csc,
   : BaseMatcher(csc.trk(), csc.vtx(), csc.conf(), csc.event(), csc.eventSetup())
   , csc_stub_matcher_(&csc)
 {
-  auto tfTrack = conf().getParameter<edm::ParameterSet>("upgradeEmtfTrack");
+  const auto& tfTrack = conf().getParameter<edm::ParameterSet>("upgradeEmtfTrack");
   minBXEMTFTrack_ = tfTrack.getParameter<int>("minBX");
   maxBXEMTFTrack_ = tfTrack.getParameter<int>("maxBX");
   verboseEMTFTrack_ = tfTrack.getParameter<int>("verbose");
   deltaREMTFTrack_ = tfTrack.getParameter<double>("deltaR");
 
-  auto regionalMuonCand = conf().getParameter<edm::ParameterSet>("upgradeEmtfCand");
+  const auto& regionalMuonCand = conf().getParameter<edm::ParameterSet>("upgradeEmtfCand");
   minBXRegMuCand_ = regionalMuonCand.getParameter<int>("minBX");
   maxBXRegMuCand_ = regionalMuonCand.getParameter<int>("maxBX");
   verboseRegMuCand_ = regionalMuonCand.getParameter<int>("verbose");
   deltaRRegMuCand_ = regionalMuonCand.getParameter<double>("deltaR");
 
-  auto gmt = conf().getParameter<edm::ParameterSet>("upgradeGMT");
+  const auto& gmt = conf().getParameter<edm::ParameterSet>("upgradeGMT");
   minBXGMT_ = gmt.getParameter<int>("minBX");
   maxBXGMT_ = gmt.getParameter<int>("maxBX");
   verboseGMT_ = gmt.getParameter<int>("verbose");
@@ -174,7 +174,7 @@ void UpgradeL1MuMatcher::matchGMTToSimTrack(const BXVector<l1t::Muon>& gmtCands)
       float pt = L1Mu->pt();
       float phi = L1Mu->phi() ;
       float eta = L1Mu->eta();
-      for (auto trk : tfTracks_){
+      for (const auto& trk : tfTracks_){
         float dR = deltaR(trk->eta(), trk->phi(), eta, phi);
         float dPtRel = std::fabs(trk->pt() - pt)/pt;
         if (dR < deltaRGMT_ and dPtRel < mindPtRel){

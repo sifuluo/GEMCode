@@ -6,7 +6,7 @@ DisplacedGENMuonMatcher::DisplacedGENMuonMatcher(const SimTrack& t, const SimVer
   : BaseMatcher(t, v, ps, ev, es)
 {
   //  if(gemvalidation::getByToken("genParticles", genParticles, event())) return;//
-  auto displacedGenMu_= conf().getParameter<edm::ParameterSet>("displacedGenMu");
+  const auto& displacedGenMu_= conf().getParameter<edm::ParameterSet>("displacedGenMu");
   verbose_ = displacedGenMu_.getParameter<int>("verbose");
   run_ = displacedGenMu_.getParameter<bool>("run");
   sampleType_ = displacedGenMu_.getParameter<int>("sampleType");
@@ -51,7 +51,7 @@ DisplacedGENMuonMatcher::matchDisplacedGENMuonMatcherToSimTrack(const reco::GenP
   std::vector<const reco::Candidate*>   genMuonMothers;
 
   int counterGenParticle = 0;
-  for(reco::GenParticleCollection::const_iterator iGenParticle = genParticles.begin();  iGenParticle != genParticles.end();  ++iGenParticle) {
+  for(auto iGenParticle = genParticles.begin();  iGenParticle != genParticles.end();  ++iGenParticle) {
     counterGenParticle++;
     // Check if gen particle is muon (pdgId = +/-13) and stable (status = 1)
     //    if (verbose_) std::cout << counterGenParticle << " " << iGenParticle->status() << " " << iGenParticle->pdgId() << " " << iGenParticle->vx() << " " << iGenParticle->vy() << " " << iGenParticle->vz() << std::endl;
@@ -310,7 +310,7 @@ DisplacedGENMuonMatcher::matchDisplacedGENMuonFromMuonGunMatcherToSimTrack(const
 
   float minDeltaR = 0.6;
   int counterGenParticle = 0;
-  for(reco::GenParticleCollection::const_iterator iGenParticle = genParticles.begin();  iGenParticle != genParticles.end();  ++iGenParticle) {
+  for(auto iGenParticle = genParticles.begin();  iGenParticle != genParticles.end();  ++iGenParticle) {
     counterGenParticle++;
     // Check if gen particle is muon (pdgId = +/-13) and stable (status = 1)
     if ( fabs( iGenParticle->pdgId() ) == 13 and iGenParticle->status() == 1 ) {
@@ -334,14 +334,14 @@ DisplacedGENMuonMatcher::matchDisplacedGENMuonFromMuonGunMatcherToSimTrack(const
 
 }
 
-double 
+double
 DisplacedGENMuonMatcher::dxy(double px, double py, double vx, double vy, double pt)
 {
   //Source: https://cmssdt.cern.ch/SDT/lxr/source/DataFormats/TrackReco/interface/TrackBase.h#119
   return (- vx * py + vy * px ) / pt;
 }
 
-double 
+double
 DisplacedGENMuonMatcher::phiHeavyCorr(double pt, double eta, double phi, double q)
 {
   //  float resEta = eta;
@@ -354,7 +354,7 @@ DisplacedGENMuonMatcher::phiHeavyCorr(double pt, double eta, double phi, double 
 }
 
 double
-DisplacedGENMuonMatcher::invariantMass(const reco::Candidate* p1, const reco::Candidate* p2) 
+DisplacedGENMuonMatcher::invariantMass(const reco::Candidate* p1, const reco::Candidate* p2)
 {
   return  sqrt((p1->energy() + p2->energy())*(p1->energy() + p2->energy()) -
                (p1->px() + p2->px())*(p1->px() + p2->px()) -
