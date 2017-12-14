@@ -449,6 +449,47 @@ void DisplacedMuonTriggerPtassignment::setupGeometry(const edm::EventSetup& es)
   hasME0Geometry_ = true;
   hasDTGeometry_ = true;
 
+  es.get<MuonGeometryRecord>().get(gem_geom_);
+  if (gem_geom_.isValid()) {
+    gemGeometry_ = &*gem_geom_;
+  } else {
+    hasGEMGeometry_ = false;
+    std::cout << "+++ Info: GEM geometry is unavailable. +++\n";
+  }
+
+  es.get<MuonGeometryRecord>().get(me0_geom_);
+  if (me0_geom_.isValid()) {
+    me0Geometry_ = &*me0_geom_;
+  } else {
+    hasME0Geometry_ = false;
+    std::cout << "+++ Info: ME0 geometry is unavailable. +++\n";
+  }
+
+  es.get<MuonGeometryRecord>().get(rpc_geom_);
+  if (rpc_geom_.isValid()) {
+    rpcGeometry_ = &*rpc_geom_;
+  } else {
+    hasRPCGeometry_ = false;
+    std::cout << "+++ Info: RPC geometry is unavailable. +++\n";
+  }
+
+  es.get<MuonGeometryRecord>().get(dt_geom_);
+  if (dt_geom_.isValid()) {
+    dtGeometry_ = &*dt_geom_;
+  } else {
+    hasDTGeometry_ = false;
+    std::cout << "+++ Info: DT geometry is unavailable. +++\n";
+  }
+
+  es.get<MuonGeometryRecord>().get(csc_geom_);
+  if (csc_geom_.isValid()) {
+    cscGeometry_ = &*csc_geom_;
+  } else {
+    hasCSCGeometry_ = false;
+    std::cout << "+++ Info: CSC geometry is unavailable. +++\n";
+  }
+
+  /*
   try {
     es.get<MuonGeometryRecord>().get(gem_geom_);
     gemGeometry_ = &*gem_geom_;
@@ -488,7 +529,7 @@ void DisplacedMuonTriggerPtassignment::setupGeometry(const edm::EventSetup& es)
     hasDTGeometry_ = false;
     std::cout << "+++ Info: DT geometry is unavailable. +++\n";
   }
-
+  */
 
 }
 

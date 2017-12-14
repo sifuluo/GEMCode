@@ -70,16 +70,16 @@ public:
   float dxy() const;
 
   /// general interface to propagation
-  GlobalPoint propagateToZ(GlobalPoint &inner_point, GlobalVector &inner_vector, float z) const;
+  GlobalPoint propagateToZ(const GlobalPoint &inner_point, const GlobalVector &inner_vector, float z) const;
 
   /// general interface to propagation
-  GlobalPoint propagateToZCharge(GlobalPoint &inner_point, GlobalVector &inner_vector, float z, int charge) const;
+  GlobalPoint propagateToZCharge(const GlobalPoint &inner_point, const GlobalVector &inner_vector, float z, int charge) const;
 
   /// propagation for a track starting from a vertex
   GlobalPoint propagateToZ(float z) const;
 
   /// general interface to propagation
-  GlobalPoint propagateToR(GlobalPoint &inner_point, GlobalVector &inner_vector, float r) const;
+  GlobalPoint propagateToR(const GlobalPoint &inner_point, const GlobalVector &inner_vector, float r) const;
   /// propagation for a track starting from a vertex
   GlobalPoint propagateToR(float r) const;
 
@@ -90,7 +90,7 @@ public:
   GlobalPoint propagatedPositionGEM() const;
 
   /// propaate from ME0 to CSC
-  GlobalPoint propagateFromME0ToCSC(ME0Segment segment, float pt, int charge, int st, bool evenodd) const;
+  GlobalPoint propagateFromME0ToCSC(const ME0Segment& segment, float pt, int charge, int st, bool evenodd) const;
 
   /// geometry
   void setGEMGeometry(const GEMGeometry *geom) {gemGeometry_ = geom;}
@@ -106,7 +106,7 @@ public:
   const DTGeometry* getDTGeometry() const {return dtGeometry_;}
 
   double phiHeavyCorr(double pt, double eta, double phi, double charge) const;
-  bool passDPhicut(CSCDetId id, int chargesign, float dphi, float pt) const;
+  bool passDPhicut(const CSCDetId& id, int chargesign, float dphi, float pt) const;
 
   const CSCLayerGeometry* retriveCSCKeyLayerGeometry(int rawid) const;
 

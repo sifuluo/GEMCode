@@ -30,17 +30,17 @@ class SimHitMatcher;
 class CSCStubMatcher : public DigiMatcher
 {
 public:
-  
+
   typedef std::map<int, std::vector<std::pair<unsigned int, const GEMPadDigi*> > > GEMPads;
   typedef std::pair<unsigned int, const GEMPadDigi*> GEMPadBX;
   typedef std::vector<GEMPadBX> GEMPadsBX;
 
   CSCStubMatcher(SimHitMatcher& sh, CSCDigiMatcher& dg, GEMDigiMatcher& gem_dg, RPCDigiMatcher& rpc_dg,
-                 edm::EDGetTokenT<CSCCLCTDigiCollection>& clctInputs_, 
-                 edm::EDGetTokenT<CSCALCTDigiCollection>& alctInputs_, 
-                 edm::EDGetTokenT<CSCCorrelatedLCTDigiCollection>& lctInputs_, 
+                 edm::EDGetTokenT<CSCCLCTDigiCollection>& clctInputs_,
+                 edm::EDGetTokenT<CSCALCTDigiCollection>& alctInputs_,
+                 edm::EDGetTokenT<CSCCorrelatedLCTDigiCollection>& lctInputs_,
                  edm::EDGetTokenT<CSCCorrelatedLCTDigiCollection>& mplctInputs_);
-  
+
   ~CSCStubMatcher();
 
   /// crossed chamber detIds with not necessarily matching stubs
@@ -48,7 +48,7 @@ public:
   std::set<unsigned int> chamberIdsAllALCT(int csc_type = CSC_ALL) const;
   std::set<unsigned int> chamberIdsAllLCT(int csc_type = CSC_ALL) const;
   std::set<unsigned int> chamberIdsAllMPLCT(int csc_type = CSC_ALL) const;
- 
+
   /// chamber detIds with matching stubs
   /// by default, only returns those from ME1b; use al chambers if csc_type=0
   std::set<unsigned int> chamberIdsCLCT(int csc_type = CSC_ALL) const;
@@ -95,11 +95,11 @@ public:
   CSCCorrelatedLCTDigi bestCscMplctInChamber(unsigned int) const;
 
   // get matching comparator digis for a given stub in a chamber
-  CSCComparatorDigiDetIdContainer 
+  CSCComparatorDigiDetIdContainer
     matchingComparatorDigisLCT(unsigned int, const CSCCorrelatedLCTDigi&) const;
-  CSCWireDigiDetIdContainer 
+  CSCWireDigiDetIdContainer
     matchingWireDigisLCT(unsigned int, const CSCCorrelatedLCTDigi&) const;
-   
+
   //get global position of matching comparator digi in each layer
   void positionsOfComparatorInLCT(unsigned int, const CSCCorrelatedLCTDigi&, std::vector<GlobalPoint>&) const;
   //z position of  certain layer
@@ -116,18 +116,18 @@ public:
   int nChambersWithLCT(int min_quality = 0) const;
   int nChambersWithMPLCT(int min_quality = 0) const;
 
-  bool checkStubInChamber(CSCDetId id, CSCCorrelatedLCTDigi lct) const;
-  bool wasStubMatchedInChamber(CSCDetId id, CSCCorrelatedLCTDigi lct) const;
+  bool checkStubInChamber(const CSCDetId& id, const CSCCorrelatedLCTDigi& lct) const;
+  bool wasStubMatchedInChamber(const CSCDetId& id, const CSCCorrelatedLCTDigi& lct) const;
 
   // get the position of an LCT in global coordinates
   GlobalPoint getGlobalPosition(unsigned int rawId, const CSCCorrelatedLCTDigi& lct) const;
 
   // get the fractional strip for an LCT that can be used in the geometry
   float getFractionalStrip(const CSCCorrelatedLCTDigi& lct) const;
-  
+
   // get the bending angle from the pattern number and bending bit
   float getAverageBendingLCT(unsigned int rawId, const CSCCorrelatedLCTDigi& lct) const;
-  
+
 private:
 
   void matchCLCTsToSimTrack(const CSCCLCTDigiCollection&);
@@ -188,7 +188,7 @@ private:
   int minNHitsChamberCLCT_;
   int minNHitsChamberLCT_;
   int minNHitsChamberMPLCT_;
-  
+
   bool verboseALCT_;
   bool verboseCLCT_;
   bool verboseLCT_;

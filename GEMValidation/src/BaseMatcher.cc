@@ -163,7 +163,8 @@ BaseMatcher::dxy() const
 
 
 GlobalPoint
-BaseMatcher::propagateToZCharge(GlobalPoint &inner_point, GlobalVector &inner_vec, float z, int charge) const
+BaseMatcher::propagateToZCharge(const GlobalPoint &inner_point,
+                                const GlobalVector &inner_vec, float z, int charge) const
 {
   Plane::PositionType pos(0.f, 0.f, z);
   Plane::RotationType rot;
@@ -185,7 +186,8 @@ BaseMatcher::propagateToZCharge(GlobalPoint &inner_point, GlobalVector &inner_ve
 
 
 GlobalPoint
-BaseMatcher::propagateToZ(GlobalPoint &inner_point, GlobalVector &inner_vec, float z) const
+BaseMatcher::propagateToZ(const GlobalPoint &inner_point,
+                          const GlobalVector &inner_vec, float z) const
 {
   Plane::PositionType pos(0.f, 0.f, z);
   Plane::RotationType rot;
@@ -215,7 +217,8 @@ BaseMatcher::propagateToZ(float z) const
 }
 
 GlobalPoint
-BaseMatcher::propagateToR(GlobalPoint &inner_point, GlobalVector &inner_vec, float R) const
+BaseMatcher::propagateToR(const GlobalPoint &inner_point,
+                          const GlobalVector &inner_vec, float R) const
 {
   Cylinder::CylinderPointer my_cyl(Cylinder::build(Surface::PositionType(0,0,0), Surface::RotationType(), R));
 
@@ -256,7 +259,7 @@ BaseMatcher::propagatedPositionSt2() const
 
 
 GlobalPoint
-BaseMatcher::propagateFromME0ToCSC(ME0Segment segment,float pt, int charge, int st, bool evenodd) const
+BaseMatcher::propagateFromME0ToCSC(const ME0Segment& segment,float pt, int charge, int st, bool evenodd) const
 {
   int chamber = (evenodd? 1:2);
   int ring = 1;
@@ -296,7 +299,7 @@ BaseMatcher::phiHeavyCorr(double pt, double eta, double phi, double charge) cons
 
 
 
-bool BaseMatcher::passDPhicut(CSCDetId id, int chargesign, float dphi, float pt) const
+bool BaseMatcher::passDPhicut(const CSCDetId& id, int chargesign, float dphi, float pt) const
 //BaseMatcher::passDPhicut(CSCDetId id, float dPhi, float pt) const
 {
   //  const double GEMdPhi[9][3];

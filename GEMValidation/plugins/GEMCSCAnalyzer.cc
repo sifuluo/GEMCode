@@ -450,6 +450,12 @@ struct MyTrackEff
   float L1Track_phi;
   float L1TrackMuon_eta;
   float L1TrackMuon_phi;
+  float GMTCand_eta;
+  float GMTCand_phi;
+  float sim_st2_eta;
+  float sim_st2_phi;
+  float sim_prop_eta;
+  float sim_prop_phi;
   float dR_prop_L1TrackMuon;
   float dR_st2_L1TrackMuon;
   float dR_L1Track;
@@ -937,8 +943,15 @@ void MyTrackEff::init()
   L1Track_phi = -99;
   L1TrackMuon_eta = -99;
   L1TrackMuon_phi = -99;
-  dR_L1TrackMuon = -99;
-
+  GMTCand_eta = -99;
+  GMTCand_phi = -99;
+  sim_st2_eta = -99;
+  sim_st2_phi = -99;
+  sim_prop_eta = -99;
+  sim_prop_phi = -99;
+  dR_prop_L1TrackMuon = -99;
+  dR_st2_L1TrackMuon = -99;
+  dR_L1Track = -99;
 }
 
 
@@ -1414,6 +1427,20 @@ TTree* MyTrackEff::book(TTree *t, const std::string & name)
   t->Branch("isL1MediumVeto", &isL1MediumVeto);
   t->Branch("isL1TightVeto", &isL1TightVeto);
   t->Branch("nTrackTriggers", &nTrackTriggers);
+
+  t->Branch("L1Track_eta", &L1Track_eta);
+  t->Branch("L1Track_phi", &L1Track_phi);
+  t->Branch("L1TrackMuon_eta", &L1TrackMuon_eta);
+  t->Branch("L1TrackMuon_phi", &L1TrackMuon_phi);
+  t->Branch("GMTCand_eta", &GMTCand_eta);
+  t->Branch("GMTCand_phi", &GMTCand_phi);
+  t->Branch("sim_st2_eta", &sim_st2_eta);
+  t->Branch("sim_st2_phi", &sim_st2_phi);
+  t->Branch("sim_prop_eta", &sim_prop_eta);
+  t->Branch("sim_prop_phi", &sim_prop_phi);
+  t->Branch("dR_prop_L1TrackMuon", &dR_prop_L1TrackMuon);
+  t->Branch("dR_st2_L1TrackMuon", &dR_st2_L1TrackMuon);
+  t->Branch("dR_L1Track", &dR_L1Track);
 
   return t;
 }
@@ -3926,54 +3953,59 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
 
   // matched track-muon information
   cout<<"Best TrackMuon "<<endl;
+  // track-match
 
-  float L1Track_eta = match_track.bestL1Track()->getMomentum().eta();
-  float L1Track_phi = (float)match_track.bestL1Track()->getMomentum().phi();
+  etrk_[0].L1Track_eta = match_track.bestL1Track()->getMomentum().eta();
+  etrk_[0].L1Track_phi = (float)match_track.bestL1Track()->getMomentum().phi();
 
-  cout<<"Best l1Tk_eta "<<L1Track_eta<<endl;
-  cout<<"Best l1Tk_phi "<<L1Track_phi<<endl;
+  cout<<"Best l1Tk_eta "<<etrk_[0].L1Track_eta<<endl;
+  cout<<"Best l1Tk_phi "<<etrk_[0].L1Track_phi<<endl;
 
-  float dR_L1Track = reco::deltaR(L1Track_eta, L1Track_phi, etrk_[0].eta, etrk_[0].phi);
-  cout<<"Delta(sim,L1Track) " << dR_L1Track << endl;
+  etrk_[0].dR_L1Track = reco::deltaR(etrk_[0].L1Track_eta, etrk_[0].L1Track_phi, etrk_[0].eta, etrk_[0].phi);
+  cout<<"Delta(sim,L1Track) " << etrk_[0].dR_L1Track << endl;
 
   if (l1GmtCands.size() and match_muon.bestGMTCand()) {
 
-    float sim_prop_eta = match_sh.propagatedPositionSt2().eta();
-    float sim_prop_phi = (float)match_sh.propagatedPositionSt2().phi();
+    etrk_[0].sim_prop_eta = match_sh.propagatedPositionSt2().eta();
+    etrk_[0].sim_prop_phi = (float)match_sh.propagatedPositionSt2().phi();
 
-    cout<<"sim prop eta "<<sim_prop_eta<<endl;
-    cout<<"sim prop phi "<<sim_prop_phi<<endl;
+    cout<<"sim prop eta "<<etrk_[0].sim_prop_eta<<endl;
+    cout<<"sim prop phi "<<etrk_[0].sim_prop_phi<<endl;
 
-    float sim_st2_eta = match_sh.simHitsMeanPositionSecondStation().eta();
-    float sim_st2_phi = match_sh.simHitsMeanPositionSecondStation().phi();
+    etrk_[0].sim_st2_eta = match_sh.simHitsMeanPositionSecondStation().eta();
+    etrk_[0].sim_st2_phi = match_sh.simHitsMeanPositionSecondStation().phi();
 
-    cout<<"sim st2 eta "<<sim_st2_eta<<endl;
-    cout<<"sim st2 phi "<<sim_st2_phi<<endl;
+    cout<<"sim st2 eta "<<etrk_[0].sim_st2_eta<<endl;
+    cout<<"sim st2 phi "<<etrk_[0].sim_st2_phi<<endl;
 
     const TFCand* bestGmtCand = match_muon.bestGMTCand();
-    float GMTCand_eta = bestGmtCand->eta();
-    float GMTCand_phi = bestGmtCand->phi();
+    etrk_[0].GMTCand_eta = bestGmtCand->eta();
+    etrk_[0].GMTCand_phi = bestGmtCand->phi();
 
-    cout<<"GMTCand_eta "<<GMTCand_eta<<endl;
-    cout<<"GMTCand_phi "<<GMTCand_phi<<endl;
+    cout<<"GMTCand_eta "<<etrk_[0].GMTCand_eta<<endl;
+    cout<<"GMTCand_phi "<<etrk_[0].GMTCand_phi<<endl;
 
     if (match_track.bestTrackMuon() != nullptr){
 
-      float L1TrackMuon_eta = match_track.bestTrackMuon()->getMuRef()->eta();
-      float L1TrackMuon_phi = (float)match_track.bestTrackMuon()->getMuRef()->phi();
+      etrk_[0].L1TrackMuon_eta = match_track.bestTrackMuon()->getMuRef()->eta();
+      etrk_[0].L1TrackMuon_phi = (float)match_track.bestTrackMuon()->getMuRef()->phi();
 
-      cout<<"Best muon_eta "<<L1TrackMuon_eta<<endl;
-      cout<<"Best muon_phi "<<L1TrackMuon_phi<<endl;
+      cout<<"Best muon_eta "<<etrk_[0].L1TrackMuon_eta<<endl;
+      cout<<"Best muon_phi "<<etrk_[0].L1TrackMuon_phi<<endl;
 
 
 
-      float dR_prop_L1TrackMuon = reco::deltaR(L1TrackMuon_eta, L1TrackMuon_phi,
-                                               sim_prop_eta, sim_prop_phi);
-      cout<<"Delta(sim prop,L1TrackMuon) " << dR_prop_L1TrackMuon << endl;
+      etrk_[0].dR_prop_L1TrackMuon = reco::deltaR(etrk_[0].L1TrackMuon_eta,
+                                                  etrk_[0].L1TrackMuon_phi,
+                                                  etrk_[0].sim_prop_eta, etrk_[0].sim_prop_phi);
+      cout<<"Delta(sim prop,L1TrackMuon) " << etrk_[0].dR_prop_L1TrackMuon << endl;
 
-      float dR_st2_L1TrackMuon = reco::deltaR(L1TrackMuon_eta, L1TrackMuon_phi,
-                                              sim_st2_eta, sim_st2_phi);
-      cout<<"Delta(sim st2,L1TrackMuon) " << dR_st2_L1TrackMuon << endl;
+      etrk_[0].dR_st2_L1TrackMuon = reco::deltaR(etrk_[0].L1TrackMuon_eta, etrk_[0].L1TrackMuon_phi,
+                                                 etrk_[0].sim_st2_eta, etrk_[0].sim_st2_phi);
+      cout<<"Delta(sim st2,L1TrackMuon) " << etrk_[0].dR_st2_L1TrackMuon << endl;
+    }
+    else{
+      std::cout << "ERROR: No matching L1TrkMu when L1Mu was there" << std::endl;
     }
   }
 
