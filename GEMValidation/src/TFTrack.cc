@@ -43,7 +43,7 @@ TFTrack::TFTrack(const l1t::EMTFTrack *t)
   bx_ = t->BX();
   nstubs = 0;
   dr_ = 10.0;
-  for (auto hit : *trackHits_)
+  for (const auto& hit : *trackHits_)
       if (hit.Is_CSC_hit()) nstubs++;
 
 }
@@ -105,7 +105,7 @@ bool
 TFTrack::hasStubEndcap(int st) const
 {
   if (trackType_ == EMTF_Track){
-    for (auto stub : *trackHits_)
+    for (const auto& stub : *trackHits_)
       if (stub.Is_CSC_hit() and stub.Station() == st) return true;
   }
   return false;
@@ -215,13 +215,13 @@ unsigned int TFTrack::digiInME(int st, int ring) const
       if (triggerDigis_.size() != triggerIds_.size()) std::cout<<" BUG " <<std::endl;
       for (unsigned int i=0; i<triggerDigis_.size(); i++)
       {
-	 auto id(triggerIds_.at(i));
+	 const auto& id(triggerIds_.at(i));
 	 if (id.station()==st && id.ring()==ring) return i;
 	 else continue;
       }
   }else if (trackType_ == EMTF_Track){
       unsigned int i =0;
-      for (auto hit : *trackHits_){
+      for (const auto& hit : *trackHits_){
      	if (hit.Station() == st and hit.Ring() == ring and hit.Is_CSC_hit())
 	    return i;
 	i++;

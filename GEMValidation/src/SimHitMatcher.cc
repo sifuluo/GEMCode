@@ -176,7 +176,7 @@ SimHitMatcher::SimHitMatcher(const SimTrack& t, const SimVertex& v,
       // select RPC simhits
       edm::PSimHitContainer rpc_hits_select;
       for (const auto& h: *rpc_hits.product()) {
-        RPCDetId id(h.detUnitId());
+        const RPCDetId& id(h.detUnitId());
         if (useRPCChamberType(gemvalidation::toRPCType(id.region(), id.station(), id.ring()))) rpc_hits_select.push_back(h);
       }
 
@@ -208,7 +208,7 @@ SimHitMatcher::SimHitMatcher(const SimTrack& t, const SimVertex& v,
       // select DT simhits
       edm::PSimHitContainer dt_hits_select;
       for (const auto& h: *dt_hits.product()) {
-        DTWireId id(h.detUnitId());
+        const DTWireId id(h.detUnitId());
         if (useDTChamberType(gemvalidation::toDTType(id.wheel(), id.station()))) dt_hits_select.push_back(h);
       }
 
@@ -303,7 +303,7 @@ SimHitMatcher::matchCSCSimHitsToSimTrack(std::vector<unsigned int> track_ids, co
 
       csc_detid_to_hits_[ h.detUnitId() ].push_back(h);
       csc_hits_.push_back(h);
-      CSCDetId layer_id( h.detUnitId() );
+      const CSCDetId& layer_id( h.detUnitId() );
       csc_chamber_to_hits_[ layer_id.chamberId().rawId() ].push_back(h);
     }
   }
@@ -324,7 +324,7 @@ SimHitMatcher::matchRPCSimHitsToSimTrack(std::vector<unsigned int> track_ids, co
       if (discardEleHitsRPC_ && pdgid == 11) continue;
       rpc_detid_to_hits_[ h.detUnitId() ].push_back(h);
       rpc_hits_.push_back(h);
-      RPCDetId layer_id( h.detUnitId() );
+      const RPCDetId& layer_id( h.detUnitId() );
       rpc_chamber_to_hits_[ layer_id.chamberId().rawId() ].push_back(h);
     }
   }
@@ -344,7 +344,7 @@ SimHitMatcher::matchGEMSimHitsToSimTrack(std::vector<unsigned int> track_ids, co
       // discard electron hits in the GEM chambers
       if (discardEleHitsGEM_ && pdgid == 11) continue;
 
-      GEMDetId p_id( h.detUnitId() );
+      const GEMDetId& p_id( h.detUnitId() );
 
       gem_detid_to_hits_[ h.detUnitId() ].push_back(h);
       gem_hits_.push_back(h);
@@ -440,7 +440,7 @@ SimHitMatcher::matchME0SimHitsToSimTrack(std::vector<unsigned int> track_ids, co
 
       me0_detid_to_hits_[ h.detUnitId() ].push_back(h);
       me0_hits_.push_back(h);
-      ME0DetId layer_id( h.detUnitId() );
+      const ME0DetId& layer_id( h.detUnitId() );
       me0_chamber_to_hits_[ layer_id.layerId().rawId() ].push_back(h);
       me0_superchamber_to_hits_[ layer_id.chamberId().rawId() ].push_back(h);
     }
@@ -462,7 +462,7 @@ SimHitMatcher::matchDTSimHitsToSimTrack(std::vector<unsigned int> track_ids, con
       if (discardEleHitsDT_ && pdgid == 11) continue;
 
       dt_detid_to_hits_[ h.detUnitId() ].push_back(h);
-      DTWireId layer_id( h.detUnitId() );
+      const DTWireId layer_id( h.detUnitId() );
       dt_hits_.push_back(h);
       dt_layer_to_hits_ [ layer_id.layerId().rawId() ].push_back(h);
       dt_superlayer_to_hits_ [ layer_id.superlayerId().rawId() ].push_back(h);
@@ -702,7 +702,7 @@ SimHitMatcher::superChamberIdsGEMCoincidences() const
   std::set<unsigned int> result;
   for (const auto& p: gem_detids_to_copads_)
   {
-    GEMDetId p_id(p.first);
+    const GEMDetId& p_id(p.first);
     GEMDetId superch_id(p_id.region(), p_id.ring(), p_id.station(), 0, p_id.chamber(), 0);
     //std::cout <<"superChamberIdsGEMCoincidences id "<< superch_id << std::endl;
     result.insert(superch_id.rawId());
@@ -854,22 +854,22 @@ SimHitMatcher::nLayersWithHitsInSuperChamber(unsigned int detid) const
   {
     if (gemvalidation::is_gem(detid))
     {
-      const GEMDetId idd(h.detUnitId());
+      const GEMDetId& idd(h.detUnitId());
       layers_with_hits.insert(idd.layer());
     }
     if (gemvalidation::is_me0(detid))
     {
-      const ME0DetId idd(h.detUnitId());
+      const ME0DetId& idd(h.detUnitId());
       layers_with_hits.insert(idd.layer());
     }
     if (gemvalidation::is_csc(detid))
     {
-      const CSCDetId idd(h.detUnitId());
+      const CSCDetId& idd(h.detUnitId());
       layers_with_hits.insert(idd.layer());
     }
     if (gemvalidation::is_rpc(detid))
     {
-      const RPCDetId idd(h.detUnitId());
+      const RPCDetId& idd(h.detUnitId());
       layers_with_hits.insert(idd.layer());
     }
   }
@@ -1126,7 +1126,7 @@ SimHitMatcher::simHitPositionKeyLayer(unsigned int chid) const
 	  //std::cout <<"layerId "<< l_id;
           const LocalPoint& lp = p.entryPoint();
 	  //std::cout <<" localPoint (x,y): "<<lp.x()<<" "<< lp.y();
-          GlobalPoint gp = getCSCGeometry()->idToDet(p.detUnitId())->surface().toGlobal(lp);
+          const GlobalPoint& gp = getCSCGeometry()->idToDet(p.detUnitId())->surface().toGlobal(lp);
 	 // std::cout <<" gp (x,y,z) "<< gp.x()<<" "<< gp.y()<<" "<< gp.z()<< std::endl;
           zs.push_back(gp.z());
           xs.push_back(gp.x());
@@ -1250,45 +1250,44 @@ SimHitMatcher::LocalBendingInChamber(unsigned int detid) const
   if (cscid.station()==1 and (cscid.ring()==1 or cscid.ring()==4)){
   	const CSCDetId cscid1a(cscid.endcap(), cscid.station(), 4, cscid.chamber(), 1);
   	const CSCDetId cscid1b(cscid.endcap(), cscid.station(), 1, cscid.chamber(), 1);
-	const edm::PSimHitContainer hits1a = hitsInDetId(cscid1a.rawId());
-	const edm::PSimHitContainer hits1b = hitsInDetId(cscid1b.rawId());
-	GlobalPoint gp1a = simHitsMeanPosition(hitsInDetId(cscid1a.rawId()));
-	GlobalPoint gp1b = simHitsMeanPosition(hitsInDetId(cscid1b.rawId()));
-	if (hits1a.size()>0 and hits1b.size()>0)
+    const edm::PSimHitContainer& hits1a = hitsInDetId(cscid1a.rawId());
+    const edm::PSimHitContainer& hits1b = hitsInDetId(cscid1b.rawId());
+    const GlobalPoint& gp1a = simHitsMeanPosition(hitsInDetId(cscid1a.rawId()));
+    const GlobalPoint& gp1b = simHitsMeanPosition(hitsInDetId(cscid1b.rawId()));
+    if (hits1a.size()>0 and hits1b.size()>0)
 	    //phi_layer1 = (gp1a.phi()*hits1a.size()+gp1b.phi()*hits1b.size())/(hits1a.size()+hits1b.size());
 	    phi_layer1 = (gp1a.phi()+gp1b.phi())/2.0;
-	else if (hits1a.size()>0) phi_layer1 = gp1a.phi();
-	else if (hits1b.size()>0) phi_layer1 = gp1b.phi();
-	else std::cerr <<" no hits in layer1, cant not find global phi of hits " << std::endl;
+    else if (hits1a.size()>0) phi_layer1 = gp1a.phi();
+    else if (hits1b.size()>0) phi_layer1 = gp1b.phi();
+    else std::cerr <<" no hits in layer1, cant not find global phi of hits " << std::endl;
 
   	const CSCDetId cscid6a(cscid.endcap(), cscid.station(), 4, cscid.chamber(), 6);
   	const CSCDetId cscid6b(cscid.endcap(), cscid.station(), 1, cscid.chamber(), 6);
-	const edm::PSimHitContainer hits6a = hitsInDetId(cscid6a.rawId());
-	const edm::PSimHitContainer hits6b = hitsInDetId(cscid6b.rawId());
-	GlobalPoint gp6a = simHitsMeanPosition(hitsInDetId(cscid6a.rawId()));
-	GlobalPoint gp6b = simHitsMeanPosition(hitsInDetId(cscid6b.rawId()));
-	if (hits6a.size()>0 and hits6b.size()>0)
+    const edm::PSimHitContainer& hits6a = hitsInDetId(cscid6a.rawId());
+    const edm::PSimHitContainer& hits6b = hitsInDetId(cscid6b.rawId());
+    const GlobalPoint& gp6a = simHitsMeanPosition(hitsInDetId(cscid6a.rawId()));
+    const GlobalPoint& gp6b = simHitsMeanPosition(hitsInDetId(cscid6b.rawId()));
+    if (hits6a.size()>0 and hits6b.size()>0)
 	    //phi_layer6 = (gp6a.phi()*hits6a.size()+gp6b.phi()*hits6b.size())/(hits6a.size()+hits6b.size());
 	    phi_layer6 = (gp6a.phi()+gp6b.phi())/2.0;
-	else if (hits6a.size()>0) phi_layer6 = gp6a.phi();
-	else if (hits6b.size()>0) phi_layer6 = gp6b.phi();
-	else std::cerr <<" no hits in layer6, cant not find global phi of hits " << std::endl;
+    else if (hits6a.size()>0) phi_layer6 = gp6a.phi();
+    else if (hits6b.size()>0) phi_layer6 = gp6b.phi();
+    else std::cerr <<" no hits in layer6, cant not find global phi of hits " << std::endl;
 
 
   }
   else {
   	const CSCDetId cscid1(cscid.endcap(), cscid.station(), cscid.ring(), cscid.chamber(), 1);
-	const edm::PSimHitContainer hits1 = hitsInDetId(cscid1.rawId());
-	if (hits1.size()==0) std::cerr <<" no hits in layer1, cant not find global phi of hits " << std::endl;
-	GlobalPoint gp1 = simHitsMeanPosition(hitsInDetId(cscid1.rawId()));
-	phi_layer1 = gp1.phi();
+    const edm::PSimHitContainer& hits1 = hitsInDetId(cscid1.rawId());
+    if (hits1.size()==0) std::cerr <<" no hits in layer1, cant not find global phi of hits " << std::endl;
+    const GlobalPoint& gp1 = simHitsMeanPosition(hitsInDetId(cscid1.rawId()));
+    phi_layer1 = gp1.phi();
 
   	const CSCDetId cscid6(cscid.endcap(), cscid.station(), cscid.ring(), cscid.chamber(), 6);
-	const edm::PSimHitContainer hits6 = hitsInDetId(cscid6.rawId());
-	if (hits6.size()==0) std::cerr <<" no hits in layer6, cant not find global phi of hits " << std::endl;
-	GlobalPoint gp6 = simHitsMeanPosition(hitsInDetId(cscid6.rawId()));
-	phi_layer6 = gp6.phi();
-
+    const edm::PSimHitContainer& hits6 = hitsInDetId(cscid6.rawId());
+    if (hits6.size()==0) std::cerr <<" no hits in layer6, cant not find global phi of hits " << std::endl;
+    const GlobalPoint& gp6 = simHitsMeanPosition(hitsInDetId(cscid6.rawId()));
+    phi_layer6 = gp6.phi();
   }
 	//std::cout <<" phi1 "<< phi_layer1 <<" phi6 " << phi_layer6 << std::endl;
 	return deltaPhi(phi_layer6,phi_layer1);

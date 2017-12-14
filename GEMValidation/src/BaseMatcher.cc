@@ -262,15 +262,15 @@ BaseMatcher::propagateFromME0ToCSC(ME0Segment segment,float pt, int charge, int 
   int ring = 1;
   ME0DetId me0Id(segment.me0DetId());
   int endcap = (me0Id.region()>0) ? 1 : 2;
-  auto me0Chamber(me0Geometry_->chamber(me0Id));
+  const auto& me0Chamber(me0Geometry_->chamber(me0Id));
   const CSCDetId csclayerId(endcap, st, ring, chamber,  CSCConstants::KEY_CLCT_LAYER);
   //std::cout <<"ME0Id "<< me0Id <<" CSC endcap "<< me0Id.region() <<" st "<< st <<" ring "<< ring <<" chamber "<< chamber<<" cscid "<< csclayerId << std::endl;
   const CSCLayer* csclayer(cscGeometry_->layer(csclayerId));
-  const GlobalPoint gp_csc = csclayer->centerOfWireGroup(10);
+  const GlobalPoint& gp_csc = csclayer->centerOfWireGroup(10);
   //float propagate_z = (evenodd ? AVERAGE_ME11_ODD_Z : AVERAGE_ME11_EVEN_Z) * me0Id.region();
   float propagate_z = gp_csc.z();
   const LocalPoint& lp(segment.localPosition());
-  GlobalPoint SegPos(me0Chamber->toGlobal(lp));
+  const GlobalPoint& SegPos(me0Chamber->toGlobal(lp));
   const LocalVector& lv(segment.localDirection());
   const GlobalVector& SegDir(me0Chamber->toGlobal(lv));
   float ratio = pt/SegDir.perp();

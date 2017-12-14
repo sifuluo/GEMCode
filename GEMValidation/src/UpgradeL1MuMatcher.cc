@@ -74,7 +74,7 @@ UpgradeL1MuMatcher::clear()
 void
 UpgradeL1MuMatcher::matchEmtfTrackToSimTrack(const l1t::EMTFTrackCollection& tracks)
 {
-  GlobalPoint gp_st2(propagatedPositionSt2());
+  const GlobalPoint& gp_st2(propagatedPositionSt2());
   mindREMTFTrack = deltaREMTFTrack_;
   if (verboseEMTFTrack_)
     std::cout <<"propaget position to st2 eta "

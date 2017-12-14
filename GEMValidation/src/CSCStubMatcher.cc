@@ -968,13 +968,13 @@ CSCStubMatcher::bestCscLctInChamber(unsigned int detid) const
  // get the detid of the keylayer of this chamber
   const auto& chamberId = CSCDetId(detid);
 
-  auto layer(cscGeometry_->chamber(chamberId)->layer(3));
-  auto layerId(layer->id());
-  auto hit_strips(sh_matcher_->hitStripsInDetId(layerId,0));
+  const auto& layer(cscGeometry_->chamber(chamberId)->layer(3));
+  const auto& layerId(layer->id());
+  const auto& hit_strips(sh_matcher_->hitStripsInDetId(layerId,0));
   std::cout << "In function bestCscLctInChamber " << std::endl;
   std::cout << "hit CSC strips (delta0) " << std::endl;
   copy(hit_strips.begin(), hit_strips.end(), ostream_iterator<int>(cout, " "));
-  auto input(cscLctsInChamber(detid));
+  const auto& input(cscLctsInChamber(detid));
   int minDeltaStrip = 99;
   int index = -1;
   for (unsigned int i=0; i<input.size(); ++i){
@@ -1063,8 +1063,8 @@ CSCStubMatcher::positionsOfComparatorInLCT(unsigned int detid, const CSCCorrelat
 	    float fractional_strip = digi_matcher_->getFractionalStrip(comp);
 	    const auto& layer_geo(cscGeometry_->chamber(id)->layer(l)->geometry());
 	    float wire = layer_geo->middleWireOfGroup(stub.getKeyWG() + 1);
-	    LocalPoint csc_intersect = layer_geo->intersectionOfStripAndWire(fractional_strip, wire);
-	    GlobalPoint csc_gp = cscGeometry_->idToDet(l_id)->surface().toGlobal(csc_intersect);
+	    const LocalPoint& csc_intersect = layer_geo->intersectionOfStripAndWire(fractional_strip, wire);
+	    const GlobalPoint& csc_gp = cscGeometry_->idToDet(l_id)->surface().toGlobal(csc_intersect);
 	    //std::cout <<"In positionsOfComparatorInLCT local Point "<< csc_intersect <<" globalPoint "<< csc_gp << std::endl;
 	    sum_x += csc_gp.x();
 	    sum_y += csc_gp.y();
@@ -1147,7 +1147,7 @@ CSCStubMatcher::nChambersWithMPLCT(int min_quality) const
 
 
 bool
-CSCStubMatcher::checkStubInChamber(CSCDetId id, CSCCorrelatedLCTDigi lct) const
+CSCStubMatcher::checkStubInChamber(const CSCDetId& id, const CSCCorrelatedLCTDigi& lct) const
 {
 
   //    int hs = lct->getStrip() + 1; // LCT halfstrip and wiregoup numbers start from 0
@@ -1176,7 +1176,7 @@ CSCStubMatcher::checkStubInChamber(CSCDetId id, CSCCorrelatedLCTDigi lct) const
 
 
 bool
-CSCStubMatcher::wasStubMatchedInChamber(CSCDetId id, CSCCorrelatedLCTDigi lct) const
+CSCStubMatcher::wasStubMatchedInChamber(const CSCDetId& id, const CSCCorrelatedLCTDigi& lct) const
 {
   const auto& stubs(cscLctsInChamber(id.rawId()));
   for (const auto& stub: stubs){
@@ -1198,8 +1198,8 @@ CSCStubMatcher::getGlobalPosition(unsigned int rawId, const CSCCorrelatedLCTDigi
   const auto& layer_geo = cscChamber->layer(CSCConstants::KEY_CLCT_LAYER)->geometry();
   // LCT::getKeyWG() also starts from 0
   float wire = layer_geo->middleWireOfGroup(lct.getKeyWG() + 1);
-  LocalPoint csc_intersect = layer_geo->intersectionOfStripAndWire(fractional_strip, wire);
-  GlobalPoint csc_gp = cscGeometry_->idToDet(key_id)->surface().toGlobal(csc_intersect);
+  const LocalPoint& csc_intersect = layer_geo->intersectionOfStripAndWire(fractional_strip, wire);
+  const GlobalPoint& csc_gp = cscGeometry_->idToDet(key_id)->surface().toGlobal(csc_intersect);
   return csc_gp;
 
 }

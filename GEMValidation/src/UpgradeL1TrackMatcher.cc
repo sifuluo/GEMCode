@@ -18,6 +18,8 @@ UpgradeL1TrackMatcher::UpgradeL1TrackMatcher(
               matcher.eventSetup())
   , matcher_(&matcher)
 {
+  clear();
+
   // tracks produced by L1Tracker
   edm::Handle<L1TTTrackCollectionType> hl1Tracks;
   if (gemvalidation::getByToken(trackInputLabel,hl1Tracks, event()))
@@ -39,8 +41,8 @@ UpgradeL1TrackMatcher::~UpgradeL1TrackMatcher()
 void
 UpgradeL1TrackMatcher::clear()
 {
-  bestTrackMuon_ = NULL;
-  bestTrack_ = NULL;
+  bestTrackMuon_ = nullptr;
+  bestTrack_ = nullptr;
 }
 
 void
@@ -91,18 +93,18 @@ UpgradeL1TrackMatcher::matchTrackMuonToSimTrack(const l1t::L1TkMuonParticleColle
     if (std::abs(best_eta - l1Tk_eta)<0.001 and std::abs(best_phi -l1Tk_phi)<0.001) {
       bestTrackMuon_ = const_cast<l1t::L1TkMuonParticle*>(&trackmuon);
       // cout<<"Best TrackMuon "<<endl;
-      // cout<<"Best l1Tk_eta "<<l1Tk_eta<<endl;
-      // cout<<"Best l1Tk_phi "<<l1Tk_phi<<endl;
-      // cout<<"Best muon_eta "<<bestTrackMuon_->getMuRef()->eta()<<endl;
-      // cout<<"Best muon_phi "<<bestTrackMuon_->getMuRef()->phi()<<endl;
+      cout<<"Best l1Tk_eta "<<l1Tk_eta<<endl;
+      cout<<"Best l1Tk_phi "<<l1Tk_phi<<endl;
+      cout<<"Best muon_eta "<<bestTrackMuon_->getMuRef()->eta()<<endl;
+      cout<<"Best muon_phi "<<bestTrackMuon_->getMuRef()->phi()<<endl;
       const double dR_True = reco::deltaR(bestTrackMuon_->getMuRef()->eta(),
                                           (float)bestTrackMuon_->getMuRef()->phi(),
                                           propagatedPositionSt2().eta(),
                                           (float)propagatedPositionSt2().phi());
-      // cout<<"True muon_eta "<<propagatedPositionSt2().eta()<<endl;
-      // cout<<"True muon_phi "<<propagatedPositionSt2().phi()<<endl;
-      // cout<<"DeltaR " << dR_True << endl;
-      break;
+      cout<<"True muon_eta "<<propagatedPositionSt2().eta()<<endl;
+      cout<<"True muon_phi "<<propagatedPositionSt2().phi()<<endl;
+      cout<<"DeltaR " << dR_True << endl;
+      //      break;
     }
   }
 }
