@@ -83,7 +83,7 @@ DisplacedMuonTriggerPtassignment::DisplacedMuonTriggerPtassignment(std::map<unsi
 	continue;
     if (chid.chamber()%2 == 0) isEven[chid.station()-1] = true;
     if (idlcts.second.size()>1 and verbose_>0)
-	std::cout <<"more than one LCT  available in chamber id "<< chid <<" LCT size "<< idlcts.second.size()<<std::endl;
+      std::cout <<"more than one LCT  available in chamber id "<< chid <<" LCT size "<< idlcts.second.size()<<std::endl;
     globalPositionOfLCT(idlcts.second, chid);
     //find GEMPads
     if ((chid.station() == 1 and (chid.ring()==1 or chid.ring()==4) and fabs(gp_st_layer3[0].eta()) <= me0MinEta_)
@@ -111,8 +111,9 @@ DisplacedMuonTriggerPtassignment::DisplacedMuonTriggerPtassignment(std::map<unsi
       GEMDetId id(endcap, 1, chid.station(), 1, chid.chamber(), 0);//GEM superchamber
       edm::Handle<GEMPadDigiCollection> gem_pads;
       if (gemvalidation::getByToken(gemPadDigiInput_, gem_pads, ev_))
-	  matchGEMPadsToTrack(*gem_pads.product(), id);
-      else std::cout <<"error failed to readout GEMPad "<< std::endl;
+        matchGEMPadsToTrack(*gem_pads.product(), id);
+      else
+        if (verbose_>0) std::cout <<"error failed to readout GEMPad "<< std::endl;
       if (not hasGEMPad_st[chid.station() - 1]) std::cout <<"failed to find matched GEM Pad, station "<< chid.station() << std::endl;
 
     }
@@ -121,10 +122,12 @@ DisplacedMuonTriggerPtassignment::DisplacedMuonTriggerPtassignment(std::map<unsi
       //ME0DetId id(endcap, 0, chid.chamber()/2, 0);//region, layer, chamber, roll
       edm::Handle<ME0SegmentCollection> me0_segments;
       if (gemvalidation::getByToken(me0SegmentInput_, me0_segments, ev_))
-	    //matchME0SegmentsToTrack(*me0_segments.product(), id);
-	    matchME0SegmentsToTrack(*me0_segments.product());
-      else std::cout <<"error failed to readout ME0Segment "<< std::endl;
-      if (not hasME0) std::cout <<"failed to find matched ME0 segment "<< std::endl;
+        //matchME0SegmentsToTrack(*me0_segments.product(), id);
+        matchME0SegmentsToTrack(*me0_segments.product());
+      else
+        if (verbose_>0) std::cout <<"error failed to read out ME0Segment "<< std::endl;
+      if (not hasME0)
+        if (verbose_>0) std::cout <<"failed to find matched ME0 segment "<< std::endl;
     }
 
   }
@@ -145,11 +148,11 @@ DisplacedMuonTriggerPtassignment::DisplacedMuonTriggerPtassignment(std::map<unsi
     else if (isEven[0] and isEven[1] and isEven[2]) npar = 2;
     else if (isEven[0] and not(isEven[1]) and not(isEven[2])) npar = 3;
     else {
-	    std::cout <<" hasStub in station 1 2 3  but npar = -1 "<< std::endl;
+	    if (verbose_>0) std::cout <<" hasStub in station 1 2 3  but npar = -1 "<< std::endl;
 	    npar= -1;
       for (const auto& idlcts : chamberid_lcts_){
         CSCDetId chid(idlcts.first);
-        std::cout <<"CSC id "<< chid <<" LCT "<< idlcts.second[0] << std::endl;
+        if (verbose_>0) std::cout <<"CSC id "<< chid <<" LCT "<< idlcts.second[0] << std::endl;
 	    }
     }
   }else
@@ -488,71 +491,8 @@ void DisplacedMuonTriggerPtassignment::setupGeometry(const edm::EventSetup& es)
     hasCSCGeometry_ = false;
     std::cout << "+++ Info: CSC geometry is unavailable. +++\n";
   }
-
-  /*
-  try {
-    es.get<MuonGeometryRecord>().get(gem_geom_);
-    gemGeometry_ = &*gem_geom_;
-  } catch (edm::eventsetup::NoProxyException<GEMGeometry>& e) {
-    hasGEMGeometry_ = false;
-    std::cout << "+++ Info: GEM geometry is unavailable. +++\n";
-  }
-
-  try {
-    es.get<MuonGeometryRecord>().get(me0_geom_);
-    me0Geometry_ = &*me0_geom_;
-  } catch (edm::eventsetup::NoProxyException<ME0Geometry>& e) {
-    hasME0Geometry_ = false;
-    std::cout << "+++ Info: ME0 geometry is unavailable. +++\n";
-  }
-
-  try {
-    es.get<MuonGeometryRecord>().get(csc_geom_);
-    cscGeometry_ = &*csc_geom_;
-  } catch (edm::eventsetup::NoProxyException<CSCGeometry>& e) {
-    hasCSCGeometry_ = false;
-    std::cout << "+++ Info: CSC geometry is unavailable. +++\n";
-  }
-
-  try {
-    es.get<MuonGeometryRecord>().get(rpc_geom_);
-    rpcGeometry_ = &*rpc_geom_;
-  } catch (edm::eventsetup::NoProxyException<RPCGeometry>& e) {
-    hasRPCGeometry_ = false;
-    std::cout << "+++ Info: RPC geometry is unavailable. +++\n";
-  }
-
-  try {
-    es.get<MuonGeometryRecord>().get(dt_geom_);
-    dtGeometry_ = &*dt_geom_;
-  } catch (edm::eventsetup::NoProxyException<DTGeometry>& e) {
-    hasDTGeometry_ = false;
-    std::cout << "+++ Info: DT geometry is unavailable. +++\n";
-  }
-  */
-
 }
 
-
-// void DisplacedMuonTriggerPtassignment::setupTriggerScales(const edm::EventSetup& es)
-// {
-//   hasMuScales_ = true;
-//   hasMuPtScale_ = true;
-
-//   try {
-//     es.get<L1MuTriggerScalesRcd>().get(muScales_);
-//   } catch (edm::eventsetup::NoProxyException<L1MuTriggerScalesRcd>& e) {
-//     hasMuScales_ = false;
-//     LogDebug("DisplacedMuonTriggerPtassignment") << "+++ Info: L1MuTriggerScalesRcd is unavailable. +++\n";
-//   }
-
-//   try {
-//     es.get<L1MuTriggerPtScaleRcd>().get(muPtScale_);
-//   } catch (edm::eventsetup::NoProxyException<L1MuTriggerPtScaleRcd>& e) {
-//     hasMuPtScale_ = false;
-//     LogDebug("DisplacedMuonTriggerPtassignment") << "+++ Info: L1MuTriggerPtScaleRcd is unavailable. +++\n";
-//   }
-// }
 
 //void DisplacedMuonTriggerPtassignment::fitComparatorsLCT(const CSCComparatorDigiCollection& hCSCComparators, const CSCCorrelatedLCTDigi& stub,
 //	                                  CSCDetId ch_id, float& fit_phi_layer1, float& fit_phi_layer3, float& fit_phi_layer6,
@@ -686,7 +626,7 @@ void DisplacedMuonTriggerPtassignment::fitTrackRadius(GlobalPoint* gps, float* r
   }
 
   if (nstubs < 3){
-    std::cout <<"error!!! only "<< nstubs <<" stubs are found, need at least 3 "<< std::endl;
+    if (verbose_>0) std::cout <<"error!!! only "<< nstubs <<" stubs are found, need at least 3 "<< std::endl;
     return ;
   }
 
@@ -698,9 +638,9 @@ void DisplacedMuonTriggerPtassignment::fitTrackRadius(GlobalPoint* gps, float* r
   	else
 	    radius[i] = 0.0;
 	if (fabs(radius[i]-gps[i].perp())>=.02*gps[i].perp() and hasStub_st[i]){
-	    std::cout <<" warning!!! difference bewteen before fitting and after fitting is large "<< std::endl;
+	    if (verbose_>0) std::cout <<" warning!!! difference bewteen before fitting and after fitting is large "<< std::endl;
 	//if (verbose_>=0)
-	    std::cout <<"station "<< i+1 <<" z "<< gps[i].z() <<" radius from gp "<< gps[i].perp()<<" from fit "<< radius[i]<< std::endl;
+	    if (verbose_>0) std::cout <<"station "<< i+1 <<" z "<< gps[i].z() <<" radius from gp "<< gps[i].perp()<<" from fit "<< radius[i]<< std::endl;
 	}
   }
 
@@ -735,33 +675,33 @@ void DisplacedMuonTriggerPtassignment::globalPositionOfLCT(CSCCorrelatedLCTDigiC
   unsigned int beststub=0;
   //find closest stub as ref
   for (int i=st-1; i>0; i--)
-      if (hasStub_st[i-1]){
-  	gp_ref = GlobalPoint(gp_st_layer3[i-1]);
-	hasRefStub = true;
-	break;
+    if (hasStub_st[i-1]){
+      gp_ref = GlobalPoint(gp_st_layer3[i-1]);
+      hasRefStub = true;
+      break;
   	}
   if (hasRefStub and stubs.size()>1){
-        unsigned int istub = -1;
+    unsigned int istub = -1;
   	for (const auto& stub : stubs){
-	    	istub++;
-		if (not stub.isValid()) continue;
+      istub++;
+      if (not stub.isValid()) continue;
   		globalPositionOfLCT(stub, chid);
-		//assign higher weight to phi comparison
-    		float dphi = 10.*deltaPhi(float(gp_st_layer3[st-1].phi()), float(gp_ref.phi()));
-    		float deta = gp_st_layer3[st-1].eta() - gp_ref.eta();
-    		float curr_dr2 = dphi*dphi + deta*deta;
-		if (curr_dr2<dR){
-		    dR = curr_dr2;
+      //assign higher weight to phi comparison
+      float dphi = 10.*deltaPhi(float(gp_st_layer3[st-1].phi()), float(gp_ref.phi()));
+      float deta = gp_st_layer3[st-1].eta() - gp_ref.eta();
+      float curr_dr2 = dphi*dphi + deta*deta;
+      if (curr_dr2<dR){
+        dR = curr_dr2;
 		    beststub = istub;
-		}
+      }
   	}
-   }
+  }
   if (beststub >= stubs.size() or dR >= 99)
-      std::cout <<"error beststub >= stubs.size() , beststub "<< beststub <<" stubs size "<< stubs.size() <<" dR "<< dR << std::endl;
+    if (verbose_>0) std::cout <<"error beststub >= stubs.size() , beststub "<< beststub <<" stubs size "<< stubs.size() <<" dR "<< dR << std::endl;
 
   globalPositionOfLCT(stubs[beststub], chid);
   if (verbose_>0)
-      std::cout <<"LCT position, chid "<< chid<<" hs "<<stubs[beststub].getStrip()+1<<" wg "<< stubs[beststub].getKeyWG()+1 <<" gp eta "<< gp_st_layer3[st-1].eta()<<" phi "<<gp_st_layer3[st-1].phi()<<" perp "<< gp_st_layer3[st-1].perp() << std::endl;
+    std::cout <<"LCT position, chid "<< chid<<" hs "<<stubs[beststub].getStrip()+1<<" wg "<< stubs[beststub].getKeyWG()+1 <<" gp eta "<< gp_st_layer3[st-1].eta()<<" phi "<<gp_st_layer3[st-1].phi()<<" perp "<< gp_st_layer3[st-1].perp() << std::endl;
 
 }
 
@@ -803,7 +743,7 @@ void DisplacedMuonTriggerPtassignment::globalPositionOfGEMPad(GEMPadDigiContaine
   int st = gemid.station();
   for (const auto& gempad : gempads){
   	if (gempad.pad() > nGEMPads or gempad.pad() < 0){
-      std::cout <<" gempad.pad() is within pad range gempad "<< gempad <<" npad "<< nGEMPads << std::endl;
+      if (verbose_>0) std::cout <<" gempad.pad() is within pad range gempad "<< gempad <<" npad "<< nGEMPads << std::endl;
       return;
     }
   	const LocalPoint& lpGEM(gemRoll->centreOfPad(gempad.pad()));
@@ -815,7 +755,7 @@ void DisplacedMuonTriggerPtassignment::globalPositionOfGEMPad(GEMPadDigiContaine
         and fabs(dphi) < fabs(dphi_gemcsc_st[st-1])){
       gp_ge[st-1] = GlobalPoint(gp_pad);
       dphi_gemcsc_st[st-1] = fabs(deltaPhi(float(gp_pad.phi()), float(gp_st_layer3[st-1].phi())));
-      std::cout <<"GEMid "<< gemid <<" found matched GEMPad phi "<< phi_gem[st-1] <<" dphi "<< dphi_gemcsc_st[st-1] << std::endl;
+      if (verbose_>0) std::cout <<"GEMid "<< gemid <<" found matched GEMPad phi "<< phi_gem[st-1] <<" dphi "<< dphi_gemcsc_st[st-1] << std::endl;
     }
   }
 }
@@ -851,7 +791,7 @@ void DisplacedMuonTriggerPtassignment::matchGEMPadsToTrack(const GEMPadDigiColle
 		    phi_gem[st-1] = gp_pad.phi();
 		    hasGEMPad_st[st-1] = true;
 
-		    std::cout <<"GEMid "<< p_id <<" found matched GEMPad "<< d->pad() <<" phi "<< phi_gem[st-1] <<" dphi "<< dphi_gemcsc_st[st-1] << std::endl;
+		    if (verbose_>0) std::cout <<"GEMid "<< p_id <<" found matched GEMPad "<< d->pad() <<" phi "<< phi_gem[st-1] <<" dphi "<< dphi_gemcsc_st[st-1] << std::endl;
 	    }
 
 	}

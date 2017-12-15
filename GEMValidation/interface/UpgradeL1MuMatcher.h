@@ -7,10 +7,11 @@
 
  Original Author:  "Sven Dildick"
 */
-#include "GEMCode/GEMValidation/interface/TFTrack.h" 
-#include "GEMCode/GEMValidation/interface/TFCand.h" 
+#include "GEMCode/GEMValidation/interface/TFTrack.h"
+#include "GEMCode/GEMValidation/interface/TFCand.h"
 
 #include "GEMCode/GEMValidation/interface/CSCStubMatcher.h"
+#include "GEMCode/GEMValidation/interface/SimHitMatcher.h"
 #include "DataFormats/L1TMuon/interface/RegionalMuonCand.h"
 #include "DataFormats/L1TMuon/interface/EMTFTrack.h"
 #include "DataFormats/L1TMuon/interface/EMTFHit.h"
@@ -21,8 +22,9 @@ class UpgradeL1MuMatcher : public BaseMatcher
  public:
   /// constructor
   UpgradeL1MuMatcher(CSCStubMatcher&,
-                        edm::EDGetTokenT<l1t::EMTFTrackCollection> &,
-                        edm::EDGetTokenT< BXVector<l1t::RegionalMuonCand> > &, 
+                     SimHitMatcher&,
+                     edm::EDGetTokenT<l1t::EMTFTrackCollection> &,
+                     edm::EDGetTokenT< BXVector<l1t::RegionalMuonCand> > &,
 			edm::EDGetTokenT< BXVector<l1t::Muon> > &);
   /// destructor
   ~UpgradeL1MuMatcher();
@@ -31,7 +33,6 @@ class UpgradeL1MuMatcher : public BaseMatcher
   TFTrack* bestTFTrack() const { return bestTrack; }
   TFCand* bestGMTCand() const { return bestGMT; }
   std::vector<TFCand*> gmts() const { return gmts_; }
-  
 
  private:
 
@@ -57,6 +58,7 @@ class UpgradeL1MuMatcher : public BaseMatcher
   TFCand* bestGMT;
 
   const CSCStubMatcher* csc_stub_matcher_;
+  const SimHitMatcher* simhit_matcher_;
 
   int minBXEMTFTrack_, maxBXEMTFTrack_;
   int verboseEMTFTrack_;

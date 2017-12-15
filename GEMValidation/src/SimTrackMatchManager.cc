@@ -67,7 +67,11 @@ SimTrackMatchManager::SimTrackMatchManager(
   , dt_rechits_(simhits_,
                 dtRecHit1DPairInput_, dtRecSegment2DInput_,
                 dtRecSegment4DInput_)
-  , l1_muons_(csc_stubs_, emtfTrackInputLabel_, regMuonCandInputLabel_, gmtInputLabel_)
+  , l1_muons_(csc_stubs_,
+              simhits_,
+              emtfTrackInputLabel_,
+              regMuonCandInputLabel_,
+              gmtInputLabel_)
   , l1_tracks_(l1_muons_, trackInputLabel_, trackMuonInputLabel_)
   , hlt_tracks_(csc_rechits_, dt_rechits_, rpc_rechits_, gem_rechits_,
                 recoTrackExtraInputLabel_, recoTrackInputLabel_, recoChargedCandidateInputLabel_)

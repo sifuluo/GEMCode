@@ -84,27 +84,41 @@ UpgradeL1TrackMatcher::matchL1TrackToSimTrack(const L1TTTrackCollectionType& tra
 void
 UpgradeL1TrackMatcher::matchTrackMuonToSimTrack(const l1t::L1TkMuonParticleCollection& trackmuons)
 {
-  // matching depends on the matched track and the matched muon
-  for (const auto& trackmuon : trackmuons){
-    const double l1Tk_eta = trackmuon.getTrkPtr()->getMomentum().eta();
-    const double l1Tk_phi = trackmuon.getTrkPtr()->getMomentum().barePhi();
-    const double best_eta = bestTrack_->getMomentum().eta();
-    const double best_phi = bestTrack_->getMomentum().barePhi();
-    if (std::abs(best_eta - l1Tk_eta)<0.001 and std::abs(best_phi -l1Tk_phi)<0.001) {
-      bestTrackMuon_ = const_cast<l1t::L1TkMuonParticle*>(&trackmuon);
-      // cout<<"Best TrackMuon "<<endl;
-      cout<<"Best l1Tk_eta "<<l1Tk_eta<<endl;
-      cout<<"Best l1Tk_phi "<<l1Tk_phi<<endl;
-      cout<<"Best muon_eta "<<bestTrackMuon_->getMuRef()->eta()<<endl;
-      cout<<"Best muon_phi "<<bestTrackMuon_->getMuRef()->phi()<<endl;
-      const double dR_True = reco::deltaR(bestTrackMuon_->getMuRef()->eta(),
-                                          (float)bestTrackMuon_->getMuRef()->phi(),
-                                          propagatedPositionSt2().eta(),
-                                          (float)propagatedPositionSt2().phi());
-      cout<<"True muon_eta "<<propagatedPositionSt2().eta()<<endl;
-      cout<<"True muon_phi "<<propagatedPositionSt2().phi()<<endl;
-      cout<<"DeltaR " << dR_True << endl;
-      //      break;
+  if (matcher_->bestGMTCand()) {
+    const double best_eta = matcher_->bestGMTCand()->eta();
+    const double best_phi = matcher_->bestGMTCand()->phi();
+    std::cout << "Best matching L1Mu eta " << best_eta << std::endl;
+    std::cout << "Best matching L1Mu phi " << best_phi << std::endl;
+
+    // matching depends on the matched track and the matched muon
+    for (const auto& trackmuon : trackmuons) {
+      const double muon_eta = trackmuon.getMuRef()->eta();
+      const double muon_phi = trackmuon.getMuRef()->phi();
+      std::cout << "\tcandidate L1TkMu eta " << muon_eta << std::endl;
+      std::cout << "\tcandidate L1TkMu phi " << muon_phi << std::endl;
+
+
+      if (std::abs(best_eta - muon_eta)<0.01 and std::abs(best_phi - muon_phi)<0.01) {
+        bestTrackMuon_ = const_cast<l1t::L1TkMuonParticle*>(&trackmuon);
+        const double l1Tk_eta = trackmuon.getTrkPtr()->getMomentum().eta();
+        const double l1Tk_phi = trackmuon.getTrkPtr()->getMomentum().barePhi();
+
+        cout<<"\tBest l1Tk_eta "<<l1Tk_eta<<endl;
+        cout<<"\tBest l1Tk_phi "<<l1Tk_phi<<endl;
+        cout<<"\tBest muon_eta "<<bestTrackMuon_->getMuRef()->eta()<<endl;
+        cout<<"\tBest muon_phi "<<bestTrackMuon_->getMuRef()->phi()<<endl;
+        const double dR_True = reco::deltaR(bestTrackMuon_->getMuRef()->eta(),
+                                            (float)bestTrackMuon_->getMuRef()->phi(),
+                                            propagatedPositionSt2().eta(),
+                                            (float)propagatedPositionSt2().phi());
+        cout<<"\tTrue muon_eta "<<propagatedPositionSt2().eta()<<endl;
+        cout<<"\tTrue muon_phi "<<propagatedPositionSt2().phi()<<endl;
+        cout<<"\tDeltaR " << dR_True << endl;
+        //      break;
+      }
     }
+  }
+  else{
+    std::cout << "No Best matching L1Mu" << std::endl;
   }
 }

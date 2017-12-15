@@ -32,7 +32,7 @@ ME0RecHitMatcher::ME0RecHitMatcher(ME0DigiMatcher& dg,
     if (gemvalidation::getByToken(me0SegmentInput_, me0_segments, event()) and runME0Segment_){
       matchME0SegmentsToSimTrack(*me0_segments.product());
       matchME0SegmentsToSimTrackBydR(*me0_segments.product());
-    }else if (runME0Segment_) std::cout <<"Not running matchME0SegmentsToSimTrack "<< std::endl;
+    }else if (verboseME0Segment_) std::cout <<"Not running matchME0SegmentsToSimTrack "<< std::endl;
   }
 }
 
@@ -48,7 +48,7 @@ ME0RecHitMatcher::matchME0RecHitsToSimTrack(const ME0RecHitCollection& rechits)
   for (const auto& id: layer_ids) {
     ME0DetId p_id(id);
 
-    // get the rechits
+    // get the rechit
     const auto& rechits_in_det = rechits.get(p_id);
     for (auto rr = rechits_in_det.first; rr != rechits_in_det.second; ++rr) {
 

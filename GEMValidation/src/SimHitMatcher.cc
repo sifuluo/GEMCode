@@ -385,37 +385,35 @@ SimHitMatcher::matchGEMSimHitsToSimTrack(std::vector<unsigned int> track_ids, co
     for (const auto& h: hits1) {
       const LocalPoint& lp = h.entryPoint();
       pads1.insert( 1 + static_cast<int>(roll1->padTopology().channel(lp)) );
-      std::cout <<"GEMHits detid1 "<<id1 <<" pad1 "<< 1 + static_cast<int>(roll1->padTopology().channel(lp)) << std::endl;
+      if (verboseGEM_) std::cout <<"GEMHits detid1 "<<id1 <<" pad1 "<< 1 + static_cast<int>(roll1->padTopology().channel(lp)) << std::endl;
     }
 
     // find pads with hits in layer2
     for (const auto& d2 : detids){
-	//staggered geometry???? improve here !!
-	GEMDetId id2(d2);
-	// does layer 2 has simhits?
-	if (id2.layer() !=2 or id2.region() != id1.region() or id2.ring()!=id1.ring() or id2.station()!=id1.station() or abs(id2.roll()-id1.roll())>1)
-	    continue;
-	const auto& hits2 = hitsInDetId(id2());
-	const auto& roll2 = getGEMGeometry()->etaPartition(id2);
-	for (const auto& h: hits2) {
-	  const LocalPoint& lp = h.entryPoint();
-	  pads2.insert( 1 + static_cast<int>(roll2->padTopology().channel(lp)) );
-	  std::cout <<"GEMHits detid2 "<<id2 <<" pad2 "<< 1 + static_cast<int>(roll2->padTopology().channel(lp)) << std::endl;
-	}
+      //staggered geometry???? improve here !!
+      GEMDetId id2(d2);
+      // does layer 2 has simhits?
+      if (id2.layer() !=2 or id2.region() != id1.region() or id2.ring()!=id1.ring() or id2.station()!=id1.station() or abs(id2.roll()-id1.roll())>1)
+        continue;
+      const auto& hits2 = hitsInDetId(id2());
+      const auto& roll2 = getGEMGeometry()->etaPartition(id2);
+      for (const auto& h: hits2) {
+        const LocalPoint& lp = h.entryPoint();
+        pads2.insert( 1 + static_cast<int>(roll2->padTopology().channel(lp)) );
+        if (verboseGEM_) std::cout <<"GEMHits detid2 "<<id2 <<" pad2 "<< 1 + static_cast<int>(roll2->padTopology().channel(lp)) << std::endl;
+      }
     }
 
-
     for (const auto& pad1 : pads1)
-	for (const auto& pad2 : pads2){
-	    if (abs(pad1-pad2) <= 1)
-	    {
-		if (copads.find(pad1) == copads.end())
-		    copads.insert(pad1);
-		if (copads.find(pad2) == copads.end())
-		    copads.insert(pad2);
-	    }
-	}
-
+      for (const auto& pad2 : pads2){
+        if (abs(pad1-pad2) <= 1)
+          {
+            if (copads.find(pad1) == copads.end())
+              copads.insert(pad1);
+            if (copads.find(pad2) == copads.end())
+              copads.insert(pad2);
+          }
+      }
 
     //std::set_intersection(pads1.begin(), pads1.end(), pads2.begin(), pads2.end(), std::inserter(copads, copads.begin()));
     if (copads.empty()) continue;
@@ -1733,32 +1731,36 @@ SimHitMatcher::chamberIdsDTStation(int station) const
 }
 
 GlobalPoint
-SimHitMatcher::simHitsMeanPositionSecondStation() const
+SimHitMatcher::simHitsMeanPositionStation(int station) const
 {
   // get the mean position in CSC
   edm::PSimHitContainer cscHits;
-  const auto& cscIds(chamberIdsCSCStation(2));
+  const auto& cscIds(chamberIdsCSCStation(station));
   for (const auto& p1 : cscIds){
     const auto& hits = hitsInChamber(p1);
     cscHits.insert(cscHits.end(), hits.begin(), hits.end());
   }
   const GlobalPoint& cscgp = simHitsMeanPosition(cscHits);
+  cout << "cscgp eta " << cscgp.eta() << " " << cscgp.phi() << endl;
 
   edm::PSimHitContainer dtHits;
-  const auto& dtIds(chamberIdsDTStation(2));
+  const auto& dtIds(chamberIdsDTStation(station));
   for (const auto& p1 : dtIds){
     const auto& hits = hitsInChamber(p1);
     dtHits.insert(dtHits.end(), hits.begin(), hits.end());
   }
   const GlobalPoint& dtgp = simHitsMeanPosition(dtHits);
+  cout << "dtgp eta " << dtgp.eta() << " " << dtgp.phi() << endl;
 
   // get the average
-  if (cscgp == GlobalPoint() and
-      dtgp == GlobalPoint()) return GlobalPoint();
-  if (!(cscgp == GlobalPoint()) and
-      dtgp == GlobalPoint()) return cscgp;
-  if (cscgp == GlobalPoint() and
-      !(dtgp == GlobalPoint())) return dtgp;
+  if (cscgp == GlobalPoint() and dtgp == GlobalPoint())
+    return GlobalPoint();
+
+  if (!(cscgp == GlobalPoint()) and dtgp == GlobalPoint())
+    return cscgp;
+
+  if (cscgp == GlobalPoint() and !(dtgp == GlobalPoint()))
+    return dtgp;
 
   GlobalPoint average;
   float x, y, z;

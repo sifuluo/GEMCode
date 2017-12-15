@@ -169,7 +169,7 @@ public:
   float simHitsMeanWire(const edm::PSimHitContainer& sim_hits) const;
 
   /// calculate the average position at the second station
-  GlobalPoint simHitsMeanPositionSecondStation() const;
+  GlobalPoint simHitsMeanPositionStation(int n) const;
 
   std::set<int> hitStripsInDetId(unsigned int, int margin_n_strips = 0) const;  // GEM/ME0 or CSC
   std::set<int> hitWiregroupsInDetId(unsigned int, int margin_n_wg = 0) const; // CSC
