@@ -33,8 +33,12 @@
 #include "DataFormats/GeometrySurface/interface/BoundCylinder.h"
 #include "DataFormats/MuonDetId/interface/GEMDetId.h"
 
+#include "L1Trigger/L1TMuonEndCap/interface/TrackTools.h"
 #include <L1Trigger/CSCCommonTrigger/interface/CSCConstants.h>
-#include "L1Trigger/CSCCommonTrigger/interface/CSCTriggerGeometry.h"
+//#include "L1Trigger/CSCCommonTrigger/interface/CSCTriggerGeometry.h" 
+/* header file out-of-date
+ *
+ */
 
 #include "DataFormats/GeometryVector/interface/GlobalPoint.h"
 
@@ -122,8 +126,9 @@ class TFTrack
  private:
   int trackType_;
   const l1t::EMTFTrack* l1track_;
+  //l1t::EMTFHitCollection trackHits_copy;
   std::vector<const CSCCorrelatedLCTDigi*> triggerDigis_;
-  const l1t::EMTFHitCollection * trackHits_; //similar to triggerDigis_ + triggerDigis_
+  l1t::EMTFHitCollection  trackHits_; //similar to triggerDigis_ + triggerDigis_
   std::vector<CSCDetId> triggerIds_;
   std::vector<std::pair<float, float>> triggerEtaPhis_;
   /* std::vector<csctf::TrackStub> triggerStubs_; */

@@ -6,29 +6,34 @@
 #include <map>
 
 UpgradeL1MuMatcher::UpgradeL1MuMatcher(CSCStubMatcher& csc,
+                     		       SimHitMatcher& sh,
                                        edm::EDGetTokenT<l1t::EMTFTrackCollection> &emtfTrackInputLabel_,
                                        edm::EDGetTokenT< BXVector<l1t::RegionalMuonCand> > & regionalMuonCandInputLabel_,
                                        edm::EDGetTokenT< BXVector<l1t::Muon> > & gmtInputLabel_)
   : BaseMatcher(csc.trk(), csc.vtx(), csc.conf(), csc.event(), csc.eventSetup())
-  , csc_stub_matcher_(&csc)
+  ,csc_stub_matcher_(&csc)
+  ,simhit_matcher_(&sh)
 {
   const auto& tfTrack = conf().getParameter<edm::ParameterSet>("upgradeEmtfTrack");
   minBXEMTFTrack_ = tfTrack.getParameter<int>("minBX");
   maxBXEMTFTrack_ = tfTrack.getParameter<int>("maxBX");
   verboseEMTFTrack_ = tfTrack.getParameter<int>("verbose");
   deltaREMTFTrack_ = tfTrack.getParameter<double>("deltaR");
+  runEMTFTrack_ = tfTrack.getParameter<bool>("run");
 
   const auto& regionalMuonCand = conf().getParameter<edm::ParameterSet>("upgradeEmtfCand");
   minBXRegMuCand_ = regionalMuonCand.getParameter<int>("minBX");
   maxBXRegMuCand_ = regionalMuonCand.getParameter<int>("maxBX");
   verboseRegMuCand_ = regionalMuonCand.getParameter<int>("verbose");
   deltaRRegMuCand_ = regionalMuonCand.getParameter<double>("deltaR");
+  runRegMuCand_ = regionalMuonCand.getParameter<bool>("run");
 
   const auto& gmt = conf().getParameter<edm::ParameterSet>("upgradeGMT");
   minBXGMT_ = gmt.getParameter<int>("minBX");
   maxBXGMT_ = gmt.getParameter<int>("maxBX");
   verboseGMT_ = gmt.getParameter<int>("verbose");
   deltaRGMT_ = gmt.getParameter<double>("deltaR");
+  runGMT_ = gmt.getParameter<bool>("run");
 
   //std::cout<<" UpgradeL1MuMatcher constructor" <<std::endl;
   clear();
@@ -41,21 +46,21 @@ UpgradeL1MuMatcher::UpgradeL1MuMatcher(CSCStubMatcher& csc,
 
   // tracks produced by EMEMTF
   edm::Handle<l1t::EMTFTrackCollection> hl1Tracks;
-  if (gemvalidation::getByToken(emtfTrackInputLabel_,hl1Tracks, event()))
+  if (runEMTFTrack_ and gemvalidation::getByToken(emtfTrackInputLabel_,hl1Tracks, event()))
     matchEmtfTrackToSimTrack(*hl1Tracks.product());
-  else
+  else if ( runEMTFTrack_)
     std::cout  <<"failed readout EMTFTracks " << std::endl;
 
   edm::Handle<BXVector<l1t::RegionalMuonCand>> hRegMuonCand;
-  if (gemvalidation::getByToken(regionalMuonCandInputLabel_,hRegMuonCand, event()))
+  if (runRegMuCand_ and gemvalidation::getByToken(regionalMuonCandInputLabel_,hRegMuonCand, event()))
     matchRegionalMuonCandToSimTrack(*hRegMuonCand.product());
-  else
+  else if ( runRegMuCand_)
     std::cout  <<"failed readout RegionalMuonCand " << std::endl;
 
   edm::Handle<BXVector<l1t::Muon>> hGMT;
-  if (gemvalidation::getByToken(gmtInputLabel_,hGMT, event()))
+  if (runGMT_ and gemvalidation::getByToken(gmtInputLabel_,hGMT, event()))
     matchGMTToSimTrack(*hGMT.product());
-  else
+  else if ( runGMT_)
     std::cout  <<"failed readout GMT " << std::endl;
 }
 
@@ -84,12 +89,12 @@ UpgradeL1MuMatcher::matchEmtfTrackToSimTrack(const l1t::EMTFTrackCollection& tra
       std::cout <<"track BX "<< trk.BX()
                 <<  " pt "<< trk.Pt()
                 <<" eta "<< trk.Eta()
-                <<" phi "<< trk.Phi_glob_rad()
-                <<" phi_local "<< trk.Phi_loc_rad() << std::endl;
+                <<" phi "<< emtf::deg_to_rad(trk.Phi_glob())
+                <<" phi_local "<< emtf::deg_to_rad(trk.Phi_loc()) << std::endl;
     if (trk.BX() < minBXEMTFTrack_ or trk.BX() > maxBXEMTFTrack_) continue;
     float dR = 10.0;
     dR = deltaR(float(gp_st2.eta()), float(gp_st2.phi()),
-                trk.Eta(), trk.Phi_glob_rad());
+                trk.Eta(), emtf::deg_to_rad(trk.Phi_glob()));
     if (verboseEMTFTrack_)
       std::cout <<"dR (track, sim) "<< dR <<" deltaREMTFTrack_ "
                 << deltaREMTFTrack_ << std::endl;

@@ -1520,8 +1520,8 @@ private:
   edm::EDGetTokenT<BXVector<l1t::RegionalMuonCand>> regMuonCandInputLabel_;
   edm::EDGetTokenT<BXVector<l1t::Muon>> gmtInputLabel_;
 
-  edm::EDGetTokenT<L1TTTrackCollectionType> trackInputLabel_;
-  edm::EDGetTokenT<l1t::L1TkMuonParticleCollection> trackMuonInputLabel_;
+  //edm::EDGetTokenT<L1TTTrackCollectionType> trackInputLabel_;
+  //edm::EDGetTokenT<l1t::L1TkMuonParticleCollection> trackMuonInputLabel_;
 
   edm::EDGetTokenT<reco::TrackExtraCollection> recoTrackExtraInputLabel_;
   edm::EDGetTokenT<reco::TrackCollection> recoTrackInputLabel_;
@@ -1691,12 +1691,12 @@ GEMCSCAnalyzer::GEMCSCAnalyzer(const edm::ParameterSet& ps)
   const auto& upgradegmt = cfg_.getParameter<edm::ParameterSet>("upgradeGMT");
   gmtInputLabel_ = consumes< BXVector<l1t::Muon> >(upgradegmt.getParameter<edm::InputTag>("validInputTags"));
 
-  const auto& l1Track = cfg_.getParameter<edm::ParameterSet>("l1track");
-  trackInputLabel_ = consumes<L1TTTrackCollectionType>(l1Track.getParameter<edm::InputTag>("validInputTags"));
-  verboseL1Track_ = l1Track.getParameter<int>("verbose");
+  //const auto& l1Track = cfg_.getParameter<edm::ParameterSet>("l1track");
+  //trackInputLabel_ = consumes<L1TTTrackCollectionType>(l1Track.getParameter<edm::InputTag>("validInputTags"));
+  //verboseL1Track_ = l1Track.getParameter<int>("verbose");
 
-  const auto& l1TrackMuon = cfg_.getParameter<edm::ParameterSet>("l1tkmuon");
-  trackMuonInputLabel_ = consumes<l1t::L1TkMuonParticleCollection>(l1TrackMuon.getParameter<edm::InputTag>("validInputTags"));
+  //const auto& l1TrackMuon = cfg_.getParameter<edm::ParameterSet>("l1tkmuon");
+  //trackMuonInputLabel_ = consumes<l1t::L1TkMuonParticleCollection>(l1TrackMuon.getParameter<edm::InputTag>("validInputTags"));
 
   const auto& recoTrackExtra = cfg_.getParameter<edm::ParameterSet>("recoTrackExtra");
   recoTrackExtraInputLabel_ = consumes<reco::TrackExtraCollection>(recoTrackExtra.getParameter<edm::InputTag>("validInputTags"));
@@ -1782,13 +1782,14 @@ void GEMCSCAnalyzer::analyze(const edm::Event& ev, const edm::EventSetup& es)
     std::cout << "Total number of SimTrack in this event: " << sim_track.size() << std::endl;
   }
 
+  /*
   edm::Handle< std::vector< TTTrack< Ref_Phase2TrackerDigi_ > > > TTTrackHandle;
   ev.getByToken(trackInputLabel_, TTTrackHandle);
   const std::vector< TTTrack< Ref_Phase2TrackerDigi_ > >& TTTracks = *TTTrackHandle.product();
 
   if (verboseL1Track_){
     std::cout << "Total number of L1Track in this event: " << TTTracks.size() << std::endl;
-  }
+  }*/
 
   int trk_no=0;
   for (const auto& t: sim_track)
@@ -1837,8 +1838,8 @@ void GEMCSCAnalyzer::analyze(const edm::Event& ev, const edm::EventSetup& es)
                                emtfTrackInputLabel_,
                                regMuonCandInputLabel_,
                                gmtInputLabel_,
-                               trackInputLabel_,
-                               trackMuonInputLabel_,
+                               //trackInputLabel_,
+                               //trackMuonInputLabel_,
                                recoTrackExtraInputLabel_,
                                recoTrackInputLabel_,
                                recoChargedCandidateInputLabel_
@@ -1878,7 +1879,7 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
   const CSCStubMatcher& match_lct = match.cscStubs();
   const ME0RecHitMatcher& match_me0rh = match.me0RecHits();
   const UpgradeL1MuMatcher& match_muon = match.l1Muons();
-  const UpgradeL1TrackMatcher& match_track = match.l1Tracks();
+  //const UpgradeL1TrackMatcher& match_track = match.l1Tracks();
   //const HLTTrackMatcher& match_hlt_track = match.hltTracks();
   const SimTrack &t = match_sh.trk();
 
@@ -1892,8 +1893,9 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
   std::cout <<"Sim trk_no " << trk_no <<" eta "<< t.momentum().eta() << " phi "<< t.momentum().phi() << " pt "<< t.momentum().pt()<<" pz "<<  t.momentum().pz()<<std::endl;
   */
 
-  L1TrackTriggerVeto trkVeto(cfg_, match_sh.eventSetup(), match_sh.event(), trackInputLabel_,
-                             t.momentum().eta(), normalizedPhi((float)t.momentum().phi()));
+  //L1TrackTriggerVeto trkVeto(cfg_, match_sh.eventSetup(), match_sh.event(), trackInputLabel_,
+    //                         t.momentum().eta(), normalizedPhi((float)t.momentum().phi()));
+
 
   float randtest1 = CLHEP::RandFlat::shoot(0.0,1.0) ;
   float randtest2 = CLHEP::RandFlat::shoot(0.0,1.0) ;
@@ -1915,10 +1917,10 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
     etrk_[s].charge = t.charge();
     etrk_[s].endcap = (etrk_[s].eta > 0.) ? 1 : -1;
 
-    etrk_[s].isSimLooseVeto = trkVeto.isLooseVeto();
-    etrk_[s].isSimMediumVeto = trkVeto.isMediumVeto();
-    etrk_[s].isSimTightVeto = trkVeto.isTightVeto();
-    etrk_[s].nTrackTriggers = trkVeto.getNTrackTriggers();
+    //etrk_[s].isSimLooseVeto = trkVeto.isLooseVeto();
+    //etrk_[s].isSimMediumVeto = trkVeto.isMediumVeto();
+    //etrk_[s].isSimTightVeto = trkVeto.isTightVeto();
+    //etrk_[s].nTrackTriggers = trkVeto.getNTrackTriggers();
 
     if (match_gen.checkRunOK()){
       const auto& matchedDarkBoson(match_gen.getMatchedDarkBoson());
@@ -3893,12 +3895,13 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
     etrk_[0].L1Mu_quality = bestGmtCand->quality();
 
     // track trigger veto
-    L1TrackTriggerVeto trkVeto2(cfg_, match_sh.eventSetup(), match_sh.event(), trackInputLabel_,
+    /*L1TrackTriggerVeto trkVeto2(cfg_, match_sh.eventSetup(), match_sh.event(), trackInputLabel_,
                                 etrk_[0].L1Mu_eta, normalizedPhi((float)etrk_[0].L1Mu_phi));
     etrk_[0].isL1LooseVeto  = trkVeto2.isLooseVeto();
     etrk_[0].isL1MediumVeto = trkVeto2.isMediumVeto();
     etrk_[0].isL1TightVeto  = trkVeto2.isTightVeto();
 
+    */
     float tfeta = bestGmtCand->eta();
     float tfphi = bestGmtCand->phi();
     float mindPhi = .70;
@@ -3951,6 +3954,7 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
     }
   }
 
+  /*
   // matched track-muon information
   cout<<"Best TrackMuon "<<endl;
   // track-match
@@ -4007,7 +4011,8 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
     else{
       std::cout << "ERROR: No matching L1TrkMu when L1Mu was there" << std::endl;
     }
-  }
+  }*/
+
 
   /*if (match_muon.tfCands().size()) {
     etrk_[0].has_tfCand = 1;

@@ -8,9 +8,9 @@
 using namespace std;
 
 UpgradeL1TrackMatcher::UpgradeL1TrackMatcher(
-    UpgradeL1MuMatcher& matcher,
-    edm::EDGetTokenT<L1TTTrackCollectionType>& trackInputLabel,
-    edm::EDGetTokenT<l1t::L1TkMuonParticleCollection>& trackMuonInputLabel) :
+    UpgradeL1MuMatcher& matcher) :
+    //edm::EDGetTokenT<L1TTTrackCollectionType>& trackInputLabel,
+    //edm::EDGetTokenT<l1t::L1TkMuonParticleCollection>& trackMuonInputLabel) :
   BaseMatcher(matcher.trk(),
               matcher.vtx(),
               matcher.conf(),
@@ -18,6 +18,8 @@ UpgradeL1TrackMatcher::UpgradeL1TrackMatcher(
               matcher.eventSetup())
   , matcher_(&matcher)
 {
+
+  /*
   clear();
 
   // tracks produced by L1Tracker
@@ -32,12 +34,14 @@ UpgradeL1TrackMatcher::UpgradeL1TrackMatcher(
     matchTrackMuonToSimTrack(*hl1TrackMuons.product());
   else
     std::cout  <<"failed readout L1Tracks " << std::endl;
+    */
 }
+
 
 UpgradeL1TrackMatcher::~UpgradeL1TrackMatcher()
 {
 }
-
+/*
 void
 UpgradeL1TrackMatcher::clear()
 {
@@ -122,3 +126,4 @@ UpgradeL1TrackMatcher::matchTrackMuonToSimTrack(const l1t::L1TkMuonParticleColle
     std::cout << "No Best matching L1Mu" << std::endl;
   }
 }
+*/

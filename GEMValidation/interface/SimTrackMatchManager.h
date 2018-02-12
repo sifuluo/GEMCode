@@ -26,9 +26,9 @@
 #include "GEMCode/GEMValidation/interface/DTDigiMatcher.h"
 #include "GEMCode/GEMValidation/interface/DTStubMatcher.h"
 #include "GEMCode/GEMValidation/interface/DTRecHitMatcher.h"
-#include "GEMCode/GEMValidation/interface/L1TrackTriggerVeto.h"
+//#include "GEMCode/GEMValidation/interface/L1TrackTriggerVeto.h"
 #include "GEMCode/GEMValidation/interface/UpgradeL1MuMatcher.h"
-#include "GEMCode/GEMValidation/interface/UpgradeL1TrackMatcher.h"
+//#include "GEMCode/GEMValidation/interface/UpgradeL1TrackMatcher.h"
 #include "GEMCode/GEMValidation/interface/HLTTrackMatcher.h"
 
 class SimTrackMatchManager
@@ -74,8 +74,8 @@ public:
       edm::EDGetTokenT<l1t::EMTFTrackCollection> &emtfTrackInputLabel_,
       edm::EDGetTokenT< BXVector<l1t::RegionalMuonCand> > & regMuonCandInputLabel_,
       edm::EDGetTokenT< BXVector<l1t::Muon> > &gmtInputLabel_,
-      edm::EDGetTokenT<L1TTTrackCollectionType>& trackInputLabel_,
-      edm::EDGetTokenT<l1t::L1TkMuonParticleCollection>& trackMuonInputLabel_,
+      //edm::EDGetTokenT<L1TTTrackCollectionType>& trackInputLabel_,
+      //edm::EDGetTokenT<l1t::L1TkMuonParticleCollection>& trackMuonInputLabel_,
       edm::EDGetTokenT<reco::TrackExtraCollection>& recoTrackExtraInputLabel_,
       edm::EDGetTokenT<reco::TrackCollection>& recoTrackInputLabel_,
       edm::EDGetTokenT<reco::RecoChargedCandidateCollection>& recoChargedCandidateInputLabel_
@@ -98,7 +98,7 @@ public:
   const DTStubMatcher& dtStubs() const {return dt_stubs_;}
   const DTRecHitMatcher& dtRecHits() const {return dt_rechits_;}
   const UpgradeL1MuMatcher& l1Muons() const {return l1_muons_;}
-  const UpgradeL1TrackMatcher& l1Tracks() const {return l1_tracks_;}
+  //const UpgradeL1TrackMatcher& l1Tracks() const {return l1_tracks_;}
   const HLTTrackMatcher& hltTracks() const {return hlt_tracks_;}
 
 private:
@@ -118,7 +118,7 @@ private:
   DTStubMatcher dt_stubs_;
   DTRecHitMatcher dt_rechits_;
   UpgradeL1MuMatcher l1_muons_;
-  UpgradeL1TrackMatcher l1_tracks_;
+  //UpgradeL1TrackMatcher l1_tracks_;
   HLTTrackMatcher hlt_tracks_;
 };
 

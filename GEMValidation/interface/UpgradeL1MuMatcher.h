@@ -15,6 +15,7 @@
 #include "DataFormats/L1TMuon/interface/RegionalMuonCand.h"
 #include "DataFormats/L1TMuon/interface/EMTFTrack.h"
 #include "DataFormats/L1TMuon/interface/EMTFHit.h"
+#include "L1Trigger/L1TMuonEndCap/interface/TrackTools.h"
 #include "DataFormats/L1Trigger/interface/Muon.h"
 
 class UpgradeL1MuMatcher : public BaseMatcher
@@ -63,14 +64,17 @@ class UpgradeL1MuMatcher : public BaseMatcher
   int minBXEMTFTrack_, maxBXEMTFTrack_;
   int verboseEMTFTrack_;
   double deltaREMTFTrack_;
+  bool runEMTFTrack_;
 
   int minBXRegMuCand_, maxBXRegMuCand_;
   int verboseRegMuCand_;
   double deltaRRegMuCand_;
+  bool runRegMuCand_;
 
   int minBXGMT_, maxBXGMT_;
   int verboseGMT_;
   double deltaRGMT_;
+  bool runGMT_;
 
   //l1t::EMTFTrackCollection tfTracks_;
   std::vector<TFTrack*> tfTracks_;

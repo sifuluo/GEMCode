@@ -39,8 +39,8 @@ SimTrackMatchManager::SimTrackMatchManager(
     edm::EDGetTokenT<l1t::EMTFTrackCollection>& emtfTrackInputLabel_,
     edm::EDGetTokenT< BXVector<l1t::RegionalMuonCand> >& regMuonCandInputLabel_,
     edm::EDGetTokenT< BXVector<l1t::Muon> >& gmtInputLabel_,
-    edm::EDGetTokenT<L1TTTrackCollectionType>& trackInputLabel_,
-    edm::EDGetTokenT<l1t::L1TkMuonParticleCollection>& trackMuonInputLabel_,
+    //edm::EDGetTokenT<L1TTTrackCollectionType>& trackInputLabel_,
+    //edm::EDGetTokenT<l1t::L1TkMuonParticleCollection>& trackMuonInputLabel_,
     edm::EDGetTokenT<reco::TrackExtraCollection>& recoTrackExtraInputLabel_,
     edm::EDGetTokenT<reco::TrackCollection>& recoTrackInputLabel_,
     edm::EDGetTokenT<reco::RecoChargedCandidateCollection>& recoChargedCandidateInputLabel_)
@@ -72,7 +72,7 @@ SimTrackMatchManager::SimTrackMatchManager(
               emtfTrackInputLabel_,
               regMuonCandInputLabel_,
               gmtInputLabel_)
-  , l1_tracks_(l1_muons_, trackInputLabel_, trackMuonInputLabel_)
+  //, l1_tracks_(l1_muons_, trackInputLabel_, trackMuonInputLabel_)
   , hlt_tracks_(csc_rechits_, dt_rechits_, rpc_rechits_, gem_rechits_,
                 recoTrackExtraInputLabel_, recoTrackInputLabel_, recoChargedCandidateInputLabel_)
 

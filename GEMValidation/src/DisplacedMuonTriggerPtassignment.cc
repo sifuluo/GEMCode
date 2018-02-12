@@ -194,9 +194,9 @@ DisplacedMuonTriggerPtassignment::DisplacedMuonTriggerPtassignment(const l1t::EM
 
   // first step: collect all stubs associated to the CSC TF Track
   std::map<unsigned int, CSCCorrelatedLCTDigiContainer> chamberid_lct;
-  const auto& stubCollection = *tftrack.PtrHits();
+  const auto& stubCollection = tftrack.Hits();
   for (const auto& hit: stubCollection) {
-    if (not hit.Is_CSC_hit()) continue;
+    if (not hit.Is_CSC()) continue;
     const CSCDetId& ch_id = hit.CSC_DetId()();
     // empty vector for stubs
     CSCCorrelatedLCTDigiContainer v;
@@ -1179,8 +1179,8 @@ DisplacedMuonTriggerPtassignment::stubInCSCTFTracks(const CSCCorrelatedLCTDigi& 
 {
   bool isMatched = false;
   for (const auto& tftrack: l1Tracks){
-    for (const l1t::EMTFHit& hit : *tftrack.PtrHits()){
-      if (hit.Is_CSC_hit()) continue;
+    for (const l1t::EMTFHit& hit : tftrack.Hits()){
+      if (hit.Is_CSC()) continue;
       const CSCCorrelatedLCTDigi& csc_hit = hit.CSC_LCTDigi();
       if (csc_hit == candidateStub) {
         isMatched = true;
