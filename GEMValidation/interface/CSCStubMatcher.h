@@ -11,7 +11,6 @@
 
 #include "GEMCode/GEMValidation/interface/CSCDigiMatcher.h"
 #include "GEMCode/GEMValidation/interface/GEMDigiMatcher.h"
-#include "GEMCode/GEMValidation/interface/RPCDigiMatcher.h"
 
 #include "DataFormats/CSCDigi/interface/CSCALCTDigiCollection.h"
 #include "DataFormats/CSCDigi/interface/CSCCLCTDigiCollection.h"
@@ -35,7 +34,7 @@ public:
   typedef std::pair<unsigned int, const GEMPadDigi*> GEMPadBX;
   typedef std::vector<GEMPadBX> GEMPadsBX;
 
-  CSCStubMatcher(SimHitMatcher& sh, CSCDigiMatcher& dg, GEMDigiMatcher& gem_dg, RPCDigiMatcher& rpc_dg,
+  CSCStubMatcher(SimHitMatcher& sh, CSCDigiMatcher& dg, GEMDigiMatcher& gem_dg,
                  edm::EDGetTokenT<CSCCLCTDigiCollection>& clctInputs_,
                  edm::EDGetTokenT<CSCALCTDigiCollection>& alctInputs_,
                  edm::EDGetTokenT<CSCCorrelatedLCTDigiCollection>& lctInputs_,
@@ -137,7 +136,6 @@ private:
 
   const CSCDigiMatcher* digi_matcher_;
   const GEMDigiMatcher* gem_digi_matcher_;
-  const RPCDigiMatcher* rpc_digi_matcher_;
   const SimHitMatcher* sh_matcher_;
 
   // matched stubs in crossed chambers
@@ -179,8 +177,6 @@ private:
   bool matchAlctGemME21_;
   bool matchClctGemME11_;
   bool matchClctGemME21_;
-  bool matchAlctRpc_;
-  bool matchClctRpc_;
   bool hsFromSimHitMean_;
 
   int minNHitsChamber_;

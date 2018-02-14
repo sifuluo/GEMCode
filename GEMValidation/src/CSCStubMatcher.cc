@@ -8,7 +8,7 @@ using namespace std;
 using namespace matching;
 
 
-CSCStubMatcher::CSCStubMatcher(SimHitMatcher& sh, CSCDigiMatcher& dg, GEMDigiMatcher& gem_dg, RPCDigiMatcher& rpc_dg,
+CSCStubMatcher::CSCStubMatcher(SimHitMatcher& sh, CSCDigiMatcher& dg, GEMDigiMatcher& gem_dg,
                                edm::EDGetTokenT<CSCCLCTDigiCollection>& clctInputs_,
                                edm::EDGetTokenT<CSCALCTDigiCollection>& alctInputs_,
                                edm::EDGetTokenT<CSCCorrelatedLCTDigiCollection>& lctInputs_,
@@ -16,7 +16,6 @@ CSCStubMatcher::CSCStubMatcher(SimHitMatcher& sh, CSCDigiMatcher& dg, GEMDigiMat
 : DigiMatcher(sh)
 , digi_matcher_(&dg)
 , gem_digi_matcher_(&gem_dg)
-, rpc_digi_matcher_(&rpc_dg)
 , sh_matcher_(&sh)
 {
   const auto& cscCLCT_ = conf().getParameter<edm::ParameterSet>("cscCLCT");
@@ -43,8 +42,6 @@ CSCStubMatcher::CSCStubMatcher(SimHitMatcher& sh, CSCDigiMatcher& dg, GEMDigiMat
   matchAlctGemME21_ = cscLCT_.getParameter<bool>("matchAlctGemME21");
   matchClctGemME11_ = cscLCT_.getParameter<bool>("matchClctGemME11");
   matchClctGemME21_ = cscLCT_.getParameter<bool>("matchClctGemME21");
-  matchAlctRpc_ = cscLCT_.getParameter<bool>("matchAlctRpc");
-  matchClctRpc_ = cscLCT_.getParameter<bool>("matchClctRpc");
   hsFromSimHitMean_ = cscLCT_.getParameter<bool>("hsFromSimHitMean");
   runLCT_ = cscLCT_.getParameter<bool>("run");
 
@@ -385,20 +382,6 @@ CSCStubMatcher::matchLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& lcts)
 	if (verbose())
 	    std::cout <<"GEMDetId "<< gemDetId << (hasPad ? " has CoPad ":" has NO CoPad") << std::endl;
     }
-    if ((ch_id.station()==3 or ch_id.station()==4) and ch_id.ring()==1){
-	// find matching rpc chamber (only valid for me31 and me41)
-	const int csc_trig_sect(CSCTriggerNumbering::triggerSectorFromLabels(ch_id));
-	const int csc_trig_id( CSCTriggerNumbering::triggerCscIdFromLabels(ch_id));
-	const int csc_trig_chid((3*(csc_trig_sect-1)+csc_trig_id)%18 +1);
-	const int rpc_trig_sect((csc_trig_chid-1)/3+1);
-	const int rpc_trig_subsect((csc_trig_chid-1)%3+1);
-	const RPCDetId rpcDetId(RPCDetId(ch_id.zendcap(),1,ch_id.station(),rpc_trig_sect,1,rpc_trig_subsect,0));
-	const auto& rpcDigis(rpc_digi_matcher_->digisInChamber(rpcDetId));
-	hasDigis = (rpcDigis.size()>0);
-    }
-
-
-
 
     int iLct = -1;
     for (const auto& lct: lcts_tmp)
@@ -418,20 +401,13 @@ CSCStubMatcher::matchLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& lcts)
           const bool caseAlctClct(j<alct.size() && i<clct.size());
           const bool caseAlctGem(is_valid(alct[j]) and i==clct.size() and (ch_id.station() == 1 or ch_id.station() == 2) and ch_id.ring()==1);
           //const bool caseClctGem(is_valid(clct[i]) and hasPad and !is_valid(alct[j]) and (ch_id.station() == 1 or ch_id.station() == 2));
-          const bool caseAlctRpc(is_valid(alct[j]) and i==clct.size() and (ch_id.station() == 3 or ch_id.station() == 4) and ch_id.ring()==1);
-
           bool matchAlctGem_((matchAlctGemME11_ and ch_id.station()==1 )||(matchAlctGemME21_ and ch_id.station()==2));
-          //const bool caseClctRpc(is_valid(clct[i]) and hasDigis and !is_valid(alct[j]) and (ch_id.station() == 3 or ch_id.station() == 4));
 	  if (caseAlctGem and not matchAlctGem_)
-	      continue;
-	  if (caseAlctRpc and not matchAlctRpc_)
 	      continue;
 		 
           if(verbose()){
             if (caseAlctGem and hasPad) std::cout <<" caseAlctGem and hasPad "<< std::endl;
             else if (caseAlctGem and not(hasPad)) cout <<" caseAlct Gem and not hasPad "<< std::endl;
-            if (caseAlctRpc and hasDigis) std::cout <<" caseAlctRpc and hasDigis "<< std::endl;
-            else if (caseAlctRpc and not(hasDigis)) cout <<" caseAlctRpc and not hasDigis "<< std::endl;
           }
           const CSCChamber* cscChamber(cscGeometry_->chamber(CSCDetId(id)));
 
@@ -467,9 +443,9 @@ CSCStubMatcher::matchLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& lcts)
           const int my_bx(digi_bx(alct[j]));
           const auto& digi_wgs = digi_matcher_->wiregroupsInChamber(id,1);
 
-	  if (not(caseAlctClct) and not(caseAlctGem) and not(caseAlctRpc)){
+	  if (not(caseAlctClct) and not(caseAlctGem)){
 	      if (verbose())
-	      	std::cout <<"this LCT can not be match AlctClct, AlctGem, AlctRpc, skip it: "<< lct<< std::endl;
+	      	std::cout <<"this LCT can not be match AlctClct, AlctGem, skip it: "<< lct<< std::endl;
 	      continue;
 	  }
 
@@ -491,18 +467,6 @@ CSCStubMatcher::matchLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& lcts)
              continue;
              }*/
 
-          //if (matchAlctRpc_ and caseAlctRpc and !(my_bx == digi_bx(lct) and std::abs(my_hs_gemrpc - digi_channel(lct))<3 and my_wg == digi_wg(lct) ) ){
-          if (matchAlctRpc_ and caseAlctRpc and !(hasDigis and  std::fabs(my_hs_gemrpc - digi_channel(lct))<3.0 and my_wg == digi_wg(lct) ) ){
-            if (verbose()) cout<<"  BAD LCT in AlctRpc case"<<endl;
-            //std::cout << "my_hs_gemrpc " << my_hs_gemrpc << "  hs from LCT " << digi_channel(lct)
-            //        <<" my_wg " << my_wg << " wg in LCT "<<digi_wg(lct) <<std::endl;
-            continue;
-          }
-          else if (caseAlctRpc and !matchAlctRpc_) continue;
-          /* if (matchClctRpc_ and caseClctRpc and !(my_bx == digi_bx(lct) and my_hs == digi_channel(lct) and std::abs(my_wg_gemrpc_mean - digi_wg(lct))<3) ){
-             if (verbose()) cout<<"  BAD"<<endl;
-             continue;
-             }*/
 
           if (verbose() and ch_id.ring()==1 and (ch_id.station()==1 or ch_id.station()==2) and !caseAlctClct and !caseAlctGem)
             std::cout <<"ME11 or ME21: jth alct "<< j<<" ith clct "<<i <<"  not caseAlctClct caseAlctGem, LCT "<< lct << std::endl;
@@ -522,7 +486,6 @@ CSCStubMatcher::matchLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& lcts)
 
           if (verbose() and caseAlctClct)  std::cout << " this LCT is matched to simtrack in AlctClct case" << std::endl;
           if (verbose() and caseAlctGem)  std::cout << " this LCT is matched to simtrack in AlctGem case" << std::endl;
-          if (verbose() and caseAlctRpc)  std::cout << " this LCT is matched to simtrack in AlctRpc case" << std::endl;
 
           break;
         } //clct loop over

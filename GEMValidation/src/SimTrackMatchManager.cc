@@ -58,8 +58,8 @@ SimTrackMatchManager::SimTrackMatchManager(
   , csc_digis_(simhits_, cscComparatorDigiInput_, cscWireDigiInput_)
   , csc_stubs_(simhits_,
                csc_digis_, gem_digis_,
-               rpc_digis_, clctInputs_,
-               alctInputs_, lctInputs_, mplctInputs_)
+               clctInputs_, alctInputs_, 
+	       lctInputs_, mplctInputs_)
   , csc_rechits_(simhits_,
                  cscRecHit2DInput_, cscSegmentInput_)
   , dt_digis_(simhits_, dtDigiInput_)

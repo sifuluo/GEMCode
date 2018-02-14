@@ -214,10 +214,8 @@ SimTrackMatching = cms.PSet(
         addGhosts = cms.bool(True),
         matchAlctGemME11 = cms.bool(False),
         matchAlctGemME21 = cms.bool(False),
-        matchAlctRpc = cms.bool(False),
         matchClctGemME11 = cms.bool(False),
         matchClctGemME21 = cms.bool(False),
-        matchClctRpc = cms.bool(False),
         hsFromSimHitMean = cms.bool(True),
     ),
     cscMPLCT = cms.PSet(
