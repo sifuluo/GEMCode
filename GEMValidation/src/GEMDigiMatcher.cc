@@ -4,10 +4,10 @@
 using namespace std;
 using namespace matching;
 
-GEMDigiMatcher::GEMDigiMatcher(SimHitMatcher& sh,
-                               edm::EDGetTokenT<GEMDigiCollection> &gemDigiInput_,
-                               edm::EDGetTokenT<GEMPadDigiCollection> &gemPadDigiInput_,
-                               edm::EDGetTokenT<GEMCoPadDigiCollection> &gemCoPadDigiInput_)
+GEMDigiMatcher::GEMDigiMatcher(const SimHitMatcher& sh,
+                               const edm::EDGetTokenT<GEMDigiCollection> &gemDigiInput_,
+                               const edm::EDGetTokenT<GEMPadDigiCollection> &gemPadDigiInput_,
+                               const edm::EDGetTokenT<GEMCoPadDigiCollection> &gemCoPadDigiInput_)
 : DigiMatcher(sh)
 {
   const auto& gemDigi_= conf().getParameter<edm::ParameterSet>("gemStripDigi");

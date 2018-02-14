@@ -8,13 +8,13 @@ using namespace std;
 using namespace matching;
 
 
-CSCStubMatcher::CSCStubMatcher(SimHitMatcher& sh, 
-			       CSCDigiMatcher& dg, 
-			       GEMDigiMatcher& gem_dg,
-                               edm::EDGetTokenT<CSCCLCTDigiCollection>& clctInputs_,
-                               edm::EDGetTokenT<CSCALCTDigiCollection>& alctInputs_,
-                               edm::EDGetTokenT<CSCCorrelatedLCTDigiCollection>& lctInputs_,
-                               edm::EDGetTokenT<CSCCorrelatedLCTDigiCollection>& mplctInputs_)
+CSCStubMatcher::CSCStubMatcher(const SimHitMatcher& sh, 
+			       const CSCDigiMatcher& dg, 
+			       const GEMDigiMatcher& gem_dg,
+                               const edm::EDGetTokenT<CSCCLCTDigiCollection>& clctInputs_,
+                               const edm::EDGetTokenT<CSCALCTDigiCollection>& alctInputs_,
+                               const edm::EDGetTokenT<CSCCorrelatedLCTDigiCollection>& lctInputs_,
+                               const edm::EDGetTokenT<CSCCorrelatedLCTDigiCollection>& mplctInputs_)
 : DigiMatcher(sh)
 , digi_matcher_(&dg)
 , gem_digi_matcher_(&gem_dg)

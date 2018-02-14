@@ -5,7 +5,7 @@ using namespace std;
 using namespace matching;
 
 
-RPCDigiMatcher::RPCDigiMatcher(SimHitMatcher& sh, edm::EDGetTokenT<RPCDigiCollection> &rpcDigiInput_)
+RPCDigiMatcher::RPCDigiMatcher(const SimHitMatcher& sh, const edm::EDGetTokenT<RPCDigiCollection> &rpcDigiInput_)
 : DigiMatcher(sh)
 {
   const auto& rpcDigi_= conf().getParameter<edm::ParameterSet>("rpcStripDigi");

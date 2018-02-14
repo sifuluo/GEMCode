@@ -4,9 +4,9 @@
 using namespace std;
 
 
-ME0RecHitMatcher::ME0RecHitMatcher(ME0DigiMatcher& dg,
-                                   edm::EDGetTokenT<ME0RecHitCollection>& me0RecHitInput_,
-                                   edm::EDGetTokenT<ME0SegmentCollection>& me0SegmentInput_)
+ME0RecHitMatcher::ME0RecHitMatcher(const ME0DigiMatcher& dg,
+                                   const edm::EDGetTokenT<ME0RecHitCollection>& me0RecHitInput_,
+                                   const edm::EDGetTokenT<ME0SegmentCollection>& me0SegmentInput_)
   : BaseMatcher(dg.trk(), dg.vtx(), dg.conf(), dg.event(), dg.eventSetup())
   , digi_matcher_(&dg)
 {

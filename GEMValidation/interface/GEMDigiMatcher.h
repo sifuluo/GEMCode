@@ -29,10 +29,10 @@ class GEMDigiMatcher : public DigiMatcher
 {
 public:
 
-  GEMDigiMatcher(SimHitMatcher& sh,
-                 edm::EDGetTokenT<GEMDigiCollection>& gemDigiInput_, 
-                 edm::EDGetTokenT<GEMPadDigiCollection>& gemPadDigiInput_, 
-                 edm::EDGetTokenT<GEMCoPadDigiCollection>& gemCoPadDigiInput_);
+  GEMDigiMatcher(const SimHitMatcher& sh,
+                 const edm::EDGetTokenT<GEMDigiCollection>& gemDigiInput_, 
+		 const edm::EDGetTokenT<GEMPadDigiCollection>& gemPadDigiInput_, 
+                 const edm::EDGetTokenT<GEMCoPadDigiCollection>& gemCoPadDigiInput_);
   
   ~GEMDigiMatcher();
 

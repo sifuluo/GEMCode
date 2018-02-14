@@ -4,7 +4,7 @@
 using namespace std;
 using namespace matching;
 
-ME0DigiMatcher::ME0DigiMatcher(SimHitMatcher& sh, edm::EDGetTokenT<ME0DigiPreRecoCollection>& me0DigiInput_)
+ME0DigiMatcher::ME0DigiMatcher(const SimHitMatcher& sh, const edm::EDGetTokenT<ME0DigiPreRecoCollection>& me0DigiInput_)
 : DigiMatcher(sh)
 {
   const auto& me0Digi_= conf().getParameter<edm::ParameterSet>("me0DigiPreReco");

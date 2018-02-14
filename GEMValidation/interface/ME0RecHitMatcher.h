@@ -25,9 +25,9 @@ public:
   typedef std::vector<ME0RecHit> ME0RecHitContainer;
   typedef std::vector<ME0Segment> ME0SegmentContainer;
 
-  ME0RecHitMatcher(ME0DigiMatcher& sh,
-                   edm::EDGetTokenT<ME0RecHitCollection>& me0RecHitInput_,
-                   edm::EDGetTokenT<ME0SegmentCollection>& me0SegmentInput_);
+  ME0RecHitMatcher(const ME0DigiMatcher& sh,
+                   const edm::EDGetTokenT<ME0RecHitCollection>& me0RecHitInput_,
+                   const edm::EDGetTokenT<ME0SegmentCollection>& me0SegmentInput_);
 
   ~ME0RecHitMatcher() {}
 

@@ -4,10 +4,10 @@
 using namespace std;
 
 
-DTRecHitMatcher::DTRecHitMatcher(SimHitMatcher& sh,
-                                 edm::EDGetTokenT<DTRecHitCollection>& dtRecHit1DPairInput_,
-                                 edm::EDGetTokenT<DTRecSegment2DCollection>& dtRecSegment2DInput_,
-                                 edm::EDGetTokenT<DTRecSegment4DCollection>& dtRecSegment4DInput_
+DTRecHitMatcher::DTRecHitMatcher(const SimHitMatcher& sh,
+                                 const edm::EDGetTokenT<DTRecHitCollection>& dtRecHit1DPairInput_,
+                                 const edm::EDGetTokenT<DTRecSegment2DCollection>& dtRecSegment2DInput_,
+                                 const edm::EDGetTokenT<DTRecSegment4DCollection>& dtRecSegment4DInput_
                                  )
   : BaseMatcher(sh.trk(), sh.vtx(), sh.conf(), sh.event(), sh.eventSetup())
   , simhit_matcher_(&sh)

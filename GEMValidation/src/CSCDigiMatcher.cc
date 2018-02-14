@@ -5,9 +5,9 @@ using namespace std;
 using namespace matching;
 
 
-CSCDigiMatcher::CSCDigiMatcher(SimHitMatcher& sh,
-                               edm::EDGetTokenT<CSCComparatorDigiCollection>& cscComparatorDigiInput_,
-                               edm::EDGetTokenT<CSCWireDigiCollection>& cscWireDigiInput_)
+CSCDigiMatcher::CSCDigiMatcher(const SimHitMatcher& sh,
+                               const edm::EDGetTokenT<CSCComparatorDigiCollection>& cscComparatorDigiInput_,
+                               const edm::EDGetTokenT<CSCWireDigiCollection>& cscWireDigiInput_)
 : DigiMatcher(sh)
 {
   const auto& cscWireDigi_ = conf().getParameter<edm::ParameterSet>("cscWireDigi");

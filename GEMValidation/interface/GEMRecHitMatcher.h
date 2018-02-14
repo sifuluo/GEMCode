@@ -31,7 +31,7 @@ public:
 
   typedef std::vector<GEMRecHit> GEMRecHitContainer;
 
-  GEMRecHitMatcher(SimHitMatcher& sh, edm::EDGetTokenT<GEMRecHitCollection>& gemRecHitInput_);
+  GEMRecHitMatcher(const SimHitMatcher& sh, const edm::EDGetTokenT<GEMRecHitCollection>& gemRecHitInput_);
   
   ~GEMRecHitMatcher();
 

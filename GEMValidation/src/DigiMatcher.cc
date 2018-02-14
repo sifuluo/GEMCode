@@ -23,7 +23,7 @@ float halfstripToStrip(int hs)
 }
 
 
-DigiMatcher::DigiMatcher(SimHitMatcher& sh)
+DigiMatcher::DigiMatcher(const SimHitMatcher& sh)
 : BaseMatcher(sh.trk(), sh.vtx(), sh.conf(), sh.event(), sh.eventSetup())
 , simhit_matcher_(&sh)
 {

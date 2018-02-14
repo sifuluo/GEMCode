@@ -25,7 +25,7 @@ public:
 
   typedef std::vector<DTLocalTrigger> DTLocalTriggerContainer;
 
-  DTStubMatcher(SimHitMatcher& sh, edm::EDGetTokenT<DTLocalTriggerCollection>& input_);
+  DTStubMatcher(const SimHitMatcher& sh, const edm::EDGetTokenT<DTLocalTriggerCollection>& input_);
   
   ~DTStubMatcher();
 
