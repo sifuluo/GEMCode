@@ -153,21 +153,32 @@ GEMDigiMatcher::matchCoPadsToSimTrack(const GEMCoPadDigiCollection& co_pads)
 
     for (auto pad = co_pads_in_det.first; pad != co_pads_in_det.second; ++pad)
     {
+      // to match simtrack to GEMCoPad, check the pads within the copad!
+      bool matchL1 = false;
+      GEMDetId gemL1_id(p_id.region(), p_id.ring(), p_id.station(), 1, p_id.chamber(), 0);
       if (verboseCoPad_) cout<<"CoPad: chp "<<*pad<<endl;
-      // check that the pad BX is within the range
-      if (pad->roll() != p_id.roll()) continue;
-      if (pad->bx(1) < minBXGEMCoPad_ || pad->bx(1) > maxBXGEMCoPad_) continue;
-      if (verboseCoPad_) cout<<"CoPad: chp1 "<<*pad<<endl;
-      // check that it matches a pad that was hit by SimHits from our track
-      if (hit_co_pads.find(pad->pad(1)) == hit_co_pads.end()) continue;
-      if (verboseCoPad_) cout<<"CoPad: chp2 "<<*pad<<endl;
-      // check that it matches a coincidence pad that was hit by SimHits from our track
+      for (const auto& p: gemPadsInChamber(gemL1_id.rawId())) {
+	if (p==pad->first()){
+	  matchL1 = true;
+	  break;
+	}
+      }
 
-      const auto& mydigi = make_digi(id, pad->pad(1), pad->bx(1), GEM_COPAD);
-      //detid_to_copads_[id].push_back(mydigi);
-      superchamber_to_copads_[ superch_id() ].push_back(mydigi);
+      bool matchL2 = false;
+      GEMDetId gemL2_id(p_id.region(), p_id.ring(), p_id.station(), 2, p_id.chamber(), 0);      
+      for (const auto& p: gemPadsInChamber(gemL2_id.rawId())) {
+	if (p==pad->second()){
+	  matchL2 = true;
+	  break;
+	}
+      }
 
-      superchamber_to_gemcopads_[ superch_id() ].push_back(*pad);
+      if (matchL1 and matchL2) {
+	if (verboseCoPad_) cout<<"CoPad: was matched! "<<endl;
+	const auto& mydigi = make_digi(id, pad->pad(1), pad->bx(1), GEM_COPAD);
+	superchamber_to_copads_[ superch_id() ].push_back(mydigi);
+	superchamber_to_gemcopads_[ superch_id() ].push_back(*pad);
+      }      
     }
   }
 }
