@@ -4055,25 +4055,6 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
     std::cout << "SimTrack has GMTCand" << std::endl;
   }
 
-  // L1Extra
-  const auto& l1Extras(match_l1_gmt.getMatchedL1ExtraMuonParticles());
-  if (l1Extras.size()) {
-    etrk_[0].has_l1Extra = 1;
-
-    const auto& l1Extra(l1Extras[0].first);
-    etrk_[0].l1Extra_pt = l1Extra.pt();
-    etrk_[0].l1Extra_eta = l1Extra.eta();
-    etrk_[0].l1Extra_phi = l1Extra.phi();
-    etrk_[0].l1Extra_dR = l1Extras[0].second;
-    if (verbose_) {
-      std::cout << "Number of matched L1Extras: " << l1Extras.size() << std::endl;
-      std::cout << "l1Extra_pt " << etrk_[0].l1Extra_pt << std::endl;
-      std::cout << "l1Extra_eta " << etrk_[0].l1Extra_eta << std::endl;
-      std::cout << "l1Extra_phi " << etrk_[0].l1Extra_phi << std::endl;
-      std::cout << "l1Extra_dR " << etrk_[0].l1Extra_dR << std::endl;
-    }
-  }
-
   // RecoTrackExtra
   const auto& recoTrackExtras(match_hlt_track.getMatchedRecoTrackExtras());
   if (recoTrackExtras.size()) {

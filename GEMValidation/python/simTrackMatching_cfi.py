@@ -443,14 +443,6 @@ SimTrackMatching = cms.PSet(
         maxBX = cms.int32(1),
         deltaR = cms.double(0.05),
     ),
-    l1ExtraMuonParticle = cms.PSet(
-        verbose = cms.int32(0),
-        validInputTags = cms.InputTag("hltL1extraParticles"),
-        run = cms.bool(True),
-        minBX = cms.int32(-1),
-        maxBX = cms.int32(1),
-        deltaR = cms.double(0.2),
-    ),
     l1track = cms.PSet(
         verbose = cms.int32(1),
         run = cms.bool(True),
