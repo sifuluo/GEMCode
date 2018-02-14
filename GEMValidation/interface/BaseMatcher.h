@@ -140,7 +140,7 @@ public:
   int verbose_;
 
   // list of CSC chamber types to use
-  bool useCSCChamberTypes_[11];
+  bool useCSCChamberTypes_[13];// add ME0 as special CSC
   bool useGEMChamberTypes_[3];
   bool useRPCChamberTypes_[31];
   bool useDTChamberTypes_[21];

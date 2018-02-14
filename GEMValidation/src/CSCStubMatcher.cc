@@ -419,7 +419,14 @@ CSCStubMatcher::matchLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& lcts)
           const bool caseAlctGem(is_valid(alct[j]) and i==clct.size() and (ch_id.station() == 1 or ch_id.station() == 2) and ch_id.ring()==1);
           //const bool caseClctGem(is_valid(clct[i]) and hasPad and !is_valid(alct[j]) and (ch_id.station() == 1 or ch_id.station() == 2));
           const bool caseAlctRpc(is_valid(alct[j]) and i==clct.size() and (ch_id.station() == 3 or ch_id.station() == 4) and ch_id.ring()==1);
+
+          bool matchAlctGem_((matchAlctGemME11_ and ch_id.station()==1 )||(matchAlctGemME21_ and ch_id.station()==2));
           //const bool caseClctRpc(is_valid(clct[i]) and hasDigis and !is_valid(alct[j]) and (ch_id.station() == 3 or ch_id.station() == 4));
+	  if (caseAlctGem and not matchAlctGem_)
+	      continue;
+	  if (caseAlctRpc and not matchAlctRpc_)
+	      continue;
+		 
           if(verbose()){
             if (caseAlctGem and hasPad) std::cout <<" caseAlctGem and hasPad "<< std::endl;
             else if (caseAlctGem and not(hasPad)) cout <<" caseAlct Gem and not hasPad "<< std::endl;
@@ -439,7 +446,6 @@ CSCStubMatcher::matchLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& lcts)
           const auto& hits = sh_matcher_->hitsInChamber(id);
           const float my_hs_gemrpc_mean(sh_matcher_->simHitsMeanStrip(hits));
           //const float my_wg_gemrpc_mean(sh_matcher_->simHitsMeanStrip(hits));
-          bool matchAlctGem_((matchAlctGemME11_ and ch_id.station()==1 )||(matchAlctGemME21_ and ch_id.station()==2));
           //bool matchClctGem_((matchClctGemME11_ and cscid.station()==1 )||(matchClctGemME21_ and cscid.station()==2));
           /* Printing Stuff
              if (caseAlctClct[i][j]) std::cout << "caseAlctClct" << std::endl;
@@ -467,13 +473,14 @@ CSCStubMatcher::matchLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& lcts)
 	      continue;
 	  }
 
-          if ( caseAlctClct and !((my_bx == digi_bx(lct) || 6 == digi_bx(lct)) and my_hs == digi_channel(lct) and my_wg == digi_wg(lct))){
+	  //ALCTs center at BX3, CLCTs center at BX7, LCTs centers at BX8 and usually LCT_BX = ALCT_BX+5
+          if ( caseAlctClct and !((my_bx+5 == digi_bx(lct) || 8 == digi_bx(lct)) and my_hs == digi_channel(lct) and my_wg == digi_wg(lct))){
             if (verbose()) cout<<"  BAD LCT in AlctClct case"<<endl;
             continue;
           }
 
           //add hadPad here
-          if (matchAlctGem_ and caseAlctGem and !(hasPad and  my_bx == digi_bx(lct) and std::abs(my_hs_gemrpc - digi_channel(lct))<4 and my_wg == digi_wg(lct) ) ){
+          if (matchAlctGem_ and caseAlctGem and !(hasPad and  my_bx+5 == digi_bx(lct) and std::abs(my_hs_gemrpc - digi_channel(lct))<4 and my_wg == digi_wg(lct) ) ){
             if (verbose()) cout<<"  BAD LCT in AlctGem case, my_hs_gemrpc "<< my_hs_gemrpc <<" LCT hs "<< digi_channel(lct) <<endl;
             continue;
           }

@@ -24,8 +24,10 @@ process.source = cms.Source("PoolSource",
 )
 
 InputDir = ['/eos/uscms/store/user/dildick/DarkSUSY_mH_125_mGammaD_20_cT_0_14TeV/DarkSUSY_mH_125_mGammaD_20_cT_0_14TeV_REGEN/170723_232821/0000/']
+InputDir = ['/fdata/hepx/store/user/tahuang/SingleMu_100X_Run2MC_CSC_CentralBX_GEN_SIM_DIGI_L1/SingleMu_100X_Run2MC_CSC_CentralBX_GEN_SIM_DIGI_L1/180212_131435/0000/']
+InputDir = ['/fdata/hepx/store/user/tahuang/SingleMu_100X_Run2MC_CSC_CentralBX_GEN_SIM_DIGI_L1_20180212/SingleMu_100X_Run2MC_CSC_CentralBX_GEN_SIM_DIGI_L1_20180212/180213_092307/0000/']
 from GEMCode.GEMValidation.InputFileHelpers import *
-#process = useInputDir(process, InputDir, True)
+process = useInputDir(process, InputDir, True)
 
 process.TFileService = cms.Service("TFileService",
     fileName = cms.string("out_ana.root")
@@ -68,7 +70,7 @@ if doGem:
   matching.cscLCT.minNHitsChamber = 3
   matching.cscMPLCT.minNHitsChamber = 3
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(50000) )
 
 process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 

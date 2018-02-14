@@ -15,11 +15,14 @@ BaseMatcher::BaseMatcher(const SimTrack& t, const SimVertex& v,
 {
   // list of CSC chamber type numbers to use
   std::vector<int> csc_types = conf().getParameter<std::vector<int> >("cscStationsToUse");
-  for (int i = CSC_ALL; i != CSC_ME42; i++) useCSCChamberTypes_[i] = false;
+  //for (int i = CSC_ALL; i != CSC_ME42; i++) useCSCChamberTypes_[i] = false;
+  for (int i = CSC_ALL; i != GEM_ME0; i++) useCSCChamberTypes_[i] = false; // add ME0 as special CSC
+
   for (const auto& t: csc_types)
   {
-    if (t >= 0 && t <= CSC_ME42) useCSCChamberTypes_[t] = true;
+    if (t >= 0 && t <= GEM_ME0) useCSCChamberTypes_[t] = true;
   }
+
   // empty list means use all the chamber types
   if (csc_types.empty()) useCSCChamberTypes_[CSC_ALL] = true;
 
@@ -53,6 +56,9 @@ BaseMatcher::BaseMatcher(const SimTrack& t, const SimVertex& v,
   // empty list means use all the chamber types
   if (gem_types.empty()) useGEMChamberTypes_[GEM_ALL] = true;
 
+  bool useGEM = false;
+  for (int i = GEM_ALL; i != GEM_ME21; i++) useGEM |= useGEMChamberTypes_[i];
+
   // Get the magnetic field
   es.get<IdealMagneticFieldRecord>().get(magfield_);
 
@@ -72,7 +78,8 @@ BaseMatcher::BaseMatcher(const SimTrack& t, const SimVertex& v,
     gemGeometry_ = &*gem_geom_;
   } else {
     hasGEMGeometry_ = false;
-    std::cout << "+++ Info: GEM geometry is unavailable. +++\n";
+    if (useGEM)
+	std::cout << "+++ Info: GEM geometry is unavailable. +++\n";
   }
 
   es.get<MuonGeometryRecord>().get(me0_geom_);
@@ -80,7 +87,8 @@ BaseMatcher::BaseMatcher(const SimTrack& t, const SimVertex& v,
     me0Geometry_ = &*me0_geom_;
   } else {
     hasME0Geometry_ = false;
-    std::cout << "+++ Info: ME0 geometry is unavailable. +++\n";
+    if (useCSCChamberTypes_[GEM_ME0]) // if ME0 is still used butME0 geom is not found, print out warning
+	std::cout << "+++ Info: ME0 geometry is unavailable. +++\n";
   }
 
   es.get<MuonGeometryRecord>().get(rpc_geom_);

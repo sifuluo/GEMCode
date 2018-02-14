@@ -183,8 +183,8 @@ struct MyTrackEff
   Float_t z_layer3_fit_even, z_layer3_fit_odd;
   Char_t bend_lct_odd;
   Char_t bend_lct_even;
-  Char_t bx_lct_odd;
-  Char_t bx_lct_even;
+  Char_t bx_lct_odd, bx_alct_odd, bx_clct_odd;
+  Char_t bx_lct_even, bx_alct_even, bx_clct_even;
 
 
   UChar_t hs_lct_odd;
@@ -643,6 +643,10 @@ void MyTrackEff::init()
   quality_clct_even = -1;
   quality_alct_odd = -1;
   quality_alct_even = -1;
+  bx_clct_odd = -9;
+  bx_clct_even = -9;
+  bx_alct_odd = -9;
+  bx_alct_even = -9;
   pad_odd = -1;
   pad_even = -1;
   Copad_odd = -1;
@@ -1074,6 +1078,17 @@ TTree* MyTrackEff::book(TTree *t, const std::string & name)
   t->Branch("has_clct", &has_clct);
   t->Branch("has_alct", &has_alct);
   t->Branch("has_lct", &has_lct);
+
+  t->Branch("quality_clct_odd", &quality_clct_odd);
+  t->Branch("quality_clct_even", &quality_clct_even);
+  t->Branch("bx_clct_odd", &bx_clct_odd);
+  t->Branch("bx_clct_even", &bx_clct_even);
+  t->Branch("quality_alct_odd", &quality_alct_odd);
+  t->Branch("quality_alct_even", &quality_alct_even);
+  t->Branch("bx_alct_odd", &bx_alct_odd);
+  t->Branch("bx_alct_even", &bx_alct_even);
+
+
   t->Branch("chamber_lct_odd", &chamber_lct_odd);
   t->Branch("chamber_lct_even", &chamber_lct_even);
   t->Branch("z_layer3_fit_even", &z_layer3_fit_even);
@@ -1125,10 +1140,6 @@ TTree* MyTrackEff::book(TTree *t, const std::string & name)
   t->Branch("wiregroup_even", &wiregroup_even);
   t->Branch("halfstrip_odd", &halfstrip_odd);
   t->Branch("halfstrip_even", &halfstrip_even);
-  t->Branch("quality_clct_odd", &quality_clct_odd);
-  t->Branch("quality_clct_even", &quality_clct_even);
-  t->Branch("quality_alct_odd", &quality_alct_odd);
-  t->Branch("quality_alct_even", &quality_alct_even);
 
   t->Branch("pad_odd", &pad_odd);
   t->Branch("pad_even", &pad_even);
@@ -2280,6 +2291,9 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
     if (odd) etrk_[st].quality_clct_odd = digi_quality(clct);
     else etrk_[st].quality_clct_even = digi_quality(clct);
 
+    if (odd) etrk_[st].bx_clct_odd = digi_bx(clct);
+    else etrk_[st].bx_clct_even = digi_bx(clct);
+
     if (odd) etrk_[st].has_clct |= 1;
     else etrk_[st].has_clct |= 2;
 
@@ -2290,6 +2304,9 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
 
       if (odd) etrk_[1].quality_clct_odd = digi_quality(clct);
       else etrk_[1].quality_clct_even = digi_quality(clct);
+
+      if (odd) etrk_[1].bx_clct_odd = digi_bx(clct);
+      else etrk_[1].bx_clct_even = digi_bx(clct);
 
       if (odd) etrk_[1].has_clct |= 1;
       else etrk_[1].has_clct |= 2;
@@ -2313,6 +2330,9 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
     if (odd) etrk_[st].quality_alct_odd = digi_quality(alct);
     else etrk_[st].quality_alct_even = digi_quality(alct);
 
+    if (odd) etrk_[st].bx_alct_odd = digi_bx(alct);
+    else etrk_[st].bx_alct_even = digi_bx(alct);
+
     if (odd) etrk_[st].has_alct |= 1;
     else etrk_[st].has_alct |= 2;
 
@@ -2323,6 +2343,9 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
 
       if (odd) etrk_[1].quality_alct_odd = digi_quality(alct);
       else etrk_[1].quality_alct_even = digi_quality(alct);
+
+      if (odd) etrk_[1].bx_alct_odd = digi_bx(alct);
+      else etrk_[1].bx_alct_even = digi_bx(alct);
 
       if (odd) etrk_[1].has_alct |= 1;
       else etrk_[1].has_alct |= 2;
@@ -3372,6 +3395,7 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
   }
 
 
+  /*
   DisplacedMuonTriggerPtassignment displacedMuonL1Pt(match_lct.allLctsMatched2SimMuon(),
 	  					     //match_gd.allGempadsMatch2SimMuon_2strip(),
 						     gemPadDigiInput_,
@@ -3678,6 +3702,8 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
      }
 
   if (verbose_) std::cout <<"GEMCSCAnalyzer step9 "<< std::endl;
+  */ //displacedMuonPtassignment comment here, should a flag to control whether to run it or not
+
  //general propagation
   /*const auto& propagate_odd_gp(match_track.simTrackPropagateGPs_odd());
   const auto& propagate_even_gp(match_track.simTrackPropagateGPs_even());
