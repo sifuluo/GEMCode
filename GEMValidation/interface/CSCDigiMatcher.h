@@ -80,17 +80,6 @@ public:
   std::set<int> stripsInChamber(unsigned int, int max_gap_to_fill = 0) const;
   std::set<int> wiregroupsInChamber(unsigned int, int max_gap_to_fill = 0) const;
 
-  // return the halfstrip for a given comparator digi
-  // the detid is the Id for the layer where the digi is at
-  // halfstrip starts at 0!
-  int getHalfStrip(const CSCComparatorDigi&) const;
-
-  // returns the fractional strip of a halfstrip
-  // to be used in the function CSCLayerGeometry::intersectionOfStripAndWire()
-  // note that LCT's HS starts from 0, but in geometry strips start from 1
-  float getFractionalStrip(const CSCComparatorDigi&) const;
-
-  
 private:
 
   void matchStripsToSimTrack(const CSCComparatorDigiCollection& comparators);

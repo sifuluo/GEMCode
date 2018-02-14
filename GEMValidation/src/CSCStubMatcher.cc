@@ -981,7 +981,7 @@ CSCStubMatcher::matchingComparatorDigisLCT(unsigned int detid, const CSCCorrelat
     // loop on the comparator digis
     for (const auto& comp: comps){
       //check if they match the LCT pattern
-      int halfStrip = digi_matcher_->getHalfStrip(comp);
+      int halfStrip = comp.getHalfStrip();
       if (chamberId.ring()==4 and verboseLCT_)
       	std::cout <<"layerid "<< layerId << "\t"<<comp<<" "<<halfStrip<<endl;
       // const auto& pattern = CSCCathodeLCTProcessor::pattern2007[patternNumber];
@@ -1030,7 +1030,7 @@ CSCStubMatcher::positionsOfComparatorInLCT(unsigned int detid, const CSCCorrelat
      for (const auto& p: digis){
 	if (p.first == l_id.rawId()){
 	    const auto& comp = p.second;
-	    float fractional_strip = digi_matcher_->getFractionalStrip(comp);
+	    float fractional_strip = comp.getFractionalStrip();
 	    const auto& layer_geo(cscGeometry_->chamber(id)->layer(l)->geometry());
 	    float wire = layer_geo->middleWireOfGroup(stub.getKeyWG() + 1);
 	    const LocalPoint& csc_intersect = layer_geo->intersectionOfStripAndWire(fractional_strip, wire);
