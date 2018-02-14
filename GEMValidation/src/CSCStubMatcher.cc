@@ -384,6 +384,7 @@ CSCStubMatcher::matchLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& lcts)
       for (const auto& p: cscClctsInChamber(id)){
 	if (p==lct.getCLCT()) {
 	  lct_clct_match = true;
+          if (verbose()) cout<<" LCT matched to CLCT "<< p <<endl;
 	  break;
 	}
       } 
@@ -391,23 +392,28 @@ CSCStubMatcher::matchLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& lcts)
       for (const auto& p: cscAlctsInChamber(id)){
 	if (p==lct.getALCT()) {
 	  lct_alct_match = true;
+          if (verbose()) cout<<" LCT matched to ALCT "<< p <<endl;
 	  break;
 	}
       } 
       // Check if matched to an GEM pad L1
-      const GEMDetId gemDetIdL1(ch_id.zendcap(),1,ch_id.station(),1,ch_id.chamber(),0);
-      for (const auto& p: gem_digi_matcher_->gemPadsInChamber(gemDetIdL1.rawId())){
-	if (p==lct.getGEM1()){
-	  lct_gem1_match = true;
-	  break;
+      if (ch_id.ring()==1 and (ch_id.station()==1 or ch_id.station()==2)) {
+	const GEMDetId gemDetIdL1(ch_id.zendcap(),1,ch_id.station(),1,ch_id.chamber(),0);
+	for (const auto& p: gem_digi_matcher_->gemPadsInChamber(gemDetIdL1.rawId())){
+	  if (p==lct.getGEM1()){
+	    lct_gem1_match = true;
+	    if (verbose()) cout<<" LCT matched to GEML1 "<< p <<endl;
+	    break;
+	  }
 	}
-      }
-      const GEMDetId gemDetIdL2(ch_id.zendcap(),1,ch_id.station(),2,ch_id.chamber(),0);
-      // Check if matched to an GEM pad L2
-      for (const auto& p: gem_digi_matcher_->gemPadsInChamber(gemDetIdL2.rawId())){
-	if (p==lct.getGEM2()){
-	  lct_gem2_match = true;
-	  break;
+	const GEMDetId gemDetIdL2(ch_id.zendcap(),1,ch_id.station(),2,ch_id.chamber(),0);
+	// Check if matched to an GEM pad L2
+	for (const auto& p: gem_digi_matcher_->gemPadsInChamber(gemDetIdL2.rawId())){
+	  if (p==lct.getGEM2()){
+	    lct_gem2_match = true;
+	    if (verbose()) cout<<" LCT matched to GEML2 "<< p <<endl;
+	    break;
+	  }
 	}
       }
       
