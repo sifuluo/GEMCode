@@ -395,16 +395,16 @@ CSCStubMatcher::matchLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& lcts)
 	}
       } 
       // Check if matched to an GEM pad L1
-      const GEMDetId gemDetIdL1(GEMDetId(ch_id.zendcap(),1,ch_id.station(),1,ch_id.chamber(),0));
+      const GEMDetId gemDetIdL1(ch_id.zendcap(),1,ch_id.station(),1,ch_id.chamber(),0);
       for (const auto& p: gem_digi_matcher_->gemPadsInChamber(gemDetIdL1.rawId())){
 	if (p==lct.getGEM1()){
 	  lct_gem1_match = true;
 	  break;
 	}
       }
-      const GEMDetId gemDetIdL2(GEMDetId(ch_id.zendcap(),1,ch_id.station(),2,ch_id.chamber(),0));
+      const GEMDetId gemDetIdL2(ch_id.zendcap(),1,ch_id.station(),2,ch_id.chamber(),0);
       // Check if matched to an GEM pad L2
-      for (const auto& p: gem_digi_matcher_->gemPadsInChamber(gemDetIdL1.rawId())){
+      for (const auto& p: gem_digi_matcher_->gemPadsInChamber(gemDetIdL2.rawId())){
 	if (p==lct.getGEM2()){
 	  lct_gem2_match = true;
 	  break;
