@@ -100,9 +100,12 @@ SimHitMatcher::SimHitMatcher(const SimTrack& t,
 	    const auto& csc_simhits = hitsInDetId(id);
 	    const auto& csc_simhits_gp = simHitsMeanPosition(csc_simhits);
 	    const auto& strips = hitStripsInDetId(id);
-	    cout<<"cscdetid "<<CSCDetId(id)<<": "<<csc_simhits.size()<<" "<<csc_simhits_gp.phi()<<" "<< csc_detid_to_hits_[id].size()<<endl;
-	    cout<<"nStrip "<<strips.size()<<endl;
-	    cout<<"strips : "; std::copy(strips.begin(), strips.end(), ostream_iterator<int>(cout, " ")); cout<<endl;
+	    CSCDetId cscid(id);
+	    if (cscid.station() == 1 and (cscid.ring() == 1 or cscid.ring() == 4)){
+		cout<<"cscdetid "<<CSCDetId(id)<<": "<<csc_simhits.size()<<" "<<csc_simhits_gp.phi()<<" "<< csc_detid_to_hits_[id].size()<<endl;
+		cout<<"nStrip "<<strips.size()<<endl;
+		cout<<"strips : "; std::copy(strips.begin(), strips.end(), ostream_iterator<int>(cout, " ")); cout<<endl;
+	    }
 	  }
 	}
       }
