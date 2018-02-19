@@ -3371,109 +3371,109 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
 
 
   DisplacedMuonTriggerPtassignment displacedMuonL1Pt(match_lct.allLctsMatched2SimMuon(),
-	  					     //match_gd.allGempadsMatch2SimMuon_2strip(),
-						     gemPadDigiInput_,
-						     me0SegmentInput_,
-						     displacedMuPt_cfg_,
-						     match_lct.eventSetup(),
-						     match_lct.event());
+                                                     //match_gd.allGempadsMatch2SimMuon_2strip(),
+                                                     gemPadDigiInput_,
+                                                     me0SegmentInput_,
+                                                     displacedMuPt_cfg_,
+                                                     match_lct.eventSetup(),
+                                                     match_lct.event());
   displacedMuonL1Pt.setCharge(etrk_[0].charge);
   if (displacedMuonL1Pt.getNParity() >= 0)  std::cout <<"DisplacedMuon get npar "<< displacedMuonL1Pt.getNParity()<<" ring "<<displacedMuonL1Pt.getMeRing() << std::endl;
 
 
   int npar =displacedMuonL1Pt.getNParity();
   DisplacedMuonTriggerPtassignment displacedMuonL1Pt_sim(gp1,
-	  						 gp2,
-							 gp3,
-							 gp4,
-							 gp_ge11,
-							 gp_ge21,
-							 npar,
-							 displacedMuPt_cfg_,
-							 match_lct.eventSetup(),
-							 match_lct.event());
+                                                         gp2,
+                                                         gp3,
+                                                         gp4,
+                                                         gp_ge11,
+                                                         gp_ge21,
+                                                         npar,
+                                                         displacedMuPt_cfg_,
+                                                         match_lct.eventSetup(),
+                                                         match_lct.event());
   displacedMuonL1Pt_sim.setCharge(etrk_[0].charge);
 
   if ((etrk_[1].has_csc_sh || etrk_[4].has_csc_sh) and (etrk_[6].has_csc_sh || etrk_[7].has_csc_sh)) {
-     if ((etrk_[8].has_csc_sh || etrk_[9].has_csc_sh) || (etrk_[10].has_csc_sh || etrk_[11].has_csc_sh))
+    if ((etrk_[8].has_csc_sh || etrk_[9].has_csc_sh) || (etrk_[10].has_csc_sh || etrk_[11].has_csc_sh))
      	etrk_[0].hasSt3orSt4_sh=true;
      if (displacedMuonL1Pt.getNParity()>=0 and (fabs(displacedMuonL1Pt.getRadiusSt(1)-gp1.perp())>.02*gp1.perp()
-		 or fabs(displacedMuonL1Pt.getRadiusSt(2)-gp2.perp())>.02*gp2.perp()
-		 or fabs(displacedMuonL1Pt.getRadiusSt(3)-gp3.perp())>.02*gp3.perp()))
-	    std::cout <<" warning, difference between fitting and sim is large, module, npar  "<< displacedMuonL1Pt.getNParity()<<" ring "<< displacedMuonL1Pt.getMeRing() << std::endl;
+                                                or fabs(displacedMuonL1Pt.getRadiusSt(2)-gp2.perp())>.02*gp2.perp()
+                                                or fabs(displacedMuonL1Pt.getRadiusSt(3)-gp3.perp())>.02*gp3.perp()))
+       std::cout <<" warning, difference between fitting and sim is large, module, npar  "<< displacedMuonL1Pt.getNParity()<<" ring "<< displacedMuonL1Pt.getMeRing() << std::endl;
 
      etrk_[0].eta_st2_L1 = displacedMuonL1Pt.getTrackEta();
      etrk_[0].eta_st1_L1 = displacedMuonL1Pt.getCSCEta(1);//get station 1 eta
      etrk_[0].isMe0Region = displacedMuonL1Pt.checkME0Region();
      etrk_[0].npar_L1 = displacedMuonL1Pt.getNParity();
      if (etrk_[0].meRing == 1)
-	 std::cout <<"eta_st1_L1 "<< etrk_[0].eta_st1_L1 <<" eta_st2_L1 "<< etrk_[0].eta_st2_L1 <<" npar "<< etrk_[0].npar_L1<<(etrk_[0].isMe0Region ? " ME0region":" GE11region") << std::endl;
+       std::cout <<"eta_st1_L1 "<< etrk_[0].eta_st1_L1 <<" eta_st2_L1 "<< etrk_[0].eta_st2_L1 <<" npar "<< etrk_[0].npar_L1<<(etrk_[0].isMe0Region ? " ME0region":" GE11region") << std::endl;
 
      if (etrk_[0].meRing == 1 and displacedMuonL1Pt.getNParity()>=0 and displacedMuonL1Pt.runDirectionbased(false, true)){
 
-     	etrk_[0].phiM_ME11only_L1 = displacedMuonL1Pt.getlocalPhiDirection(1);
-     	etrk_[0].phiM_st2_L1 = displacedMuonL1Pt.getlocalPhiDirection(2);
-     	etrk_[0].phiM_st12_L1 = displacedMuonL1Pt.getlocalPhiDirection(12);
-     	etrk_[0].phiM_st23_L1 = displacedMuonL1Pt.getlocalPhiDirection(23);
+       etrk_[0].phiM_ME11only_L1 = displacedMuonL1Pt.getlocalPhiDirection(1);
+       etrk_[0].phiM_st2_L1 = displacedMuonL1Pt.getlocalPhiDirection(2);
+       etrk_[0].phiM_st12_L1 = displacedMuonL1Pt.getlocalPhiDirection(12);
+       etrk_[0].phiM_st23_L1 = displacedMuonL1Pt.getlocalPhiDirection(23);
 
-	etrk_[0].dphi_dir_ME11only_st2_L1 = displacedMuonL1Pt.getdeltaPhiDirection(1, 2);
-	etrk_[0].dphi_dir_st1_st12_L1 = displacedMuonL1Pt.getdeltaPhiDirection(1, 12);
-	etrk_[0].dphi_dir_st2_st23_L1 = displacedMuonL1Pt.getdeltaPhiDirection(2, 23);
-	etrk_[0].dphi_dir_st12_st23_L1 = displacedMuonL1Pt.getdeltaPhiDirection(12, 23);
-	etrk_[0].direction_ge21_pt = displacedMuonL1Pt.getDirectionPt();
-	//std::cout <<"Direction based ge21 pt "<< etrk_[0].direction_ge21_pt  << std::endl;
+       etrk_[0].dphi_dir_ME11only_st2_L1 = displacedMuonL1Pt.getdeltaPhiDirection(1, 2);
+       etrk_[0].dphi_dir_st1_st12_L1 = displacedMuonL1Pt.getdeltaPhiDirection(1, 12);
+       etrk_[0].dphi_dir_st2_st23_L1 = displacedMuonL1Pt.getdeltaPhiDirection(2, 23);
+       etrk_[0].dphi_dir_st12_st23_L1 = displacedMuonL1Pt.getdeltaPhiDirection(12, 23);
+       etrk_[0].direction_ge21_pt = displacedMuonL1Pt.getDirectionPt();
+       //std::cout <<"Direction based ge21 pt "<< etrk_[0].direction_ge21_pt  << std::endl;
 
        if (etrk_[0].meRing == 1)
-	   std::cout <<"dphi12 noME0GE11_GE21 "<< etrk_[0].dphi_dir_ME11only_st2_L1 <<" phiM_st1 "<<displacedMuonL1Pt.getlocalPhiDirection(1)<<" phiM_st2 "<< displacedMuonL1Pt.getlocalPhiDirection(2) << std::endl;
+         std::cout <<"dphi12 noME0GE11_GE21 "<< etrk_[0].dphi_dir_ME11only_st2_L1 <<" phiM_st1 "<<displacedMuonL1Pt.getlocalPhiDirection(1)<<" phiM_st2 "<< displacedMuonL1Pt.getlocalPhiDirection(2) << std::endl;
 
      }
 
 
      if (etrk_[0].meRing == 1 and displacedMuonL1Pt.getNParity()>=0 and displacedMuonL1Pt.runDirectionbased(true, true)){
-	etrk_[0].phiM_st1_L1 = displacedMuonL1Pt.getlocalPhiDirection(1);
-	etrk_[0].dphi_dir_st1_st2_L1 = displacedMuonL1Pt.getdeltaPhiDirection(1, 2);
-	if (displacedMuonL1Pt.checkME0Region())
-	    etrk_[0].phiM_ME0_L1 = displacedMuonL1Pt.getlocalPhiDirection(1);
-	else etrk_[0].phiM_GE11_L1 = displacedMuonL1Pt.getlocalPhiDirection(1);
+       etrk_[0].phiM_st1_L1 = displacedMuonL1Pt.getlocalPhiDirection(1);
+       etrk_[0].dphi_dir_st1_st2_L1 = displacedMuonL1Pt.getdeltaPhiDirection(1, 2);
+       if (displacedMuonL1Pt.checkME0Region())
+         etrk_[0].phiM_ME0_L1 = displacedMuonL1Pt.getlocalPhiDirection(1);
+       else etrk_[0].phiM_GE11_L1 = displacedMuonL1Pt.getlocalPhiDirection(1);
 
        std::cout <<"dphi12 ME0GE11_GE21 "<< etrk_[0].dphi_dir_st1_st2_L1 <<" phiM_st1 "<<displacedMuonL1Pt.getlocalPhiDirection(1)<<" phiM_st2 "<< displacedMuonL1Pt.getlocalPhiDirection(2) << std::endl;
      }else if (displacedMuonL1Pt.getNParity()>=0 and displacedMuonL1Pt.checkME0Region())  std::cout <<"ME0 region,  ME0 or GE21 is not found " << std::endl;
 
 
      if (displacedMuonL1Pt.getNParity()>=0 and displacedMuonL1Pt.runDirectionbased(false, false)){
-     	etrk_[0].phiM_ME21only_L1 = displacedMuonL1Pt.getlocalPhiDirection(2);
-     	etrk_[0].phiM_st12_L1 = displacedMuonL1Pt.getlocalPhiDirection(12);
-     	etrk_[0].phiM_st23_L1 = displacedMuonL1Pt.getlocalPhiDirection(23);
-	if (etrk_[0].meRing == 2){
-	    etrk_[0].phiM_st1_L1 = displacedMuonL1Pt.getlocalPhiDirection(1);
-	    etrk_[0].dphi_dir_st1_st2_L1 = displacedMuonL1Pt.getdeltaPhiDirection(1, 2);
-	    etrk_[0].dphi_dir_st1_st12_L1 = displacedMuonL1Pt.getdeltaPhiDirection(1, 12);
-	    etrk_[0].dphi_dir_st2_st23_L1 = displacedMuonL1Pt.getdeltaPhiDirection(2, 23);
-	    etrk_[0].dphi_dir_st12_st23_L1 = displacedMuonL1Pt.getdeltaPhiDirection(12, 23);
-	}
+       etrk_[0].phiM_ME21only_L1 = displacedMuonL1Pt.getlocalPhiDirection(2);
+       etrk_[0].phiM_st12_L1 = displacedMuonL1Pt.getlocalPhiDirection(12);
+       etrk_[0].phiM_st23_L1 = displacedMuonL1Pt.getlocalPhiDirection(23);
+       if (etrk_[0].meRing == 2){
+         etrk_[0].phiM_st1_L1 = displacedMuonL1Pt.getlocalPhiDirection(1);
+         etrk_[0].dphi_dir_st1_st2_L1 = displacedMuonL1Pt.getdeltaPhiDirection(1, 2);
+         etrk_[0].dphi_dir_st1_st12_L1 = displacedMuonL1Pt.getdeltaPhiDirection(1, 12);
+         etrk_[0].dphi_dir_st2_st23_L1 = displacedMuonL1Pt.getdeltaPhiDirection(2, 23);
+         etrk_[0].dphi_dir_st12_st23_L1 = displacedMuonL1Pt.getdeltaPhiDirection(12, 23);
+       }
 
-	//assign values to these variables both in ring1 and ring2
-        etrk_[0].dphi_dir_ME11only_ME21only_L1 = displacedMuonL1Pt.getdeltaPhiDirection(1, 2);
-	etrk_[0].dphi_dir_st1_st2_L1_csc = displacedMuonL1Pt.getdeltaPhiDirection(1, 2);
-	etrk_[0].dphi_dir_st1_st12_L1_csc = displacedMuonL1Pt.getdeltaPhiDirection(1, 12);
-	etrk_[0].dphi_dir_st2_st23_L1_csc = displacedMuonL1Pt.getdeltaPhiDirection(2, 23);
-	etrk_[0].dphi_dir_st12_st23_L1 = displacedMuonL1Pt.getdeltaPhiDirection(12, 23);
+       //assign values to these variables both in ring1 and ring2
+       etrk_[0].dphi_dir_ME11only_ME21only_L1 = displacedMuonL1Pt.getdeltaPhiDirection(1, 2);
+       etrk_[0].dphi_dir_st1_st2_L1_csc = displacedMuonL1Pt.getdeltaPhiDirection(1, 2);
+       etrk_[0].dphi_dir_st1_st12_L1_csc = displacedMuonL1Pt.getdeltaPhiDirection(1, 12);
+       etrk_[0].dphi_dir_st2_st23_L1_csc = displacedMuonL1Pt.getdeltaPhiDirection(2, 23);
+       etrk_[0].dphi_dir_st12_st23_L1 = displacedMuonL1Pt.getdeltaPhiDirection(12, 23);
 
-	etrk_[0].direction_noge21_pt = displacedMuonL1Pt.getDirectionPt();
-	//std::cout <<"Direction based no ge21 pt "<< etrk_[0].direction_noge21_pt  << std::endl;
+       etrk_[0].direction_noge21_pt = displacedMuonL1Pt.getDirectionPt();
+       //std::cout <<"Direction based no ge21 pt "<< etrk_[0].direction_noge21_pt  << std::endl;
 
        if (etrk_[0].meRing == 1)
-	   std::cout <<"dphi12 noME0_noGE21 "<< etrk_[0].dphi_dir_ME11only_ME21only_L1 <<" phiM_st1 "<<displacedMuonL1Pt.getlocalPhiDirection(1)<<" phiM_st2 "<< displacedMuonL1Pt.getlocalPhiDirection(2) << std::endl;
+         std::cout <<"dphi12 noME0_noGE21 "<< etrk_[0].dphi_dir_ME11only_ME21only_L1 <<" phiM_st1 "<<displacedMuonL1Pt.getlocalPhiDirection(1)<<" phiM_st2 "<< displacedMuonL1Pt.getlocalPhiDirection(2) << std::endl;
 
      }
 
 
      if (etrk_[0].meRing == 1 and displacedMuonL1Pt.getNParity()>=0 and displacedMuonL1Pt.runDirectionbased(true, false)){
 	etrk_[0].dphi_dir_st1_ME21only_L1 = displacedMuonL1Pt.getdeltaPhiDirection(1, 2);
-       std::cout <<"dphi12 ME0GE11_noGE21 "<< etrk_[0].dphi_dir_st1_ME21only_L1 <<" phiM_st1 "<<displacedMuonL1Pt.getlocalPhiDirection(1)<<" phiM_st2 "<< displacedMuonL1Pt.getlocalPhiDirection(2) << std::endl;
+  std::cout <<"dphi12 ME0GE11_noGE21 "<< etrk_[0].dphi_dir_st1_ME21only_L1 <<" phiM_st1 "<<displacedMuonL1Pt.getlocalPhiDirection(1)<<" phiM_st2 "<< displacedMuonL1Pt.getlocalPhiDirection(2) << std::endl;
      }else if (displacedMuonL1Pt.getNParity()>=0 and displacedMuonL1Pt.checkME0Region())  {
-	 std::cout <<"ME0 region, ME0 is not found " << std::endl;
-	 if (etrk_[ME0].has_lct>0) std::cout <<"warning, simTrack has a matched ME0 segment, eta "<< gpME0.eta() <<" phi "<< gpME0.phi() << std::endl;
+       std::cout <<"ME0 region, ME0 is not found " << std::endl;
+       if (etrk_[ME0].has_lct>0) std::cout <<"warning, simTrack has a matched ME0 segment, eta "<< gpME0.eta() <<" phi "<< gpME0.phi() << std::endl;
      }
 
 
@@ -3964,19 +3964,21 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
   etrk_[0].dR_L1Track = reco::deltaR(etrk_[0].L1Track_eta, etrk_[0].L1Track_phi, etrk_[0].eta, etrk_[0].phi);
   cout<<"Delta(sim,L1Track) " << etrk_[0].dR_L1Track << endl;
 
-  if (l1GmtCands.size() and match_muon.bestGMTCand()) {
-
     etrk_[0].sim_prop_eta = match_sh.propagatedPositionSt2().eta();
     etrk_[0].sim_prop_phi = (float)match_sh.propagatedPositionSt2().phi();
 
     cout<<"sim prop eta "<<etrk_[0].sim_prop_eta<<endl;
     cout<<"sim prop phi "<<etrk_[0].sim_prop_phi<<endl;
 
-    etrk_[0].sim_st2_eta = match_sh.simHitsMeanPositionSecondStation().eta();
-    etrk_[0].sim_st2_phi = match_sh.simHitsMeanPositionSecondStation().phi();
+    etrk_[0].sim_st2_eta = match_sh.simHitsMeanPositionStation(2).eta();
+    etrk_[0].sim_st2_phi = match_sh.simHitsMeanPositionStation(2).phi();
 
+    cout<<"sim origin eta "<<etrk_[0].eta<<endl;
+    cout<<"sim origin phi "<<etrk_[0].phi<<endl;
     cout<<"sim st2 eta "<<etrk_[0].sim_st2_eta<<endl;
     cout<<"sim st2 phi "<<etrk_[0].sim_st2_phi<<endl;
+
+  if (l1GmtCands.size() and match_muon.bestGMTCand()) {
 
     const TFCand* bestGmtCand = match_muon.bestGMTCand();
     etrk_[0].GMTCand_eta = bestGmtCand->eta();
@@ -3993,8 +3995,6 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
       cout<<"Best muon_eta "<<etrk_[0].L1TrackMuon_eta<<endl;
       cout<<"Best muon_phi "<<etrk_[0].L1TrackMuon_phi<<endl;
 
-
-
       etrk_[0].dR_prop_L1TrackMuon = reco::deltaR(etrk_[0].L1TrackMuon_eta,
                                                   etrk_[0].L1TrackMuon_phi,
                                                   etrk_[0].sim_prop_eta, etrk_[0].sim_prop_phi);
@@ -4003,10 +4003,14 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
       etrk_[0].dR_st2_L1TrackMuon = reco::deltaR(etrk_[0].L1TrackMuon_eta, etrk_[0].L1TrackMuon_phi,
                                                  etrk_[0].sim_st2_eta, etrk_[0].sim_st2_phi);
       cout<<"Delta(sim st2,L1TrackMuon) " << etrk_[0].dR_st2_L1TrackMuon << endl;
+      cout<<endl;
     }
     else{
       std::cout << "ERROR: No matching L1TrkMu when L1Mu was there" << std::endl;
+      cout<<endl;
     }
+  } else {
+    cout<<endl;
   }
 
   /*if (match_muon.tfCands().size()) {

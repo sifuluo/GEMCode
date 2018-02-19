@@ -7,7 +7,7 @@ import FWCore.ParameterSet.Config as cms
 
 from Configuration.StandardSequences.Eras import eras
 
-process = cms.Process('ReL1TrackTrigger',eras.Phase2)
+process = cms.Process('ReL1TrackTrigger2',eras.Phase2)
 
 # import of standard configurations
 process.load('Configuration.StandardSequences.Services_cff')
@@ -30,7 +30,7 @@ process.maxEvents = cms.untracked.PSet(
 process.source = cms.Source(
     "PoolSource",
     #fileNames = cms.untracked.vstring('file:/eos/uscms/store/user/dildick/DarkSUSY_mH_125_mGammaD_20_cT_0_14TeV/DarkSUSY_mH_125_mGammaD_20_cT_0_14TeV_DIGI_L1_TTCluster/170807_164940/0000/out_digi_l1_l1cluster_134.root'),
-    fileNames = cms.untracked.vstring('file:004002D8-8D8C-E711-8A16-0025905C3DD0.root'),
+    fileNames = cms.untracked.vstring('file:/eos/uscms/store/user/lpcgem/Nu_E10-v1-pythia8-gun/NuE10_v1_pythia8_gun_14TeV_ReL1_TT_TkMu_v3/170929_234044/0000/step2_473.root'),
     secondaryFileNames = cms.untracked.vstring()
 )
 
@@ -96,8 +96,8 @@ process.endjob_step = cms.EndPath(process.endOfProcess)
 process.FEVTDEBUGHLToutput_step = cms.EndPath(process.FEVTDEBUGHLToutput)
 
 # Schedule definition
-process.schedule = cms.Schedule(process.L1simulation_step,
-                                process.L1TrackTrigger_step,
+process.schedule = cms.Schedule(#process.L1simulation_step,
+                                #process.L1TrackTrigger_step,
                                 process.pL1TkMuon,
                                 process.endjob_step,
                                 process.FEVTDEBUGHLToutput_step)

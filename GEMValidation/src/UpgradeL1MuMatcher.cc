@@ -5,12 +5,15 @@
 #include "TLorentzVector.h"
 #include <map>
 
-UpgradeL1MuMatcher::UpgradeL1MuMatcher(CSCStubMatcher& csc,
-                                       edm::EDGetTokenT<l1t::EMTFTrackCollection> &emtfTrackInputLabel_,
-                                       edm::EDGetTokenT< BXVector<l1t::RegionalMuonCand> > & regionalMuonCandInputLabel_,
-                                       edm::EDGetTokenT< BXVector<l1t::Muon> > & gmtInputLabel_)
+UpgradeL1MuMatcher::UpgradeL1MuMatcher(
+    CSCStubMatcher& csc,
+    SimHitMatcher& sim,
+    edm::EDGetTokenT<l1t::EMTFTrackCollection> &emtfTrackInputLabel_,
+    edm::EDGetTokenT< BXVector<l1t::RegionalMuonCand> > & regionalMuonCandInputLabel_,
+    edm::EDGetTokenT< BXVector<l1t::Muon> > & gmtInputLabel_)
   : BaseMatcher(csc.trk(), csc.vtx(), csc.conf(), csc.event(), csc.eventSetup())
   , csc_stub_matcher_(&csc)
+  , simhit_matcher_(&sim)
 {
   const auto& tfTrack = conf().getParameter<edm::ParameterSet>("upgradeEmtfTrack");
   minBXEMTFTrack_ = tfTrack.getParameter<int>("minBX");
@@ -45,7 +48,6 @@ UpgradeL1MuMatcher::UpgradeL1MuMatcher(CSCStubMatcher& csc,
     matchEmtfTrackToSimTrack(*hl1Tracks.product());
   else
     std::cout  <<"failed readout EMTFTracks " << std::endl;
-
   edm::Handle<BXVector<l1t::RegionalMuonCand>> hRegMuonCand;
   if (gemvalidation::getByToken(regionalMuonCandInputLabel_,hRegMuonCand, event()))
     matchRegionalMuonCandToSimTrack(*hRegMuonCand.product());
@@ -163,34 +165,64 @@ void UpgradeL1MuMatcher::matchRegionalMuonCandToSimTrack(const BXVector<l1t::Reg
 
 void UpgradeL1MuMatcher::matchGMTToSimTrack(const BXVector<l1t::Muon>& gmtCands)
 {
-  if (tfTracks_.size()  ==  0) return;
+  const GlobalPoint& gp_st2(propagatedPositionSt2());
+
+  const GlobalPoint& gp_sim(simhit_matcher_->simHitsMeanPositionStation(2));
+  cout <<"gp_sim2 eta " << gp_sim.eta() << endl;
+  cout <<"gp_sim2 phi " << gp_sim.phi() << endl;
+
+  const GlobalPoint& gp_sim1(simhit_matcher_->simHitsMeanPositionStation(1));
+  cout <<"gp_sim1 eta " << gp_sim1.eta() << endl;
+  cout <<"gp_sim1 phi " << gp_sim1.phi() << endl;
+
+  // if (tfTracks_.size()  ==  0) return;
   float mindPtRel = 0.5;
   mindRGMT = deltaRGMT_;
+  int iGMT=0;
   for (int bx = gmtCands.getFirstBX(); bx <= gmtCands.getLastBX(); bx++ ){
     if ( bx < minBXGMT_ or bx > maxBXGMT_) continue;
     for (auto cand = gmtCands.begin(bx); cand != gmtCands.end(bx); ++cand ){
+      iGMT++;
       TFCand *L1Mu = new TFCand(&(*cand));
       L1Mu->setBx(bx);
       float pt = L1Mu->pt();
       float phi = L1Mu->phi() ;
       float eta = L1Mu->eta();
-      for (const auto& trk : tfTracks_){
-        float dR = deltaR(trk->eta(), trk->phi(), eta, phi);
-        float dPtRel = std::fabs(trk->pt() - pt)/pt;
-        if (dR < deltaRGMT_ and dPtRel < mindPtRel){
-          L1Mu->setDR( dR );
-          L1Mu->setMatchedTFTrack( trk );
-          gmts_.push_back(L1Mu);
-        }
+      float dR = deltaR(float(gp_st2.eta()), float(gp_st2.phi()), eta, phi);
+      if (verboseGMT_){
+        cout << "candidate GMT "<< iGMT << " eta " << eta << endl;
+        cout << "candidate GMT "<< iGMT << " phi " << phi << endl;
+        cout << "candidate GMT "<< iGMT << " bx " << bx << endl;
       }
+
+      if (dR < deltaRGMT_){
+        L1Mu->setDR( dR );
+        gmts_.push_back(L1Mu);
+      }
+      // for (const auto& trk : tfTracks_){
+      //   float dR = deltaR(trk->eta(), trk->phi(), eta, phi);
+      //   float dPtRel = std::fabs(trk->pt() - pt)/pt;
+      //   if (dR < deltaRGMT_ and dPtRel < mindPtRel){
+      //     L1Mu->setDR( dR );
+      //     L1Mu->setMatchedTFTrack( trk );
+      //     gmts_.push_back(L1Mu);
+      //   }
+      // }
       if (verboseGMT_)
         L1Mu->print();
     }
   }
+  int i =0;
   for (const auto& cand : gmts_){
+    i++;
     float phi = cand->phi();
     float eta = cand->eta();
+    if (verboseGMT_){
+      cout << "candidate GMT "<< i << " eta " << eta << endl;
+      cout << "candidate GMT "<< i << " phi " << phi << endl;
+    }
     float dR = deltaR(bestTrack->eta(), bestTrack->phi(), eta, phi);
+    dR = deltaR(float(gp_st2.eta()), float(gp_st2.phi()), eta, phi);
     if (dR < mindRGMT){
       mindRGMT = dR;
       bestGMT = cand;

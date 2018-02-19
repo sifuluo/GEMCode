@@ -16,13 +16,12 @@ process.load('TrackPropagation.SteppingHelixPropagator.SteppingHelixPropagatorOp
 process.load('TrackPropagation.SteppingHelixPropagator.SteppingHelixPropagatorAlong_cfi')
 
 process.source = cms.Source("PoolSource",
-	fileNames = cms.untracked.vstring('file:step2.root'),
-	#fileNames = cms.untracked.vstring('/store/user/dildick/DarkSUSY_mH_125_mGammaD_20000_cT_0_14TeV_GEN_SIM_90X/DarkSUSY_mH_125_mGammaD_20000_cT_0_14TeV_PU0_DIGI_L1/170116_230113/0000/step2_1.root')
+	fileNames = cms.untracked.vstring('file:/eos/uscms/store/user/lpcgem/TenMu_E0to50-pythia8-gun/TenMuE0to50_v1_pythia8_gun_14TeV_ReL1_TT_TkMu/170914_224137/0000/step2_210.root'),
 )
 
 InputDir = ['/eos/uscms/store/user/dildick/DarkSUSY_mH_125_mGammaD_20_cT_0_14TeV/DarkSUSY_mH_125_mGammaD_20_cT_0_14TeV_REGEN/170723_232821/0000/']
 from GEMCode.GEMValidation.InputFileHelpers import *
-process = useInputDir(process, InputDir, True)
+#process = useInputDir(process, InputDir, True)
 
 process.TFileService = cms.Service("TFileService",
     fileName = cms.string("out_ana.root")
@@ -59,11 +58,12 @@ if doGem:
   matching.cscLCT.minNHitsChamber = 3
   matching.cscMPLCT.minNHitsChamber = 3
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
 
 process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 
-process.p = cms.Path(process.GEMCSCAnalyzer)
+process.load("L1Trigger.L1TTrackMatch.L1TkObjectProducers_cff")
+process.p = cms.Path(process.L1TkMuons * process.GEMCSCAnalyzer)
 
 ## messages
 print

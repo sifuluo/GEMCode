@@ -97,7 +97,6 @@ UpgradeL1TrackMatcher::matchTrackMuonToSimTrack(const l1t::L1TkMuonParticleColle
       std::cout << "\tcandidate L1TkMu eta " << muon_eta << std::endl;
       std::cout << "\tcandidate L1TkMu phi " << muon_phi << std::endl;
 
-
       if (std::abs(best_eta - muon_eta)<0.01 and std::abs(best_phi - muon_phi)<0.01) {
         bestTrackMuon_ = const_cast<l1t::L1TkMuonParticle*>(&trackmuon);
         const double l1Tk_eta = trackmuon.getTrkPtr()->getMomentum().eta();
