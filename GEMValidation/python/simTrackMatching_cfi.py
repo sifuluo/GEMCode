@@ -175,8 +175,8 @@ SimTrackMatching = cms.PSet(
         verbose = cms.int32(2),
         validInputTags = cms.InputTag("simMuonCSCDigis", "MuonCSCComparatorDigi"),
         run = cms.bool(True),
-        minBX = cms.int32(6-4),# pulse extention in CLCT processor
-        maxBX = cms.int32(8),
+        minBX = cms.int32(5),
+        maxBX = cms.int32(11),
         matchDeltaStrip = cms.int32(2),
         minNHitsChamber = cms.int32(4),
     ),
@@ -185,8 +185,8 @@ SimTrackMatching = cms.PSet(
         verbose = cms.int32(1),
         validInputTags = cms.InputTag("simMuonCSCDigis", "MuonCSCWireDigi"),
         run = cms.bool(True),
-        minBX = cms.int32(7-4),# pulse extention in ALCT processor
-        maxBX = cms.int32(9),
+        minBX = cms.int32(5),
+        maxBX = cms.int32(11),
         matchDeltaWG = cms.int32(2),
         minNHitsChamber = cms.int32(4),
     ),
