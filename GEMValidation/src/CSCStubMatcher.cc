@@ -8,8 +8,8 @@ using namespace std;
 using namespace matching;
 
 
-CSCStubMatcher::CSCStubMatcher(const SimHitMatcher& sh, 
-			       const CSCDigiMatcher& dg, 
+CSCStubMatcher::CSCStubMatcher(const SimHitMatcher& sh,
+			       const CSCDigiMatcher& dg,
 			       const GEMDigiMatcher& gem_dg,
                                const edm::EDGetTokenT<CSCCLCTDigiCollection>& clctInputs_,
                                const edm::EDGetTokenT<CSCALCTDigiCollection>& alctInputs_,
@@ -82,7 +82,7 @@ CSCStubMatcher::matchCLCTsToSimTrack(const CSCCLCTDigiCollection& clcts)
   // only look for stub in chambers that have digis matching to this track
   setVerbose(verboseCLCT_);
  CSCCLCTDigiCollection::DigiRangeIterator detUnitIt;
- for (detUnitIt= clcts.begin(); detUnitIt!= clcts.end(); ++detUnitIt){    
+ for (detUnitIt= clcts.begin(); detUnitIt!= clcts.end(); ++detUnitIt){
      const CSCDetId& id = (*detUnitIt).first;
      const CSCCLCTDigiCollection::Range& range =(*detUnitIt).second;
      for (CSCCLCTDigiCollection::const_iterator digiIt =  range.first; digiIt!=range.second; ++digiIt){
@@ -317,90 +317,90 @@ CSCStubMatcher::matchLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& lcts)
 
   int n_minLayers = 0;
   for (const auto& id: cathode_and_anode_ids)
-  {
-    if (digi_matcher_->nLayersWithStripInChamber(id) >= minNHitsChamberCLCT_ and 
-	digi_matcher_->nLayersWithWireInChamber(id) >= minNHitsChamberALCT_) ++n_minLayers;
-    CSCDetId ch_id(id);
-
-    int ring = ch_id.ring();
-    if (ring == 4) ring =1; //use ME1b id to get CLCTs
-    CSCDetId ch_id2(ch_id.endcap(), ch_id.station(),  ring, ch_id.chamber(), 0);
-
-    const auto& lcts_in_det = lcts.get(ch_id2);
-    DigiContainer lcts_tmp;
-    CSCCorrelatedLCTDigiContainer cscLcts_tmp;
-    map<int, DigiContainer> bx_to_lcts;
-    for (auto lct = lcts_in_det.first; lct != lcts_in_det.second; ++lct)
     {
-      if (!lct->isValid()) continue;
+      if (digi_matcher_->nLayersWithStripInChamber(id) >= minNHitsChamberCLCT_ and
+          digi_matcher_->nLayersWithWireInChamber(id) >= minNHitsChamberALCT_) ++n_minLayers;
+      CSCDetId ch_id(id);
 
-      if (verbose()) cout<<"\n lct in detId "<<ch_id<<" "<<*lct<<endl;
+      int ring = ch_id.ring();
+      if (ring == 4) ring =1; //use ME1b id to get CLCTs
+      CSCDetId ch_id2(ch_id.endcap(), ch_id.station(),  ring, ch_id.chamber(), 0);
 
-      int bx = lct->getBX();
-
-      // check that the BX for stub wasn't too early or too late
-      if (bx < minBXLCT_ || bx > maxBXLCT_) continue;
-
-      int hs = lct->getStrip() + 1; // LCT halfstrip and wiregoup numbers start from 0
-      if (ch_id.ring() == 4 and ch_id.station() == 1 and hs>128)
-	  hs = hs - 128;
-      int wg = lct->getKeyWG() + 1;
-
-      //fixedME
-      float dphi = -9;
-
-      const auto& mydigi = make_digi(id, hs, bx, CSC_LCT, lct->getQuality(), lct->getPattern(), wg, dphi);
-      lcts_tmp.push_back(mydigi);
-      cscLcts_tmp.push_back(*lct);
-      bx_to_lcts[bx].push_back(mydigi);
-
-      // Add ghost LCTs when there are two in bx
-      // and the two don't share half-strip or wiregroup
-      // TODO: when GEMs would be used to resolve this, there might ned to be an option to turn this off!
-      if (bx_to_lcts[bx].size() == 2 and addGhostLCTs_)
-      {
-        auto lct11 = bx_to_lcts[bx][0];
-        auto lct22 = bx_to_lcts[bx][1];
-        int wg1 = digi_wg(lct11);
-        int wg2 = digi_wg(lct22);
-        int hs1 = digi_channel(lct11);
-        int hs2 = digi_channel(lct22);
-
-        if ( ! (wg1 == wg2 || hs1 == hs2) )
+      const auto& lcts_in_det = lcts.get(ch_id2);
+      DigiContainer lcts_tmp;
+      CSCCorrelatedLCTDigiContainer cscLcts_tmp;
+      map<int, DigiContainer> bx_to_lcts;
+      for (auto lct = lcts_in_det.first; lct != lcts_in_det.second; ++lct)
         {
-          auto lct12 = lct11;
-          digi_wg(lct12) = wg2;
-          lcts_tmp.push_back(lct12);
-	  CSCCorrelatedLCTDigi LCT12(0, 1, digi_quality(lct12), digi_wg(lct12), digi_channel(lct12), digi_pattern(lct12), 0, digi_bx(lct12));
-	  cscLcts_tmp.push_back(LCT12);
+          if (!lct->isValid()) continue;
 
-          auto lct21 = lct22;
-          digi_wg(lct21) = wg1;
-          lcts_tmp.push_back(lct21);
-	  CSCCorrelatedLCTDigi LCT21(0, 1, digi_quality(lct21), digi_wg(lct21), digi_channel(lct21), digi_pattern(lct21), 0, digi_bx(lct21));
-	  cscLcts_tmp.push_back(LCT21);
-	  if (verbose())
-	      cout<<"added ghosts"<<endl<<lct11<<"    "<<lct22<<endl <<lct12<<"    "<<lct21<<endl;
+          if (verbose()) cout<<"\n lct in detId "<<ch_id<<" "<<*lct<<endl;
+
+          int bx = lct->getBX();
+
+          // check that the BX for stub wasn't too early or too late
+          if (bx < minBXLCT_ || bx > maxBXLCT_) continue;
+
+          int hs = lct->getStrip() + 1; // LCT halfstrip and wiregoup numbers start from 0
+          if (ch_id.ring() == 4 and ch_id.station() == 1 and hs>128)
+            hs = hs - 128;
+          int wg = lct->getKeyWG() + 1;
+
+          //fixedME
+          float dphi = -9;
+
+          const auto& mydigi = make_digi(id, hs, bx, CSC_LCT, lct->getQuality(), lct->getPattern(), wg, dphi);
+          lcts_tmp.push_back(mydigi);
+          cscLcts_tmp.push_back(*lct);
+          bx_to_lcts[bx].push_back(mydigi);
+
+          // Add ghost LCTs when there are two in bx
+          // and the two don't share half-strip or wiregroup
+          // TODO: when GEMs would be used to resolve this, there might ned to be an option to turn this off!
+          if (bx_to_lcts[bx].size() == 2 and addGhostLCTs_)
+            {
+              auto lct11 = bx_to_lcts[bx][0];
+              auto lct22 = bx_to_lcts[bx][1];
+              int wg1 = digi_wg(lct11);
+              int wg2 = digi_wg(lct22);
+              int hs1 = digi_channel(lct11);
+              int hs2 = digi_channel(lct22);
+
+              if ( ! (wg1 == wg2 || hs1 == hs2) )
+                {
+                  auto lct12 = lct11;
+                  digi_wg(lct12) = wg2;
+                  lcts_tmp.push_back(lct12);
+                  CSCCorrelatedLCTDigi LCT12(0, 1, digi_quality(lct12), digi_wg(lct12), digi_channel(lct12), digi_pattern(lct12), 0, digi_bx(lct12));
+                  cscLcts_tmp.push_back(LCT12);
+
+                  auto lct21 = lct22;
+                  digi_wg(lct21) = wg1;
+                  lcts_tmp.push_back(lct21);
+                  CSCCorrelatedLCTDigi LCT21(0, 1, digi_quality(lct21), digi_wg(lct21), digi_channel(lct21), digi_pattern(lct21), 0, digi_bx(lct21));
+                  cscLcts_tmp.push_back(LCT21);
+                  if (verbose())
+                    cout<<"added ghosts"<<endl<<lct11<<"    "<<lct22<<endl <<lct12<<"    "<<lct21<<endl;
+                }
+            }
+        } // lcts_in_det
+
+      size_t n_lct = lcts_tmp.size();
+      if (verbose()) cout<< "number of lcts = "<<n_lct <<" from cscLcts_tmp "<< cscLcts_tmp.size() <<endl;
+      if (n_lct == 0) continue; // no LCTs in this chamber
+
+      // assign the non necessarily matching LCTs
+      chamber_to_lcts_all_[id] = lcts_tmp;
+      chamber_to_cscLcts_all_[id] = cscLcts_tmp;
+
+      if (verbose() and !(n_lct == 1 || n_lct == 2 || n_lct == 4 ) )
+        {
+          cout<<"WARNING!!! weird #LCTs="<<n_lct;
+          for (const auto& s: lcts_tmp) cout<<"  "<<s<<endl;
+          //continue;
         }
-      }
-    } // lcts_in_det
 
-    size_t n_lct = lcts_tmp.size();
-    if (verbose()) cout<< "number of lcts = "<<n_lct <<" from cscLcts_tmp "<< cscLcts_tmp.size() <<endl;
-    if (n_lct == 0) continue; // no LCTs in this chamber
-
-    // assign the non necessarily matching LCTs
-    chamber_to_lcts_all_[id] = lcts_tmp;
-    chamber_to_cscLcts_all_[id] = cscLcts_tmp;
-
-    if (verbose() and !(n_lct == 1 || n_lct == 2 || n_lct == 4 ) )
-    {
-      cout<<"WARNING!!! weird #LCTs="<<n_lct;
-      for (const auto& s: lcts_tmp) cout<<"  "<<s<<endl;
-      //continue;
-    }
-
-    // New LCT matching procedure
+      // New LCT matching procedure
     int iLct = -1;
     for (const auto& lct: cscLcts_tmp)
     {
@@ -413,85 +413,85 @@ CSCStubMatcher::matchLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& lcts)
       if (verbose()) cout <<"in LCT, getCLCT "<< lct.getCLCT() <<" getALCT "<< lct.getALCT() << endl;
       // Check if matched to an CLCT
       for (const auto& p: cscClctsInChamber(id)){
-	if (p==lct.getCLCT()) {
-	  lct_clct_match = true;
+        if (p==lct.getCLCT()) {
+          lct_clct_match = true;
           if (verbose()) cout<<" LCT matched to CLCT "<< p <<endl;
-	  break;
-	}else{
-	  if (verbose()) cout<<" LCT Failed to matched to CLCT "<< p <<endl;
-	}
-      } 
+          break;
+        }else{
+          if (verbose()) cout<<" LCT Failed to matched to CLCT "<< p <<endl;
+        }
+      }
       // Check if matched to an ALCT
       for (const auto& p: cscAlctsInChamber(id)){
-	  //ALCT BX is shifted 
-	if (p.getKeyWG() == lct.getALCT().getKeyWG()) {
-	  lct_alct_match = true;
+        //ALCT BX is shifted
+        if (p.getKeyWG() == lct.getALCT().getKeyWG()) {
+          lct_alct_match = true;
           if (verbose()) cout<<" LCT matched to ALCT "<< p <<endl;
-	  break;
-	}else{
-	  if (verbose()) cout<<" LCT Failed to matched to ALCT "<< p <<endl;
-	}
-      } 
+          break;
+        }else{
+          if (verbose()) cout<<" LCT Failed to matched to ALCT "<< p <<endl;
+        }
+      }
       // Check if matched to an GEM pad L1
       // fixME here: double check the timing of GEMPad
       if (ch_id.ring()==1 and (ch_id.station()==1 or ch_id.station()==2)) {
-	const GEMDetId gemDetIdL1(ch_id.zendcap(),1,ch_id.station(),1,ch_id.chamber(),0);
-	for (const auto& p: gem_digi_matcher_->gemPadsInChamber(gemDetIdL1.rawId())){
-	  if (p==lct.getGEM1()){
-	    lct_gem1_match = true;
-	    if (verbose()) cout<<" LCT matched to GEML1 "<< p <<endl;
-	    break;
-	  }
-	}
-	const GEMDetId gemDetIdL2(ch_id.zendcap(),1,ch_id.station(),2,ch_id.chamber(),0);
-	// Check if matched to an GEM pad L2
-	for (const auto& p: gem_digi_matcher_->gemPadsInChamber(gemDetIdL2.rawId())){
-	  if (p==lct.getGEM2()){
-	    lct_gem2_match = true;
-	    if (verbose()) cout<<" LCT matched to GEML2 "<< p <<endl;
-	    break;
-	  }
-	}
+        const GEMDetId gemDetIdL1(ch_id.zendcap(),1,ch_id.station(),1,ch_id.chamber(),0);
+        for (const auto& p: gem_digi_matcher_->gemPadsInChamber(gemDetIdL1.rawId())){
+          if (p==lct.getGEM1()){
+            lct_gem1_match = true;
+            if (verbose()) cout<<" LCT matched to GEML1 "<< p <<endl;
+            break;
+          }
+        }
+        const GEMDetId gemDetIdL2(ch_id.zendcap(),1,ch_id.station(),2,ch_id.chamber(),0);
+        // Check if matched to an GEM pad L2
+        for (const auto& p: gem_digi_matcher_->gemPadsInChamber(gemDetIdL2.rawId())){
+          if (p==lct.getGEM2()){
+            lct_gem2_match = true;
+            if (verbose()) cout<<" LCT matched to GEML2 "<< p <<endl;
+            break;
+          }
+        }
       }
-      
+
       lct_matched = ((lct_clct_match and lct_alct_match) or
-		     (lct_alct_match and lct_gem1_match and lct_gem2_match) or
-		     (lct_clct_match and lct_gem1_match and lct_gem2_match));
+                     (lct_alct_match and lct_gem1_match and lct_gem2_match) or
+                     (lct_clct_match and lct_gem1_match and lct_gem2_match));
 
       if (chamber_to_lct_.find(id) == chamber_to_lct_.end())   chamber_to_lct_[id] = lcts_tmp[iLct];
       else{
-	if (verbose()) cout << "ALARM!!! here already was matching LCT "<<chamber_to_lct_[id] 
-	    		<<" New LCT  "<< lcts_tmp[iLct] <<endl;
+        if (verbose()) cout << "ALARM!!! here already was matching LCT "<<chamber_to_lct_[id]
+                            <<" New LCT  "<< lcts_tmp[iLct] <<endl;
       }
 
       if (lct_matched) {
-	if (verbose()) cout<<"this LCT matched to simtrack in chamber "<< ch_id << endl;
-	chamber_to_lcts_[id].emplace_back(lcts_tmp[iLct]);
-	chamber_to_cscLcts_[id].emplace_back(lct);
+        if (verbose()) cout<<"this LCT matched to simtrack in chamber "<< ch_id << endl;
+        chamber_to_lcts_[id].emplace_back(lcts_tmp[iLct]);
+        chamber_to_cscLcts_[id].emplace_back(lct);
       }
     } // lct loop over
   }
 
   if (verbose() and n_minLayers > 0)
-  {
-    if (chamber_to_lct_.size() == 0)
     {
-      cout<<"No Matched LCT"<<endl;
-      for (const auto &it: lcts)
-      {
-        CSCDetId id(it.first);
-        if (useCSCChamberType(id.iChamberType())) continue;
-        const auto& lcts_in_det = lcts.get(id);
-        for (auto a = lcts_in_det.first; a != lcts_in_det.second; ++a)
+      if (chamber_to_lct_.size() == 0)
         {
-          if (!a->isValid()) continue;
-          if (verbose()) cout<<" lct: "<<id<<"  "<<*a<<endl;
-        }
-      }
+          cout<<"No Matched LCT"<<endl;
+          for (const auto &it: lcts)
+            {
+              CSCDetId id(it.first);
+              if (useCSCChamberType(id.iChamberType())) continue;
+              const auto& lcts_in_det = lcts.get(id);
+              for (auto a = lcts_in_det.first; a != lcts_in_det.second; ++a)
+                {
+                  if (!a->isValid()) continue;
+                  if (verbose()) cout<<" lct: "<<id<<"  "<<*a<<endl;
+                }
+            }
 
+        }
+      else cout<<"at least one matched LCT" << std::endl;
     }
-    else cout<<"at least one matched LCT" << std::endl;
-  }
 }
 
 

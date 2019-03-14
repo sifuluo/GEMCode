@@ -32,6 +32,7 @@ class UpgradeL1MuMatcher : public BaseMatcher
 
   std::vector<TFTrack*> tfTracks() const  {return tfTracks_;}
   TFTrack* bestTFTrack() const { return bestTrack; }
+  TFCand* bestTFCand() const { return bestRegMuCand; }
   TFCand* bestGMTCand() const { return bestGMT; }
   std::vector<TFCand*> gmts() const { return gmts_; }
 
