@@ -308,7 +308,7 @@ SimTrackMatching = cms.PSet(
         validInputTags = cms.InputTag("simEmtfDigis","EMTF"),
         minBX = cms.int32(0),
         maxBX = cms.int32(0),
-        deltaR = cms.double(0.5),
+        deltaR = cms.double(0.1),
     ),
     upgradeGMT = cms.PSet(
         verbose = cms.int32(0),
@@ -316,7 +316,7 @@ SimTrackMatching = cms.PSet(
         validInputTags = cms.InputTag("simGmtStage2Digis"),
         minBX = cms.int32(0),
         maxBX = cms.int32(0),
-        deltaR = cms.double(0.5),
+        deltaR = cms.double(0.1),
     ),
 
     cscTfTrack = cms.PSet(

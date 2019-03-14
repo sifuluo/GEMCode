@@ -79,50 +79,35 @@ UpgradeL1MuMatcher::clear()
 void
 UpgradeL1MuMatcher::matchEmtfTrackToSimTrack(const l1t::EMTFTrackCollection& tracks)
 {
-  const GlobalPoint& gp_st2(propagatedPositionSt2());
-  mindREMTFTrack = deltaREMTFTrack_;
-  if (verboseEMTFTrack_)
-    std::cout <<"propaget position to st2 eta "
-              << float(gp_st2.eta()) <<" phi "<< float(gp_st2.phi()) << std::endl;
   for (const auto& trk : tracks) {
+    int nMatchingStubs = 0;
+    int nMaxMatchingStubs = 0;
     if (verboseEMTFTrack_)
       std::cout <<"track BX "<< trk.BX()
                 <<  " pt "<< trk.Pt()
                 <<" eta "<< trk.Eta()
                 <<" phi "<< emtf::deg_to_rad(trk.Phi_glob())
                 <<" phi_local "<< emtf::deg_to_rad(trk.Phi_loc()) << std::endl;
-    if (trk.BX() < minBXEMTFTrack_ or trk.BX() > maxBXEMTFTrack_) continue;
-    float dR = 10.0;
-    dR = deltaR(float(gp_st2.eta()), float(gp_st2.phi()),
-                trk.Eta(), emtf::deg_to_rad(trk.Phi_glob()));
-    if (verboseEMTFTrack_)
-      std::cout <<"dR (track, sim) "<< dR <<" deltaREMTFTrack_ "
-                << deltaREMTFTrack_ << std::endl;
-    if (dR < deltaREMTFTrack_){
-      TFTrack* track  = new TFTrack(&trk);
-      track->setDR(dR);
-      if (verboseEMTFTrack_){
-        track->print();
+    for (const auto& stub : trk.Hits()){
+      const CSCCorrelatedLCTDigi& csc_stub = stub.CreateCSCCorrelatedLCTDigi();
+      const CSCDetId& csc_id = stub.CSC_DetId();
+      for (const auto& sim_stub: csc_stub_matcher_->cscMplctsInChamber(csc_id.rawId())){
+        if (csc_stub==sim_stub) {
+          nMatchingStubs++;
+        }
       }
-      tfTracks_.push_back(track);
-      if (dR < mindREMTFTrack){
-        mindREMTFTrack = dR;
-        bestTrack = track;
+      if (nMatchingStubs>=2) {
+        if (nMatchingStubs > nMaxMatchingStubs){
+          bestTrack = new TFTrack(&trk);
+          nMaxMatchingStubs = nMatchingStubs;
+        }
       }
     }
-    //   // check the matching CSC stubs
-    //   const auto sim_stubs = csc_stub_matcher_->allLctsMatched2SimMuon();
-    //   const l1t::EMTFHitCollection l1_stubs = trk.Hits();
-    //   for (const auto& l1_stub: l1_stubs){
-    //     CSCCorrelatedLCTDigi csc_stub = l1_stub.CSC_LCTDigi();
-    //     for (const auto& sim_stub: sim_stubs){
-    //       if (csc_stub==sim_stub.
-    //     }
-   }
-   if (verboseGMT_ and bestTrack){
-       std::cout <<"all matched TFTRack size "<< tfTracks_.size() << std::endl;
-       std::cout <<"best TFTrack ";  bestTrack->print();
-   }
+  }
+  if (verboseGMT_ and bestTrack){
+    std::cout <<"all matched TFTRack size "<< tfTracks_.size() << std::endl;
+    std::cout <<"best TFTrack ";  bestTrack->print();
+  }
 }
 
 void UpgradeL1MuMatcher::matchRegionalMuonCandToSimTrack(const BXVector<l1t::RegionalMuonCand>& regMuCands)

@@ -16,10 +16,6 @@
 
 #include "DataFormats/L1Trigger/interface/L1MuonParticleFwd.h"
 #include "DataFormats/L1Trigger/interface/L1MuonParticle.h"
-/* #include "L1Trigger/CSCTrackFinder/interface/CSCTFSectorProcessor.h" */
-/* #include "L1Trigger/CSCTrackFinder/interface/CSCSectorReceiverLUT.h" */
-/* #include "L1Trigger/CSCTrackFinder/interface/CSCTrackFinderDataTypes.h" */
-/* #include "DataFormats/L1CSCTrackFinder/interface/L1CSCTrackCollection.h" */
 #include "DataFormats/L1TMuon/interface/EMTFTrack.h"
 #include "DataFormats/L1TMuon/interface/EMTFHit.h"
 
@@ -35,7 +31,6 @@
 
 #include "L1Trigger/L1TMuonEndCap/interface/TrackTools.h"
 #include <L1Trigger/CSCCommonTrigger/interface/CSCConstants.h>
-//#include "L1Trigger/CSCCommonTrigger/interface/CSCTriggerGeometry.h" 
 /* header file out-of-date
  *
  */
