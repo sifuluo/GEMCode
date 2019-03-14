@@ -18,10 +18,6 @@ class TFCand
   /// destructor
   ~TFCand();
 
-  /* void init(CSCTFPtLUT* ptLUT, */
-	/*     edm::ESHandle< L1MuTriggerScales > &muScales, */
- 	/*     edm::ESHandle< L1MuTriggerPtScale > &muPtScale); */
-
   void setDR(double);
   void setGlobalPhi(double x) { phi_ = x ; }
   void setBx(int x ) { bx_= x;}

@@ -31,18 +31,12 @@
 
 #include "L1Trigger/L1TMuonEndCap/interface/TrackTools.h"
 #include <L1Trigger/CSCCommonTrigger/interface/CSCConstants.h>
-/* header file out-of-date
- *
- */
-
 #include "DataFormats/GeometryVector/interface/GlobalPoint.h"
 
 class TFTrack
 {
  public:
   /// constructor
-  /* TFTrack(const csc::L1Track* t, const CSCCorrelatedLCTDigiCollection*); */
-
   TFTrack(const l1t::EMTFTrack *t);
   /// copy constructor
   TFTrack(const TFTrack&);
@@ -51,19 +45,14 @@ class TFTrack
 
   //l1t::tftype = enum{bmtf, omtf_neg, omtf_pos, emtf_neg, emtf_pos};
   enum {CSCTF_Track, EMTF_Track, OMTF_Track};
-  /* void init(edm::ESHandle< L1MuTriggerScales > &muScales, */
-	/*     edm::ESHandle< L1MuTriggerPtScale > &muPtScale); */
 
   void setDR(double dr);
 
-  /// L1 track
-  /* const csc::L1Track* getL1Track() const {return l1track_;} */
   /// collection of trigger digis
   std::vector<const CSCCorrelatedLCTDigi*> getTriggerDigis() const {return triggerDigis_;}
   /// collection of MPC LCTs
   std::vector<CSCDetId> getTriggerDigisIds() const {return triggerIds_;}
   std::vector<std::pair<float, float>> getTriggerEtaPhis() {return triggerEtaPhis_;}
-  //std::vector<csctf::TrackStub> getTriggerStubs() const {return triggerStubs_;}
   std::vector<matching::Digi*> getTriggerMPLCTs() const {return mplcts_;}
   std::vector<CSCDetId> getChamberIds() const {return ids_;}
 
@@ -72,7 +61,6 @@ class TFTrack
   void addTriggerDigi(const CSCCorrelatedLCTDigi*);
   void addTriggerDigiId(const CSCDetId&);
   void addTriggerEtaPhi(const std::pair<float,float>&);
-  /* void addTriggerStub(const csctf::TrackStub&); */
 
   int tracktype() const { return trackType_; }
   unsigned int nStubs() const {return l1track_->NumHits();}
@@ -126,7 +114,6 @@ class TFTrack
   l1t::EMTFHitCollection  trackHits_; //similar to triggerDigis_ + triggerDigis_
   std::vector<CSCDetId> triggerIds_;
   std::vector<std::pair<float, float>> triggerEtaPhis_;
-  /* std::vector<csctf::TrackStub> triggerStubs_; */
   std::vector<matching::Digi*> mplcts_;
   std::vector<CSCDetId> ids_; // chamber ids
   unsigned phi_packed_;
