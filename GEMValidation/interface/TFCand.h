@@ -4,7 +4,6 @@
 //#include "GEMCode/GEMValidation/interface/PtassignmentHelper.h"
 #include "GEMCode/GEMValidation/interface/TFTrack.h"
 #include "DataFormats/L1TMuon/interface/RegionalMuonCand.h"
-#include "DataFormats/L1GlobalMuonTrigger/interface/L1MuRegionalCand.h"
 #include "DataFormats/L1Trigger/interface/Muon.h"
 
 
@@ -12,7 +11,6 @@ class TFCand
 {
  public:
   /// constructor
-  TFCand(const L1MuRegionalCand* t);
   TFCand(const l1t::RegionalMuonCand* t);
   TFCand(const l1t::Muon* t);
   /// copy constructor
@@ -29,8 +27,6 @@ class TFCand
   void setBx(int x ) { bx_= x;}
   void setMatchedTFTrack(TFTrack* trk)  { nTFStubs = trk->nStubs(); tftrack_ = trk; }
   void print();
-
-  const L1MuRegionalCand * l1Cand() const {return l1Cand_;}
 
   TFTrack* tftrack() const {return tftrack_;}
 
@@ -49,7 +45,6 @@ class TFCand
 
  private:
 
-  const L1MuRegionalCand* l1Cand_;
   const l1t::RegionalMuonCand* gmtCand;
   TFTrack* tftrack_;
   std::vector<CSCDetId> ids_;

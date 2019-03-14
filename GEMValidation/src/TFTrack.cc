@@ -1,29 +1,6 @@
 #include "GEMCode/GEMValidation/interface/TFTrack.h"
 #include "GEMCode/GEMValidation/interface/Helpers.h"
 
-// TFTrack::TFTrack(const csc::L1Track* t, const CSCCorrelatedLCTDigiCollection* lcts)
-// {
-//   l1track_ = t;
-//   nstubs = 0;
-//   trackType_ = CSCTF_Track;
-
-//   for (auto detUnitIt = lcts->begin(); detUnitIt != lcts->end(); detUnitIt++) {
-//     const CSCDetId& id = (*detUnitIt).first;
-//     //std::cout << "DetId " << id << std::endl;
-//     const auto range = (*detUnitIt).second;
-//     for (auto digiIt = range.first; digiIt != range.second; digiIt++) {
-//       if (!(*digiIt).isValid()) continue;
-//       //std::cout << "Digi " << *digiIt << std::endl;
-//       addTriggerDigi(&(*digiIt));
-//       addTriggerDigiId(id);
-//       nstubs++;
-//     }
-//   }
-
-
-// }
-
-
 TFTrack::TFTrack(const l1t::EMTFTrack *t)
 {
 
@@ -65,37 +42,6 @@ TFTrack::~TFTrack()
   trackHits_.clear();
 
 }
-
-// void
-// TFTrack::init(edm::ESHandle< L1MuTriggerScales > &muScales,
-// 	      edm::ESHandle< L1MuTriggerPtScale > &muPtScale)
-// {
-//   // This section is copied from L1Trigger/CSCTrackFinder/interface/CSCTFMuonSorter.h
-//   unsigned gbl_phi(l1track_->localPhi() + ((l1track_->sector() - 1)*24) + 6);
-//   if(gbl_phi > 143) gbl_phi -= 143;
-//   phi_packed_ = gbl_phi & 0xff;
-
-//   const unsigned eta_sign(l1track_->endcap() == 1 ? 0 : 1);
-//   const int gbl_eta(l1track_->eta_packed() | eta_sign << (L1MuRegionalCand::ETA_LENGTH - 1));
-//   eta_packed_  = gbl_eta & 0x3f;
-
-//   unsigned gpt = 0, quality = 0;
-//   csc::L1Track::decodeRank(l1track_->rank(), gpt, quality);
-//   q_packed_ = quality & 0x3;
-//   pt_packed_ = gpt & 0x1f;
-//   chargesign_ = l1track_->charge_packed();
-//   if (chargesign_ == 0) charge_ = -1;
-//   else charge_ = 1;
-//   dPhi12_ = 1*(l1track_->ptLUTAddress() & 0xFF);
-//   dPhi23_ = 1*((l1track_->ptLUTAddress() & 0xF00)>>8);
-//   // calculate pt, eta and phi (don't forget to store the sign)
-//   const int sign(l1track_->endcap()==1 ? 1 : -1);
-//   pt_ = muPtScale->getPtScale()->getLowEdge(pt_packed_) + 1.e-6;
-//   eta_ = muScales->getRegionalEtaScale(2)->getCenter(l1track_->eta_packed()) * sign;
-//   phi_ = normalizedPhi(muScales->getPhiScale()->getLowEdge(phi_packed_));
-//   dr_ = 10.0;
-// }
-
 
 void
 TFTrack::setDR(double dr)
@@ -179,8 +125,6 @@ TFTrack::print()
     std::cout<<"TFTrack \t bx:"<<bx_<<" pt: "<<pt_<<"  eta: "<<eta_<<"  phi: "<<phi_ << " local phi "<< phi_local_ <<"  dr: "<<dr_<<" quality "<< quality_ <<std::endl;
   if (trackType_ == CSCTF_Track){
 //    std::cout<<"#### TFTRACK PRINT: "<<msg<<" #####"<<std::endl;
-    //std::cout<<"## L1MuRegionalCand print: ";
-    //l1track_->print();
     //std::cout<<"\n## L1Track Print: ";
     //l1track_->Print();
     //std::cout<<"## TFTRACK:
