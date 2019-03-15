@@ -183,7 +183,9 @@ BaseMatcher::propagateToZCharge(const GlobalPoint &inner_point,
   if (state_start.hasError()) std::cout <<"state_start has error  "<< std::endl;
 
   TrajectoryStateOnSurface tsos(propagator_->propagate(state_start, *my_plane));
-  if (!tsos.isValid()) std::cout <<" tsos not valid "<< std::endl;
+  if (!tsos.isValid()) {
+    if (verbose()) std::cout <<" tsos not valid "<< std::endl;
+  }
   if (!tsos.isValid()) tsos = propagatorOpposite_->propagate(state_start, *my_plane);
   //broken here  when propagating ME0
   //std::cout <<"propagateToZ GP "<< tsos.globalPosition() <<" eta "<< tsos.globalPosition().eta()<<" phi "<< tsos.globalPosition().phi()<< std::endl;
@@ -203,10 +205,12 @@ BaseMatcher::propagateToZ(const GlobalPoint &inner_point,
 
   FreeTrajectoryState state_start(inner_point, inner_vec, trk_.charge(), &*magfield_);
   //std::cout <<"state_start  position "<< state_start.position()<<" momentum "<< state_start.momentum()<<" charge "<<state_start.charge() << std::endl;
-  if (state_start.hasError()) std::cout <<"state_start has error  "<< std::endl;
+  if (state_start.hasError()) if (verbose()) std::cout <<"state_start has error  "<< std::endl;
 
   TrajectoryStateOnSurface tsos(propagator_->propagate(state_start, *my_plane));
-  if (!tsos.isValid()) std::cout <<" tsos not valid "<< std::endl;
+  if (!tsos.isValid()) {
+    if (verbose()) std::cout <<" tsos not valid "<< std::endl;
+  }
   if (!tsos.isValid()) tsos = propagatorOpposite_->propagate(state_start, *my_plane);
   //broken here  when propagating ME0
   //std::cout <<"propagateToZ GP "<< tsos.globalPosition() <<" eta "<< tsos.globalPosition().eta()<<" phi "<< tsos.globalPosition().phi()<< std::endl;
