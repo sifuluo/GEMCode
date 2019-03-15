@@ -441,7 +441,7 @@ ME0RecHitMatcher::findbestME0Segment_bydR(ME0SegmentContainer allSegs, GlobalPoi
 
   for (const auto& seg: allSegs){
     const GlobalPoint& gpME0(globalPoint(seg));
-    cout <<"gp_propagated eta "<< gp_propagated.eta() <<" phi "<< gp_propagated.phi() <<" gpME0 eta "<< gpME0.eta()<<" phi "<< gpME0.phi() << endl;
+    // cout <<"gp_propagated eta "<< gp_propagated.eta() <<" phi "<< gp_propagated.phi() <<" gpME0 eta "<< gpME0.eta()<<" phi "<< gpME0.phi() << endl;
     float dPhi = gpME0.phi()- gp_propagated.phi();
     float dEta = gpME0.eta() - gp_propagated.eta();
     float dR = std::sqrt(dPhi*dPhi + dEta*dEta);
