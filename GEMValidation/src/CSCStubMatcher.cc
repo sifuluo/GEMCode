@@ -86,8 +86,8 @@ CSCStubMatcher::matchCLCTsToSimTrack(const CSCCLCTDigiCollection& clcts)
      const CSCDetId& id = (*detUnitIt).first;
      const CSCCLCTDigiCollection::Range& range =(*detUnitIt).second;
      for (CSCCLCTDigiCollection::const_iterator digiIt =  range.first; digiIt!=range.second; ++digiIt){
-	 if (id.station() == 1 and (id.ring() == 1 or id.ring() ==4 ))
-	     cout <<"CSCid "<< id <<" CLCTs "<< (*digiIt) << endl;
+       if (id.station() == 1 and (id.ring() == 1 or id.ring() ==4 ))
+         if (verbose()) cout <<"CSCid "<< id <<" CLCTs "<< (*digiIt) << endl;
      }
  }
 

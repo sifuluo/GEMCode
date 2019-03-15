@@ -168,7 +168,7 @@ SimTrackMatching = cms.PSet(
     ),
     ## CSC
     cscSimHit = cms.PSet(
-        verbose = cms.int32(1),
+        verbose = cms.int32(0),
         inputTag = cms.InputTag("g4SimHits", "MuonCSCHits"),
         run = cms.bool(True),
         simMuOnly = cms.bool(False),
@@ -177,7 +177,7 @@ SimTrackMatching = cms.PSet(
     ),
     #csc strip digi, central BX 7
     cscStripDigi = cms.PSet(
-        verbose = cms.int32(2),
+        verbose = cms.int32(0),
         inputTag = cms.InputTag("simMuonCSCDigis", "MuonCSCComparatorDigi"),
         run = cms.bool(True),
         minBX = cms.int32(5),
@@ -187,7 +187,7 @@ SimTrackMatching = cms.PSet(
     ),
     #csc wire digi, central BX 8
     cscWireDigi = cms.PSet(
-        verbose = cms.int32(1),
+        verbose = cms.int32(0),
         inputTag = cms.InputTag("simMuonCSCDigis", "MuonCSCWireDigi"),
         run = cms.bool(True),
         minBX = cms.int32(5),
@@ -197,7 +197,7 @@ SimTrackMatching = cms.PSet(
     ),
     #csc CLCT, central BX 7
     cscCLCT = cms.PSet(
-        verbose = cms.int32(1),
+        verbose = cms.int32(0),
         inputTag = cms.InputTag("simCscTriggerPrimitiveDigis"),
         run = cms.bool(True),
         minBX = cms.int32(6),
@@ -206,7 +206,7 @@ SimTrackMatching = cms.PSet(
     ),
     #csc ALCT, central BX 8-5
     cscALCT = cms.PSet(
-        verbose = cms.int32(1),
+        verbose = cms.int32(0),
         inputTag = cms.InputTag("simCscTriggerPrimitiveDigis"),
         run = cms.bool(True),
         minBX = cms.int32(2),
@@ -215,7 +215,7 @@ SimTrackMatching = cms.PSet(
     ),
     #csc LCT, central BX 8
     cscLCT = cms.PSet(
-        verbose = cms.int32(1),
+        verbose = cms.int32(0),
         inputTag = cms.InputTag("simCscTriggerPrimitiveDigis"),
         run = cms.bool(True),
         minBX = cms.int32(7),
