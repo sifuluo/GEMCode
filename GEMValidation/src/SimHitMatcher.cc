@@ -12,10 +12,10 @@
 using namespace std;
 
 
-SimHitMatcher::SimHitMatcher(const SimTrack& t, 
+SimHitMatcher::SimHitMatcher(const SimTrack& t,
 			     const SimVertex& v,
-      			     const edm::ParameterSet& ps, 
-			     const edm::Event& ev, 
+      			     const edm::ParameterSet& ps,
+			     const edm::Event& ev,
 			     const edm::EventSetup& es,
                              const edm::EDGetTokenT<edm::SimVertexContainer>& simVertexInput_,
                              const edm::EDGetTokenT<edm::SimTrackContainer>& simTrackInput_,
@@ -1403,7 +1403,7 @@ SimHitMatcher::hitStripsInDetId(unsigned int detid, int margin_n_strips) const
     for (const auto& h: simhits)
     {
       const LocalPoint& lp = h.entryPoint();
-      int central_strip = 1 + static_cast<int>(getGEMGeometry()->etaPartition(id)->topology().channel(lp));
+      int central_strip = static_cast<int>(getGEMGeometry()->etaPartition(id)->topology().channel(lp));
       int smin = central_strip - margin_n_strips;
       smin = (smin > 0) ? smin : 1;
       int smax = central_strip + margin_n_strips;
