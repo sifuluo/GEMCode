@@ -68,10 +68,10 @@ SimHitMatcher::SimHitMatcher(const SimTrack& t,
   int no = 0;
   trkid_to_index_.clear();
   for (const auto& t: *sim_tracks.product())
-  {
-    trkid_to_index_[t.trackId()] = no;
-    no++;
-  }
+    {
+      trkid_to_index_[t.trackId()] = no;
+      no++;
+    }
   vector<unsigned> track_ids = getIdsOfSimTrackShower(trk().trackId(), *sim_tracks.product(), *sim_vertices.product());
   if (verboseSimTrack_) {
     std::cout << "Printing track_ids" << std::endl;
@@ -92,22 +92,23 @@ SimHitMatcher::SimHitMatcher(const SimTrack& t,
       if(runCSCSimHit_) {
         matchCSCSimHitsToSimTrack(track_ids, csc_hits_select);
 
-	if (verboseCSC_) {
-	  cout<<"nSimHits "<<no<<" nTrackIds "<<track_ids.size()<<" nSelectedCSCSimHits "<<csc_hits_select.size()<<endl;
-	  cout<<"detids CSC " << detIdsCSC(0).size()<<endl;
+        if (verboseCSC_) {
+          cout<<"nSimHits "<<no<<" nTrackIds "<<track_ids.size()<<" nSelectedCSCSimHits "<<csc_hits_select.size()<<endl;
+          cout<<"detids CSC " << detIdsCSC(0).size()<<endl;
 
-	  for (const auto& id: detIdsCSC(0)) {
-	    const auto& csc_simhits = hitsInDetId(id);
-	    const auto& csc_simhits_gp = simHitsMeanPosition(csc_simhits);
-	    const auto& strips = hitStripsInDetId(id);
-	    CSCDetId cscid(id);
-	    if (cscid.station() == 1 and (cscid.ring() == 1 or cscid.ring() == 4)){
-		cout<<"cscdetid "<<CSCDetId(id)<<": "<<csc_simhits.size()<<" "<<csc_simhits_gp.phi()<<" "<< csc_detid_to_hits_[id].size()<<endl;
-		cout<<"nStrip "<<strips.size()<<endl;
-		cout<<"strips : "; std::copy(strips.begin(), strips.end(), ostream_iterator<int>(cout, " ")); cout<<endl;
-	    }
-	  }
-	}
+          for (const auto& id: detIdsCSC(0)) {
+            const auto& csc_simhits = hitsInDetId(id);
+            const auto& csc_simhits_gp = simHitsMeanPosition(csc_simhits);
+            const auto& strips = hitStripsInDetId(id);
+            CSCDetId cscid(id);
+            if (true/*cscid.station() == 1 and (cscid.ring() == 1 or cscid.ring() == 4)*/){
+              cout<<"cscdetid "<<CSCDetId(id)<<": "<<csc_simhits.size()<<" "<<csc_simhits_gp.eta()
+                  <<" "<<csc_simhits_gp.phi()<<" "<< csc_detid_to_hits_[id].size()<<endl;
+              cout<<"nStrip "<<strips.size()<<endl;
+              cout<<"strips : "; std::copy(strips.begin(), strips.end(), ostream_iterator<int>(cout, " ")); cout<<endl;
+            }
+          }
+        }
       }
     }
   }
@@ -302,10 +303,10 @@ SimHitMatcher::matchCSCSimHitsToSimTrack(std::vector<unsigned int> track_ids, co
       const LocalPoint& lp = h.entryPoint();
       GlobalPoint gp;
       if (gemvalidation::is_csc(h.detUnitId()))
-       {
-     	 gp = getCSCGeometry()->idToDet(h.detUnitId())->surface().toGlobal(lp);
-	 if (verboseCSC_) std::cout <<" csc id "<< CSCDetId(h.detUnitId()) <<" x "<< gp.x()<<" y "<< gp.y() <<" z "<< gp.z()<< std::endl;
-       }
+        {
+          gp = getCSCGeometry()->idToDet(h.detUnitId())->surface().toGlobal(lp);
+          if (verboseCSC_) std::cout <<" csc id "<< CSCDetId(h.detUnitId()) <<" x "<< gp.x()<<" y "<< gp.y() <<" z "<< gp.z()<< std::endl;
+        }
 
       csc_detid_to_hits_[ h.detUnitId() ].push_back(h);
       csc_hits_.push_back(h);

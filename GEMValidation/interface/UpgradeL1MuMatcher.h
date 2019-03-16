@@ -23,7 +23,6 @@ class UpgradeL1MuMatcher : public BaseMatcher
  public:
   /// constructor
   UpgradeL1MuMatcher(CSCStubMatcher&,
-                     SimHitMatcher&,
                      edm::EDGetTokenT<l1t::EMTFTrackCollection> &,
                      edm::EDGetTokenT< BXVector<l1t::RegionalMuonCand> > &,
 			edm::EDGetTokenT< BXVector<l1t::Muon> > &);
@@ -60,7 +59,6 @@ class UpgradeL1MuMatcher : public BaseMatcher
   TFCand* bestGMT;
 
   const CSCStubMatcher* csc_stub_matcher_;
-  const SimHitMatcher* simhit_matcher_;
 
   int minBXEMTFTrack_, maxBXEMTFTrack_;
   int verboseEMTFTrack_;

@@ -34,8 +34,8 @@ public:
   typedef std::pair<unsigned int, const GEMPadDigi*> GEMPadBX;
   typedef std::vector<GEMPadBX> GEMPadsBX;
 
-  CSCStubMatcher(const SimHitMatcher& sh, 
-		 const CSCDigiMatcher& dg, 
+  CSCStubMatcher(const SimHitMatcher& sh,
+		 const CSCDigiMatcher& dg,
 		 const GEMDigiMatcher& gem_dg,
                  const edm::EDGetTokenT<CSCCLCTDigiCollection>& clctInputs_,
                  const edm::EDGetTokenT<CSCALCTDigiCollection>& alctInputs_,
@@ -175,10 +175,6 @@ private:
 
   bool addGhostLCTs_;
   bool addGhostMPLCTs_;
-  bool matchAlctGemME11_;
-  bool matchAlctGemME21_;
-  bool matchClctGemME11_;
-  bool matchClctGemME21_;
   bool hsFromSimHitMean_;
 
   int minNHitsChamber_;

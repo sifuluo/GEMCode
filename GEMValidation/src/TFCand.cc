@@ -10,8 +10,8 @@ TFCand::TFCand(const l1t::RegionalMuonCand* cand )
   quality_ = cand->hwQual();
   trackType_ = cand->trackFinderType();
   dr_ = 10.0;
-  phi_ = -9;
-
+  phi_ = normalizedPhi((((cand->hwPhi() + cand->processor() * 96 + 576 + 24) % 576) / 576.) * 2.0 * 3.1415926);
+  // std::cout << "processor number " <<  cand->hwPhi() << " " << cand->processor() << std::endl;
 }
 
 TFCand::TFCand(const l1t::Muon* cand )

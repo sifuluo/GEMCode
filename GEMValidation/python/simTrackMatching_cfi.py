@@ -33,6 +33,7 @@ SimTrackMatching = cms.PSet(
     overrideminNHitsChamber = cms.bool(False),
     minNHitsChamber = cms.untracked.int32(4),
     verbose = cms.bool(False),
+
     ## per collection params
     displacedGenMu = cms.PSet(
 	inputTag = cms.InputTag("genParticles"),
@@ -51,13 +52,13 @@ SimTrackMatching = cms.PSet(
         inputTag = cms.InputTag("g4SimHits"),
     ),
     simTrack = cms.PSet(
-        verbose = cms.int32(0),
+        verbose = cms.int32(1),
         inputTag = cms.InputTag("g4SimHits"),
         minPt = cms.double(1.5),
         maxPt = cms.double(999.),
         minEta = cms.double(0.0),
         maxEta = cms.double(2.4),
-        onlyMuon = cms.bool(True),
+        onlyMuon = cms.bool(False),
         requireVertex = cms.bool(True),
         requireGenPart = cms.bool(True),
     ),
@@ -148,7 +149,7 @@ SimTrackMatching = cms.PSet(
         inputTag = cms.InputTag("g4SimHits", "MuonRPCHits"),
         run = cms.bool(True),
         simMuOnly = cms.bool(False),
-        discardEleHits = cms.bool(True),
+        discardEleHits = cms.bool(False),
     ),
     rpcStripDigi = cms.PSet(
         verbose = cms.int32(0),
@@ -172,7 +173,7 @@ SimTrackMatching = cms.PSet(
         inputTag = cms.InputTag("g4SimHits", "MuonCSCHits"),
         run = cms.bool(True),
         simMuOnly = cms.bool(False),
-        discardEleHits = cms.bool(True),
+        discardEleHits = cms.bool(False),
         minNHitsChamber = cms.int32(4),
     ),
     #csc strip digi, central BX 7
@@ -222,15 +223,11 @@ SimTrackMatching = cms.PSet(
         maxBX = cms.int32(9),
         minNHitsChamber = cms.int32(4),
         addGhosts = cms.bool(True),
-        matchAlctGemME11 = cms.bool(False),
-        matchAlctGemME21 = cms.bool(False),
-        matchClctGemME11 = cms.bool(False),
-        matchClctGemME21 = cms.bool(False),
         hsFromSimHitMean = cms.bool(True),
     ),
     cscMPLCT = cms.PSet(
         verbose = cms.int32(0),
-        inputTag = cms.InputTag("simCscTriggerPrimitiveDigis"),
+        inputTag = cms.InputTag("simCscTriggerPrimitiveDigis","MPCSORTED"),
         run = cms.bool(True),
         minBX = cms.int32(7),
         maxBX = cms.int32(9),
@@ -257,7 +254,7 @@ SimTrackMatching = cms.PSet(
         inputTag = cms.InputTag("g4SimHits", "MuonDTHits"),
         run = cms.bool(True),
         simMuOnly = cms.bool(False),
-        discardEleHits = cms.bool(True),
+        discardEleHits = cms.bool(False),
         minNHitsChamber = cms.int32(4),
     ),
     dtDigi = cms.PSet(
@@ -313,7 +310,7 @@ SimTrackMatching = cms.PSet(
         inputTag = cms.InputTag("simEmtfDigis","EMTF"),
         minBX = cms.int32(0),
         maxBX = cms.int32(0),
-        deltaR = cms.double(0.1),
+        deltaR = cms.double(0.3),
     ),
     upgradeGMT = cms.PSet(
         verbose = cms.int32(0),
@@ -321,7 +318,7 @@ SimTrackMatching = cms.PSet(
         inputTag = cms.InputTag("simGmtStage2Digis"),
         minBX = cms.int32(0),
         maxBX = cms.int32(0),
-        deltaR = cms.double(0.1),
+        deltaR = cms.double(0.3),
     ),
 
     l1track = cms.PSet(

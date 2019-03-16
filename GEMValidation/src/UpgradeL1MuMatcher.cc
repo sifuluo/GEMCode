@@ -6,13 +6,11 @@
 #include <map>
 
 UpgradeL1MuMatcher::UpgradeL1MuMatcher(CSCStubMatcher& csc,
-                     		       SimHitMatcher& sh,
                                        edm::EDGetTokenT<l1t::EMTFTrackCollection> &emtfTrackInputLabel_,
                                        edm::EDGetTokenT< BXVector<l1t::RegionalMuonCand> > & regionalMuonCandInputLabel_,
                                        edm::EDGetTokenT< BXVector<l1t::Muon> > & gmtInputLabel_)
   : BaseMatcher(csc.trk(), csc.vtx(), csc.conf(), csc.event(), csc.eventSetup())
   ,csc_stub_matcher_(&csc)
-  ,simhit_matcher_(&sh)
 {
   const auto& tfTrack = conf().getParameter<edm::ParameterSet>("upgradeEmtfTrack");
   minBXEMTFTrack_ = tfTrack.getParameter<int>("minBX");
@@ -58,7 +56,7 @@ UpgradeL1MuMatcher::UpgradeL1MuMatcher(CSCStubMatcher& csc,
     std::cout  <<"failed readout RegionalMuonCand " << std::endl;
 
   edm::Handle<BXVector<l1t::Muon>> hGMT;
-  if (runGMT_ and gemvalidation::getByToken(gmtInputLabel_,hGMT, event()))
+  if (gemvalidation::getByToken(gmtInputLabel_,hGMT, event()))
     matchGMTToSimTrack(*hGMT.product());
   else if ( runGMT_)
     std::cout  <<"failed readout GMT " << std::endl;
@@ -91,12 +89,15 @@ UpgradeL1MuMatcher::matchEmtfTrackToSimTrack(const l1t::EMTFTrackCollection& tra
     for (const auto& stub : trk.Hits()){
       const CSCCorrelatedLCTDigi& csc_stub = stub.CreateCSCCorrelatedLCTDigi();
       const CSCDetId& csc_id = stub.CSC_DetId();
-      for (const auto& sim_stub: csc_stub_matcher_->cscMplctsInChamber(csc_id.rawId())){
-        if (csc_stub==sim_stub) {
+      if (verboseEMTFTrack_) std::cout << "L1 " << csc_id << " " << csc_stub << " " << csc_stub_matcher_->cscLctsInChamber(csc_id.rawId()).size() << std::endl;
+      for (const auto& sim_stub: csc_stub_matcher_->cscLctsInChamber(csc_id.rawId())){
+        if (verboseEMTFTrack_) std::cout << "\tSIM " << csc_id << " " << sim_stub << std::endl;
+        if (csc_stub == sim_stub) {
           nMatchingStubs++;
         }
       }
       if (nMatchingStubs>=2) {
+        tfTracks_.push_back(new TFTrack(&trk));
         if (nMatchingStubs > nMaxMatchingStubs){
           bestTrack = new TFTrack(&trk);
           nMaxMatchingStubs = nMatchingStubs;
@@ -104,8 +105,8 @@ UpgradeL1MuMatcher::matchEmtfTrackToSimTrack(const l1t::EMTFTrackCollection& tra
       }
     }
   }
-  if (verboseGMT_ and bestTrack){
-    std::cout <<"all matched TFTRack size "<< tfTracks_.size() << std::endl;
+  if (verboseEMTFTrack_ and bestTrack){
+    std::cout <<"all matched TFTrack size "<< tfTracks_.size() << std::endl;
     std::cout <<"best TFTrack ";  bestTrack->print();
   }
 }
@@ -119,12 +120,18 @@ void UpgradeL1MuMatcher::matchRegionalMuonCandToSimTrack(const BXVector<l1t::Reg
     if ( bx < minBXRegMuCand_ or bx > maxBXRegMuCand_) continue;
     for (auto cand = regMuCands.begin(bx); cand != regMuCands.end(bx); ++cand ){
       TFCand *L1Mu = new TFCand(&(*cand));
+      L1Mu->print();
+
       L1Mu->setBx(bx);
       float pt = L1Mu->pt();
-      float phi = L1Mu->phi_local() ;
       float eta = L1Mu->eta();
+      float phi = L1Mu->phi();
+      if (verboseRegMuCand_) std::cout << "candidate regional muon " << pt << " "
+                                       << eta << " " << phi << std::endl;
       for (const auto& trk : tfTracks_){
-        float dR = deltaR(trk->eta(), trk->phi_local(), eta, phi);
+        if (verboseRegMuCand_) std::cout << "EMTF "<< trk->pt()  << " "
+                                         << trk->eta() << " " << trk->phi() << std::endl;
+        float dR = deltaR(trk->eta(), trk->phi(), eta, phi);
         float dPtRel = std::fabs(trk->pt() - pt)/pt;
         if (dR < deltaRRegMuCand_ and dPtRel < mindPtRel){
           L1Mu->setDR( dR );
@@ -138,9 +145,10 @@ void UpgradeL1MuMatcher::matchRegionalMuonCandToSimTrack(const BXVector<l1t::Reg
     }
   }
   for (const auto& cand : regMuCands_){
-    float phi = cand->phi_local();
     float eta = cand->eta();
-    float dR = deltaR(bestTrack->eta(), bestTrack->phi_local(), eta, phi);
+    float phi = cand->phi();
+    float dR = deltaR(bestTrack->eta(), bestTrack->phi(), eta, phi);
+    if (verboseRegMuCand_) std::cout << "EMTF dR " << dR << std::endl;
     if (dR < mindRRegMuCand){
       mindRRegMuCand = dR;
       bestRegMuCand = cand;
