@@ -67,7 +67,7 @@ SimTrackMatching = cms.PSet(
         verbose = cms.int32(0),
         inputTag = cms.InputTag("g4SimHits", "MuonGEMHits"),
         run = cms.bool(True),
-        simMuOnly = cms.bool(False),
+        simMuOnly = cms.bool(True),
         discardEleHits = cms.bool(True),
     ),
     gemStripDigi = cms.PSet(
@@ -105,8 +105,8 @@ SimTrackMatching = cms.PSet(
         verbose = cms.int32(0),
         inputTag = cms.InputTag("g4SimHits", "MuonME0Hits"),
         run = cms.bool(True),
-        simMuOnly = cms.bool(False),
-        discardEleHits = cms.bool(False),
+        simMuOnly = cms.bool(True),
+        discardEleHits = cms.bool(True),
         minNHitsChamber = cms.int32(4),
     ),
     me0DigiPreReco = cms.PSet(
@@ -148,8 +148,8 @@ SimTrackMatching = cms.PSet(
         verbose = cms.int32(0),
         inputTag = cms.InputTag("g4SimHits", "MuonRPCHits"),
         run = cms.bool(True),
-        simMuOnly = cms.bool(False),
-        discardEleHits = cms.bool(False),
+        simMuOnly = cms.bool(True),
+        discardEleHits = cms.bool(True),
     ),
     rpcStripDigi = cms.PSet(
         verbose = cms.int32(0),
@@ -172,8 +172,8 @@ SimTrackMatching = cms.PSet(
         verbose = cms.int32(0),
         inputTag = cms.InputTag("g4SimHits", "MuonCSCHits"),
         run = cms.bool(True),
-        simMuOnly = cms.bool(False),
-        discardEleHits = cms.bool(False),
+        simMuOnly = cms.bool(True),
+        discardEleHits = cms.bool(True),
         minNHitsChamber = cms.int32(4),
     ),
     #csc strip digi, central BX 7
@@ -253,8 +253,8 @@ SimTrackMatching = cms.PSet(
         verbose = cms.int32(0),
         inputTag = cms.InputTag("g4SimHits", "MuonDTHits"),
         run = cms.bool(True),
-        simMuOnly = cms.bool(False),
-        discardEleHits = cms.bool(False),
+        simMuOnly = cms.bool(True),
+        discardEleHits = cms.bool(True),
         minNHitsChamber = cms.int32(4),
     ),
     dtDigi = cms.PSet(
