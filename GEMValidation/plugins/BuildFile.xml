@@ -26,3 +26,6 @@
 <library name="GEMCodeGEMValidation_plugins" file="GEMCSCAnalyzer.cc">
   <flags EDM_PLUGIN="1" />
 </library>
+<library name="GEMCodeGEMValidation_plugins" file="TDRAnalyzer.cc">
+  <flags EDM_PLUGIN="1" />
+</library>

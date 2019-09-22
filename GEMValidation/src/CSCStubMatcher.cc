@@ -1,6 +1,6 @@
 #include "GEMCode/GEMValidation/interface/CSCStubMatcher.h"
 #include "GEMCode/GEMValidation/interface/SimHitMatcher.h"
-#include "L1Trigger/CSCTriggerPrimitives/src/CSCCathodeLCTProcessor.h"
+#include "L1Trigger/CSCTriggerPrimitives/interface/CSCCathodeLCTProcessor.h"
 
 #include <algorithm>
 
@@ -447,9 +447,10 @@ CSCStubMatcher::matchLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& lcts)
         }
       }
 
+      // change and into an or
       lct_matched = ((lct_clct_match and lct_alct_match) or
-                     (lct_alct_match and lct_gem1_match and lct_gem2_match) or
-                     (lct_clct_match and lct_gem1_match and lct_gem2_match));
+                     (lct_alct_match and (lct_gem1_match or lct_gem2_match)) or
+                     (lct_clct_match and (lct_gem1_match or lct_gem2_match)));
 
       if (chamber_to_lct_.find(id) == chamber_to_lct_.end())   chamber_to_lct_[id] = lcts_tmp[iLct];
       else{

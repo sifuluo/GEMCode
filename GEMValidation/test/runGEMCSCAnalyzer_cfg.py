@@ -6,9 +6,7 @@ process = cms.Process("GEMCSCANA")
 process.load('Configuration.StandardSequences.Services_cff')
 process.load('FWCore.MessageService.MessageLogger_cfi')
 process.load('Configuration.EventContent.EventContent_cff')
-#process.load('Configuration.Geometry.GeometryExtended2023D17Reco_cff')
-process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
-process.load('Configuration.StandardSequences.GeometrySimDB_cff')
+process.load('Configuration.Geometry.GeometryExtended2023D41Reco_cff')
 process.load('Configuration.StandardSequences.MagneticField_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
@@ -18,16 +16,14 @@ process.load('TrackPropagation.SteppingHelixPropagator.SteppingHelixPropagatorOp
 process.load('TrackPropagation.SteppingHelixPropagator.SteppingHelixPropagatorAlong_cfi')
 
 process.source = cms.Source("PoolSource",
-	#fileNames = cms.untracked.vstring('file:step2.root'),
-	fileNames = cms.untracked.vstring('file:/home/taohuang/CSCEmulation/CMSSW_10_0_0/src/crabjobs/SingleMuPt100_pythia8_cfi_GEN_SIM_DIGI_L1.root'),
-	#fileNames = cms.untracked.vstring('/store/user/dildick/DarkSUSY_mH_125_mGammaD_20000_cT_0_14TeV_GEN_SIM_90X/DarkSUSY_mH_125_mGammaD_20000_cT_0_14TeV_PU0_DIGI_L1/170116_230113/0000/step2_1.root')
+	fileNames = cms.untracked.vstring('file:/eos/uscms/store/user/dildick/Mu_FlatPt2to100-pythia8-gun/crab_Mu_FlatPt2to100-pythia8-gunPU0_REL1_20190921_v2/190922_041957/0000/step3_1.root')
 )
 
-InputDir = ['/eos/uscms/store/user/dildick/DarkSUSY_mH_125_mGammaD_20_cT_0_14TeV/DarkSUSY_mH_125_mGammaD_20_cT_0_14TeV_REGEN/170723_232821/0000/']
-InputDir = ['/fdata/hepx/store/user/tahuang/SingleMu_100X_Run2MC_CSC_CentralBX_GEN_SIM_DIGI_L1/SingleMu_100X_Run2MC_CSC_CentralBX_GEN_SIM_DIGI_L1/180212_131435/0000/']
-InputDir = ['/fdata/hepx/store/user/tahuang/SingleMu_100X_Run2MC_CSC_CentralBX_GEN_SIM_DIGI_L1_20180212/SingleMu_100X_Run2MC_CSC_CentralBX_GEN_SIM_DIGI_L1_20180212/180213_092307/0000/']
-from GEMCode.GEMValidation.InputFileHelpers import *
-process = useInputDir(process, InputDir, True)
+#InputDir = ['/eos/uscms/store/user/dildick/DarkSUSY_mH_125_mGammaD_20_cT_0_14TeV/DarkSUSY_mH_125_mGammaD_20_cT_0_14TeV_REGEN/170723_232821/0000/']
+#InputDir = ['/fdata/hepx/store/user/tahuang/SingleMu_100X_Run2MC_CSC_CentralBX_GEN_SIM_DIGI_L1/SingleMu_100X_Run2MC_CSC_CentralBX_GEN_SIM_DIGI_L1/180212_131435/0000/']
+#InputDir = ['/fdata/hepx/store/user/tahuang/SingleMu_100X_Run2MC_CSC_CentralBX_GEN_SIM_DIGI_L1_20180212/SingleMu_100X_Run2MC_CSC_CentralBX_GEN_SIM_DIGI_L1_20180212/180213_092307/0000/']
+#from GEMCode.GEMValidation.InputFileHelpers import *
+#process = useInputDir(process, InputDir, True)
 
 process.TFileService = cms.Service("TFileService",
     fileName = cms.string("out_ana.root")
@@ -35,8 +31,7 @@ process.TFileService = cms.Service("TFileService",
 
 ## global tag for upgrade studies
 from Configuration.AlCa.GlobalTag import GlobalTag
-#process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc', '')
-process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase1_2018_realistic', '')
+process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase2_realistic', '')
 
 # the analyzer configuration
 def enum(*sequential, **named):
@@ -52,7 +47,7 @@ process.GEMCSCAnalyzer = cms.EDAnalyzer("GEMCSCAnalyzer",
     simTrackMatching = SimTrackMatching
 )
 matching = process.GEMCSCAnalyzer.simTrackMatching
-matching.gemStationsToUse = cms.vint32(-1) ## no GEM station is used
+matching.gemStationsToUse = cms.vint32(0,1,2) ## no GEM station is used
 matching.cscStationsToUse = cms.vint32(0,1,2,3,4,5,6,7,8,9,10,11)
 matching.l1track.run = cms.bool(False)
 matching.l1tkmuon.run = cms.bool(False)
@@ -70,7 +65,7 @@ if doGem:
   matching.cscLCT.minNHitsChamber = 3
   matching.cscMPLCT.minNHitsChamber = 3
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(50000) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000) )
 
 process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 
