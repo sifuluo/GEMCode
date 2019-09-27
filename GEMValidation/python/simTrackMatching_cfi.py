@@ -52,7 +52,7 @@ SimTrackMatching = cms.PSet(
         inputTag = cms.InputTag("g4SimHits"),
     ),
     simTrack = cms.PSet(
-        verbose = cms.int32(1),
+        verbose = cms.int32(0),
         inputTag = cms.InputTag("g4SimHits"),
         minPt = cms.double(1.5),
         maxPt = cms.double(999.),

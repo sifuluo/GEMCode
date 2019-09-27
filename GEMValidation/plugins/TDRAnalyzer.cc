@@ -52,48 +52,6 @@ struct MyTrackEff
   Char_t charge;
   Char_t endcap;
 
-  // Dark photon
-  Float_t genGd_m;
-  Float_t genGd_E;
-  Float_t genGd_p;
-  Float_t genGd_pt;
-  Float_t genGd_px;
-  Float_t genGd_py;
-  Float_t genGd_pz;
-  Float_t genGd_eta;
-  Float_t genGd_phi;
-  Float_t genGd_vx;
-  Float_t genGd_vy;
-  Float_t genGd_vz;
-  Float_t genGd_vLx;
-  Float_t genGd_vLy;
-  Float_t genGd_vLz;
-  Float_t genGd_lxy;
-  Float_t genGd_l;
-  Float_t genGd_dxy;
-  Float_t genGd0Gd1_dR;
-  Float_t genGd0Gd1_m;
-
-  Float_t genGdMu_dxy_max;
-  Float_t genGdMu_eta_max;
-
-  // Gen level muon
-  Int_t genGd_index;
-  Int_t genGdMu_index;
-  Float_t genGdMu_p;
-  Float_t genGdMu_pt;
-  Float_t genGdMu_px;
-  Float_t genGdMu_py;
-  Float_t genGdMu_pz;
-  Float_t genGdMu_eta;
-  Float_t genGdMu_phi;
-  Float_t genGdMu_phi_corr;
-  Float_t genGdMu_vx;
-  Float_t genGdMu_vy;
-  Float_t genGdMu_vz;
-  Float_t genGdMu_dxy;
-  Float_t genGdMu_dR;
-  Float_t genGdMu_lxy;
 
   Float_t beamSpot_x;
   Float_t beamSpot_y;
@@ -226,150 +184,6 @@ struct MyTrackEff
   Int_t quality_odd;
   Int_t quality_even;
 
-  // Track properties
-  Int_t has_tfTrack;
-  Int_t has_tfCand;
-  Int_t has_gmtRegCand;
-  Int_t has_gmtCand;
-
-  //csctf
-  Float_t trackpt, tracketa, trackphi;
-  UInt_t quality_packed, pt_packed, eta_packed, phi_packed;
-  UInt_t chargesign;
-  UInt_t rank;
-  UInt_t nstubs;
-  UInt_t deltaphi12, deltaphi23;
-  Bool_t hasME1,hasME2, hasME3, hasME4;
-  Char_t chamberME1,chamberME2;//bit1: odd, bit2: even
-  Int_t ME1_ring, ME2_ring;
-  Int_t ME1_hs, ME2_hs, ME1_wg,ME2_wg;
-  Float_t dphiGE11,dphiGE21;
-  Bool_t passGE11,passGE21;
-  Bool_t passGE11_pt5, passGE11_pt7, passGE11_pt10, passGE11_pt15, passGE11_pt20, passGE11_pt30, passGE11_pt40;
-  Bool_t passGE21_pt5, passGE21_pt7, passGE21_pt10, passGE21_pt15, passGE21_pt20, passGE21_pt30, passGE21_pt40;
-  Bool_t passGE11_simpt, passGE21_simpt;
-  Float_t deltaR;
-  Float_t lctdphi12;
-  /*
-  Float_t eta_propagated_ME1;
-  Float_t eta_propagated_ME2;
-  Float_t eta_propagated_ME3;
-  Float_t eta_propagated_ME4;
-  Float_t phi_propagated_ME1;
-  Float_t phi_propagated_ME2;
-  Float_t phi_propagated_ME3;
-  Float_t phi_propagated_ME4;
-  Float_t eta_ME1_TF;
-  Float_t eta_ME2_TF;
-  Float_t eta_ME3_TF;
-  Float_t eta_ME4_TF;
-  Float_t phi_ME1_TF;
-  Float_t phi_ME2_TF;
-  Float_t phi_ME3_TF;
-  Float_t phi_ME4_TF;
-
-  Float_t eta_interStat12;
-  Float_t phi_interStat12;
-  Float_t eta_interStat23;
-  Float_t phi_interStat23;
-  Float_t eta_interStat13;
-  Float_t phi_interStat13;
-  */
-
-  Bool_t allstubs_matched_TF;
-  //L1Mu
-  Float_t bestdRGmtCand;
-  Float_t L1Mu_pt, L1Mu_eta, L1Mu_phi, L1Mu_quality, L1Mu_bx;
-  Int_t L1Mu_charge;
-  Float_t L1Mu_me0_eta, L1Mu_me0_phi, L1Mu_me0_dPhi, L1Mu_me0_mindPhi1, L1Mu_me0_mindPhi2, L1Mu_me0_dR, L1Mu_me0_st1_dphi, L1Mu_me0_st2_eta, L1Mu_me0_st2_phi;
-  Bool_t L1Mu_me0_st1_isEven;
-  Float_t L1Mu_st1_eta, L1Mu_st1_phi, L1Mu_st1_dR;
-  Bool_t L1Mu_st1_isEven;
-
-  Int_t has_l1Extra;
-  Float_t l1Extra_pt;
-  Float_t l1Extra_eta;
-  Float_t l1Extra_phi;
-  Float_t l1Extra_dR;
-  Int_t has_recoTrackExtra;
-  Float_t recoTrackExtra_pt_inner;
-  Float_t recoTrackExtra_eta_inner;
-  Float_t recoTrackExtra_phi_inner;
-  Float_t recoTrackExtra_pt_outer;
-  Float_t recoTrackExtra_eta_outer;
-  Float_t recoTrackExtra_phi_outer;
-  Int_t has_recoTrack;
-  Float_t recoTrack_pt_outer;
-  Float_t recoTrack_eta_outer;
-  Float_t recoTrack_phi_outer;
-  Int_t has_recoChargedCandidate;
-  Float_t recoChargedCandidate_pt;
-  Float_t recoChargedCandidate_eta;
-  Float_t recoChargedCandidate_phi;
-
-  Int_t recoChargedCandidate_nValidCSCHits;
-  Int_t recoChargedCandidate_nValidRPCHits;
-  Int_t recoChargedCandidate_nValidDTHits;
-
-
-  // pt assginment
-  Int_t meRing;
-  Float_t phiM_gemcsc_even,phiM_gemcsc_odd;
-  Float_t phiM_st1_sh, phiM_st2_sh;
-  Float_t phiM_st12_sh, phiM_st23_sh;
-  Float_t phiM_fitxyz_even,phiM_fitxyz_odd;
-  Float_t phiM_st1_L1, phiM_st2_L1;
-  Float_t phiM_st12_L1, phiM_st23_L1;
-  Float_t phiM_ME11only_L1, phiM_ME21only_L1;
-  Float_t phiM_GE11_L1, phiM_ME0_L1, dphi_dir_GE11_st2_L1, dphi_dir_ME0_st2_L1;
-  Float_t dphi_dir_ME11only_st2_L1, dphi_dir_st1_ME21only_L1, dphi_dir_ME11only_ME21only_L1;
-  Float_t pt_sh_even,pt_sh_odd,ptphi_sh_even,ptphi_sh_odd,pteta_sh_even,pteta_sh_odd;
-  Float_t ptphi_gemsh_odd, ptphi_gemsh_even;
-  Float_t dphi_dir_st1_st2_sh, dphi_dir_st1_st2_L1, dphi_dir_st1_st2_L1_csc;
-  Float_t dphi_dir_st1_st12_sh,dphi_dir_st2_st23_sh, dphi_dir_st12_st23_sh;
-  Float_t dphi_dir_st1_st12_L1,dphi_dir_st2_st23_L1,dphi_dir_st1_st12_L1_csc,dphi_dir_st2_st23_L1_csc, dphi_dir_st12_st23_L1;
-  Float_t hybrid_pt, hybrid_noge21_pt, position_pt, direction_ge21_pt, direction_noge21_pt;
-  //Float_t ptphi_diff_sh_11,ptphi_diff_sh_12,ptphi_diff_sh_21,ptphi_diff_sh_22;
-  Float_t ptphi_diff_sh;
-  Float_t deltay12_fit, deltay23_fit;
-  Float_t deltay12_lct, deltay23_lct;
-  Float_t deltay12_sim, deltay23_sim;
-  Float_t deltay12_test, deltay23_test, deltay123_test;
-  Float_t eta_st2_sh, eta_st2_L1, eta_st1_L1;
-  Bool_t isMe0Region;
-  Int_t npar_L1, npar_sim;
-  Float_t eta_st1_sim, eta_st2_sim;
-  Float_t pt_position_sh, pt_direction_sh;
-  Float_t pt_position, pt_direction_gemcsc, pt_direction_gemcsc_central, pt_direction_xfactor;
-  Float_t pt_position_fit;
-  Int_t npar;
-  Int_t npar_lct;
-  Bool_t hasSt1St2St3;
-  Bool_t hasSt3orSt4_sh;
-
-  // track veto
-  Bool_t isSimLooseVeto;
-  Bool_t isSimMediumVeto;
-  Bool_t isSimTightVeto;
-  Bool_t isL1LooseVeto;
-  Bool_t isL1MediumVeto;
-  Bool_t isL1TightVeto;
-  Int_t nTrackTriggers;
-
-  // track-match
-  float L1Track_eta;
-  float L1Track_phi;
-  float L1TrackMuon_eta;
-  float L1TrackMuon_phi;
-  float GMTCand_eta;
-  float GMTCand_phi;
-  float sim_st2_eta;
-  float sim_st2_phi;
-  float sim_prop_eta;
-  float sim_prop_phi;
-  float dR_prop_L1TrackMuon;
-  float dR_st2_L1TrackMuon;
-  float dR_L1Track;
 };
 
 void MyTrackEff::init()
@@ -387,48 +201,6 @@ void MyTrackEff::init()
   charge = -9;
   endcap = -9;
 
-  // Dark photon
-  genGd_m =0.0;
-  genGd_E =0.0;
-  genGd_p =0.0;
-  genGd_pt =0.0;
-  genGd_px =0.0;
-  genGd_py =0.0;
-  genGd_pz =0.0;
-  genGd_eta =0.0;
-  genGd_phi =0.0;
-  genGd_vx =0.0;
-  genGd_vy =0.0;
-  genGd_vz =0.0;
-  genGd_vLx = -0.;
-  genGd_vLy = -0;
-  genGd_vLz= -0;
-  genGd_lxy = -0.;
-  genGd_l =-0.;
-  genGd_dxy =-1;
-  genGd0Gd1_dR =-1;
-  genGd0Gd1_m = 0;
-
-  genGdMu_dxy_max =0.0;
-  genGdMu_eta_max =0.0;
-
-  // Gen level muon
-  genGd_index = -99;
-  genGdMu_index = -99;
-  genGdMu_p =0.0;
-  genGdMu_pt =0.0;
-  genGdMu_px =0.0;
-  genGdMu_py =0.0;
-  genGdMu_pz =0.0;
-  genGdMu_eta =0.0;
-  genGdMu_phi =0.0;
-  genGdMu_phi_corr =0.0;
-  genGdMu_vx =0.0;
-  genGdMu_vy =0.0;
-  genGdMu_vz =0.0;
-  genGdMu_dxy =0.0;
-  genGdMu_dR = 10.0;
-  genGdMu_lxy = 0.0;
 
   beamSpot_x =0.0;
   beamSpot_y =0.0;
@@ -470,14 +242,6 @@ void MyTrackEff::init()
   perp_layer6_sh_odd = -1;
   z_layer6_sh_even = 0.0;
   z_layer6_sh_odd = 0.0;
-  pt_sh_even = -9.0;
-  pteta_sh_even = 0;
-  ptphi_sh_even = -9.0;
-  pt_sh_odd = -9.0;
-  pteta_sh_odd = 0;
-  ptphi_sh_odd = -9.0;
-  ptphi_gemsh_even = -9.0;
-  ptphi_gemsh_odd = -9.0;
 
 
   has_csc_strips = 0;
@@ -586,12 +350,6 @@ void MyTrackEff::init()
   dphipositionpt_gemsh_odd = -9;
   dphipositionpt_cscsh_even = -9;
   dphipositionpt_cscsh_odd = -9;
-  phiM_gemcsc_odd = -9;
-  phiM_gemcsc_even =-9;
-  phiM_fitxyz_odd = -9;
-  phiM_fitxyz_even =-9;
-
-
 
   strip_gemdg_odd = -9;
   strip_gemdg_even = -9;
@@ -672,12 +430,6 @@ TTree* MyTrackEff::book(TTree *t, const std::string & name)
   t->Branch("z_layer6_sh_odd", &z_layer6_sh_odd);
   t->Branch("eta_cscsh_even", &eta_cscsh_even);
   t->Branch("eta_cscsh_odd", &eta_cscsh_odd);
-  t->Branch("pt_sh_even", &pt_sh_even);
-  t->Branch("pteta_sh_even", &pteta_sh_even);
-  t->Branch("ptphi_sh_even", &ptphi_sh_even);
-  t->Branch("pt_sh_odd", &pt_sh_odd);
-  t->Branch("pteta_sh_odd", &pteta_sh_odd);
-  t->Branch("ptphi_sh_odd", &ptphi_sh_odd);
 
   t->Branch("chamber_dg_odd", &chamber_dg_odd);
   t->Branch("chamber_dg_even", &chamber_dg_even);
@@ -787,10 +539,7 @@ TTree* MyTrackEff::book(TTree *t, const std::string & name)
   t->Branch("dphipositionpt_gemsh_odd", &dphipositionpt_gemsh_odd);
   t->Branch("dphipositionpt_cscsh_even", &dphipositionpt_cscsh_even);
   t->Branch("dphipositionpt_cscsh_odd", &dphipositionpt_cscsh_odd);
-  t->Branch("phiM_gemcsc_odd", &phiM_gemcsc_odd);
-  t->Branch("phiM_gemcsc_even", &phiM_gemcsc_even);
-  t->Branch("phiM_fitxyz_odd", &phiM_fitxyz_odd);
-  t->Branch("phiM_fitxyz_even", &phiM_fitxyz_even);
+
   t->Branch("strip_gemdg_odd", &strip_gemdg_odd);
   t->Branch("strip_gemdg_even", &strip_gemdg_even);
 
@@ -1083,15 +832,15 @@ TDRAnalyzer::TDRAnalyzer(const edm::ParameterSet& ps)
     }
   }
 
-  cscStationsCo_.push_back(std::make_pair(-99,-99));
-  cscStationsCo_.push_back(std::make_pair(1,-99));
-  cscStationsCo_.push_back(std::make_pair(1,4));
+  // cscStationsCo_.push_back(std::make_pair(-99,-99));
   cscStationsCo_.push_back(std::make_pair(1,1));
   cscStationsCo_.push_back(std::make_pair(1,2));
   cscStationsCo_.push_back(std::make_pair(1,3));
+
   cscStationsCo_.push_back(std::make_pair(2,1));
   cscStationsCo_.push_back(std::make_pair(2,2));
   cscStationsCo_.push_back(std::make_pair(3,1));
+
   cscStationsCo_.push_back(std::make_pair(3,2));
   cscStationsCo_.push_back(std::make_pair(4,1));
   cscStationsCo_.push_back(std::make_pair(4,2));
@@ -1101,7 +850,9 @@ TDRAnalyzer::TDRAnalyzer(const edm::ParameterSet& ps)
 
 int TDRAnalyzer::detIdToMEStation(int st, int ri)
 {
-  const auto& p(std::make_pair(st, ri));
+  auto p = std::make_pair(st, ri);
+  if (st==1 and ri==4)
+    p = std::make_pair(st, 1);
   return std::find(cscStationsCo_.begin(), cscStationsCo_.end(), p) - cscStationsCo_.begin();
 }
 
@@ -1202,7 +953,6 @@ void TDRAnalyzer::analyze(const edm::Event& ev, const edm::EventSetup& es)
 
 void TDRAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
 {
-  const DisplacedGENMuonMatcher& match_gen = match.genMuons();
   const SimHitMatcher& match_sh = match.simhits();
   const GEMDigiMatcher& match_gd = match.gemDigis();
   const CSCDigiMatcher& match_cd = match.cscDigis();
@@ -1245,13 +995,16 @@ void TDRAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
     {
 
       CSCDetId id(d);
+
       const int st(detIdToMEStation(id.station(),id.ring()));
       if (stations_to_use_.count(st) == 0) continue;
+
       int nlayers(match_sh.nLayersWithHitsInSuperChamber(d));
       if (id.station() == 1 and id.chamber()%2 == 1) etrk_[0].chamber_ME1_csc_sh |= 1;
       if (id.station() == 1 and id.chamber()%2 == 0) etrk_[0].chamber_ME1_csc_sh |= 2;
       if (id.station() == 2 and id.chamber()%2 == 1) etrk_[0].chamber_ME2_csc_sh |= 1;
       if (id.station() == 2 and id.chamber()%2 == 0) etrk_[0].chamber_ME2_csc_sh |= 2;
+
       // case ME11
       if (id.station()==1 and (id.ring()==4 or id.ring()==1)){
         // get the detId of the pairing subchamber
@@ -1259,73 +1012,20 @@ void TDRAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
         CSCDetId co_id(id.endcap(), id.station(), other_ring, id.chamber());
         // check if co_id occurs in the list
         // add the hit layers
-
         const auto& rawId(co_id.rawId());
         if (csc_simhits.find(rawId) != csc_simhits.end()) {
           nlayers = nlayers+match_sh.nLayersWithHitsInSuperChamber(rawId);
-
         }
-
       }
-      //std::cout <<"CSCid with simhits "<< id << " nlayer "<< nlayers << std::endl;
+      std::cout << "CSC chamber " << id << " nlayer " << nlayers << std::endl;
       if (nlayers < minNHitsChamberCSCSimHit_) continue;
-      const GlobalVector& ym = match_sh.simHitsMeanMomentum(match_sh.hitsInChamber(d));
-      etrk_[st].bending_sh = match_sh.LocalBendingInChamber(d);
-      const CSCDetId id1(id.endcap(), id.station(), id.ring(), id.chamber(), 1);
-      const CSCDetId id6(id.endcap(), id.station(), id.ring(), id.chamber(), 6);
-      const GlobalPoint& gp1 = match_sh.simHitsMeanPosition(match_sh.hitsInDetId(id1.rawId()));
-      const GlobalPoint& gp6 = match_sh.simHitsMeanPosition(match_sh.hitsInDetId(id6.rawId()));
-      const bool odd(id.chamber()%2==1);
-      if (odd) etrk_[st].has_csc_sh |= 1;
-      else etrk_[st].has_csc_sh |= 2;
-      if (odd){
-        etrk_[st].pteta_sh_odd = ym.eta();
-        etrk_[st].ptphi_sh_odd = ym.phi();
-        etrk_[st].pt_sh_odd = ym.perp();
-      }else{
-        etrk_[st].pteta_sh_even = ym.eta();
-        etrk_[st].ptphi_sh_even = ym.phi();
-        etrk_[st].pt_sh_even = ym.perp();
-      }
-      if (odd){
-        if (match_sh.hitsInDetId(id1.rawId()).size()>0){
-          etrk_[st].eta_layer1_sh_odd = gp1.eta();
-          etrk_[st].phi_layer1_sh_odd = gp1.phi();
-          etrk_[st].perp_layer1_sh_odd = gp1.perp();
-          etrk_[st].z_layer1_sh_odd = gp1.z();
-          //std::cout <<"layer1 id "<< id1 <<" phi "<< gp1.phi() <<" eta "<< gp1.eta() <<" x "<< gp1.x()<<" y "<< gp1.y()<<" z "<< gp1.z() <<" perp "<< gp1.perp() << std::endl;
-        }
-        if (match_sh.hitsInDetId(id6.rawId()).size()>0){
-          etrk_[st].eta_layer6_sh_odd = gp6.eta();
-          etrk_[st].phi_layer6_sh_odd = gp6.phi();
-          etrk_[st].perp_layer6_sh_odd = gp6.perp();
-          etrk_[st].z_layer6_sh_odd = gp6.z();
-          //std::cout <<"layer6 id "<< id6 <<" phi "<< gp6.phi() <<" eta "<< gp6.eta() <<" x "<< gp6.x()<<" y "<< gp6.y()<<" z "<< gp6.z() <<" perp "<< gp6.perp() << std::endl;
-        }
-      }else{
-        if (match_sh.hitsInDetId(id1.rawId()).size()>0){
-          etrk_[st].eta_layer1_sh_even = gp1.eta();
-          etrk_[st].phi_layer1_sh_even = gp1.phi();
-          etrk_[st].perp_layer1_sh_even = gp1.perp();
-          etrk_[st].z_layer1_sh_even = gp1.z();
-          //std::cout <<"layer1 id "<< id1 <<" phi "<< gp1.phi() <<" eta "<< gp1.eta() <<" x "<< gp1.x()<<" y "<< gp1.y()<<" z "<< gp1.z() <<" perp "<< gp1.perp() << std::endl;
-        }
-        if (match_sh.hitsInDetId(id6.rawId()).size()>0){
-          etrk_[st].eta_layer6_sh_even = gp6.eta();
-          etrk_[st].phi_layer6_sh_even = gp6.phi();
-          etrk_[st].perp_layer6_sh_even = gp6.perp();
-          etrk_[st].z_layer6_sh_even = gp6.z();
-          //std::cout <<"layer6 id "<< id6 <<" phi "<< gp6.phi() <<" eta "<< gp6.eta() <<" x "<< gp6.x()<<" y "<< gp6.y()<<" z "<< gp6.z() <<" perp "<< gp6.perp() << std::endl;
-        }
-      }
 
+      const bool odd(id.chamber()%2==1);
       if (odd) etrk_[st].chamber_sh_odd = id.chamber();
       else etrk_[st].chamber_sh_even = id.chamber();
       if (odd) etrk_[st].nlayers_csc_sh_odd = nlayers;
       else etrk_[st].nlayers_csc_sh_even = nlayers;
 
-      if (odd) gv_sh_odd[st] = ym;
-      else gv_sh_even[st] = ym;
       const GlobalPoint& keygp(match_sh.simHitPositionKeyLayer(id));
       if (odd) gp_sh_odd[st] = keygp;
       else gp_sh_even[st] = keygp;
@@ -1335,148 +1035,11 @@ void TDRAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
       else     etrk_[st].phi_cscsh_even = keygp.phi();
       if (odd) etrk_[st].perp_cscsh_odd = keygp.perp();
       else     etrk_[st].perp_cscsh_even = keygp.perp();
-      if (odd) etrk_[st].dphipositionpt_cscsh_odd = deltaPhi(float(keygp.phi()),etrk_[st].ptphi_sh_odd);
-      else     etrk_[st].dphipositionpt_cscsh_even = deltaPhi(float(keygp.phi()),etrk_[st].ptphi_sh_even);
-
-      if (st==2 or st==3){
-      	if (odd) etrk_[1].eta_cscsh_odd = keygp.eta();
-      	else     etrk_[1].eta_cscsh_even = keygp.eta();
-      	if (odd) etrk_[1].phi_cscsh_odd = keygp.phi();
-      	else     etrk_[1].phi_cscsh_even = keygp.phi();
-      	if (odd) etrk_[1].perp_cscsh_odd = keygp.perp();
-      	else     etrk_[1].perp_cscsh_even = keygp.perp();
-        if (odd) etrk_[1].dphipositionpt_cscsh_odd = deltaPhi(float(keygp.phi()),etrk_[st].ptphi_sh_odd);
-        else     etrk_[1].dphipositionpt_cscsh_even = deltaPhi(float(keygp.phi()),etrk_[st].ptphi_sh_even);
-      }
-
-      // case ME11
-      if (st==2 or st==3){
-        if (odd) etrk_[1].has_csc_sh |= 1;
-        else etrk_[1].has_csc_sh |= 2;
-
-        if (odd) etrk_[1].nlayers_csc_sh_odd = nlayers;
-        else etrk_[1].nlayers_csc_sh_even = nlayers;
-
-        if (odd) etrk_[st].chamber_sh_odd = id.chamber();
-        else etrk_[st].chamber_sh_even = id.chamber();
-        if (odd) gp_sh_odd[1] = keygp;
-        else gp_sh_even[1] = keygp;
-        if (odd) gv_sh_odd[1] = ym;
-        else gv_sh_even[1] = ym;
-
-
-        if (odd){
-          etrk_[1].pt_sh_odd = ym.perp();
-          etrk_[1].pteta_sh_odd = ym.eta();
-          etrk_[1].ptphi_sh_odd = ym.phi();
-        }else {
-          etrk_[1].pt_sh_even = ym.perp();
-          etrk_[1].pteta_sh_even = ym.eta();
-          etrk_[1].ptphi_sh_even = ym.phi();
-        }
-        if (odd){
-          if (match_sh.hitsInDetId(id1.rawId()).size()>0){
-            etrk_[1].eta_layer1_sh_odd = gp1.eta();
-            etrk_[1].phi_layer1_sh_odd = gp1.phi();
-            etrk_[1].perp_layer1_sh_odd = gp1.perp();
-            etrk_[1].z_layer1_sh_odd = gp1.z();
-          }
-          if (match_sh.hitsInDetId(id6.rawId()).size()>0){
-            etrk_[1].eta_layer6_sh_odd = gp6.eta();
-            etrk_[1].phi_layer6_sh_odd = gp6.phi();
-            etrk_[1].perp_layer6_sh_odd = gp6.perp();
-            etrk_[1].z_layer6_sh_odd = gp6.z();
-          }
-        }else{
-          if (match_sh.hitsInDetId(id1.rawId()).size()>0){
-            etrk_[1].eta_layer1_sh_even = gp1.eta();
-            etrk_[1].phi_layer1_sh_even = gp1.phi();
-            etrk_[1].perp_layer1_sh_even = gp1.perp();
-            etrk_[1].z_layer1_sh_even = gp1.z();
-          }
-          if (match_sh.hitsInDetId(id6.rawId()).size()>0){
-            etrk_[1].eta_layer6_sh_even = gp6.eta();
-            etrk_[1].phi_layer6_sh_even = gp6.phi();
-            etrk_[1].perp_layer6_sh_even = gp6.perp();
-            etrk_[1].z_layer6_sh_even = gp6.z();
-          }
-        }
-        etrk_[1].bending_sh = match_sh.LocalBendingInChamber(d);
-      }
+      if (odd) etrk_[st].has_csc_sh |= 1;
+      else etrk_[st].has_csc_sh |= 2;
 
     }
 
-  //ME0 simhits
-  const auto& me0_simhits(match_sh.superChamberIdsME0());
-  if (verbose_) std::cout <<"me0 simthits , chamber id size "<< me0_simhits.size() << std::endl;
-  for (const auto& d : me0_simhits){
-    const ME0DetId id(d);
-    int nlayers = match_sh.nLayersWithHitsInSuperChamber(d);
-    if (verbose_) std::cout <<"ME0 Detid "<< id <<" nlayer hits "<< nlayers << std::endl;
-    if (nlayers < minNHitsChamberME0SimHit_) continue;
-    bool odd(id.chamber()%2 == 1);
-    //ME0DetId(int region, int layer,int chamber, int roll)
-    const GlobalVector& ym = match_sh.simHitsMeanMomentum(match_sh.hitsInSuperChamber(d));
-    const GlobalPoint& keygp(match_sh.simHitsMeanPosition(match_sh.hitsInSuperChamber(d)));
-    //etrk_[ME0].bending_sh = match_sh.LocalBendingInChamber(d);
-    const ME0DetId id1(id.region(), 1, id.chamber(), 0);
-    const ME0DetId id6(id.region(), 6, id.chamber(), 0);
-    const GlobalPoint& gp1 = match_sh.simHitsMeanPosition(match_sh.hitsInChamber(id1.rawId()));
-    const GlobalPoint& gp6 = match_sh.simHitsMeanPosition(match_sh.hitsInChamber(id6.rawId()));
-    if (odd)  etrk_[ME0].nlayers_csc_sh_odd = nlayers;
-    else  etrk_[ME0].nlayers_csc_sh_even = nlayers;
-    if (odd) etrk_[ME0].has_csc_sh |= 1;
-    else etrk_[ME0].has_csc_sh |= 2;
-    if (odd) etrk_[ME0].chamber_sh_odd = id.chamber();
-    else etrk_[ME0].chamber_sh_even = id.chamber();
-    if (odd) etrk_[ME0].eta_cscsh_odd = keygp.eta();
-    else     etrk_[ME0].eta_cscsh_even = keygp.eta();
-    if (odd) etrk_[ME0].phi_cscsh_odd = keygp.phi();
-    else     etrk_[ME0].phi_cscsh_even = keygp.phi();
-    if (odd) etrk_[ME0].perp_cscsh_odd = keygp.perp();
-    if (odd) etrk_[ME0].perp_cscsh_even = keygp.perp();
-    if (odd){
-    	etrk_[ME0].pteta_sh_odd = ym.eta();
-    	etrk_[ME0].ptphi_sh_odd = ym.phi();
-    	etrk_[ME0].pt_sh_odd = ym.perp();
-    }else{
-    	etrk_[ME0].pteta_sh_even = ym.eta();
-    	etrk_[ME0].ptphi_sh_even = ym.phi();
-    	etrk_[ME0].pt_sh_even = ym.perp();
-    }
-    if (odd){
-    	if (match_sh.hitsInChamber(id1.rawId()).size()>0){
-        etrk_[ME0].eta_layer1_sh_odd = gp1.eta();
-        etrk_[ME0].phi_layer1_sh_odd = gp1.phi();
-        etrk_[ME0].perp_layer1_sh_odd = gp1.perp();
-        etrk_[ME0].z_layer1_sh_odd = gp1.z();
-        //std::cout <<"layer1 id "<< id1 <<" phi "<< gp1.phi() <<" eta "<< gp1.eta() <<" x "<< gp1.x()<<" y "<< gp1.y()<<" z "<< gp1.z() <<" perp "<< gp1.perp() << " z "<< gp1.z() << std::endl;
-      }
-    	if (match_sh.hitsInChamber(id6.rawId()).size()>0){
-        etrk_[ME0].eta_layer6_sh_odd = gp6.eta();
-        etrk_[ME0].phi_layer6_sh_odd = gp6.phi();
-        etrk_[ME0].perp_layer6_sh_odd = gp6.perp();
-        etrk_[ME0].z_layer6_sh_odd = gp6.z();
-        //std::cout <<"layer6 id "<< id6 <<" phi "<< gp6.phi() <<" eta "<< gp6.eta() <<" x "<< gp6.x()<<" y "<< gp6.y()<<" z "<< gp6.z() <<" perp "<< gp6.perp()<< " z "<< gp6.z() << std::endl;
-      }
-    }else{
-    	if (match_sh.hitsInChamber(id1.rawId()).size()>0){
-        etrk_[ME0].eta_layer1_sh_even = gp1.eta();
-        etrk_[ME0].phi_layer1_sh_even = gp1.phi();
-        etrk_[ME0].perp_layer1_sh_even = gp1.perp();
-        etrk_[ME0].z_layer1_sh_even = gp1.z();
-        //std::cout <<"layer1 id "<< id1 <<" phi "<< gp1.phi() <<" eta "<< gp1.eta() <<" x "<< gp1.x()<<" y "<< gp1.y()<<" z "<< gp1.z() <<" perp "<< gp1.perp() << " z "<< gp1.z() << std::endl;
-      }
-    	if (match_sh.hitsInChamber(id6.rawId()).size()>0){
-        etrk_[ME0].eta_layer6_sh_even = gp6.eta();
-        etrk_[ME0].phi_layer6_sh_even = gp6.phi();
-        etrk_[ME0].perp_layer6_sh_even = gp6.perp();
-        etrk_[ME0].z_layer6_sh_even = gp6.z();
-        //std::cout <<"layer6 id "<< id6 <<" phi "<< gp6.phi() <<" eta "<< gp6.eta() <<" x "<< gp6.x()<<" y "<< gp6.y()<<" z "<< gp6.z() <<" perp "<< gp6.perp() << " z "<< gp6.z() << std::endl;
-      }
-    }
-
-  }
   if (verbose_) std::cout <<"TDRAnalyzer step2 "<< std::endl;
   // CSC strip digis
   for(const auto& d: match_cd.chamberIdsStrip(0))
@@ -1495,15 +1058,6 @@ void TDRAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
 
       if (odd) etrk_[st].nlayers_st_dg_odd = nlayers;
       else etrk_[st].nlayers_st_dg_even = nlayers;
-
-      // case ME11
-      if (st==2 or st==3){
-        if (odd) etrk_[1].has_csc_strips |= 1;
-        else etrk_[1].has_csc_strips |= 2;
-
-        if (odd) etrk_[1].nlayers_st_dg_odd = nlayers;
-        else etrk_[1].nlayers_st_dg_even = nlayers;
-      }
     }
 
   // CSC wire digis
@@ -1523,15 +1077,6 @@ void TDRAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
 
       if (odd) etrk_[st].nlayers_wg_dg_odd = nlayers;
       else etrk_[st].nlayers_wg_dg_even = nlayers;
-
-      // case ME11
-      if (st==2 or st==3){
-        if (odd) etrk_[1].has_csc_wires |= 1;
-        else etrk_[1].has_csc_wires |= 2;
-
-        if (odd) etrk_[1].nlayers_wg_dg_odd = nlayers;
-        else etrk_[1].nlayers_wg_dg_even = nlayers;
-      }
     }
 
   // CSC CLCTs
@@ -1558,21 +1103,6 @@ void TDRAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
 
       if (odd) etrk_[st].has_clct |= 1;
       else etrk_[st].has_clct |= 2;
-
-      // case ME11
-      if (st==2 or st==3){
-        if (odd) etrk_[1].halfstrip_odd = digi_channel(clct);
-        else etrk_[1].halfstrip_even = digi_channel(clct);
-
-        if (odd) etrk_[1].quality_clct_odd = digi_quality(clct);
-        else etrk_[1].quality_clct_even = digi_quality(clct);
-
-        if (odd) etrk_[1].bx_clct_odd = digi_bx(clct);
-        else etrk_[1].bx_clct_even = digi_bx(clct);
-
-        if (odd) etrk_[1].has_clct |= 1;
-        else etrk_[1].has_clct |= 2;
-      }
     }
 
   // CSC ALCTs
@@ -1597,21 +1127,6 @@ void TDRAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
 
       if (odd) etrk_[st].has_alct |= 1;
       else etrk_[st].has_alct |= 2;
-
-      // case ME11
-      if (st==2 or st==3){
-        if (odd) etrk_[1].wiregroup_odd = digi_channel(alct);
-        else etrk_[1].wiregroup_even = digi_channel(alct);
-
-        if (odd) etrk_[1].quality_alct_odd = digi_quality(alct);
-        else etrk_[1].quality_alct_even = digi_quality(alct);
-
-        if (odd) etrk_[1].bx_alct_odd = digi_bx(alct);
-        else etrk_[1].bx_alct_even = digi_bx(alct);
-
-        if (odd) etrk_[1].has_alct |= 1;
-        else etrk_[1].has_alct |= 2;
-      }
     }
 
   if (verbose_) std::cout <<"TDRAnalyzer step3 "<< std::endl;
@@ -1626,12 +1141,6 @@ void TDRAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
     {
       lct_odd[s] = make_digi();
       lct_even[s] = make_digi();
-
-      // case ME11
-      if (s==2 or s==3){
-        lct_odd[1] = make_digi();
-        lct_even[1] = make_digi();
-      }
     }
 
   // LCT stubs
@@ -1644,13 +1153,6 @@ void TDRAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
       const bool odd(id.chamber()%2==1);
       if (odd) etrk_[st].has_lct |= 1;
       else etrk_[st].has_lct |= 2;
-
-      // case ME11
-      if (st==2 or st==3){
-        if (odd) etrk_[1].has_lct |= 1;
-        else etrk_[1].has_lct |= 2;
-      }
-
 
       const auto& lct = match_lct.lctInChamber(d);
       const int bend(LCT_BEND_PATTERN[digi_pattern(lct)]);
@@ -1701,374 +1203,8 @@ void TDRAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
           etrk_[st].quality_even = digi_quality(lct);
           etrk_[st].passdphi_even = match_lct.passDPhicut(id, chargesign, digi_dphi(lct), pt);
         }
-
-      // case ME11
-      if (st==2 or st==3){
-        if (odd)
-          {
-            lct_odd[1] = lct;
-            gp_lct_odd[1] = gp;
-            etrk_[1].bend_lct_odd = bend;
-            etrk_[1].phi_lct_odd = gp.phi();
-            etrk_[1].eta_lct_odd = gp.eta();
-            etrk_[1].perp_lct_odd = gp.perp();
-            etrk_[1].dphi_lct_odd = digi_dphi(lct);
-            etrk_[1].bx_lct_odd = digi_bx(lct);
-            etrk_[1].hs_lct_odd = digi_channel(lct);
-            etrk_[1].wg_lct_odd = digi_wg(lct);
-            etrk_[1].chamber_lct_odd = id.chamber();
-            etrk_[1].quality_odd = digi_quality(lct);
-            etrk_[1].passdphi_odd = match_lct.passDPhicut(id, chargesign, digi_dphi(lct), pt);
-          }
-        else
-          {
-            lct_even[1] = lct;
-            gp_lct_even[1] = gp;
-            etrk_[1].bend_lct_even = bend;
-            etrk_[1].phi_lct_even = gp.phi();
-            etrk_[1].eta_lct_even = gp.eta();
-            etrk_[1].perp_lct_even = gp.perp();
-            etrk_[1].dphi_lct_even = digi_dphi(lct);
-            etrk_[1].bx_lct_even = digi_bx(lct);
-            etrk_[1].hs_lct_even = digi_channel(lct);
-            etrk_[1].wg_lct_even = digi_wg(lct);
-            etrk_[1].chamber_lct_even = id.chamber();
-            etrk_[1].quality_even = digi_quality(lct);
-            etrk_[1].passdphi_even = match_lct.passDPhicut(id, chargesign, digi_dphi(lct), pt);
-          }
-
       }
-    }
 
-  if (verbose_) std::cout <<"TDRAnalyzer step4 "<< std::endl;
-  //for GEMs in station1, it will be also filled in ME11
-  // GEM simhits in superchamber
-  GlobalPoint gp_gemsh_odd[12];
-  GlobalPoint gp_gemsh_even[12];
-  for(const auto& d: match_sh.superChamberIdsGEM())
-    {
-      GEMDetId id(d);
-      int MEStation = id.station();
-
-      const int st(detIdToMEStation(MEStation,id.ring()));
-      if (stations_to_use_.count(st) == 0) continue;
-
-      const bool odd(id.chamber()%2==1);
-      if (match_sh.hitsInSuperChamber(d).size() > 0)
-        {
-          if (odd) etrk_[st].has_gem_sh |= 1;
-          else     etrk_[st].has_gem_sh |= 2;
-
-          for (int layer=1; layer<3; layer++){
-            GEMDetId id_tmp(id.region(), id.ring(), id.station(), layer, id.chamber(), 0);
-            const GlobalPoint& keygp = match_sh.simHitsMeanPosition(match_sh.hitsInChamber(id_tmp.rawId()));
-            const GlobalVector& keygv = match_sh.simHitsMeanMomentum(match_sh.hitsInChamber(id_tmp.rawId()));
-            float centralperp_gemsh = match_sh.simHitsGEMCentralPosition(match_sh.hitsInChamber(id_tmp.rawId()));match_sh.simHitsMeanPosition(match_sh.hitsInChamber(id_tmp.rawId()));
-            if(match_sh.hitsInChamber(id_tmp).size()==0) continue;
-            if (odd) gp_gemsh_odd[st] = keygp;
-            else gp_gemsh_even[st] = keygp;
-            //std::cout <<"Matching GEMHits GEM Id "<< id <<" gp.eta "<< keygp.eta() <<" gp.phi "<< keygp.phi() << std::endl;
-            //std::cout <<" GEM Id "<< id_tmp <<" eta "<< keygp.eta() <<" phi "<< keygp.phi()<<" perp "<< keygp.perp() <<" x " << keygp.x() <<" y "<< keygp.y() << " z "<< keygp.z()<< std::endl;
-            if (odd) etrk_[st].eta_gemsh_odd = keygp.eta();
-            else     etrk_[st].eta_gemsh_even = keygp.eta();
-            if (odd) etrk_[st].phi_gemsh_odd = keygp.phi();
-            else     etrk_[st].phi_gemsh_even = keygp.phi();
-            if (odd) etrk_[st].ptphi_gemsh_odd = keygv.phi();
-            else     etrk_[st].ptphi_gemsh_even = keygv.phi();
-            if (odd) etrk_[st].perp_gemsh_odd = keygp.perp();
-            else     etrk_[st].perp_gemsh_even = keygp.perp();
-            if (odd) etrk_[st].centralperp_gemsh_odd = centralperp_gemsh;
-            else     etrk_[st].centralperp_gemsh_even = centralperp_gemsh;
-            float phi_m = -9;
-            int st_csc = (st==3 and (etrk_[st].has_csc_sh&3)==0)? 1:st;
-            if (odd and etrk_[st_csc].phi_cscsh_odd>-9){
-              etrk_[st].dphi_sh_odd = deltaPhi(etrk_[st_csc].phi_cscsh_odd, float(keygp.phi()));// here should we use st or st_csc?
-              etrk_[st].dphipositionpt_gemsh_odd = deltaPhi(float(keygp.phi()),etrk_[st_csc].ptphi_sh_odd);
-              phi_m =  PtassignmentHelper::PhiMomentum_Radius(etrk_[st].dphi_sh_odd, etrk_[st].phi_gemsh_odd, etrk_[st_csc].perp_cscsh_odd, etrk_[st].perp_gemsh_odd);
-              etrk_[st].phiM_gemcsc_odd = phi_m;
-              //std::cout <<"dphi(M,P) "<< deltaPhi(etrk_[st].phi_gemsh_odd, gv_sh_odd[st_csc].phi())<<" momentum phi from simhits "<< gv_sh_odd[st_csc].phi() <<" phi from gem-csc "<< phi_m << std::endl;
-            }
-            else if (not(odd) and etrk_[st_csc].phi_cscsh_even>-9) {
-              etrk_[st].dphi_sh_even = deltaPhi(etrk_[st_csc].phi_cscsh_even, float(keygp.phi()));
-              etrk_[st].dphipositionpt_gemsh_even = deltaPhi(float(keygp.phi()),etrk_[st_csc].ptphi_sh_even);
-              phi_m =  PtassignmentHelper::PhiMomentum_Radius(etrk_[st].dphi_sh_even, etrk_[st].phi_gemsh_even, etrk_[st_csc].perp_cscsh_even, etrk_[st].perp_gemsh_even);
-              etrk_[st].phiM_gemcsc_even = phi_m;
-              //std::cout <<"dphi(M,P) "<< deltaPhi(etrk_[st].phi_gemsh_even, gv_sh_even[st_csc].phi())<<" momentum phi from simhits "<< gv_sh_even[st_csc].phi() <<" phi from gem-csc "<< phi_m << std::endl;
-            }
-            if (st==2 or st==3){
-              if (odd) gp_gemsh_odd[1] = keygp;
-              else gp_gemsh_even[1] = keygp;
-              if (odd) etrk_[1].eta_gemsh_odd = keygp.eta();
-              else     etrk_[1].eta_gemsh_even = keygp.eta();
-              if (odd) etrk_[1].phi_gemsh_odd = keygp.phi();
-              else     etrk_[1].phi_gemsh_even = keygp.phi();
-              if (odd) etrk_[1].ptphi_gemsh_odd = keygv.phi();
-              else     etrk_[1].ptphi_gemsh_even = keygv.phi();
-              if (odd) etrk_[1].perp_gemsh_odd = keygp.perp();
-              else     etrk_[1].perp_gemsh_even = keygp.perp();
-              if (odd) etrk_[1].centralperp_gemsh_odd = centralperp_gemsh;
-              else     etrk_[1].centralperp_gemsh_even = centralperp_gemsh;
-              if (odd and etrk_[1].phi_cscsh_odd>-9) etrk_[1].dphi_sh_odd = deltaPhi(etrk_[1].phi_cscsh_odd,float(keygp.phi()));
-              else if (etrk_[1].phi_cscsh_even>-9)     etrk_[1].dphi_sh_even = deltaPhi(etrk_[1].phi_cscsh_even,float(keygp.phi()));
-              if (odd) etrk_[1].phiM_gemcsc_odd = phi_m;
-              else etrk_[1].phiM_gemcsc_even = phi_m;
-              if (odd) etrk_[1].dphipositionpt_gemsh_odd = deltaPhi(float(keygp.phi()),etrk_[1].ptphi_sh_odd);
-              else etrk_[1].dphipositionpt_gemsh_even = deltaPhi(float(keygp.phi()),etrk_[1].ptphi_sh_even);
-            }
-            //std::cout <<"dphi(GEM, CSC) at sim "<<(odd? etrk_[st].dphi_sh_odd:etrk_[st].dphi_sh_even) <<" phi_csc "<< (odd? etrk_[st_csc].phi_cscsh_odd:etrk_[st_csc].phi_cscsh_even) <<" phi_gp "<< keygp.phi()<< std::endl;
-            if (id_tmp.layer()==1) break;
-
-          }
-
-          const float mean_strip(match_sh.simHitsMeanStrip(match_sh.hitsInSuperChamber(d)));
-          if (odd) etrk_[st].strip_gemsh_odd = mean_strip;
-          else     etrk_[st].strip_gemsh_even = mean_strip;
-        }
-
-      if (match_sh.nLayersWithHitsInSuperChamber(d) > 1)
-        {
-          //std::cout <<"GEM detid "<< id <<" has at 2 layer hits "<< std::endl;
-          if (odd) etrk_[st].has_gem_sh2 |= 1;
-          else     etrk_[st].has_gem_sh2 |= 2;
-        }
-      const auto& copad_superids (match_sh.superChamberIdsGEMCoincidences());
-      if (copad_superids.find(d) != copad_superids.end()){
-        //std::cout <<"GEM detid "<< id <<" has copad hits "<< std::endl;
-        if (odd) etrk_[st].has_gemcopad_sh |= 1;
-        else     etrk_[st].has_gemcopad_sh |= 2;
-      }
-      //ME11 Case
-      if (st==2 or st==3)
-        {
-          if (odd) etrk_[1].has_gem_sh |= 1;
-          else     etrk_[1].has_gem_sh |= 2;
-
-          const float mean_strip(match_sh.simHitsMeanStrip(match_sh.hitsInSuperChamber(d)));
-          if (odd) etrk_[1].strip_gemsh_odd = mean_strip;
-          else     etrk_[1].strip_gemsh_even = mean_strip;
-
-          if (match_sh.nLayersWithHitsInSuperChamber(d) > 1)
-            {
-              if (odd) etrk_[1].has_gem_sh2 |= 1;
-              else etrk_[1].has_gem_sh2 |= 2;
-
-            }
-          if (copad_superids.find(d) != copad_superids.end()){
-            if (odd) etrk_[1].has_gemcopad_sh |= 1;
-            else     etrk_[1].has_gemcopad_sh |= 2;
-          }
-        }//end of ME11 case
-
-    }
-
-  if (verbose_) std::cout <<"TDRAnalyzer step5 "<< std::endl;
-  // placeholders for best mtching pads
-  GlobalPoint best_pad_odd[12];
-  GlobalPoint best_pad_even[12];
-
-  // GEM digis and pads in superchambers
-  for(const auto& d: match_gd.superChamberIdsDigi())
-    {
-      GEMDetId id(d);
-      int MEStation = id.station();
-
-      const int st(detIdToMEStation(MEStation,id.ring()));
-      if (stations_to_use_.count(st) == 0) continue;
-
-      const bool odd(id.chamber()%2==1);
-      if (match_gd.nLayersWithDigisInSuperChamber(d) > 1)
-        {
-          if (odd) etrk_[st].has_gem_dg2 |= 1;
-          else     etrk_[st].has_gem_dg2 |= 2;
-        }
-
-      const auto& digis = match_gd.digisInSuperChamber(d);
-      const int median_strip(match_gd.median(digis));
-      if (odd && digis.size() > 0)
-        {
-          etrk_[st].has_gem_dg |= 1;
-          etrk_[st].strip_gemdg_odd = median_strip;
-        }
-      else if (digis.size() > 0)
-        {
-          etrk_[st].has_gem_dg |= 2;
-          etrk_[st].strip_gemdg_even = median_strip;
-        }
-
-      if (match_gd.nLayersWithPadsInSuperChamber(d) > 1)
-        {
-          if (odd) etrk_[st].has_gem_pad2 |= 1;
-          else     etrk_[st].has_gem_pad2 |= 2;
-        }
-      for (int layer=1; layer<3; layer++){
-        GEMDetId id_tmp(id.region(), id.ring(), id.station(), layer, id.chamber(), 0);
-        const auto& pads = match_gd.padsInChamber(id_tmp.rawId());
-        if(pads.size() == 0) continue;
-
-        const GlobalPoint& keygp = match_sh.simHitsMeanPosition(match_sh.hitsInChamber(id_tmp.rawId()));
-        const auto& bestgem_dg_and_gp = match_gd.digiInGEMClosestToCSC(pads, keygp);
-        if (odd)
-          {
-            best_pad_odd[st] = bestgem_dg_and_gp.second;
-            etrk_[st].has_gem_pad |= 1;
-            etrk_[st].chamber_lct_odd = id.chamber();
-            etrk_[st].pad_odd = digi_channel(bestgem_dg_and_gp.first);
-            etrk_[st].hsfromgem_odd = match_gd.extrapolateHsfromGEMPad( d, digi_channel(bestgem_dg_and_gp.first));
-            etrk_[st].z_pad_odd = best_pad_odd[st].z();
-            etrk_[st].phi_pad_odd = best_pad_odd[st].phi();
-            etrk_[st].eta_pad_odd = best_pad_odd[st].eta();
-            //question: ME1a is not included here
-            if (is_valid(lct_odd[st]))
-              {
-                const auto& gem_dg_and_gp = match_gd.digiInGEMClosestToCSC(pads, gp_lct_odd[st]);
-                best_pad_odd[st] = gem_dg_and_gp.second;
-                etrk_[st].bx_pad_odd = digi_bx(gem_dg_and_gp.first);
-                etrk_[st].dphi_pad_odd = deltaPhi(etrk_[st].phi_lct_odd, etrk_[st].phi_pad_odd);
-                etrk_[st].dphi_pad_fit_odd = deltaPhi(etrk_[st].phi_layer3_fit_odd, etrk_[st].phi_pad_odd);
-                etrk_[st].deta_pad_odd = etrk_[st].eta_lct_odd - etrk_[st].eta_pad_odd;
-              }
-          }
-        else
-          {
-            best_pad_even[st] = bestgem_dg_and_gp.second;
-            etrk_[st].has_gem_pad |= 2;
-            etrk_[st].pad_even = digi_channel(bestgem_dg_and_gp.first);
-            etrk_[st].hsfromgem_even = match_gd.extrapolateHsfromGEMPad( d, digi_channel(bestgem_dg_and_gp.first));
-            etrk_[st].z_pad_even = best_pad_even[st].z();
-            etrk_[st].phi_pad_even = best_pad_even[st].phi();
-            etrk_[st].eta_pad_even = best_pad_even[st].eta();
-            if (is_valid(lct_even[st]))
-              {
-                const auto& gem_dg_and_gp = match_gd.digiInGEMClosestToCSC(pads, gp_lct_even[st]);
-                best_pad_even[st] = gem_dg_and_gp.second;
-                etrk_[st].bx_pad_even = digi_bx(gem_dg_and_gp.first);
-                etrk_[st].dphi_pad_even = deltaPhi(etrk_[st].phi_lct_even, etrk_[st].phi_pad_even);
-                etrk_[st].dphi_pad_fit_even = deltaPhi(etrk_[st].phi_layer3_fit_even, etrk_[st].phi_pad_even);
-                //std::cout <<"GEMid "<< id << std::endl;
-                //std::cout <<"GEM sim phi "<< keygp.phi() <<" pad phi "<< etrk_[st].phi_pad_even <<" phi_lct "<< etrk_[st].phi_lct_even <<" phi_fit_lct "<< etrk_[st].phi_layer3_fit_even <<" dist(GEM, CSC) " <<  fabs(etrk_[st].z_layer3_fit_even - etrk_[st].z_pad_even)<< std::endl;
-                etrk_[st].deta_pad_even = etrk_[st].eta_lct_even - etrk_[st].eta_pad_even;
-              }
-          }
-        if (id_tmp.layer()==1) break;
-      }
-    }
-
-  //ME11Case
-  for(const auto& d: match_gd.superChamberIdsDigi())
-    {
-      GEMDetId id(d);
-      int MEStation = id.station();
-
-      const int stations(detIdToMEStation(MEStation,id.ring()));
-      int st;
-      if (stations==2 or stations==3) st=1;//ME1a,ME1b->ME11
-      else continue;
-
-      if (stations_to_use_.count(st) == 0) continue;
-
-      const bool odd(id.chamber()%2==1);
-      if (match_gd.nLayersWithDigisInSuperChamber(d) > 1)
-        {
-          if (odd) etrk_[st].has_gem_dg2 |= 1;
-          else     etrk_[st].has_gem_dg2 |= 2;
-        }
-
-      const auto& digis = match_gd.digisInSuperChamber(d);
-      const int median_strip(match_gd.median(digis));
-      if (odd && digis.size() > 0)
-        {
-          etrk_[st].has_gem_dg |= 1;
-          etrk_[st].strip_gemdg_odd = median_strip;
-        }
-      else if (digis.size() > 0)
-        {
-          etrk_[st].has_gem_dg |= 2;
-          etrk_[st].strip_gemdg_even = median_strip;
-        }
-
-      if (match_gd.nLayersWithPadsInSuperChamber(d) > 1)
-        {
-          if (odd) etrk_[st].has_gem_pad2 |= 1;
-          else     etrk_[st].has_gem_pad2 |= 2;
-        }
-
-      for (int layer=1; layer<3; layer++){
-        GEMDetId id_tmp(id.region(), id.ring(), id.station(), layer, id.chamber(), 0);
-        const auto& pads = match_gd.padsInChamber(id_tmp.rawId());
-        if(pads.size() == 0) continue;
-        const GlobalPoint& keygp = match_sh.simHitsMeanPosition(match_sh.hitsInChamber(id_tmp.rawId()));
-        const auto& bestgem_dg_and_gp = match_gd.digiInGEMClosestToCSC(pads, keygp);
-
-        if (odd)
-          {
-            best_pad_odd[st] = bestgem_dg_and_gp.second;
-            etrk_[st].has_gem_pad |= 1;
-            etrk_[st].pad_odd = digi_channel(bestgem_dg_and_gp.first);
-            etrk_[st].hsfromgem_odd = match_gd.extrapolateHsfromGEMPad( d, digi_channel(bestgem_dg_and_gp.first));
-            etrk_[st].phi_pad_odd = best_pad_odd[st].phi();
-            etrk_[st].eta_pad_odd = best_pad_odd[st].eta();
-            if (is_valid(lct_odd[st]))
-              {
-                const auto& gem_dg_and_gp = match_gd.digiInGEMClosestToCSC(pads, gp_lct_odd[st]);
-                best_pad_odd[st] = gem_dg_and_gp.second;
-                etrk_[st].bx_pad_odd = digi_bx(gem_dg_and_gp.first);
-                etrk_[st].dphi_pad_odd = deltaPhi(etrk_[st].phi_lct_odd, etrk_[st].phi_pad_odd);
-                etrk_[st].dphi_pad_fit_odd = deltaPhi(etrk_[st].phi_layer3_fit_odd, etrk_[st].phi_pad_odd);
-                etrk_[st].deta_pad_odd = etrk_[st].eta_lct_odd - etrk_[st].eta_pad_odd;
-              }
-          }
-        else
-          {
-            best_pad_even[st] = bestgem_dg_and_gp.second;
-            etrk_[st].has_gem_pad |= 2;
-            etrk_[st].pad_even = digi_channel(bestgem_dg_and_gp.first);
-            etrk_[st].hsfromgem_even = match_gd.extrapolateHsfromGEMPad( d, digi_channel(bestgem_dg_and_gp.first));
-            etrk_[st].phi_pad_even = best_pad_even[st].phi();
-            etrk_[st].eta_pad_even = best_pad_even[st].eta();
-            if (is_valid(lct_even[st]))
-              {
-                const auto& gem_dg_and_gp = match_gd.digiInGEMClosestToCSC(pads, gp_lct_even[st]);
-                best_pad_even[st] = gem_dg_and_gp.second;
-                etrk_[st].bx_pad_even = digi_bx(gem_dg_and_gp.first);
-                etrk_[st].dphi_pad_even = deltaPhi(etrk_[st].phi_lct_even, etrk_[st].phi_pad_even);
-                etrk_[st].dphi_pad_fit_even = deltaPhi(etrk_[st].phi_layer3_fit_even, etrk_[st].phi_pad_even);
-                etrk_[st].deta_pad_even = etrk_[st].eta_lct_even - etrk_[st].eta_pad_even;
-              }
-          }
-        if (id_tmp.layer()==1) break;
-      }
-    }
-
-  if (verbose_) std::cout <<"TDRAnalyzer step6 "<< std::endl;
-  for(const auto& d: match_gd.superChamberIdsCoPad())
-    {
-      GEMDetId id(d);
-      int MEStation = id.station();
-
-      const int st(detIdToMEStation(MEStation,id.ring()));
-      if (stations_to_use_.count(st) == 0) continue;
-
-      const bool odd(id.chamber()%2==1);
-      if (odd) etrk_[st].has_gem_copad |= 1;
-      else     etrk_[st].has_gem_copad |= 2;
-
-      const auto& copads = match_gd.coPadsInSuperChamber(d);
-      if (copads.size() == 0) continue;
-      if (odd) etrk_[st].Copad_odd = digi_channel(copads.at(0));
-      else etrk_[st].Copad_even = digi_channel(copads.at(0));
-      if (verbose_) std::cout <<"Matching GEMCopad detid "<< id <<" size "<< copads.size() << std::endl;
-
-      if (st==2 or st==3)
-        {
-          if (odd) etrk_[1].has_gem_copad |= 1;
-          else     etrk_[1].has_gem_copad |= 2;
-
-          const auto& copads = match_gd.coPadsInSuperChamber(d);
-          if (copads.size() == 0) continue;
-          if (odd) etrk_[1].Copad_odd = digi_channel(copads.at(0));
-          else etrk_[1].Copad_even = digi_channel(copads.at(0));
-        }
-    }
 
  if (verbose_) std::cout <<"TDRAnalyzer step10 "<< std::endl;
  for (const auto& s: stations_to_use_)
