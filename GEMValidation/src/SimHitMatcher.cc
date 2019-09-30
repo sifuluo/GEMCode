@@ -86,7 +86,11 @@ SimHitMatcher::SimHitMatcher(const SimTrack& t,
       edm::PSimHitContainer csc_hits_select;
       for (const auto& h: *csc_hits.product()) {
         const CSCDetId& id(h.detUnitId());
-        if (useCSCChamberType(gemvalidation::toCSCType(id.station(), id.ring()))) csc_hits_select.push_back(h);
+        // std::cout << "Checking  CSC hit from chamber " << id << std::endl;
+        // if (useCSCChamberType(gemvalidation::toCSCType(id.station(), id.ring()))) {
+        // std::cout << "Adding CSC hit from chamber " << id << std::endl;
+        csc_hits_select.push_back(h);
+          // }
       }
 
       if(runCSCSimHit_) {

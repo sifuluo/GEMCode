@@ -839,11 +839,13 @@ TDRAnalyzer::TDRAnalyzer(const edm::ParameterSet& ps)
 
   cscStationsCo_.push_back(std::make_pair(2,1));
   cscStationsCo_.push_back(std::make_pair(2,2));
-  cscStationsCo_.push_back(std::make_pair(3,1));
 
+  cscStationsCo_.push_back(std::make_pair(3,1));
   cscStationsCo_.push_back(std::make_pair(3,2));
+
   cscStationsCo_.push_back(std::make_pair(4,1));
   cscStationsCo_.push_back(std::make_pair(4,2));
+
   cscStationsCo_.push_back(std::make_pair(0,1));
 }
 
@@ -986,24 +988,19 @@ void TDRAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
   int chargesign = (t.charge()>0? 1:0);
   float pt = t.momentum().pt();
   // SimHits
-  const auto& csc_simhits(match_sh.chamberIdsCSC(0));
   GlobalPoint gp_sh_odd[NumOfTrees];
   GlobalPoint gp_sh_even[NumOfTrees];
   GlobalVector gv_sh_odd[NumOfTrees];
   GlobalVector gv_sh_even[NumOfTrees];
+  const auto& csc_simhits(match_sh.chamberIdsCSC(0));
   for(const auto& d: csc_simhits)
     {
-
       CSCDetId id(d);
 
       const int st(detIdToMEStation(id.station(),id.ring()));
       if (stations_to_use_.count(st) == 0) continue;
 
       int nlayers(match_sh.nLayersWithHitsInSuperChamber(d));
-      if (id.station() == 1 and id.chamber()%2 == 1) etrk_[0].chamber_ME1_csc_sh |= 1;
-      if (id.station() == 1 and id.chamber()%2 == 0) etrk_[0].chamber_ME1_csc_sh |= 2;
-      if (id.station() == 2 and id.chamber()%2 == 1) etrk_[0].chamber_ME2_csc_sh |= 1;
-      if (id.station() == 2 and id.chamber()%2 == 0) etrk_[0].chamber_ME2_csc_sh |= 2;
 
       // case ME11
       if (id.station()==1 and (id.ring()==4 or id.ring()==1)){
@@ -1011,30 +1008,32 @@ void TDRAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
         int other_ring(id.ring()==4 ? 1 : 4);
         CSCDetId co_id(id.endcap(), id.station(), other_ring, id.chamber());
         // check if co_id occurs in the list
-        // add the hit layers
         const auto& rawId(co_id.rawId());
         if (csc_simhits.find(rawId) != csc_simhits.end()) {
-          nlayers = nlayers+match_sh.nLayersWithHitsInSuperChamber(rawId);
+          nlayers += match_sh.nLayersWithHitsInSuperChamber(rawId);
         }
       }
-      std::cout << "CSC chamber " << id << " nlayer " << nlayers << std::endl;
-      if (nlayers < minNHitsChamberCSCSimHit_) continue;
-
       const bool odd(id.chamber()%2==1);
       if (odd) etrk_[st].chamber_sh_odd = id.chamber();
       else etrk_[st].chamber_sh_even = id.chamber();
+
       if (odd) etrk_[st].nlayers_csc_sh_odd = nlayers;
       else etrk_[st].nlayers_csc_sh_even = nlayers;
 
       const GlobalPoint& keygp(match_sh.simHitPositionKeyLayer(id));
+
       if (odd) gp_sh_odd[st] = keygp;
       else gp_sh_even[st] = keygp;
+
       if (odd) etrk_[st].eta_cscsh_odd = keygp.eta();
       else     etrk_[st].eta_cscsh_even = keygp.eta();
+
       if (odd) etrk_[st].phi_cscsh_odd = keygp.phi();
       else     etrk_[st].phi_cscsh_even = keygp.phi();
+
       if (odd) etrk_[st].perp_cscsh_odd = keygp.perp();
       else     etrk_[st].perp_cscsh_even = keygp.perp();
+
       if (odd) etrk_[st].has_csc_sh |= 1;
       else etrk_[st].has_csc_sh |= 2;
 
@@ -1048,8 +1047,20 @@ void TDRAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
       const int st(detIdToMEStation(id.station(),id.ring()));
       if (stations_to_use_.count(st) == 0) continue;
 
-      const int nlayers(match_cd.nLayersWithStripInChamber(d));
-      //std::cout <<"CSC strip digi, CSCid "<< id <<" nlayer "<< nlayers << std::endl;
+      int nlayers(match_cd.nLayersWithStripInChamber(d));
+      std::cout <<"CSC strip digi, CSCid "<< id <<" nlayer "<< nlayers << std::endl;
+
+      // case ME11
+      if (id.station()==1 and (id.ring()==4 or id.ring()==1)){
+        // get the detId of the pairing subchamber
+        int other_ring(id.ring()==4 ? 1 : 4);
+        CSCDetId co_id(id.endcap(), id.station(), other_ring, id.chamber());
+        // check if co_id occurs in the list
+        // add the hit layers
+        const auto& rawId(co_id.rawId());
+        nlayers += match_cd.nLayersWithStripInChamber(rawId);
+      }
+
       if (nlayers < minNHitsChamberCSCStripDigi_) continue;
 
       const bool odd(id.chamber()%2==1);
@@ -1067,8 +1078,20 @@ void TDRAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
       const int st(detIdToMEStation(id.station(),id.ring()));
       if (stations_to_use_.count(st) == 0) continue;
 
-      const int nlayers(match_cd.nLayersWithWireInChamber(d));
-      //std::cout <<"CSC wire digi, CSCid "<< id <<" nlayer "<< nlayers << std::endl;
+      int nlayers(match_cd.nLayersWithWireInChamber(d));
+
+      // case ME11
+      if (id.station()==1 and (id.ring()==4 or id.ring()==1)){
+        // get the detId of the pairing subchamber
+        int other_ring(id.ring()==4 ? 1 : 4);
+        CSCDetId co_id(id.endcap(), id.station(), other_ring, id.chamber());
+        // check if co_id occurs in the list
+        // add the hit layers
+        const auto& rawId(co_id.rawId());
+        nlayers += match_cd.nLayersWithWireInChamber(rawId);
+      }
+
+      std::cout <<"CSC wire digi, CSCid "<< id <<" nlayer "<< nlayers << std::endl;
       if (nlayers < minNHitsChamberCSCWireDigi_) continue;
 
       const bool odd(id.chamber()%2==1);

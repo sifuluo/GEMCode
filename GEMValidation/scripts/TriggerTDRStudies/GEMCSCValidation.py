@@ -4,6 +4,7 @@ from Helpers import drawCscLabel
 from Helpers import drawEtaLabel
 from Helpers import drawPuLabel
 from Helpers import draw_geff
+from Helpers import newCanvas
 import tdrstyle
 import CMS_lumi
 
@@ -17,63 +18,48 @@ CMS_lumi.lumi_sqrtS = "14 TeV"
 iPos = 0
 if( iPos==0 ): CMS_lumi.relPosX = 0.12
 
-
-
 #_______________________________________________________________________________
-def simTrackToCscSimHitMatching(plotter,st=1):
+def makeEfficiencyPlot(plotter, st, nBins, denom_cut, extra_num_cut):
 
-    ok_eta = TCut("TMath::Abs(eta)>%f && TMath::Abs(eta)<%f"%(plotter.etaMin,plotter.etaMax))
-
-    ## variables for the plo
-    #topTitle = " " * 11 + "CMS Simulation Preliminary" + " " * 35 + "14 TeV, PU0"
-    xTitle = "True muon #eta"
+    index = plotter.stationsToUse.index(st)
+    minEta = plotter.stationEtaLimits[index][0]
+    maxEta = plotter.stationEtaLimits[index][1]
+    ok_eta = TCut("TMath::Abs(eta)>%f && TMath::Abs(eta)<%f"%(minEta,maxEta))
+    xTitle = "True muon |#eta|"
     yTitle = "Efficiency"
-    #title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
+    title = ";%s;%s"%(xTitle,yTitle)
     toPlot = "TMath::Abs(eta)"
-    h_bins = "(25,%f,%f)"%(plotter.etaMin,plotter.etaMax)
+    h_bins = "(25,%f,%f)"%(minEta,maxEta)
     nBins = int(h_bins[1:-1].split(',')[0])
     minBin = float(h_bins[1:-1].split(',')[1])
     maxBin = float(h_bins[1:-1].split(',')[2])
 
-    H_ref = 600;
-    W_ref = 800;
-    W = W_ref
-    H  = H_ref
-
-    # references for T, B, L, R
-    T = 0.08*H_ref
-    B = 0.12*H_ref
-    L = 0.12*W_ref
-    R = 0.04*W_ref
-
-    c = TCanvas("c","c",50,50,800,600)
-    c.Clear()
-    c.SetLeftMargin( L/W )
-    c.SetRightMargin( R/W )
-    c.SetTopMargin( T/H )
-    c.SetBottomMargin( B/H )
-    base = TH1F("base","",nBins,minBin,maxBin)
-    base.SetMinimum(plotter.yMin)
+    c = newCanvas()
+    base = TH1F("base",title,nBins,minBin,maxBin)
+    base.SetMinimum(0)
     base.SetMaximum(plotter.yMax)
+    base.GetYaxis().SetTitleOffset(0.9)
     base.Draw("")
     CMS_lumi.CMS_lumi(c, iPeriod, iPos)
 
-    index = plotter.stationsToUse.index(st)
+    h1 = draw_geff(plotter.treeEffSt[index], title, h_bins, toPlot, ok_eta, ok_sh1, "same")
 
-    h1 = draw_geff(plotter.treeEffSt[index], "", h_bins, toPlot, nocut, ok_sh1, "same")
-    """
     leg = TLegend(0.45,0.2,.75,0.35, "", "brNDC")
     leg.SetBorderSize(0)
     leg.SetFillStyle(0)
-    leg.SetTextSize(0.06)
-    leg.AddEntry(h1, "SimHits","l")
+    leg.SetTextSize(0.05)
+    leg.AddEntry(h1, "SimHits","pl")
     leg.Draw("same")
-    """
-    #    csc = drawCscLabel(plotter.stations.reverse_mapping[st], 0.17,0.17,0.05)
-    #pul = drawPuLabel(plotter.pu,0.17,0.17,0.05)
-    #    tex = drawEtaLabel(plotter.etaMin,plotter.etaMax,0.2,0.8,0.05)
 
-    c.SaveAs("%scsc_simhit_matching_efficiency_%s%s"%(plotter.targetDir, plotter.stations.reverse_mapping[st], plotter.ext))
+    csc = drawCscLabel(plotter.stationsS.reverse_mapping[st])
+    c.SaveAs("%scsc_simhit_matching_efficiency_%s.C"%(plotter.targetDir, plotter.stations.reverse_mapping[st]))
+    c.SaveAs("%scsc_simhit_matching_efficiency_%s.pdf"%(plotter.targetDir, plotter.stations.reverse_mapping[st]))
+    c.SaveAs("%scsc_simhit_matching_efficiency_%s.png"%(plotter.targetDir, plotter.stations.reverse_mapping[st]))
+
+
+def simTrackToCscSimHitMatching(plotter,st):
+    makeEfficiencyPlot(plotter, st, 25, ok_eta, ok_sh1)
+
 
 #_______________________________________________________________________________
 def simTrackToCscStripsWiresMatching(plotter,st=1):
@@ -97,11 +83,11 @@ def simTrackToCscStripsWiresMatching(plotter,st=1):
 
     ## variables for the plot
     topTitle = " " * 11 + "CMS Simulation Preliminary" + " " * 35 + "14 TeV, PU0"
-    xTitle = "True muon #eta"
+    xTitle = "True muon |#eta|"
     yTitle = "Efficiency"
     title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
     toPlot = "TMath::Abs(eta)"
-    h_bins = "(100,%f,%f)"%(plotter.etaMin,plotter.etaMax)
+    h_bins = "(25,%f,%f)"%(plotter.etaMin,plotter.etaMax)
     nBins = int(h_bins[1:-1].split(',')[0])
     minBin = float(h_bins[1:-1].split(',')[1])
     maxBin = float(h_bins[1:-1].split(',')[2])
@@ -161,11 +147,11 @@ def simTrackToCscStripsWiresMatching_2(plotter,st=1):
 
     ## variables for the plot
     topTitle = " " * 11 + "CMS Simulation Preliminary" + " " * 35 + "14 TeV, PU0"
-    xTitle = "True muon #eta"
+    xTitle = "True muon |#eta|"
     yTitle = "Efficiency"
     title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
     toPlot = "TMath::Abs(eta)"
-    h_bins = "(100,%f,%f)"%(plotter.etaMin,plotter.etaMax)
+    h_bins = "(25,%f,%f)"%(plotter.etaMin,plotter.etaMax)
     nBins = int(h_bins[1:-1].split(',')[0])
     minBin = float(h_bins[1:-1].split(',')[1])
     maxBin = float(h_bins[1:-1].split(',')[2])
@@ -224,11 +210,11 @@ def simTrackToCscAlctClctMatching(plotter,st=1):
 
     ## variables for the plot
     topTitle = " " * 11 + "CMS Simulation Preliminary" + " " * 35 + "14 TeV, PU0"
-    xTitle = "True muon #eta"
+    xTitle = "True muon |#eta|"
     yTitle = "Efficiency"
     title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
     toPlot = "TMath::Abs(eta)"
-    h_bins = "(100,%f,%f)"%(plotter.etaMin,plotter.etaMax)
+    h_bins = "(25,%f,%f)"%(plotter.etaMin,plotter.etaMax)
     nBins = int(h_bins[1:-1].split(',')[0])
     minBin = float(h_bins[1:-1].split(',')[1])
     maxBin = float(h_bins[1:-1].split(',')[2])
@@ -291,11 +277,11 @@ def simTrackToCscAlctClctMatching_2(plotter,st=1):
 
     ## variables for the plot
     topTitle = " " * 11 + "CMS Simulation Preliminary" + " " * 35 + "14 TeV, PU0"
-    xTitle = "True muon #eta"
+    xTitle = "True muon |#eta|"
     yTitle = "Efficiency"
     title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
     toPlot = "TMath::Abs(eta)"
-    h_bins = "(100,%f,%f)"%(plotter.etaMin,plotter.etaMax)
+    h_bins = "(25,%f,%f)"%(plotter.etaMin,plotter.etaMax)
     nBins = int(h_bins[1:-1].split(',')[0])
     minBin = float(h_bins[1:-1].split(',')[1])
     maxBin = float(h_bins[1:-1].split(',')[2])
@@ -358,11 +344,11 @@ def simTrackToCscLctMatching(plotter,st=1):
 
     ## variables for the plot
     topTitle = " " * 11 + "CMS Simulation Preliminary" + " " * 35 + "14 TeV, PU0"
-    xTitle = "True muon #eta"
+    xTitle = "True muon |#eta|"
     yTitle = "Efficiency"
     title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
     toPlot = "TMath::Abs(eta)"
-    h_bins = "(50,%f,%f)"%(plotter.etaMin,plotter.etaMax)
+    h_bins = "(25,%f,%f)"%(plotter.etaMin,plotter.etaMax)
     nBins = int(h_bins[1:-1].split(',')[0])
     minBin = float(h_bins[1:-1].split(',')[1])
     maxBin = float(h_bins[1:-1].split(',')[2])
@@ -388,21 +374,35 @@ def simTrackToCscLctMatching(plotter,st=1):
     else:
     """
 
-    h1 = draw_geff(plotter.treeEffSt[index], title, h_bins, toPlot, AND(ok_sh1,ok_st1,ok_w1,OR(ok_alct1, ok_clct1)), AND(ok_lct1,TCut("lct_type==0")), "same", kRed)
-    h2 = draw_geff(plotter.treeEffSt[index], title, h_bins, toPlot, AND(ok_sh1,ok_st1,ok_w1,OR(ok_alct1, ok_clct1)), AND(ok_lct1), "same", kBlue)
+    h1 = draw_geff(plotter.treeEffSt[index], title, h_bins, toPlot, ok_sh1, AND(ok_lct1), "same", kBlue)
+#    h9 = draw_geff(plotter.treeEffSt[index], title, h_bins, toPlot, ok_sh1, AND(ok_lct1,TCut("lct_type<1 && lct_type!=-1")), "same", kGreen+4)
+    h8 = draw_geff(plotter.treeEffSt[index], title, h_bins, toPlot, ok_sh1, AND(ok_lct1,TCut("lct_type<2 && lct_type!=-1")), "same", kGreen+2)
+    h7 = draw_geff(plotter.treeEffSt[index], title, h_bins, toPlot, ok_sh1, AND(ok_lct1,TCut("lct_type<3 && lct_type!=-1")), "same", kOrange+2)
+#    h6 = draw_geff(plotter.treeEffSt[index], title, h_bins, toPlot, ok_sh1, AND(ok_lct1,TCut("lct_type<4 && lct_type!=-1")), "same", kMagenta+2)
+    h5 = draw_geff(plotter.treeEffSt[index], title, h_bins, toPlot, ok_sh1, AND(ok_lct1,TCut("lct_type<5 && lct_type!=-1")), "same", kMagenta)
+#    h4 = draw_geff(plotter.treeEffSt[index], title, h_bins, toPlot, ok_sh1, AND(ok_lct1,TCut("lct_type<6 && lct_type!=-1")), "same", kOrange)
+#    h3 = draw_geff(plotter.treeEffSt[index], title, h_bins, toPlot, ok_sh1, AND(ok_lct1,TCut("lct_type<7 && lct_type!=-1")), "same", kGreen)
+    h2 = draw_geff(plotter.treeEffSt[index], title, h_bins, toPlot, ok_sh1, AND(ok_lct1,TCut("lct_type<8 && lct_type!=-1")), "same", kRed)
 
-    leg = TLegend(0.10,0.2,.75,0.35, "", "brNDC");
+    leg = TLegend(0.10,0.6,.75,0.35, "", "brNDC");
     leg.SetBorderSize(0)
     leg.SetFillStyle(0)
     leg.SetTextSize(0.04)
-    """
-    if plotter.matchAlctGem:
-    leg.AddEntry(h1, "LCT matched to ALCT and (CLCT or GEM)","l")
-    leg.AddEntry(h2, "LCT","l")
-    """
+
+    leg.AddEntry(h1, "LCT all","l")
+
+    leg.AddEntry(h2, "LCT<8","l")
+    #leg.AddEntry(h3, "LCT<7","l")
+    #leg.AddEntry(h4, "LCT<6","l")
+    leg.AddEntry(h5, "LCT<5","l")
+    #leg.AddEntry(h6, "LCT<4","l")
+    leg.AddEntry(h7, "LCT<3","l")
+    leg.AddEntry(h8, "LCT<2","l")
+    #leg.AddEntry(h9, "LCT<1","l")
+
     #else:
-    leg.AddEntry(h1, "LCT 0","l")
-    leg.AddEntry(h2, "LCT >=0","l")
+#    leg.AddEntry(h1, "LCT 0","l")
+#    leg.AddEntry(h2, "LCT >=0","l")
     leg.Draw("same");
 
     #csc = drawCscLabel(plotter.stations.reverse_mapping[st], 0.17,0.17,0.05)
@@ -433,11 +433,11 @@ def simTrackToCscMpLctMatching(plotter,st=1):
 
     ## variables for the plot
     topTitle = " " * 11 + "CMS Simulation Preliminary" + " " * 35 + "14 TeV, PU0"
-    xTitle = "True muon #eta"
+    xTitle = "True muon |#eta|"
     yTitle = "Efficiency"
     title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
     toPlot = "TMath::Abs(eta)"
-    h_bins = "(100,%f,%f)"%(plotter.etaMin,plotter.etaMax)
+    h_bins = "(25,%f,%f)"%(plotter.etaMin,plotter.etaMax)
     nBins = int(h_bins[1:-1].split(',')[0])
     minBin = float(h_bins[1:-1].split(',')[1])
     maxBin = float(h_bins[1:-1].split(',')[2])

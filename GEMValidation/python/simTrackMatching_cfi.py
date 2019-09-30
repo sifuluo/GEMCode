@@ -32,13 +32,13 @@ SimTrackMatching = cms.PSet(
     ntupleTrackEff = cms.bool(True),
     overrideminNHitsChamber = cms.bool(False),
     minNHitsChamber = cms.untracked.int32(4),
-    verbose = cms.bool(False),
+    verbose = cms.bool(True),
 
     ## per collection params
     displacedGenMu = cms.PSet(
 	inputTag = cms.InputTag("genParticles"),
 	verbose = cms.int32(0),
-	run = cms.bool(True),
+	run = cms.bool(False),
 	sampleType = cms.int32(1),
     ),
     displacedMuPtAssignment = cms.PSet(
@@ -52,11 +52,11 @@ SimTrackMatching = cms.PSet(
         inputTag = cms.InputTag("g4SimHits"),
     ),
     simTrack = cms.PSet(
-        verbose = cms.int32(0),
+        verbose = cms.int32(1),
         inputTag = cms.InputTag("g4SimHits"),
         minPt = cms.double(1.5),
         maxPt = cms.double(999.),
-        minEta = cms.double(0.0),
+        minEta = cms.double(1.2),
         maxEta = cms.double(2.4),
         onlyMuon = cms.bool(False),
         requireVertex = cms.bool(True),
@@ -181,7 +181,7 @@ SimTrackMatching = cms.PSet(
         verbose = cms.int32(0),
         inputTag = cms.InputTag("simMuonCSCDigis", "MuonCSCComparatorDigi"),
         run = cms.bool(True),
-        minBX = cms.int32(5),
+        minBX = cms.int32(4),
         maxBX = cms.int32(11),
         matchDeltaStrip = cms.int32(2),
         minNHitsChamber = cms.int32(4),
@@ -298,7 +298,7 @@ SimTrackMatching = cms.PSet(
     ## TrackFinder tracks
     upgradeEmtfTrack = cms.PSet(
         verbose = cms.int32(0),
-        run = cms.bool(True),
+        run = cms.bool(False),
         inputTag = cms.InputTag("simEmtfDigis"),
         minBX = cms.int32(0),
         maxBX = cms.int32(0),
@@ -306,7 +306,7 @@ SimTrackMatching = cms.PSet(
     ),
     upgradeEmtfCand = cms.PSet(
         verbose = cms.int32(0),
-        run = cms.bool(True),
+        run = cms.bool(False),
         inputTag = cms.InputTag("simEmtfDigis","EMTF"),
         minBX = cms.int32(0),
         maxBX = cms.int32(0),
@@ -314,7 +314,7 @@ SimTrackMatching = cms.PSet(
     ),
     upgradeGMT = cms.PSet(
         verbose = cms.int32(0),
-        run = cms.bool(True),
+        run = cms.bool(False),
         inputTag = cms.InputTag("simGmtStage2Digis"),
         minBX = cms.int32(0),
         maxBX = cms.int32(0),
@@ -322,12 +322,12 @@ SimTrackMatching = cms.PSet(
     ),
 
     l1track = cms.PSet(
-        verbose = cms.int32(1),
+        verbose = cms.int32(0),
         run = cms.bool(True),
         inputTag = cms.InputTag("TTTracksFromTracklet","Level1TTTracks"),
     ),
     l1tkmuon = cms.PSet(
-        verbose = cms.int32(1),
+        verbose = cms.int32(0),
         run = cms.bool(True),
         inputTag = cms.InputTag("L1TkMuons"),
     ),
