@@ -1,7 +1,7 @@
-void csc_simhit_matching_efficiency_CSC_ME31()
+void Eff_CSC_ME31_SimHit()
 {
 //=========Macro generated from canvas: c/c
-//=========  (Sun Sep 29 19:22:49 2019) by ROOT version 6.14/09
+//=========  (Sun Sep 29 19:53:26 2019) by ROOT version 6.14/09
    TCanvas *c = new TCanvas("c", "c",0,0,800,600);
    gStyle->SetOptFit(1);
    gStyle->SetOptStat(0);

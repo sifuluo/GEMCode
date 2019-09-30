@@ -28,7 +28,7 @@ def AND(*arg):
         print "ERROR: invalid number of arguments"
         return
     if length == 1:
-        return arg[0] 
+        return arg[0]
     if length==2:
         return ANDtwo(arg[0],arg[1])
     if length>2:
@@ -39,14 +39,14 @@ def AND(*arg):
 
 
 #_______________________________________________________________________________
-def OR(*arg): 
+def OR(*arg):
     """OR of any number of TCuts in PyROOT"""
     length = len(arg)
     if length == 0:
         print "ERROR: invalid number of arguments"
         return
     if length == 1:
-        return arg[0] 
+        return arg[0]
     if length==2:
         return ORtwo(arg[0],arg[1])
     if length>2:
@@ -62,7 +62,7 @@ def re(i):
         return TCut("region==1")
     else:
         return TCut("region==-1")
-    
+
 
 #_______________________________________________________________________________
 def la(i):
@@ -135,8 +135,13 @@ ok_st1 = TCut("(has_csc_strips&1) > 0")
 ok_st2 = TCut("(has_csc_strips&2) > 0")
 ok_w1 = TCut("(has_csc_wires&1) > 0")
 ok_w2 = TCut("(has_csc_wires&2) > 0")
+
 ok_digi1 = AND(ok_st1,ok_w1)
 ok_digi2 = AND(ok_st2,ok_w2)
+
+ok_sh = TCut("(has_csc_sh) > 0")
+ok_st = TCut("(has_csc_strips) > 0")
+ok_w = TCut("(has_csc_wires) > 0")
 
 ## CSC stub
 ok_lct1 = TCut("(has_lct&1) > 0")
@@ -145,8 +150,14 @@ ok_alct1 = TCut("(has_alct&1) > 0")
 ok_alct2 = TCut("(has_alct&2) > 0")
 ok_clct1 = TCut("(has_clct&1) > 0")
 ok_clct2 = TCut("(has_clct&2) > 0")
+
+ok_lct = TCut("(has_lct) > 0")
+ok_alct = TCut("(has_alct) > 0")
+ok_clct = TCut("(has_clct) > 0")
+
 ok_lct_hs_min = TCut("hs_lct_odd > 4")
 ok_lct_hs_max = TCut("hs_lct_odd < 125")
+
 ok_lct_hs = AND(ok_lct_hs_min,ok_lct_hs_max)
 ok_lcths1 = AND(ok_lct1,ok_lct_hs)
 ok_lcths2 = AND(ok_lct2,ok_lct_hs)

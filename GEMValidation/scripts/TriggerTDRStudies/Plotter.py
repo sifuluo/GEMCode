@@ -1,21 +1,5 @@
 import os
-
-from ROOT import *
-
-## run quiet mode
-import sys
-sys.argv.append( '-b' )
-
 import ROOT
-gROOT.SetBatch(1)
-
-from GEMCSCValidation import simTrackToCscSimHitMatching
-from GEMCSCValidation import simTrackToCscStripsWiresMatching
-from GEMCSCValidation import simTrackToCscStripsWiresMatching_2
-from GEMCSCValidation import simTrackToCscAlctClctMatching
-from GEMCSCValidation import simTrackToCscAlctClctMatching_2
-from GEMCSCValidation import simTrackToCscLctMatching
-from GEMCSCValidation import simTrackToCscMpLctMatching
 
 def enum(*sequential, **named):
   enums = dict(zip(sequential, range(len(sequential))), **named)
@@ -50,20 +34,23 @@ class TriggerTDREfficiencyPlotter():
       [1.5,2.4],
       [1.2,1.7],
       [0.9,1.2],
+
       [1.6,2.4],
       [1.0,1.6],
+
       [1.7,2.4],
       [1.1,1.7],
+
       [1.8,2.4],
       [1.1,1.8]]
-    self.file = TFile.Open(self.inputDir + self.inputFile)
+    self.file = ROOT.TFile.Open(self.inputDir + self.inputFile)
     self.dirAna = (self.file).Get(self.analyzer)
     self.treeEffSt = []
     for x in self.stationsToUse:
       self.treeEffSt.append(self.dirAna.Get(self.effSt + self.stations.reverse_mapping[x]))
     self.yMin = 0.5
     self.yMax = 1.025
-    self.etaMin = 1.2
+    self.etaMin = 0.9
     self.etaMax = 2.4
     self.pu = 0
     self.matchAlctGem = True
