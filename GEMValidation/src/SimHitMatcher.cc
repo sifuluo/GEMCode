@@ -376,7 +376,7 @@ SimHitMatcher::matchGEMSimHitsToSimTrack(std::vector<unsigned int> track_ids, co
     set<int> pads;
     for (const auto& h: hits) {
       const LocalPoint& lp = h.entryPoint();
-      pads.insert( 1 + static_cast<int>(roll->padTopology().channel(lp)) );
+      pads.insert( static_cast<int>(roll->padTopology().channel(lp)) );
     }
     gem_detids_to_pads_[d] = pads;
   }
@@ -395,8 +395,8 @@ SimHitMatcher::matchGEMSimHitsToSimTrack(std::vector<unsigned int> track_ids, co
 
     for (const auto& h: hits1) {
       const LocalPoint& lp = h.entryPoint();
-      pads1.insert( 1 + static_cast<int>(roll1->padTopology().channel(lp)) );
-      if (verboseGEM_) std::cout <<"GEMHits detid1 "<<id1 <<" pad1 "<< 1 + static_cast<int>(roll1->padTopology().channel(lp)) << std::endl;
+      pads1.insert( static_cast<int>(roll1->padTopology().channel(lp)) );
+      if (verboseGEM_) std::cout <<"GEMHits detid1 "<<id1 <<" pad1 "<< static_cast<int>(roll1->padTopology().channel(lp)) << std::endl;
     }
 
     // find pads with hits in layer2
@@ -410,8 +410,8 @@ SimHitMatcher::matchGEMSimHitsToSimTrack(std::vector<unsigned int> track_ids, co
       const auto& roll2 = getGEMGeometry()->etaPartition(id2);
       for (const auto& h: hits2) {
         const LocalPoint& lp = h.entryPoint();
-        pads2.insert( 1 + static_cast<int>(roll2->padTopology().channel(lp)) );
-        if (verboseGEM_) std::cout <<"GEMHits detid2 "<<id2 <<" pad2 "<< 1 + static_cast<int>(roll2->padTopology().channel(lp)) << std::endl;
+        pads2.insert( static_cast<int>(roll2->padTopology().channel(lp)) );
+        if (verboseGEM_) std::cout <<"GEMHits detid2 "<<id2 <<" pad2 "<< static_cast<int>(roll2->padTopology().channel(lp)) << std::endl;
       }
     }
 
@@ -1423,7 +1423,7 @@ SimHitMatcher::hitStripsInDetId(unsigned int detid, int margin_n_strips) const
     for (const auto& h: simhits)
     {
       const LocalPoint& lp = h.entryPoint();
-      int central_strip = 1 + static_cast<int>(getME0Geometry()->etaPartition(id)->topology().channel(lp));
+      int central_strip = static_cast<int>(getME0Geometry()->etaPartition(id)->topology().channel(lp));
       int smin = central_strip - margin_n_strips;
       smin = (smin > 0) ? smin : 1;
       int smax = central_strip + margin_n_strips;
@@ -1455,7 +1455,7 @@ SimHitMatcher::hitStripsInDetId(unsigned int detid, int margin_n_strips) const
         const LocalPoint& lp = h.entryPoint();
         // check how the RPC strip numbers start counting - Ask Piet!!!
         int central_strip = static_cast<int>(roll->topology().channel(lp));
-        // int central_strip2 = 1 + static_cast<int>(getRPCGeometry()->roll(id)->strip(lp));
+        // int central_strip2 = static_cast<int>(getRPCGeometry()->roll(id)->strip(lp));
         // std::cout <<"strip from topology"<< central_strip <<" strip from roll" << central_strip2 <<std::endl;
         int smin = central_strip - margin_n_strips;
         smin = (smin > 0) ? smin : 1;

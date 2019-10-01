@@ -15,7 +15,7 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 process.load('TrackPropagation.SteppingHelixPropagator.SteppingHelixPropagatorOpposite_cfi')
 process.load('TrackPropagation.SteppingHelixPropagator.SteppingHelixPropagatorAlong_cfi')
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-100) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10000) )
 
 process.source = cms.Source(
   "PoolSource",
@@ -88,14 +88,21 @@ matching.cscStationsToUse = cms.vint32(0,1,2,3,4,5,6,7,8)
 matching.l1track.run = cms.bool(False)
 matching.l1tkmuon.run = cms.bool(False)
 matching.upgradeGMT.run = cms.bool(False)
-matching.simTrack.minPt = 10
-matching.simTrack.minEta = 1.2
+matching.simTrack.minPt = 5
+matching.simTrack.minEta = 0.9
 matching.simTrack.maxEta = 2.4
 matching.matchprint = cms.bool(False)
-matching.cscLCT.verbose = 0
+matching.cscStripDigi.verbose = 0
+matching.gemStripDigi.verbose = 1
+matching.gemPadDigi.verbose = 1
+matching.cscLCT.verbose = 1
+matching.cscCLCT.verbose = 1
 matching.cscStations = cms.vstring("CSC_ME11", "CSC_ME12", "CSC_ME13",
                                    "CSC_ME21", "CSC_ME22", "CSC_ME31",
                                    "CSC_ME32", "CSC_ME41", "CSC_ME42")
+matching.cscALCT.inputTag = cms.InputTag("simCscTriggerPrimitiveDigis","","MyCSC")
+matching.cscCLCT.inputTag = cms.InputTag("simCscTriggerPrimitiveDigis","","MyCSC")
+matching.cscLCT.inputTag = cms.InputTag("simCscTriggerPrimitiveDigis","","MyCSC")
 
 doGem = True
 if doGem:

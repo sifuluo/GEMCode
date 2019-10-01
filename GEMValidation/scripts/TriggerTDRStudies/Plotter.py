@@ -33,7 +33,7 @@ class TriggerTDREfficiencyPlotter():
     self.stationEtaLimits = [
       [1.5,2.4],
       [1.2,1.7],
-      [0.9,1.2],
+      [0.9,1.1],
 
       [1.6,2.4],
       [1.0,1.6],
