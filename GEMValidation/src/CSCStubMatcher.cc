@@ -1,6 +1,6 @@
 #include "GEMCode/GEMValidation/interface/CSCStubMatcher.h"
 #include "GEMCode/GEMValidation/interface/SimHitMatcher.h"
-#include "L1Trigger/CSCTriggerPrimitives/src/CSCCathodeLCTProcessor.h"
+#include "L1Trigger/CSCTriggerPrimitives/interface/CSCCathodeLCTProcessor.h"
 
 #include <algorithm>
 
