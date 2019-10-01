@@ -40,8 +40,7 @@ CSCDigiMatcher::~CSCDigiMatcher() {}
 void
 CSCDigiMatcher::matchStripsToSimTrack(const CSCComparatorDigiCollection& comparators)
 {
-  const auto& det_ids = simhit_matcher_->detIdsCSC(0);
-  for (const auto& id: det_ids)
+  for (const auto& id: simhit_matcher_->detIdsCSC(0))
     {
       CSCDetId layer_id(id);
 
@@ -84,8 +83,7 @@ CSCDigiMatcher::matchStripsToSimTrack(const CSCComparatorDigiCollection& compara
 void
 CSCDigiMatcher::matchWiresToSimTrack(const CSCWireDigiCollection& wires)
 {
-  const auto& det_ids = simhit_matcher_->detIdsCSC(0);
-  for (const auto& id: det_ids)
+  for (const auto& id: simhit_matcher_->detIdsCSC(0))
   {
     CSCDetId layer_id(id);
 

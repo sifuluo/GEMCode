@@ -1,7 +1,7 @@
 void Eff_ME22_Wire()
 {
 //=========Macro generated from canvas: c/c
-//=========  (Tue Oct  1 00:00:34 2019) by ROOT version 6.14/09
+//=========  (Tue Oct  1 14:31:11 2019) by ROOT version 6.14/09
    TCanvas *c = new TCanvas("c", "c",0,0,800,600);
    gStyle->SetOptFit(1);
    gStyle->SetOptStat(0);
@@ -79,9 +79,9 @@ tex->SetNDC();
    den_clone30->SetTotalEvents(0,0);
    den_clone30->SetPassedEvents(0,0);
    den_clone30->SetTotalEvents(1,212);
-   den_clone30->SetPassedEvents(1,160);
+   den_clone30->SetPassedEvents(1,138);
    den_clone30->SetTotalEvents(2,369);
-   den_clone30->SetPassedEvents(2,346);
+   den_clone30->SetPassedEvents(2,332);
    den_clone30->SetTotalEvents(3,362);
    den_clone30->SetPassedEvents(3,362);
    den_clone30->SetTotalEvents(4,378);
@@ -121,13 +121,13 @@ tex->SetNDC();
    den_clone30->SetTotalEvents(21,356);
    den_clone30->SetPassedEvents(21,356);
    den_clone30->SetTotalEvents(22,366);
-   den_clone30->SetPassedEvents(22,366);
+   den_clone30->SetPassedEvents(22,365);
    den_clone30->SetTotalEvents(23,346);
-   den_clone30->SetPassedEvents(23,318);
+   den_clone30->SetPassedEvents(23,296);
    den_clone30->SetTotalEvents(24,212);
-   den_clone30->SetPassedEvents(24,174);
+   den_clone30->SetPassedEvents(24,157);
    den_clone30->SetTotalEvents(25,45);
-   den_clone30->SetPassedEvents(25,15);
+   den_clone30->SetPassedEvents(25,9);
    den_clone30->SetTotalEvents(26,0);
    den_clone30->SetPassedEvents(26,0);
    den_clone30->SetFillColor(19);

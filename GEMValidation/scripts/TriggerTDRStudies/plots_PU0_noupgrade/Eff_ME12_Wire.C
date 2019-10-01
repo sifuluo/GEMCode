@@ -1,7 +1,7 @@
 void Eff_ME12_Wire()
 {
 //=========Macro generated from canvas: c/c
-//=========  (Tue Oct  1 00:00:33 2019) by ROOT version 6.14/09
+//=========  (Tue Oct  1 14:31:10 2019) by ROOT version 6.14/09
    TCanvas *c = new TCanvas("c", "c",0,0,800,600);
    gStyle->SetOptFit(1);
    gStyle->SetOptStat(0);
@@ -79,9 +79,9 @@ tex->SetNDC();
    den_clone9->SetTotalEvents(0,0);
    den_clone9->SetPassedEvents(0,0);
    den_clone9->SetTotalEvents(1,218);
-   den_clone9->SetPassedEvents(1,201);
+   den_clone9->SetPassedEvents(1,190);
    den_clone9->SetTotalEvents(2,369);
-   den_clone9->SetPassedEvents(2,335);
+   den_clone9->SetPassedEvents(2,307);
    den_clone9->SetTotalEvents(3,352);
    den_clone9->SetPassedEvents(3,352);
    den_clone9->SetTotalEvents(4,324);
@@ -103,11 +103,11 @@ tex->SetNDC();
    den_clone9->SetTotalEvents(12,374);
    den_clone9->SetPassedEvents(12,374);
    den_clone9->SetTotalEvents(13,304);
-   den_clone9->SetPassedEvents(13,304);
+   den_clone9->SetPassedEvents(13,299);
    den_clone9->SetTotalEvents(14,348);
-   den_clone9->SetPassedEvents(14,348);
+   den_clone9->SetPassedEvents(14,344);
    den_clone9->SetTotalEvents(15,290);
-   den_clone9->SetPassedEvents(15,290);
+   den_clone9->SetPassedEvents(15,278);
    den_clone9->SetTotalEvents(16,306);
    den_clone9->SetPassedEvents(16,306);
    den_clone9->SetTotalEvents(17,296);
@@ -119,13 +119,13 @@ tex->SetNDC();
    den_clone9->SetTotalEvents(20,356);
    den_clone9->SetPassedEvents(20,356);
    den_clone9->SetTotalEvents(21,335);
-   den_clone9->SetPassedEvents(21,333);
+   den_clone9->SetPassedEvents(21,324);
    den_clone9->SetTotalEvents(22,268);
-   den_clone9->SetPassedEvents(22,222);
+   den_clone9->SetPassedEvents(22,201);
    den_clone9->SetTotalEvents(23,155);
-   den_clone9->SetPassedEvents(23,134);
+   den_clone9->SetPassedEvents(23,123);
    den_clone9->SetTotalEvents(24,68);
-   den_clone9->SetPassedEvents(24,19);
+   den_clone9->SetPassedEvents(24,10);
    den_clone9->SetTotalEvents(25,0);
    den_clone9->SetPassedEvents(25,0);
    den_clone9->SetTotalEvents(26,0);

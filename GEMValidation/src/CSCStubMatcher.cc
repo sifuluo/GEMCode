@@ -68,7 +68,6 @@ CSCStubMatcher::CSCStubMatcher(const SimHitMatcher& sh,
   }
 }
 
-
 CSCStubMatcher::~CSCStubMatcher() {}
 
 
@@ -96,6 +95,7 @@ CSCStubMatcher::matchCLCTsToSimTrack(const CSCCLCTDigiCollection& clcts)
 
     int ring = ch_id.ring();
     if (ring == 4) ring =1; //use ME1b id to get CLCTs
+
     CSCDetId ch_id2(ch_id.endcap(), ch_id.station(),  ring, ch_id.chamber(), 0);
 
     const auto& clcts_in_det = clcts.get(ch_id2);
@@ -111,7 +111,7 @@ CSCStubMatcher::matchCLCTsToSimTrack(const CSCCLCTDigiCollection& clcts)
 
       int half_strip = c->getKeyStrip() + 1; // CLCT halfstrip numbers start from 0
       if (ch_id.ring() == 4 and ch_id.station() == 1 and half_strip > 128)
-	  half_strip  = half_strip - 128;
+        half_strip  = half_strip - 128;
 
       const auto& mydigi = make_digi(id, half_strip, c->getBX(), CSC_CLCT, c->getQuality(), c->getPattern());
 

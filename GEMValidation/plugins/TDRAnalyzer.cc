@@ -37,6 +37,8 @@ static const int NumOfTrees = 13;
 // "signed" LCT bend pattern
 const int LCT_BEND_PATTERN[11] = { -99,  -5,  4, -4,  3, -3,  2, -2,  1, -1,  0};
 
+namespace{
+
 struct MyTrackEff
 {
   void init(); // initialize to default values
@@ -563,6 +565,8 @@ TTree* MyTrackEff::book(TTree *t, const std::string & name)
   return t;
 }
 
+}
+
 // --------------------------- TDRAnalyzer ---------------------------
 
 class TDRAnalyzer : public edm::EDAnalyzer
@@ -827,34 +831,32 @@ TDRAnalyzer::TDRAnalyzer(const edm::ParameterSet& ps)
     {
       stringstream ss;
       ss << "trk_eff_"<< cscStations_[s];
-      std::cout <<"station to use "<< cscStations_[s]  << std::endl;
+      std::cout <<"station to use "<< s << " " << cscStations_[s]  << std::endl;
       tree_eff_[s] = etrk_[s].book(tree_eff_[s], ss.str());
     }
   }
 
-  // cscStationsCo_.push_back(std::make_pair(-99,-99));
+  std::cout << "Done initializing trees" << std::endl;
+
+  cscStationsCo_.push_back(std::make_pair(-99,-99));
+  cscStationsCo_.push_back(std::make_pair(1,-99));
+  cscStationsCo_.push_back(std::make_pair(1,4));
   cscStationsCo_.push_back(std::make_pair(1,1));
   cscStationsCo_.push_back(std::make_pair(1,2));
   cscStationsCo_.push_back(std::make_pair(1,3));
-
   cscStationsCo_.push_back(std::make_pair(2,1));
   cscStationsCo_.push_back(std::make_pair(2,2));
-
   cscStationsCo_.push_back(std::make_pair(3,1));
   cscStationsCo_.push_back(std::make_pair(3,2));
-
   cscStationsCo_.push_back(std::make_pair(4,1));
   cscStationsCo_.push_back(std::make_pair(4,2));
-
   cscStationsCo_.push_back(std::make_pair(0,1));
 }
 
 
 int TDRAnalyzer::detIdToMEStation(int st, int ri)
 {
-  auto p = std::make_pair(st, ri);
-  if (st==1 and ri==4)
-    p = std::make_pair(st, 1);
+  const auto& p(std::make_pair(st, ri));
   return std::find(cscStationsCo_.begin(), cscStationsCo_.end(), p) - cscStationsCo_.begin();
 }
 
@@ -948,6 +950,7 @@ void TDRAnalyzer::analyze(const edm::Event& ev, const edm::EventSetup& es)
 
     if (ntupleTrackEff_) analyzeTrackEff(match, trk_no);
     ++trk_no;
+    std::cout << "Done running on this track" << std::endl;
   }
 }
 
@@ -958,9 +961,9 @@ void TDRAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
   const SimHitMatcher& match_sh = match.simhits();
   const GEMDigiMatcher& match_gd = match.gemDigis();
   const CSCDigiMatcher& match_cd = match.cscDigis();
-  const ME0DigiMatcher& match_me0digi = match.me0Digis();
   const CSCStubMatcher& match_lct = match.cscStubs();
-  const ME0RecHitMatcher& match_me0rh = match.me0RecHits();
+  //const ME0DigiMatcher& match_me0digi = match.me0Digis();
+  //const ME0RecHitMatcher& match_me0rh = match.me0RecHits();
   const SimTrack &t = match_sh.trk();
 
   float randtest1 = CLHEP::RandFlat::shoot(0.0,1.0) ;
@@ -1050,17 +1053,6 @@ void TDRAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
       int nlayers(match_cd.nLayersWithStripInChamber(d));
       // std::cout <<"CSC strip digi, CSCid "<< id <<" nlayer "<< nlayers << std::endl;
 
-      // case ME11
-      if (id.station()==1 and (id.ring()==4 or id.ring()==1)){
-        // get the detId of the pairing subchamber
-        int other_ring(id.ring()==4 ? 1 : 4);
-        CSCDetId co_id(id.endcap(), id.station(), other_ring, id.chamber());
-        // check if co_id occurs in the list
-        // add the hit layers
-        const auto& rawId(co_id.rawId());
-        nlayers += match_cd.nLayersWithStripInChamber(rawId);
-      }
-
       if (nlayers < minNHitsChamberCSCStripDigi_) continue;
 
       const bool odd(id.chamber()%2==1);
@@ -1069,6 +1061,15 @@ void TDRAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
 
       if (odd) etrk_[st].nlayers_st_dg_odd = nlayers;
       else etrk_[st].nlayers_st_dg_even = nlayers;
+
+      // case ME11
+      if (st==2 or st==3){
+        if (odd) etrk_[1].has_csc_strips |= 1;
+        else etrk_[1].has_csc_strips |= 2;
+
+        if (odd) etrk_[1].nlayers_st_dg_odd = nlayers;
+        else etrk_[1].nlayers_st_dg_even = nlayers;
+      }
     }
 
   // CSC wire digis
@@ -1080,17 +1081,6 @@ void TDRAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
 
       int nlayers(match_cd.nLayersWithWireInChamber(d));
 
-      // case ME11
-      if (id.station()==1 and (id.ring()==4 or id.ring()==1)){
-        // get the detId of the pairing subchamber
-        int other_ring(id.ring()==4 ? 1 : 4);
-        CSCDetId co_id(id.endcap(), id.station(), other_ring, id.chamber());
-        // check if co_id occurs in the list
-        // add the hit layers
-        const auto& rawId(co_id.rawId());
-        nlayers += match_cd.nLayersWithWireInChamber(rawId);
-      }
-
       // std::cout <<"CSC wire digi, CSCid "<< id <<" nlayer "<< nlayers << std::endl;
       if (nlayers < minNHitsChamberCSCWireDigi_) continue;
 
@@ -1100,6 +1090,15 @@ void TDRAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
 
       if (odd) etrk_[st].nlayers_wg_dg_odd = nlayers;
       else etrk_[st].nlayers_wg_dg_even = nlayers;
+
+      // case ME11
+      if (st==2 or st==3){
+        if (odd) etrk_[1].has_csc_wires |= 1;
+        else etrk_[1].has_csc_wires |= 2;
+
+        if (odd) etrk_[1].nlayers_wg_dg_odd = nlayers;
+        else etrk_[1].nlayers_wg_dg_even = nlayers;
+      }
     }
 
   // CSC CLCTs
@@ -1126,6 +1125,21 @@ void TDRAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
 
       if (odd) etrk_[st].has_clct |= 1;
       else etrk_[st].has_clct |= 2;
+
+      // case ME11
+      if (st==2 or st==3){
+        if (odd) etrk_[1].halfstrip_odd = digi_channel(clct);
+        else etrk_[1].halfstrip_even = digi_channel(clct);
+
+        if (odd) etrk_[1].quality_clct_odd = digi_quality(clct);
+        else etrk_[1].quality_clct_even = digi_quality(clct);
+
+        if (odd) etrk_[1].bx_clct_odd = digi_bx(clct);
+        else etrk_[1].bx_clct_even = digi_bx(clct);
+
+        if (odd) etrk_[1].has_clct |= 1;
+        else etrk_[1].has_clct |= 2;
+      }
     }
 
   // CSC ALCTs
@@ -1150,6 +1164,21 @@ void TDRAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
 
       if (odd) etrk_[st].has_alct |= 1;
       else etrk_[st].has_alct |= 2;
+
+      // case ME11
+      if (st==2 or st==3){
+        if (odd) etrk_[1].wiregroup_odd = digi_channel(alct);
+        else etrk_[1].wiregroup_even = digi_channel(alct);
+
+        if (odd) etrk_[1].quality_alct_odd = digi_quality(alct);
+        else etrk_[1].quality_alct_even = digi_quality(alct);
+
+        if (odd) etrk_[1].bx_alct_odd = digi_bx(alct);
+        else etrk_[1].bx_alct_even = digi_bx(alct);
+
+        if (odd) etrk_[1].has_alct |= 1;
+        else etrk_[1].has_alct |= 2;
+      }
     }
 
   if (verbose_) std::cout <<"TDRAnalyzer step3 "<< std::endl;
@@ -1176,6 +1205,12 @@ void TDRAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
       const bool odd(id.chamber()%2==1);
       if (odd) etrk_[st].has_lct |= 1;
       else etrk_[st].has_lct |= 2;
+
+      // case ME11
+      if (st==2 or st==3){
+        if (odd) etrk_[1].has_lct |= 1;
+        else etrk_[1].has_lct |= 2;
+      }
 
       const auto& lct = match_lct.lctInChamber(d);
       const int bend(LCT_BEND_PATTERN[digi_pattern(lct)]);
@@ -1228,12 +1263,14 @@ void TDRAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
         }
       }
 
-
  if (verbose_) std::cout <<"TDRAnalyzer step10 "<< std::endl;
  for (const auto& s: stations_to_use_)
    {
+     std::cout << "filling station " << s << std::endl;
      tree_eff_[s]->Fill();
    }
+
+ std::cout << "Done filling station " << std::endl;
 }
 
 

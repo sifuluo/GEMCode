@@ -10,22 +10,24 @@ def enum(*sequential, **named):
 class TriggerTDREfficiencyPlotter():
   def __init__(self):
     self.inputDir = os.getenv("CMSSW_BASE") + "/src/GEMCode/GEMValidation/scripts/TriggerTDRStudies/"
-    self.inputFile = "../../../../out_ana_PU200_upgrade.root"
-    self.targetDir = "plots_PU200_upgrade/"
+    self.inputFile = "../../../../out_ana_PU0_upgrade.root"
+    self.targetDir = "plots_PU0_upgrade/"
     self.ext = ".png"
     self.analyzer = "TDRAnalyzer"
     self.effSt = "trk_eff_"
-    self.stations = enum('CSC_ME11',
+    self.stations = enum('CSC_ME11','CSC_ME1a','CSC_ME1b',
                          'CSC_ME12','CSC_ME13','CSC_ME21','CSC_ME22',
                          'CSC_ME31','CSC_ME32','CSC_ME41','CSC_ME42',
                          'GEM_ME11','GEM_ME21'
                        )
-    self.stationsS = enum('ME1/1',
+    self.stationsS = enum('ME1/1','ME1/a','ME1/b',
                           'ME1/2','ME1/3','ME2/1','ME2/2',
                           'ME3/1','ME3/2','ME4/1','ME4/2',
                           'GE1/1','GE2/1'
     )
     self.stationsToUse = [self.stations.CSC_ME11,
+                          self.stations.CSC_ME1a,
+                          self.stations.CSC_ME1b,
                           self.stations.CSC_ME12,
                           self.stations.CSC_ME13,
                           self.stations.CSC_ME21,
@@ -38,6 +40,8 @@ class TriggerTDREfficiencyPlotter():
     ]
     self.stationEtaLimits = [
       [1.5,2.4],
+      [2.1,2.4],
+      [1.5,2.2],
       [1.2,1.7],
       [0.9,1.1],
 

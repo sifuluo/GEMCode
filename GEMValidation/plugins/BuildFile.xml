@@ -23,9 +23,6 @@
 <use name="Utilities/General"/>
 <use name="GEMCode/GEMValidation"/>
 
-<library name="GEMCodeGEMValidation_plugins" file="GEMCSCAnalyzer.cc">
-  <flags EDM_PLUGIN="1" />
-</library>
-<library name="GEMCodeGEMValidation_plugins" file="TDRAnalyzer.cc">
+<library name="GEMCodeGEMValidation_plugins" file="*.cc">
   <flags EDM_PLUGIN="1" />
 </library>

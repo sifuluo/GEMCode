@@ -1,7 +1,7 @@
 void Eff_ME41_Wire()
 {
 //=========Macro generated from canvas: c/c
-//=========  (Tue Oct  1 00:00:36 2019) by ROOT version 6.14/09
+//=========  (Tue Oct  1 14:31:13 2019) by ROOT version 6.14/09
    TCanvas *c = new TCanvas("c", "c",0,0,800,600);
    gStyle->SetOptFit(1);
    gStyle->SetOptStat(0);
@@ -79,11 +79,11 @@ tex->SetNDC();
    den_clone51->SetTotalEvents(0,0);
    den_clone51->SetPassedEvents(0,0);
    den_clone51->SetTotalEvents(1,135);
-   den_clone51->SetPassedEvents(1,95);
+   den_clone51->SetPassedEvents(1,75);
    den_clone51->SetTotalEvents(2,333);
-   den_clone51->SetPassedEvents(2,299);
+   den_clone51->SetPassedEvents(2,276);
    den_clone51->SetTotalEvents(3,412);
-   den_clone51->SetPassedEvents(3,411);
+   den_clone51->SetPassedEvents(3,408);
    den_clone51->SetTotalEvents(4,388);
    den_clone51->SetPassedEvents(4,388);
    den_clone51->SetTotalEvents(5,394);
@@ -91,11 +91,11 @@ tex->SetNDC();
    den_clone51->SetTotalEvents(6,436);
    den_clone51->SetPassedEvents(6,436);
    den_clone51->SetTotalEvents(7,388);
-   den_clone51->SetPassedEvents(7,379);
+   den_clone51->SetPassedEvents(7,357);
    den_clone51->SetTotalEvents(8,422);
-   den_clone51->SetPassedEvents(8,390);
+   den_clone51->SetPassedEvents(8,328);
    den_clone51->SetTotalEvents(9,420);
-   den_clone51->SetPassedEvents(9,402);
+   den_clone51->SetPassedEvents(9,372);
    den_clone51->SetTotalEvents(10,362);
    den_clone51->SetPassedEvents(10,362);
    den_clone51->SetTotalEvents(11,414);
@@ -105,13 +105,13 @@ tex->SetNDC();
    den_clone51->SetTotalEvents(13,384);
    den_clone51->SetPassedEvents(13,384);
    den_clone51->SetTotalEvents(14,454);
-   den_clone51->SetPassedEvents(14,454);
+   den_clone51->SetPassedEvents(14,452);
    den_clone51->SetTotalEvents(15,430);
-   den_clone51->SetPassedEvents(15,386);
+   den_clone51->SetPassedEvents(15,359);
    den_clone51->SetTotalEvents(16,376);
-   den_clone51->SetPassedEvents(16,328);
+   den_clone51->SetPassedEvents(16,294);
    den_clone51->SetTotalEvents(17,384);
-   den_clone51->SetPassedEvents(17,362);
+   den_clone51->SetPassedEvents(17,351);
    den_clone51->SetTotalEvents(18,362);
    den_clone51->SetPassedEvents(18,362);
    den_clone51->SetTotalEvents(19,428);
@@ -125,9 +125,9 @@ tex->SetNDC();
    den_clone51->SetTotalEvents(23,426);
    den_clone51->SetPassedEvents(23,426);
    den_clone51->SetTotalEvents(24,384);
-   den_clone51->SetPassedEvents(24,384);
+   den_clone51->SetPassedEvents(24,381);
    den_clone51->SetTotalEvents(25,325);
-   den_clone51->SetPassedEvents(25,296);
+   den_clone51->SetPassedEvents(25,265);
    den_clone51->SetTotalEvents(26,0);
    den_clone51->SetPassedEvents(26,0);
    den_clone51->SetFillColor(19);
