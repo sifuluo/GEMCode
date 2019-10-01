@@ -1048,7 +1048,7 @@ void TDRAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
       if (stations_to_use_.count(st) == 0) continue;
 
       int nlayers(match_cd.nLayersWithStripInChamber(d));
-      std::cout <<"CSC strip digi, CSCid "<< id <<" nlayer "<< nlayers << std::endl;
+      // std::cout <<"CSC strip digi, CSCid "<< id <<" nlayer "<< nlayers << std::endl;
 
       // case ME11
       if (id.station()==1 and (id.ring()==4 or id.ring()==1)){
@@ -1091,7 +1091,7 @@ void TDRAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
         nlayers += match_cd.nLayersWithWireInChamber(rawId);
       }
 
-      std::cout <<"CSC wire digi, CSCid "<< id <<" nlayer "<< nlayers << std::endl;
+      // std::cout <<"CSC wire digi, CSCid "<< id <<" nlayer "<< nlayers << std::endl;
       if (nlayers < minNHitsChamberCSCWireDigi_) continue;
 
       const bool odd(id.chamber()%2==1);
@@ -1183,7 +1183,7 @@ void TDRAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
 
       if (match_lct.cscLctsInChamber(d).size()>0) {
         etrk_[st].lct_type = match_lct.cscLctsInChamber(d)[0].getType();
-        std::cout << "Printing best LCT " << match_lct.cscLctsInChamber(d)[0] << " " << etrk_[st].lct_type << " " << match_lct.cscLctsInChamber(d)[0].getType() << std::endl;
+        // std::cout << "Printing best LCT " << match_lct.cscLctsInChamber(d)[0] << " " << etrk_[st].lct_type << " " << match_lct.cscLctsInChamber(d)[0].getType() << std::endl;
       }
 
       //std::cout <<"CSC LCT, CSCid "<< id <<" lct "<< lct <<" gp eta "<< gp.eta()<<" phi "<< gp.phi() <<" perp "<< gp.perp()<<std::endl;

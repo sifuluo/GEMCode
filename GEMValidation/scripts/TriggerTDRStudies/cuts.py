@@ -167,6 +167,9 @@ ok_gsh1 = TCut("(has_gem_sh&1) > 0")
 ok_gsh2 = TCut("(has_gem_sh&2) > 0")
 ok_g2sh1 = TCut("(has_gem_sh2&1) > 0")
 ok_g2sh2 = TCut("(has_gem_sh2&2) > 0")
+ok_gsh = OR(ok_gsh1, ok_gsh2)
+ok_g2sh = OR(ok_g2sh1, ok_g2sh2)
+
 
 
 ## GEM digi

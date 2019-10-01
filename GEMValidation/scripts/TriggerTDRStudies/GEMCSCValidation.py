@@ -83,3 +83,7 @@ def simTrackToCscAlctClctMatching(plotter,st=1):
 #_______________________________________________________________________________
 def simTrackToCscLctMatching(plotter,st=1):
     makeEfficiencyPlot(plotter, st, 25, ok_sh, ok_lct, "LCT")
+
+#_______________________________________________________________________________
+def simTrackToGemMatching(plotter,st=1):
+    makeEfficiencyPlot(plotter, st, 25, ok_sh, ok_lct, "LCT")

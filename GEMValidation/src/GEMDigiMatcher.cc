@@ -106,7 +106,7 @@ GEMDigiMatcher::matchPadsToSimTrack(const GEMPadDigiCollection& pads)
 
         float padOfStrip = getGEMGeometry()->etaPartition(id)->padOfStrip(hit_digi.strip());
 
-        std::cout << "padOfStrip "<<padOfStrip << std::endl;
+        if (verbosePad_) std::cout << "padOfStrip "<<padOfStrip << std::endl;
 
         // match by strip +/- 1 pad
         if (std::abs(pad->pad() - padOfStrip) <= 1) {
