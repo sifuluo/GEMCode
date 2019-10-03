@@ -200,7 +200,7 @@ DisplacedMuonTriggerPtassignment::DisplacedMuonTriggerPtassignment(const l1t::EM
     const CSCDetId& ch_id = hit.CSC_DetId()();
     // empty vector for stubs
     CSCCorrelatedLCTDigiContainer v;
-    v.push_back(hit.CSC_LCTDigi());
+    v.push_back(hit.CreateCSCCorrelatedLCTDigi());
     hasStub_st[ch_id.station()-1] = true;
     chamberid_lct[ch_id.rawId()] = v;
   }
@@ -1181,7 +1181,7 @@ DisplacedMuonTriggerPtassignment::stubInCSCTFTracks(const CSCCorrelatedLCTDigi& 
   for (const auto& tftrack: l1Tracks){
     for (const l1t::EMTFHit& hit : tftrack.Hits()){
       if (hit.Is_CSC()) continue;
-      const CSCCorrelatedLCTDigi& csc_hit = hit.CSC_LCTDigi();
+      const CSCCorrelatedLCTDigi& csc_hit = hit.CreateCSCCorrelatedLCTDigi();
       if (csc_hit == candidateStub) {
         isMatched = true;
         break;

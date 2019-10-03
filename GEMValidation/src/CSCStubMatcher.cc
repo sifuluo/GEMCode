@@ -1,6 +1,6 @@
 #include "GEMCode/GEMValidation/interface/CSCStubMatcher.h"
 #include "GEMCode/GEMValidation/interface/SimHitMatcher.h"
-#include "L1Trigger/CSCTriggerPrimitives/src/CSCCathodeLCTProcessor.h"
+#include "L1Trigger/CSCTriggerPrimitives/interface/CSCCathodeLCTProcessor.h"
 
 #include <algorithm>
 
@@ -8,8 +8,8 @@ using namespace std;
 using namespace matching;
 
 
-CSCStubMatcher::CSCStubMatcher(const SimHitMatcher& sh, 
-			       const CSCDigiMatcher& dg, 
+CSCStubMatcher::CSCStubMatcher(const SimHitMatcher& sh,
+			       const CSCDigiMatcher& dg,
 			       const GEMDigiMatcher& gem_dg,
                                const edm::EDGetTokenT<CSCCLCTDigiCollection>& clctInputs_,
                                const edm::EDGetTokenT<CSCALCTDigiCollection>& alctInputs_,
@@ -82,7 +82,7 @@ CSCStubMatcher::matchCLCTsToSimTrack(const CSCCLCTDigiCollection& clcts)
   // only look for stub in chambers that have digis matching to this track
   setVerbose(verboseCLCT_);
  CSCCLCTDigiCollection::DigiRangeIterator detUnitIt;
- for (detUnitIt= clcts.begin(); detUnitIt!= clcts.end(); ++detUnitIt){    
+ for (detUnitIt= clcts.begin(); detUnitIt!= clcts.end(); ++detUnitIt){
      const CSCDetId& id = (*detUnitIt).first;
      const CSCCLCTDigiCollection::Range& range =(*detUnitIt).second;
      for (CSCCLCTDigiCollection::const_iterator digiIt =  range.first; digiIt!=range.second; ++digiIt){
@@ -318,7 +318,7 @@ CSCStubMatcher::matchLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& lcts)
   int n_minLayers = 0;
   for (const auto& id: cathode_and_anode_ids)
   {
-    if (digi_matcher_->nLayersWithStripInChamber(id) >= minNHitsChamberCLCT_ and 
+    if (digi_matcher_->nLayersWithStripInChamber(id) >= minNHitsChamberCLCT_ and
 	digi_matcher_->nLayersWithWireInChamber(id) >= minNHitsChamberALCT_) ++n_minLayers;
     CSCDetId ch_id(id);
 
@@ -420,10 +420,10 @@ CSCStubMatcher::matchLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& lcts)
 	}else{
 	  if (verbose()) cout<<" LCT Failed to matched to CLCT "<< p <<endl;
 	}
-      } 
+      }
       // Check if matched to an ALCT
       for (const auto& p: cscAlctsInChamber(id)){
-	  //ALCT BX is shifted 
+	  //ALCT BX is shifted
 	if (p.getKeyWG() == lct.getALCT().getKeyWG()) {
 	  lct_alct_match = true;
           if (verbose()) cout<<" LCT matched to ALCT "<< p <<endl;
@@ -431,7 +431,7 @@ CSCStubMatcher::matchLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& lcts)
 	}else{
 	  if (verbose()) cout<<" LCT Failed to matched to ALCT "<< p <<endl;
 	}
-      } 
+      }
       // Check if matched to an GEM pad L1
       // fixME here: double check the timing of GEMPad
       if (ch_id.ring()==1 and (ch_id.station()==1 or ch_id.station()==2)) {
@@ -453,14 +453,14 @@ CSCStubMatcher::matchLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& lcts)
 	  }
 	}
       }
-      
+
       lct_matched = ((lct_clct_match and lct_alct_match) or
 		     (lct_alct_match and lct_gem1_match and lct_gem2_match) or
 		     (lct_clct_match and lct_gem1_match and lct_gem2_match));
 
       if (chamber_to_lct_.find(id) == chamber_to_lct_.end())   chamber_to_lct_[id] = lcts_tmp[iLct];
       else{
-	if (verbose()) cout << "ALARM!!! here already was matching LCT "<<chamber_to_lct_[id] 
+	if (verbose()) cout << "ALARM!!! here already was matching LCT "<<chamber_to_lct_[id]
 	    		<<" New LCT  "<< lcts_tmp[iLct] <<endl;
       }
 
