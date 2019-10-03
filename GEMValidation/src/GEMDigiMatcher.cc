@@ -134,51 +134,47 @@ GEMDigiMatcher::matchPadsToSimTrack(const GEMPadDigiCollection& pads)
 void
 GEMDigiMatcher::matchCoPadsToSimTrack(const GEMCoPadDigiCollection& co_pads)
 {
-  const auto& det_ids = simhit_matcher_->detIdsGEMCoincidences();
-  for (const auto& id: det_ids)
-  {
-    GEMDetId p_id(id);
+  for(auto cItr = co_pads.begin(); cItr != co_pads.end(); ++cItr) {
+
+    // super chamber id and chamber ids
+    GEMDetId p_id((*cItr).first);
+    GEMDetId l1_id(p_id.region(), p_id.ring(), p_id.station(), 1, p_id.chamber(), 0);
+    GEMDetId l2_id(p_id.region(), p_id.ring(), p_id.station(), 2, p_id.chamber(), 0);
     GEMDetId superch_id(p_id.region(), p_id.ring(), p_id.station(), 0, p_id.chamber(), 0);
 
-    const auto& hit_co_pads = simhit_matcher_->hitCoPadsInDetId(id);
-    const auto& co_pads_in_det = co_pads.get(superch_id);
+    for (auto pad = (*cItr ).second.first; pad != (*cItr ).second.second; ++pad) {
 
-    if (verboseCoPad_)
-    {
-      cout<<"matching CoPads in detid "<< superch_id << std::endl;
-      cout<<"checkcopads from gemhits"<<hit_co_pads.size()<<" from copad collection "<<std::distance(co_pads_in_det.first, co_pads_in_det.second)<<" hit_pads: ";
-      copy(hit_co_pads.begin(), hit_co_pads.end(), ostream_iterator<int>(cout," "));
-      cout<<endl;
-    }
+      const GEMPadDigi& pad_l1 = (*pad).first();
+      const GEMPadDigi& pad_l2 = (*pad).second();
 
-    for (auto pad = co_pads_in_det.first; pad != co_pads_in_det.second; ++pad)
-    {
-      // to match simtrack to GEMCoPad, check the pads within the copad!
-      bool matchL1 = false;
-      GEMDetId gemL1_id(p_id.region(), p_id.ring(), p_id.station(), 1, p_id.chamber(), 0);
-      if (verboseCoPad_) cout<<"CoPad: chp "<<*pad<<endl;
-      for (const auto& p: gemPadsInChamber(gemL1_id.rawId())) {
-	if (p==pad->first()){
-	  matchL1 = true;
-	  break;
-	}
+      bool matchL1;
+      bool matchL2;
+
+      if (verboseCoPad_) cout<<"Checking CoPad: "<< *pad << endl;
+
+      // check against all hits in layer 1
+      for (const auto& p : gemPadsInChamber(l1_id.rawId()) ){
+        if (p==pad_l1) {
+          matchL1 = true;
+          break;
+        }
       }
-
-      bool matchL2 = false;
-      GEMDetId gemL2_id(p_id.region(), p_id.ring(), p_id.station(), 2, p_id.chamber(), 0);      
-      for (const auto& p: gemPadsInChamber(gemL2_id.rawId())) {
-	if (p==pad->second()){
-	  matchL2 = true;
-	  break;
-	}
+      // check against all hits in layer 2
+      for (const auto& p : gemPadsInChamber(l2_id.rawId()) ){
+        if (p==pad_l2) {
+          matchL2 = true;
+          break;
+        }
       }
-
       if (matchL1 and matchL2) {
-	if (verboseCoPad_) cout<<"CoPad: was matched! "<<endl;
-	const auto& mydigi = make_digi(id, pad->pad(1), pad->bx(1), GEM_COPAD);
-	superchamber_to_copads_[ superch_id() ].push_back(mydigi);
-	superchamber_to_gemcopads_[ superch_id() ].push_back(*pad);
-      }      
+        if (verboseCoPad_) cout<<"\tMatched!"<<endl;
+        const auto& mydigi = make_digi(p_id.rawId(), pad->pad(1), pad->bx(1), GEM_COPAD);
+        superchamber_to_copads_[ superch_id() ].push_back(mydigi);
+        superchamber_to_gemcopads_[ superch_id() ].push_back(*pad);
+      }
+      else {
+        if (verboseCoPad_) cout<<"\tWas Not Matched!"<<endl;
+      }
     }
   }
 }
