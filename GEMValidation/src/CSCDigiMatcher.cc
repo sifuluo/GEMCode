@@ -40,22 +40,34 @@ CSCDigiMatcher::~CSCDigiMatcher() {}
 void
 CSCDigiMatcher::matchStripsToSimTrack(const CSCComparatorDigiCollection& comparators)
 {
-  for (const auto& id: simhit_matcher_->detIdsCSC(0))
+
+ CSCComparatorDigiCollection::DigiRangeIterator detUnitIt;
+ for (detUnitIt= comparators.begin(); detUnitIt!= comparators.end(); ++detUnitIt){    
+     const CSCDetId& id = (*detUnitIt).first;
+     const CSCComparatorDigiCollection::Range& range =(*detUnitIt).second;
+     for (CSCComparatorDigiCollection::const_iterator digiIt =  range.first; digiIt!=range.second; ++digiIt){
+	 if (id.station() == 1 and (id.ring() == 1 or id.ring() ==4 ))
+	     cout <<"CSCid "<< id <<" Comparator digi (strip, comparator, Tbin ) "<< (*digiIt) << endl;
+     }
+ }
+
+  const auto& det_ids = simhit_matcher_->detIdsCSC(0);
+  for (const auto& id: det_ids)
+  {
+    CSCDetId layer_id(id);
+
+    const auto& hit_strips = simhit_matcher_->hitStripsInDetId(id, matchDeltaStrip_);
+    if (verboseStrip_)
     {
-      CSCDetId layer_id(id);
+      cout<<"hit_strips_fat, CSCid " << layer_id <<" ";
+      copy(hit_strips.begin(), hit_strips.end(), ostream_iterator<int>(cout, " "));
+      cout<<endl;
+    }
 
-      const auto& hit_strips = simhit_matcher_->hitStripsInDetId(id, matchDeltaStrip_);
-      if (verboseStrip_)
-        {
-          cout<<"hit_strips_fat, CSCid " << layer_id <<" ";
-          copy(hit_strips.begin(), hit_strips.end(), ostream_iterator<int>(cout, " "));
-          cout<<endl;
-        }
-
-      const auto& comp_digis_in_det = comparators.get(layer_id);
-      for (auto c = comp_digis_in_det.first; c != comp_digis_in_det.second; ++c)
-        {
-          if (verboseStrip_) cout<<"sdigi "<<layer_id<<" (strip, comparator, Tbin ) "<<*c<<endl;
+    const auto& comp_digis_in_det = comparators.get(layer_id);
+    for (auto c = comp_digis_in_det.first; c != comp_digis_in_det.second; ++c)
+    {
+      if (verboseStrip_) cout<<"sdigi "<<layer_id<<" (strip, comparator, Tbin ) "<<*c<<endl;
 
       // check that the first BX for this digi wasn't too early or too late
       if (c->getTimeBin() < minBXCSCComp_ || c->getTimeBin() > maxBXCSCComp_) continue;
@@ -69,7 +81,7 @@ CSCDigiMatcher::matchStripsToSimTrack(const CSCComparatorDigiCollection& compara
       int half_strip = c->getHalfStrip() + 1;
 
       const auto& mydigi = make_digi(id, half_strip, c->getTimeBin(), CSC_STRIP);
-      if (verboseStrip_) cout<< "\tMatched strip "<< mydigi << std::endl << std::endl;
+      if (verboseStrip_) cout<< "Matched strip "<< mydigi << endl;
       detid_to_halfstrips_[id].push_back(mydigi);
       chamber_to_halfstrips_[ layer_id.chamberId().rawId() ].push_back(mydigi);
 
@@ -83,7 +95,8 @@ CSCDigiMatcher::matchStripsToSimTrack(const CSCComparatorDigiCollection& compara
 void
 CSCDigiMatcher::matchWiresToSimTrack(const CSCWireDigiCollection& wires)
 {
-  for (const auto& id: simhit_matcher_->detIdsCSC(0))
+  const auto& det_ids = simhit_matcher_->detIdsCSC(0);
+  for (const auto& id: det_ids)
   {
     CSCDetId layer_id(id);
 

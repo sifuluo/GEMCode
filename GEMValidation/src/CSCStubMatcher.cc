@@ -122,7 +122,7 @@ CSCStubMatcher::matchCLCTsToSimTrack(const CSCCLCTDigiCollection& clcts)
       bool isMatched = false;
       // match by half-strip with the digis +/- 1 HS
       for (const auto& strip : digi_strips){
-        if (std::abs(strip - half_strip) <= 1) {
+        if (std::abs(strip - half_strip) == 0) {
           isMatched = true;
           break;
         }
@@ -238,7 +238,7 @@ CSCStubMatcher::matchALCTsToSimTrack(const CSCALCTDigiCollection& alcts)
       bool isMatched = false;
       // match by half-strip with the digis +/- 1 WG
       for (const auto& wire : digi_wgs){
-        if (std::abs(wire - wg) <= 1) {
+        if (std::abs(wire - wg) == 0) {
           isMatched = true;
           break;
         }

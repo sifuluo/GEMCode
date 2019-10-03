@@ -10,8 +10,8 @@ def enum(*sequential, **named):
 class TriggerTDREfficiencyPlotter():
   def __init__(self):
     self.inputDir = os.getenv("CMSSW_BASE") + "/src/GEMCode/GEMValidation/scripts/TriggerTDRStudies/"
-    self.inputFile = "../../../../out_ana_PU0_upgrade.root"
-    self.targetDir = "plots_PU0_upgrade/"
+    self.inputFile = "../../../../out_ana_PU200_noupgrade.root"
+    self.targetDir = "plots_PU200_noupgrade/"
     self.ext = ".png"
     self.analyzer = "TDRAnalyzer"
     self.effSt = "trk_eff_"

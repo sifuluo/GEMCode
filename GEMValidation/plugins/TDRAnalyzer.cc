@@ -18,6 +18,7 @@
 #include "GEMCode/GEMValidation/interface/PtassignmentHelper.h"
 #include "GEMCode/GEMValidation/interface/DisplacedMuonTriggerPtassignment.h"
 #include "GEMCode/GEMValidation/interface/L1TrackTriggerVeto.h"
+#include "GEMCode/GEMValidation/interface/MyTrackEff.h"
 #include "CLHEP/Random/RandomEngine.h"
 #include "CLHEP/Random/Randomize.h"
 
@@ -37,536 +38,6 @@ static const int NumOfTrees = 13;
 // "signed" LCT bend pattern
 const int LCT_BEND_PATTERN[11] = { -99,  -5,  4, -4,  3, -3,  2, -2,  1, -1,  0};
 
-namespace{
-
-struct MyTrackEff
-{
-  void init(); // initialize to default values
-  TTree* book(TTree *t, const std::string & name = "trk_eff");
-
-  Int_t lumi;
-  Int_t run;
-  Int_t event;
-  Float_t rand01_v1;
-  Float_t rand01_v2;
-
-  Float_t pt, eta, phi, pz, dxy;
-  Char_t charge;
-  Char_t endcap;
-
-
-  Float_t beamSpot_x;
-  Float_t beamSpot_y;
-  Float_t beamSpot_z;
-
-
-  Char_t chamber_ME1_csc_sh;//bit1:odd, bit2:even
-  Char_t chamber_ME2_csc_sh;
-  Int_t nlayers_csc_sh_odd;
-  Int_t nlayers_csc_sh_even;
-  Int_t chamber_lct_odd, chamber_dg_odd, chamber_sh_odd; //
-  Int_t chamber_lct_even, chamber_dg_even, chamber_sh_even; //
-  Float_t bending_sh;
-  Float_t phi_cscsh_even, phi_cscsh_odd, eta_cscsh_even, eta_cscsh_odd;
-  Float_t phi_layer1_sh_even, eta_layer1_sh_even, phi_layer1_sh_odd,eta_layer1_sh_odd, perp_layer1_sh_odd, perp_layer1_sh_even;
-  Float_t z_layer1_sh_odd, z_layer1_sh_even;
-  Float_t phi_layer6_sh_even, eta_layer6_sh_even, phi_layer6_sh_odd,eta_layer6_sh_odd, perp_layer6_sh_odd, perp_layer6_sh_even;
-  Float_t z_layer6_sh_odd, z_layer6_sh_even;
-  Float_t perp_gemsh_even, perp_gemsh_odd, perp_cscsh_even, perp_cscsh_odd,centralperp_gemsh_even, centralperp_gemsh_odd;
-  Float_t dphi_sh_even,dphi_sh_odd;
-  Float_t dphipositionpt_cscsh_even, dphipositionpt_cscsh_odd, dphipositionpt_gemsh_even,dphipositionpt_gemsh_odd;
-
-  Char_t has_csc_sh; // #layers with SimHits > minHitsChamber    bit1: in odd, bit2: even
-  Char_t has_csc_strips; // #layers with comparator digis > minHitsChamber    bit1: in odd, bit2: even
-  Char_t has_csc_wires; // #layers with wire digis > minHitsChamber    bit1: in odd, bit2: even
-  Int_t nlayers_wg_dg_odd;
-  Int_t nlayers_st_dg_odd;
-  Int_t nlayers_wg_dg_even;
-  Int_t nlayers_st_dg_even;
-
-  Char_t has_rechits;
-  Int_t nlayers_rechits_odd;
-  Int_t nlayers_rechits_even;
-
-  Char_t has_clct; // bit1: in odd, bit2: even
-  Char_t has_alct; // bit1: in odd, bit2: even
-  Char_t has_lct; // bit1: in odd, bit2: even
-
-  Float_t phi_layer1_fit_even, phi_layer3_fit_even, phi_layer6_fit_even, phi_layer1_fit_odd, phi_layer3_fit_odd, phi_layer6_fit_odd;
-  Float_t z_layer3_fit_even, z_layer3_fit_odd;
-  Char_t bend_lct_odd;
-  Char_t bend_lct_even;
-  Char_t bx_lct_odd, bx_alct_odd, bx_clct_odd;
-  Char_t bx_lct_even, bx_alct_even, bx_clct_even;
-
-
-  UChar_t hs_lct_odd;
-  UChar_t wg_lct_odd;
-  UChar_t hs_lct_even;
-  UChar_t wg_lct_even;
-
-  Float_t phi_lct_odd;
-  Float_t phi_lct_even;
-  Float_t eta_lct_odd;
-  Float_t eta_lct_even;
-  Float_t phi_me0_st2_odd;
-  Float_t phi_me0_st2_even;
-  Float_t eta_me0_st2_odd;
-  Float_t eta_me0_st2_even;
-  Float_t dphi_lct_odd; // dphi stored as data member in LCT
-  Float_t dphi_lct_even;
-  Float_t chi2_lct_odd, chi2_lct_even;
-  Float_t timeErr_lct_odd, timeErr_lct_even;
-  Int_t nHits_lct_odd, nHits_lct_even;
-  Float_t dR_sim_lct_odd, dR_sim_lct_even;
-  Float_t me0_st1_dphi_odd, me0_st1_dphi_even;
-  Bool_t me0_st1_isEven_odd, me0_st1_isEven_even;
-  Float_t perp_lct_odd;
-  Float_t perp_lct_even;
-  Bool_t passdphi_odd;
-  Bool_t passdphi_even;
-  Float_t fitperp_lct_odd;
-  Float_t fitperp_lct_even;
-
-  Int_t wiregroup_odd;
-  Int_t wiregroup_even;
-  Int_t halfstrip_odd;
-  Int_t halfstrip_even;
-
-  Int_t quality_clct_odd;
-  Int_t quality_clct_even;
-  Int_t quality_alct_odd;
-  Int_t quality_alct_even;
-
-  Int_t pad_odd;
-  Int_t pad_even;
-  Int_t Copad_odd;
-  Int_t Copad_even;
-  Int_t hsfromgem_odd;
-  Int_t hsfromgem_even;
-
-  Char_t has_gem_sh; // bit1: in odd, bit2: even
-  Char_t has_gem_sh2; // has SimHits in 2 layers  bit1: in odd, bit2: even
-  Char_t has_gemcopad_sh; // has SimHits in 2 layers  bit1: in odd, bit2: even
-  Char_t has_gem_dg; // bit1: in odd, bit2: even
-  Char_t has_gem_dg2; // has pads in 2 layers  bit1: in odd, bit2: even
-  Char_t has_gem_pad; // bit1: in odd, bit2: even
-  Char_t has_gem_pad2; // has pads in 2 layers  bit1: in odd, bit2: even
-  Char_t has_gem_copad; // bit1: in odd, bit2: even
-
-  Float_t strip_gemsh_odd; // average hits' strip
-  Float_t strip_gemsh_even;
-  Float_t eta_gemsh_odd;
-  Float_t eta_gemsh_even;
-  Float_t phi_gemsh_odd;
-  Float_t phi_gemsh_even;
-  Int_t strip_gemdg_odd; // median digis' strip
-  Int_t strip_gemdg_even;
-
-
-  Int_t lct_type;
-
-  Char_t bx_pad_odd;
-  Char_t bx_pad_even;
-  Float_t phi_pad_odd;
-  Float_t phi_pad_even;
-  Float_t z_pad_odd;
-  Float_t z_pad_even;
-  Float_t eta_pad_odd;
-  Float_t eta_pad_even;
-
-  Float_t dphi_pad_odd;
-  Float_t dphi_pad_even;
-  Float_t deta_pad_odd;
-  Float_t deta_pad_even;
-  Float_t dphi_pad_fit_odd;
-  Float_t dphi_pad_fit_even;
-
-
-  Int_t quality_odd;
-  Int_t quality_even;
-
-};
-
-void MyTrackEff::init()
-{
-  lumi = -99;
-  run = -99;
-  event = -99;
-  rand01_v1 = 99;
-  rand01_v2 = 99;
-
-  pt = 0.;
-  phi = 0.;
-  eta = -9.;
-  dxy = -999.;
-  charge = -9;
-  endcap = -9;
-
-
-  beamSpot_x =0.0;
-  beamSpot_y =0.0;
-  beamSpot_z =0.0;
-
-
-  chamber_ME1_csc_sh=0;
-  chamber_ME2_csc_sh=0;
-  chamber_sh_odd = -1;
-  chamber_sh_even = -1;
-  nlayers_csc_sh_odd = -1;
-  nlayers_csc_sh_even = -1;
-  quality_odd = 0;
-  quality_even = 0;
-  bending_sh = -10;
-  perp_cscsh_odd = -0.0;
-  perp_cscsh_even = -0.0;
-  perp_gemsh_odd = -0.0;
-  perp_gemsh_even = -0.0;
-  centralperp_gemsh_odd = -0.0;
-  centralperp_gemsh_even = -0.0;
-  phi_cscsh_even = -9.0;
-  phi_cscsh_odd = -9.0;
-  eta_cscsh_even = -9.0;
-  eta_cscsh_odd = -9.0;
-  phi_layer1_sh_even =-9.0;
-  phi_layer1_sh_odd =-9.0;
-  eta_layer1_sh_even =-9.0;
-  eta_layer1_sh_odd =-9.0;
-  perp_layer1_sh_even = -1;
-  perp_layer1_sh_odd = -1;
-  z_layer1_sh_even = 0.0;
-  z_layer1_sh_odd = 0.0;
-  phi_layer6_sh_even =-9.0;
-  phi_layer6_sh_odd =-9.0;
-  eta_layer6_sh_even =-9.0;
-  eta_layer6_sh_odd =-9.0;
-  perp_layer6_sh_even = -1;
-  perp_layer6_sh_odd = -1;
-  z_layer6_sh_even = 0.0;
-  z_layer6_sh_odd = 0.0;
-
-
-  has_csc_strips = 0;
-  has_csc_wires = 0;
-  has_rechits = 0;
-  nlayers_wg_dg_odd = -1;
-  nlayers_st_dg_odd = -1;
-  nlayers_wg_dg_even = -1;
-  nlayers_st_dg_even = -1;
-  nlayers_rechits_odd = -1;
-  nlayers_rechits_even = -1;
-
-
-  phi_layer1_fit_even =-9.0;
-  phi_layer1_fit_odd =-9.0;
-  z_layer3_fit_even =-9.0;
-  z_layer3_fit_odd =-9.0;
-  phi_layer3_fit_even =-9.0;
-  phi_layer3_fit_odd =-9.0;
-  phi_layer6_fit_even =-9.0;
-  phi_layer6_fit_odd =-9.0;
-  has_csc_sh = 0;
-  chamber_dg_odd = -1;
-  chamber_dg_even = -1;
-  has_alct = 0;
-  has_clct = 0;
-  has_lct = 0;
-  chamber_lct_odd = -1;
-  chamber_lct_even = -1;
-  bend_lct_odd = -9;
-  bend_lct_even = -9;
-  dphi_lct_odd = -9;
-  dphi_lct_even = -9;
-  bx_lct_odd = -9;
-  bx_lct_even = -9;
-  hs_lct_odd = 0;
-  hs_lct_even = 0;
-  wg_lct_odd = 0;
-  wg_lct_even = 0;
-  phi_lct_odd = -9.;
-  phi_lct_even = -9.;
-  eta_lct_odd = -9.;
-  eta_lct_even = -9.;
-  phi_me0_st2_odd = -9.;
-  phi_me0_st2_even = -9.;
-  eta_me0_st2_odd = -9.;
-  eta_me0_st2_even = -9.;
-  chi2_lct_odd = -99999;
-  chi2_lct_even = -99999;
-  timeErr_lct_odd = -9999;
-  timeErr_lct_even = -9999;
-  nHits_lct_odd = 0;
-  nHits_lct_even = 0;
-  dR_sim_lct_odd = 10;
-  dR_sim_lct_even = 10;
-  passdphi_odd = false;
-  passdphi_even = false;
-  perp_lct_odd = -1;
-  perp_lct_even = -1;
-  fitperp_lct_odd = -1;
-  fitperp_lct_even = -1;
-  me0_st1_dphi_odd = -9;
-  me0_st1_dphi_even = -9;
-  me0_st1_isEven_odd = false;
-  me0_st1_isEven_even = false;
-
-
-
-  wiregroup_odd = -1;
-  wiregroup_even =-1;
-  halfstrip_odd =-1;
-  halfstrip_even = -1;
-  quality_clct_odd = -1;
-  quality_clct_even = -1;
-  quality_alct_odd = -1;
-  quality_alct_even = -1;
-  bx_clct_odd = -9;
-  bx_clct_even = -9;
-  bx_alct_odd = -9;
-  bx_alct_even = -9;
-  pad_odd = -1;
-  pad_even = -1;
-  Copad_odd = -1;
-  Copad_even = -1;
-
-  hsfromgem_odd = -1;
-  hsfromgem_even = -1;
-
-  has_gem_sh = 0;
-  has_gem_sh2 = 0;
-  has_gemcopad_sh = 0;
-  has_gem_dg = 0;
-  has_gem_dg2 = 0;
-  has_gem_pad = 0;
-  has_gem_pad2 = 0;
-  has_gem_copad = 0;
-  strip_gemsh_odd = -9.;
-  strip_gemsh_even = -9.;
-  eta_gemsh_odd = -9.;
-  eta_gemsh_even = -9.;
-  phi_gemsh_odd = -9.;
-  phi_gemsh_even = -9.;
-  dphi_sh_odd = -9;
-  dphi_sh_even = -9;
-  dphipositionpt_gemsh_even = -9;
-  dphipositionpt_gemsh_odd = -9;
-  dphipositionpt_cscsh_even = -9;
-  dphipositionpt_cscsh_odd = -9;
-
-  strip_gemdg_odd = -9;
-  strip_gemdg_even = -9;
-
-  lct_type = -1;
-
-  bx_pad_odd = -9;
-  bx_pad_even = -9;
-  phi_pad_odd = -9.;
-  phi_pad_even = -9.;
-  z_pad_odd = -0.;
-  z_pad_even = -0.;
-  eta_pad_odd = -9.;
-  eta_pad_even = -9.;
-  dphi_pad_odd = -9.;
-  dphi_pad_even = -9.;
-  dphi_pad_fit_odd = -9.;
-  dphi_pad_fit_even = -9.;
-  deta_pad_odd = -9.;
-  deta_pad_even = -9.;
-
-}
-
-
-TTree* MyTrackEff::book(TTree *t, const std::string & name)
-{
-  edm::Service< TFileService > fs;
-  t = fs->make<TTree>(name.c_str(), name.c_str());
-
-  t->Branch("lumi", &lumi);
-  t->Branch("run", &run);
-  t->Branch("event", &event);
-  t->Branch("rand01_v1", &rand01_v1);
-  t->Branch("rand01_v2", &rand01_v2);
-
-  t->Branch("pt", &pt);
-  t->Branch("pz", &pz);
-  t->Branch("eta", &eta);
-  t->Branch("dxy", &dxy);
-  t->Branch("phi", &phi);
-  t->Branch("charge", &charge);
-  t->Branch("endcap", &endcap);
-
-
-
-  t->Branch("chamber_ME1_csc_sh", &chamber_ME1_csc_sh);
-  t->Branch("chamber_ME2_csc_sh", &chamber_ME2_csc_sh);
-  t->Branch("chamber_sh_odd", &chamber_sh_odd);
-  t->Branch("chamber_sh_even", &chamber_sh_even);
-  t->Branch("nlayers_csc_sh_odd", &nlayers_csc_sh_odd);
-  t->Branch("nlayers_csc_sh_even", &nlayers_csc_sh_even);
-  t->Branch("quality_odd", &quality_odd);
-  t->Branch("quality_even", &quality_even);
-  t->Branch("bending_sh", &bending_sh);
-  t->Branch("perp_cscsh_odd", &perp_cscsh_odd);
-  t->Branch("perp_cscsh_even", &perp_cscsh_even);
-  t->Branch("perp_gemsh_odd", &perp_gemsh_odd);
-  t->Branch("perp_gemsh_even", &perp_gemsh_even);
-  t->Branch("centralperp_gemsh_odd", &centralperp_gemsh_odd);
-  t->Branch("centralperp_gemsh_even", &centralperp_gemsh_even);
-  t->Branch("phi_cscsh_even", &phi_cscsh_even);
-  t->Branch("phi_cscsh_odd", &phi_cscsh_odd);
-  t->Branch("phi_layer1_sh_even", &phi_layer1_sh_even);
-  t->Branch("phi_layer1_sh_odd", &phi_layer1_sh_odd);
-  t->Branch("eta_layer1_sh_even", &eta_layer1_sh_even);
-  t->Branch("eta_layer1_sh_odd", &eta_layer1_sh_odd);
-  t->Branch("perp_layer1_sh_even", &perp_layer1_sh_even);
-  t->Branch("perp_layer1_sh_odd", &perp_layer1_sh_odd);
-  t->Branch("z_layer1_sh_even", &z_layer1_sh_even);
-  t->Branch("z_layer1_sh_odd", &z_layer1_sh_odd);
-  t->Branch("phi_layer6_sh_even", &phi_layer6_sh_even);
-  t->Branch("phi_layer6_sh_odd", &phi_layer6_sh_odd);
-  t->Branch("eta_layer6_sh_even", &eta_layer6_sh_even);
-  t->Branch("eta_layer6_sh_odd", &eta_layer6_sh_odd);
-  t->Branch("perp_layer6_sh_even", &perp_layer6_sh_even);
-  t->Branch("perp_layer6_sh_odd", &perp_layer6_sh_odd);
-  t->Branch("z_layer6_sh_even", &z_layer6_sh_even);
-  t->Branch("z_layer6_sh_odd", &z_layer6_sh_odd);
-  t->Branch("eta_cscsh_even", &eta_cscsh_even);
-  t->Branch("eta_cscsh_odd", &eta_cscsh_odd);
-
-  t->Branch("chamber_dg_odd", &chamber_dg_odd);
-  t->Branch("chamber_dg_even", &chamber_dg_even);
-  t->Branch("has_csc_sh", &has_csc_sh);
-  t->Branch("has_csc_strips", &has_csc_strips);
-  t->Branch("has_csc_wires", &has_csc_wires);
-  t->Branch("has_rechits", &has_rechits);
-  t->Branch("nlayers_wg_dg_odd", &nlayers_wg_dg_odd);
-  t->Branch("nlayers_wg_dg_even", &nlayers_wg_dg_even);
-  t->Branch("nlayers_st_dg_odd", &nlayers_st_dg_odd);
-  t->Branch("nlayers_st_dg_even", &nlayers_st_dg_even);
-  t->Branch("nlayers_rechits_odd", &nlayers_rechits_odd);
-  t->Branch("nlayers_rechits_even", &nlayers_rechits_even);
-
-
-  t->Branch("has_clct", &has_clct);
-  t->Branch("has_alct", &has_alct);
-  t->Branch("has_lct", &has_lct);
-
-  t->Branch("quality_clct_odd", &quality_clct_odd);
-  t->Branch("quality_clct_even", &quality_clct_even);
-  t->Branch("bx_clct_odd", &bx_clct_odd);
-  t->Branch("bx_clct_even", &bx_clct_even);
-  t->Branch("quality_alct_odd", &quality_alct_odd);
-  t->Branch("quality_alct_even", &quality_alct_even);
-  t->Branch("bx_alct_odd", &bx_alct_odd);
-  t->Branch("bx_alct_even", &bx_alct_even);
-
-
-  t->Branch("chamber_lct_odd", &chamber_lct_odd);
-  t->Branch("chamber_lct_even", &chamber_lct_even);
-  t->Branch("z_layer3_fit_even", &z_layer3_fit_even);
-  t->Branch("z_layer3_fit_odd", &z_layer3_fit_odd);
-  t->Branch("phi_layer1_fit_even", &phi_layer1_fit_even);
-  t->Branch("phi_layer1_fit_odd", &phi_layer1_fit_odd);
-  t->Branch("phi_layer3_fit_even", &phi_layer3_fit_even);
-  t->Branch("phi_layer3_fit_odd", &phi_layer3_fit_odd);
-  t->Branch("phi_layer6_fit_even", &phi_layer6_fit_even);
-  t->Branch("phi_layer6_fit_odd", &phi_layer6_fit_odd);
-  t->Branch("bend_lct_odd", &bend_lct_odd);
-  t->Branch("bend_lct_even", &bend_lct_even);
-  t->Branch("bx_lct_odd", &bx_lct_odd);
-  t->Branch("bx_lct_even", &bx_lct_even);
-  t->Branch("hs_lct_odd", &hs_lct_odd);
-  t->Branch("hs_lct_even", &hs_lct_even);
-  t->Branch("wg_lct_even", &wg_lct_even);
-  t->Branch("wg_lct_odd", &wg_lct_odd);
-  t->Branch("phi_lct_odd", &phi_lct_odd);
-  t->Branch("phi_lct_even", &phi_lct_even);
-  t->Branch("eta_lct_odd", &eta_lct_odd);
-  t->Branch("eta_lct_even", &eta_lct_even);
-  t->Branch("perp_lct_odd", &perp_lct_odd);
-  t->Branch("perp_lct_even", &perp_lct_even);
-  t->Branch("phi_me0_st2_odd", &phi_me0_st2_odd);
-  t->Branch("phi_me0_st2_even", &phi_me0_st2_even);
-  t->Branch("eta_me0_st2_odd", &eta_me0_st2_odd);
-  t->Branch("eta_me0_st2_even", &eta_me0_st2_even);
-  t->Branch("fitperp_lct_odd", &fitperp_lct_odd);
-  t->Branch("fitperp_lct_even", &fitperp_lct_even);
-  t->Branch("dphi_lct_odd", &dphi_lct_odd);
-  t->Branch("dphi_lct_even", &dphi_lct_even);
-  t->Branch("chi2_lct_odd", &chi2_lct_odd);
-  t->Branch("chi2_lct_even", &chi2_lct_even);
-  t->Branch("timeErr_lct_odd", &timeErr_lct_odd);
-  t->Branch("timeErr_lct_even", &timeErr_lct_even);
-  t->Branch("nHits_lct_odd", &nHits_lct_odd);
-  t->Branch("nHits_lct_even", &nHits_lct_even);
-  t->Branch("dR_sim_lct_odd", &dR_sim_lct_odd);
-  t->Branch("dR_sim_lct_even", &dR_sim_lct_even);
-  t->Branch("me0_st1_dphi_odd", &me0_st1_dphi_odd);
-  t->Branch("me0_st1_dphi_even", &me0_st1_dphi_even);
-  t->Branch("me0_st1_isEven_odd", &me0_st1_isEven_odd);
-  t->Branch("me0_st1_isEven_even", &me0_st1_isEven_even);
-  t->Branch("passdphi_odd", &passdphi_odd);
-  t->Branch("passdphi_even", &passdphi_even);
-
-  t->Branch("wiregroup_odd", &wiregroup_odd);
-  t->Branch("wiregroup_even", &wiregroup_even);
-  t->Branch("halfstrip_odd", &halfstrip_odd);
-  t->Branch("halfstrip_even", &halfstrip_even);
-
-  t->Branch("pad_odd", &pad_odd);
-  t->Branch("pad_even", &pad_even);
-  t->Branch("Copad_odd", &Copad_odd);
-  t->Branch("copad_even", &Copad_even);
-
-  t->Branch("hsfromgem_odd", &hsfromgem_odd);
-  t->Branch("hsfromgem_even", &hsfromgem_even);
-
-  t->Branch("has_gem_sh", &has_gem_sh);
-  t->Branch("has_gem_sh2", &has_gem_sh2);
-  t->Branch("has_gemcopad_sh", &has_gemcopad_sh);
-  t->Branch("has_gem_dg", &has_gem_dg);
-  t->Branch("has_gem_dg2", &has_gem_dg2);
-  t->Branch("has_gem_pad", &has_gem_pad);
-  t->Branch("has_gem_pad2", &has_gem_pad2);
-  t->Branch("has_gem_copad", &has_gem_copad);
-  t->Branch("strip_gemsh_odd", &strip_gemsh_odd);
-  t->Branch("strip_gemsh_even", &strip_gemsh_even);
-  t->Branch("eta_gemsh_odd", &eta_gemsh_odd);
-  t->Branch("eta_gemsh_even", &eta_gemsh_even);
-  t->Branch("phi_gemsh_odd", &phi_gemsh_odd);
-  t->Branch("phi_gemsh_even", &phi_gemsh_even);
-  t->Branch("dphi_sh_odd", &dphi_sh_odd);
-  t->Branch("dphi_sh_even", &dphi_sh_even);
-  t->Branch("dphipositionpt_gemsh_even", &dphipositionpt_gemsh_even);
-  t->Branch("dphipositionpt_gemsh_odd", &dphipositionpt_gemsh_odd);
-  t->Branch("dphipositionpt_cscsh_even", &dphipositionpt_cscsh_even);
-  t->Branch("dphipositionpt_cscsh_odd", &dphipositionpt_cscsh_odd);
-
-  t->Branch("strip_gemdg_odd", &strip_gemdg_odd);
-  t->Branch("strip_gemdg_even", &strip_gemdg_even);
-
-  t->Branch("lct_type", &lct_type);
-
-  t->Branch("bx_pad_odd", &bx_pad_odd);
-  t->Branch("bx_pad_even", &bx_pad_even);
-  t->Branch("phi_pad_odd", &phi_pad_odd);
-  t->Branch("phi_pad_even", &phi_pad_even);
-  t->Branch("z_pad_odd", &z_pad_odd);
-  t->Branch("z_pad_even", &z_pad_even);
-  t->Branch("eta_pad_odd", &eta_pad_odd);
-  t->Branch("eta_pad_even", &eta_pad_even);
-  t->Branch("dphi_pad_odd", &dphi_pad_odd);
-  t->Branch("dphi_pad_even", &dphi_pad_even);
-  t->Branch("dphi_pad_fit_odd", &dphi_pad_fit_odd);
-  t->Branch("dphi_pad_fit_even", &dphi_pad_fit_even);
-  t->Branch("deta_pad_odd", &deta_pad_odd);
-  t->Branch("deta_pad_even", &deta_pad_even);
-
-  return t;
-}
-
-}
-
 // --------------------------- TDRAnalyzer ---------------------------
 
 class TDRAnalyzer : public edm::EDAnalyzer
@@ -584,7 +55,6 @@ public:
   static void fillDescriptions(edm::ConfigurationDescriptions& descriptions);
 
   enum {ME0=12};
-
 
 private:
   int ievent;
@@ -893,18 +363,32 @@ void TDRAnalyzer::analyze(const edm::Event& ev, const edm::EventSetup& es)
   ev.getByToken(simVertexInput_, sim_vertices);
   const edm::SimVertexContainer & sim_vert = *sim_vertices.product();
 
-  if (verboseSimTrack_){
-    std::cout << "Total number of SimTrack in this event: " << sim_track.size() << std::endl;
-  }
-
-  int trk_no=0;
+  // first select the simtracks
+  edm::SimTrackContainer sim_track_selected;
   for (const auto& t: sim_track)
   {
+    // do not select bad simtracks
     if (!isSimTrackGood(t)) continue;
+
+    sim_track_selected.push_back(t);
+  }
+
+  if (verboseSimTrack_){
+    std::cout << "Number of total SimTrack:    " << sim_track.size() << std::endl;
+    std::cout << "Number of selected SimTrack: " << sim_track_selected.size() << std::endl;
+  }
+
+  // now run over the selected simtracks
+  for (unsigned iTrack = 0; iTrack < sim_track_selected.size(); iTrack++) {
+
+    const auto& t = sim_track_selected.at(iTrack);
+
     if (verboseSimTrack_){
-      std::cout << "Processing SimTrack " << trk_no + 1 << std::endl;
-      std::cout << "pt(GeV/c) = " << t.momentum().pt() << ", eta = " << t.momentum().eta()
-                << ", phi = " << t.momentum().phi() << ", Q = " << t.charge() << std::endl;
+      std::cout << "Processing SimTrack " << iTrack
+                << ": pt = " << t.momentum().pt()
+                << " GeV, eta = " << t.momentum().eta()
+                << ", phi = " << t.momentum().phi()
+                << ", Q = " << t.charge() << std::endl;
     }
 
     SimTrackMatchManager match(t, sim_vert[t.vertIndex()], cfg_, ev, es,
@@ -946,11 +430,9 @@ void TDRAnalyzer::analyze(const edm::Event& ev, const edm::EventSetup& es)
                                recoTrackExtraInputLabel_,
                                recoTrackInputLabel_,
                                recoChargedCandidateInputLabel_
-			       );
+                               );
 
-    if (ntupleTrackEff_) analyzeTrackEff(match, trk_no);
-    ++trk_no;
-    std::cout << "Done running on this track" << std::endl;
+    if (ntupleTrackEff_) analyzeTrackEff(match, iTrack);
   }
 }
 
@@ -986,7 +468,6 @@ void TDRAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
       etrk_[s].charge = t.charge();
       etrk_[s].endcap = (etrk_[s].eta > 0.) ? 1 : -1;
       }
-
 
   int chargesign = (t.charge()>0? 1:0);
   float pt = t.momentum().pt();
@@ -1183,17 +664,18 @@ void TDRAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
 
   if (verbose_) std::cout <<"TDRAnalyzer step3 "<< std::endl;
   // holders for track's LCTs
-  Digi lct_odd[12];
-  Digi lct_even[12];
-  GlobalPoint gp_lct_odd[12];
-  GlobalPoint gp_lct_even[12];
-  GlobalPoint gp_fit_odd[12];
-  GlobalPoint gp_fit_even[12];
+  Digi lct_odd[NumOfTrees];
+  Digi lct_even[NumOfTrees];
+  GlobalPoint gp_lct_odd[NumOfTrees];
+  GlobalPoint gp_lct_even[NumOfTrees];
+  GlobalPoint gp_fit_odd[NumOfTrees];
+  GlobalPoint gp_fit_even[NumOfTrees];
   for (const auto& s: stations_to_use_)
     {
       lct_odd[s] = make_digi();
       lct_even[s] = make_digi();
     }
+
 
   // LCT stubs
   for(const auto& d: match_lct.chamberIdsLCT(0))
@@ -1263,14 +745,12 @@ void TDRAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
         }
       }
 
+
  if (verbose_) std::cout <<"TDRAnalyzer step10 "<< std::endl;
  for (const auto& s: stations_to_use_)
    {
-     std::cout << "filling station " << s << std::endl;
      tree_eff_[s]->Fill();
    }
-
- std::cout << "Done filling station " << std::endl;
 }
 
 
