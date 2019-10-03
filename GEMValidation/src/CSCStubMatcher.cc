@@ -410,64 +410,102 @@ CSCStubMatcher::matchLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection& lcts)
       bool lct_alct_match(false);
       bool lct_gem1_match(false);
       bool lct_gem2_match(false);
-      if (verbose()) cout <<"in LCT, getCLCT "<< lct.getCLCT() <<" getALCT "<< lct.getALCT() << endl;
-      // Check if matched to an CLCT
-      for (const auto& p: cscClctsInChamber(id)){
-	if (p==lct.getCLCT()) {
-	  lct_clct_match = true;
-          if (verbose()) cout<<" LCT matched to CLCT "<< p <<endl;
-	  break;
-	}else{
-	  if (verbose()) cout<<" LCT Failed to matched to CLCT "<< p <<endl;
-	}
-      }
-      // Check if matched to an ALCT
-      for (const auto& p: cscAlctsInChamber(id)){
-	  //ALCT BX is shifted
-	if (p.getKeyWG() == lct.getALCT().getKeyWG()) {
-	  lct_alct_match = true;
-          if (verbose()) cout<<" LCT matched to ALCT "<< p <<endl;
-	  break;
-	}else{
-	  if (verbose()) cout<<" LCT Failed to matched to ALCT "<< p <<endl;
-	}
-      }
-      // Check if matched to an GEM pad L1
-      // fixME here: double check the timing of GEMPad
-      if (ch_id.ring()==1 and (ch_id.station()==1 or ch_id.station()==2)) {
-	const GEMDetId gemDetIdL1(ch_id.zendcap(),1,ch_id.station(),1,ch_id.chamber(),0);
-	for (const auto& p: gem_digi_matcher_->gemPadsInChamber(gemDetIdL1.rawId())){
-	  if (p==lct.getGEM1()){
-	    lct_gem1_match = true;
-	    if (verbose()) cout<<" LCT matched to GEML1 "<< p <<endl;
-	    break;
-	  }
-	}
-	const GEMDetId gemDetIdL2(ch_id.zendcap(),1,ch_id.station(),2,ch_id.chamber(),0);
-	// Check if matched to an GEM pad L2
-	for (const auto& p: gem_digi_matcher_->gemPadsInChamber(gemDetIdL2.rawId())){
-	  if (p==lct.getGEM2()){
-	    lct_gem2_match = true;
-	    if (verbose()) cout<<" LCT matched to GEML2 "<< p <<endl;
-	    break;
-	  }
-	}
+
+      if (verboseLCT_) {
+        cout <<"Checking LCT" << lct << endl
+             << "\tgetCLCT "<< lct.getCLCT() << endl
+             << "\tgetALCT "<< lct.getALCT() << endl
+             << "\tgetGEM1 "<< lct.getGEM1() << endl
+             << "\tgetGEM2 "<< lct.getGEM2() << endl << endl;
       }
 
+      // Check if matched to an CLCT
+      for (const auto& p: cscClctsInChamber(id)){
+        if (verboseLCT_) std::cout << "\tLCT checking match with CLCT " << p << std::endl;
+        if (p==lct.getCLCT()) {
+          lct_clct_match = true;
+          if (verboseLCT_) cout<<"\tLCT matched to CLCT "<< p <<endl;
+          break;
+        }
+      }
+      if (not lct_clct_match) if (verboseLCT_) cout<<"\tLCT Failed to match to CLCT "<<endl;
+
+      // Check if matched to an ALCT
+      for (const auto& p: cscAlctsInChamber(id)){
+        //ALCT BX is shifted
+        if (verboseLCT_) std::cout << "\tLCT checking match with ALCT " << p << std::endl;
+        if (p.getKeyWG() == lct.getALCT().getKeyWG()) {
+          lct_alct_match = true;
+          if (verboseLCT_) cout<<"\tLCT matched to ALCT "<< p <<endl;
+          break;
+        }
+      }
+      if (not lct_alct_match) if (verboseLCT_) cout<<"\tLCT Failed to match to ALCT " <<endl;
+
+      if (ch_id.ring()==1 and (ch_id.station()==1 or ch_id.station()==2)) {
+
+        const GEMDetId gemDetIdL1(ch_id.zendcap(),1,ch_id.station(),1,ch_id.chamber(),0);
+        const GEMDetId gemDetIdL2(ch_id.zendcap(),1,ch_id.station(),2,ch_id.chamber(),0);
+
+        // case with 2 GEM pads
+        if (lct.getType() == CSCCorrelatedLCTDigi::ALCTCLCT2GEM) {
+
+          // Check if matched to an GEM pad L1
+          for (const auto& p: gem_digi_matcher_->gemPadsInChamber(gemDetIdL1.rawId())){
+            if (verboseLCT_) std::cout << "\tLCT checking match with GEML1 " << p << std::endl;
+            if (p==lct.getGEM1()){
+              lct_gem1_match = true;
+              if (verboseLCT_) cout<<"\tLCT matched to GEML1 "<< p <<endl;
+              break;
+            }
+          }
+          if (not lct_gem1_match) if (verboseLCT_) cout<<"\tLCT Failed to match to GEM1 " <<endl;
+
+
+          // Check if matched to an GEM pad L2
+          for (const auto& p: gem_digi_matcher_->gemPadsInChamber(gemDetIdL2.rawId())){
+            if (verboseLCT_) std::cout << "\tLCT checking match with GEML2 " << p << std::endl;
+            if (p==lct.getGEM2()){
+              lct_gem2_match = true;
+              if (verboseLCT_) cout<<"\tLCT matched to GEML2 "<< p <<endl;
+              break;
+            }
+          }
+          if (not lct_gem2_match) if (verboseLCT_) cout<<"\tLCT Failed to match to GEM2 " <<endl;
+
+        }
+
+        // case with 1 GEM pad
+        // in this case, you need to check all possibilities!
+        if (lct.getType() == CSCCorrelatedLCTDigi::ALCTCLCTGEM) {
+          for (const auto& p: gem_digi_matcher_->gemPadsInChamber(gemDetIdL1.rawId())){
+            if (p==lct.getGEM1()) lct_gem1_match = true;
+            if (p==lct.getGEM2()) lct_gem2_match = true;
+          }
+          for (const auto& p: gem_digi_matcher_->gemPadsInChamber(gemDetIdL2.rawId())){
+            if (p==lct.getGEM1()) lct_gem1_match = true;
+            if (p==lct.getGEM2()) lct_gem2_match = true;
+          }
+        }
+      }
+
+      // check the match
+      // note: I use an OR to match to GEM pads for ALCT-2GEM, CLCT-2GEM
+      // it could be that the trigger picks up one wrong pad, but likely at least one will be correct...
       lct_matched = ((lct_clct_match and lct_alct_match) or
-		     (lct_alct_match and lct_gem1_match and lct_gem2_match) or
-		     (lct_clct_match and lct_gem1_match and lct_gem2_match));
+                     (lct_alct_match and (lct_gem1_match or lct_gem2_match)) or
+                     (lct_clct_match and (lct_gem1_match or lct_gem2_match)));
 
       if (chamber_to_lct_.find(id) == chamber_to_lct_.end())   chamber_to_lct_[id] = lcts_tmp[iLct];
       else{
-	if (verbose()) cout << "ALARM!!! here already was matching LCT "<<chamber_to_lct_[id]
-	    		<<" New LCT  "<< lcts_tmp[iLct] <<endl;
+        if (verbose()) cout << "ALARM!!! here already was matching LCT "<<chamber_to_lct_[id]
+                            <<" New LCT  "<< lcts_tmp[iLct] <<endl;
       }
 
       if (lct_matched) {
-	if (verbose()) cout<<"this LCT matched to simtrack in chamber "<< ch_id << endl;
-	chamber_to_lcts_[id].emplace_back(lcts_tmp[iLct]);
-	chamber_to_cscLcts_[id].emplace_back(lct);
+        if (verbose()) cout<<"this LCT matched to simtrack in chamber "<< ch_id << endl;
+        chamber_to_lcts_[id].emplace_back(lcts_tmp[iLct]);
+        chamber_to_cscLcts_[id].emplace_back(lct);
       }
     } // lct loop over
   }
