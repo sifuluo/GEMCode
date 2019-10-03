@@ -6,9 +6,7 @@ process = cms.Process("GEMCSCANA")
 process.load('Configuration.StandardSequences.Services_cff')
 process.load('FWCore.MessageService.MessageLogger_cfi')
 process.load('Configuration.EventContent.EventContent_cff')
-#process.load('Configuration.Geometry.GeometryExtended2023D17Reco_cff')
-process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
-process.load('Configuration.StandardSequences.GeometrySimDB_cff')
+process.load('Configuration.Geometry.GeometryExtended2023D41Reco_cff')
 process.load('Configuration.StandardSequences.MagneticField_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
@@ -23,9 +21,9 @@ process.source = cms.Source("PoolSource",
 	#fileNames = cms.untracked.vstring('/store/user/dildick/DarkSUSY_mH_125_mGammaD_20000_cT_0_14TeV_GEN_SIM_90X/DarkSUSY_mH_125_mGammaD_20000_cT_0_14TeV_PU0_DIGI_L1/170116_230113/0000/step2_1.root')
 )
 
-InputDir = ['/eos/uscms/store/user/dildick/DarkSUSY_mH_125_mGammaD_20_cT_0_14TeV/DarkSUSY_mH_125_mGammaD_20_cT_0_14TeV_REGEN/170723_232821/0000/']
-InputDir = ['/fdata/hepx/store/user/tahuang/SingleMu_100X_Run2MC_CSC_CentralBX_GEN_SIM_DIGI_L1/SingleMu_100X_Run2MC_CSC_CentralBX_GEN_SIM_DIGI_L1/180212_131435/0000/']
-InputDir = ['/fdata/hepx/store/user/tahuang/SingleMu_100X_Run2MC_CSC_CentralBX_GEN_SIM_DIGI_L1_20180212/SingleMu_100X_Run2MC_CSC_CentralBX_GEN_SIM_DIGI_L1_20180212/180213_092307/0000/']
+#InputDir = ['/eos/uscms/store/user/dildick/DarkSUSY_mH_125_mGammaD_20_cT_0_14TeV/DarkSUSY_mH_125_mGammaD_20_cT_0_14TeV_REGEN/170723_232821/0000/']
+#InputDir = ['/fdata/hepx/store/user/tahuang/SingleMu_100X_Run2MC_CSC_CentralBX_GEN_SIM_DIGI_L1/SingleMu_100X_Run2MC_CSC_CentralBX_GEN_SIM_DIGI_L1/180212_131435/0000/']
+#InputDir = ['/fdata/hepx/store/user/tahuang/SingleMu_100X_Run2MC_CSC_CentralBX_GEN_SIM_DIGI_L1_20180212/SingleMu_100X_Run2MC_CSC_CentralBX_GEN_SIM_DIGI_L1_20180212/180213_092307/0000/']
 from GEMCode.GEMValidation.InputFileHelpers import *
 process = useInputDir(process, InputDir, True)
 
@@ -36,7 +34,7 @@ process.TFileService = cms.Service("TFileService",
 ## global tag for upgrade studies
 from Configuration.AlCa.GlobalTag import GlobalTag
 #process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc', '')
-process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase1_2018_realistic', '')
+process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase2_realistic', '')
 
 # the analyzer configuration
 def enum(*sequential, **named):
@@ -57,8 +55,15 @@ matching.cscStationsToUse = cms.vint32(0,1,2,3,4,5,6,7,8,9,10,11)
 matching.l1track.run = cms.bool(False)
 matching.l1tkmuon.run = cms.bool(False)
 matching.upgradeGMT.run = cms.bool(False)
-matching.simTrack.minPt = 1.5
+matching.simTrack.minPt = 5
+matching.simTrack.minEta = 0.9
+matching.simTrack.maxEta = 2.4
 matching.matchprint = cms.bool(False)
+
+matching.cscALCT.inputTag = cms.InputTag("simCscTriggerPrimitiveDigis","","MyCSC")
+matching.cscCLCT.inputTag = cms.InputTag("simCscTriggerPrimitiveDigis","","MyCSC")
+matching.cscLCT.inputTag = cms.InputTag("simCscTriggerPrimitiveDigis","","MyCSC")
+
 
 doGem = True
 if doGem:
