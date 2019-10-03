@@ -11,7 +11,7 @@ def addPileUp(process, pu = 140, filelist = def_filelist):
     pu_files = ff.read().split('\n')
     ff.close()
     pu_files = filter(lambda x: x.endswith('.root'),  pu_files)
-    
+
     process.mix.input = cms.SecSource("PoolSource",
         nbPileupEvents = cms.PSet(
             averageNumber = cms.double(pu)
@@ -36,9 +36,9 @@ def useInputDir(process, inputDir, onEOS = True):
         print "Proceed to next directory"
         ls = os.listdir(my_dir)
         if onEOS:
-            theInputFiles.extend(['file:' + my_dir[:] + x for x in ls if x.endswith('root')])
+            theInputFiles.extend(['file:root://cmsxrootd.fnal.gov/' + my_dir[:] + x for x in ls if x.endswith('root')])
         else:
-            ## this works only if you pass the location on pnfs - FIXME for files staring with store/user/...                                                            
+            ## this works only if you pass the location on pnfs - FIXME for files staring with store/user/...
             theInputFiles.extend([my_dir[16:] + x for x in ls if x.endswith('root')])
 
     process.source.fileNames = cms.untracked.vstring(*theInputFiles)

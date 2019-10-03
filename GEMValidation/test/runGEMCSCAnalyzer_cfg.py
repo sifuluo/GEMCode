@@ -22,8 +22,14 @@ process.source = cms.Source("PoolSource",
 )
 
 #InputDir = ['/eos/uscms/store/user/dildick/DarkSUSY_mH_125_mGammaD_20_cT_0_14TeV/DarkSUSY_mH_125_mGammaD_20_cT_0_14TeV_REGEN/170723_232821/0000/']
-#InputDir = ['/fdata/hepx/store/user/tahuang/SingleMu_100X_Run2MC_CSC_CentralBX_GEN_SIM_DIGI_L1/SingleMu_100X_Run2MC_CSC_CentralBX_GEN_SIM_DIGI_L1/180212_131435/0000/']
-#InputDir = ['/fdata/hepx/store/user/tahuang/SingleMu_100X_Run2MC_CSC_CentralBX_GEN_SIM_DIGI_L1_20180212/SingleMu_100X_Run2MC_CSC_CentralBX_GEN_SIM_DIGI_L1_20180212/180213_092307/0000/']
+
+InputDir = ['/store/user/lpcgem/Mu_FlatPt2to100-pythia8-gun/crab_Mu_FlatPt2to100-pythia8-gun_SD20191002_PU0_CSCTP_ILT/191003_001017/0000']
+InputDir = ['/store/user/lpcgem/Mu_FlatPt2to100-pythia8-gun/crab_Mu_FlatPt2to100-pythia8-gun_SD20191002_PU0_CSCTP_NoILT/191003_001112/0000']
+InputDir = ['/store/user/lpcgem/Mu_FlatPt2to100-pythia8-gun/crab_Mu_FlatPt2to100-pythia8-gun_SD20191002_PU0_CSCTP_NoSLHC/191003_001204/0000']
+InputDir = ['/store/user/lpcgem/Mu_FlatPt2to100-pythia8-gun/crab_Mu_FlatPt2to100-pythia8-gun_SD20191002_PU200_CSCTP_ILT/191003_000951/0000']
+InputDir = ['/store/user/lpcgem/Mu_FlatPt2to100-pythia8-gun/crab_Mu_FlatPt2to100-pythia8-gun_SD20191002_PU200_CSCTP_NoILT/191003_001043/0000']
+InputDir = ['/store/user/lpcgem/Mu_FlatPt2to100-pythia8-gun/crab_Mu_FlatPt2to100-pythia8-gun_SD20191002_PU200_CSCTP_NoSLHC_v2/191003_014502/0000']
+
 from GEMCode.GEMValidation.InputFileHelpers import *
 process = useInputDir(process, InputDir, True)
 
