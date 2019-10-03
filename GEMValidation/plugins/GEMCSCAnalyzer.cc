@@ -982,12 +982,12 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
 
   if (verbose_) std::cout <<"GEMCSCAnalyzer step3 "<< std::endl;
   // holders for track's LCTs
-  Digi lct_odd[12];
-  Digi lct_even[12];
-  GlobalPoint gp_lct_odd[12];
-  GlobalPoint gp_lct_even[12];
-  GlobalPoint gp_fit_odd[12];
-  GlobalPoint gp_fit_even[12];
+  Digi lct_odd[NumOfTrees];
+  Digi lct_even[NumOfTrees];
+  GlobalPoint gp_lct_odd[NumOfTrees];
+  GlobalPoint gp_lct_even[NumOfTrees];
+  GlobalPoint gp_fit_odd[NumOfTrees];
+  GlobalPoint gp_fit_even[NumOfTrees];
   for (const auto& s: stations_to_use_)
   {
     lct_odd[s] = make_digi();
