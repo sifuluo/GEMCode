@@ -157,8 +157,8 @@ SimTrackMatching = cms.PSet(
         verbose = cms.int32(0),
         validInputTags = cms.InputTag("rpcRecHits"),
         run = cms.bool(True),
-        minBX = cms.int32(-1),
-        maxBX = cms.int32(1),
+        minBX = cms.int32(0),
+        maxBX = cms.int32(0),
         matchDeltaStrip = cms.int32(1),
     ),
     ## CSC

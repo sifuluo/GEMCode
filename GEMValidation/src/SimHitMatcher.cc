@@ -183,6 +183,8 @@ SimHitMatcher::SimHitMatcher(const SimTrack& t,
       edm::PSimHitContainer rpc_hits_select;
       for (const auto& h: *rpc_hits.product()) {
         const RPCDetId& id(h.detUnitId());
+        std::cout << "RPC simhits " << id << std::endl;
+
         if (useRPCChamberType(gemvalidation::toRPCType(id.region(), id.station(), id.ring()))) rpc_hits_select.push_back(h);
       }
 

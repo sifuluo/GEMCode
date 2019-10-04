@@ -48,15 +48,17 @@ enum GEMType {GEM_ALL = 0,
 
 /// RPC endcap chamber types -- FIXME
 enum RPCType {RPC_ALL = 0,
-	      RPC_ME12, RPC_ME13, RPC_ME22, RPC_ME23, RPC_ME31,
-	      RPC_ME32, RPC_ME33, RPC_ME41, RPC_ME42, RPC_ME43,
-	      RPC_MB01,  RPC_MB02,  RPC_MB03,  RPC_MB04,
-	      RPC_MB11p, RPC_MB12p, RPC_MB13p, RPC_MB14p,
-	      RPC_MB21p, RPC_MB22p, RPC_MB23p, RPC_MB24p,
-	      RPC_MB11n, RPC_MB12n, RPC_MB13n, RPC_MB14n,
-	      RPC_MB21n, RPC_MB22n, RPC_MB23n, RPC_MB24n,
-	      RPC_ME1, RPC_ME2, RPC_ME3, RPC_ME4,
-	      RPC_MB1, RPC_MB2, RPC_MB3, RPC_MB4};
+              RPC_ME12, RPC_ME13,
+              RPC_ME22, RPC_ME23,
+              RPC_ME31, RPC_ME32, RPC_ME33,
+              RPC_ME41, RPC_ME42, RPC_ME43,
+              RPC_MB01,  RPC_MB02,  RPC_MB03,  RPC_MB04,
+              RPC_MB11p, RPC_MB12p, RPC_MB13p, RPC_MB14p,
+              RPC_MB21p, RPC_MB22p, RPC_MB23p, RPC_MB24p,
+              RPC_MB11n, RPC_MB12n, RPC_MB13n, RPC_MB14n,
+              RPC_MB21n, RPC_MB22n, RPC_MB23n, RPC_MB24n,
+              RPC_ME1, RPC_ME2, RPC_ME3, RPC_ME4,
+              RPC_MB1, RPC_MB2, RPC_MB3, RPC_MB4};
 
 /// DT chamber types -- FIXME
 enum DTType {DT_ALL = 0,

@@ -42,12 +42,12 @@ CSCDigiMatcher::matchStripsToSimTrack(const CSCComparatorDigiCollection& compara
 {
 
  CSCComparatorDigiCollection::DigiRangeIterator detUnitIt;
- for (detUnitIt= comparators.begin(); detUnitIt!= comparators.end(); ++detUnitIt){    
+ for (detUnitIt= comparators.begin(); detUnitIt!= comparators.end(); ++detUnitIt){
      const CSCDetId& id = (*detUnitIt).first;
      const CSCComparatorDigiCollection::Range& range =(*detUnitIt).second;
      for (CSCComparatorDigiCollection::const_iterator digiIt =  range.first; digiIt!=range.second; ++digiIt){
 	 if (id.station() == 1 and (id.ring() == 1 or id.ring() ==4 ))
-	     cout <<"CSCid "<< id <<" Comparator digi (strip, comparator, Tbin ) "<< (*digiIt) << endl;
+     if (verboseStrip_) cout <<"CSCid "<< id <<" Comparator digi (strip, comparator, Tbin ) "<< (*digiIt) << endl;
      }
  }
 

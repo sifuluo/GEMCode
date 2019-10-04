@@ -279,13 +279,17 @@ RPCTimingAnalyzer::RPCTimingAnalyzer(const edm::ParameterSet& ps)
   }
 
   rpcStationsCo_.push_back(std::make_pair(-99,-99));
+
   rpcStationsCo_.push_back(std::make_pair(1,2));
   rpcStationsCo_.push_back(std::make_pair(1,3));
+
   rpcStationsCo_.push_back(std::make_pair(2,2));
   rpcStationsCo_.push_back(std::make_pair(2,3));
+
   rpcStationsCo_.push_back(std::make_pair(3,1));
   rpcStationsCo_.push_back(std::make_pair(3,2));
   rpcStationsCo_.push_back(std::make_pair(3,3));
+
   rpcStationsCo_.push_back(std::make_pair(4,1));
   rpcStationsCo_.push_back(std::make_pair(4,2));
   rpcStationsCo_.push_back(std::make_pair(4,3));
@@ -334,15 +338,6 @@ void RPCTimingAnalyzer::analyze(const edm::Event& ev, const edm::EventSetup& es)
   if (verboseSimTrack_){
     std::cout << "Total number of SimTrack in this event: " << sim_track.size() << std::endl;
   }
-
-  /*
-  edm::Handle< std::vector< TTTrack< Ref_Phase2TrackerDigi_ > > > TTTrackHandle;
-  ev.getByToken(trackInputLabel_, TTTrackHandle);
-  const std::vector< TTTrack< Ref_Phase2TrackerDigi_ > >& TTTracks = *TTTrackHandle.product();
-
-  if (verboseL1Track_){
-    std::cout << "Total number of L1Track in this event: " << TTTracks.size() << std::endl;
-  }*/
 
   int trk_no=0;
   for (const auto& t: sim_track)
@@ -440,6 +435,8 @@ void RPCTimingAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
   for (const auto& d: match_sh.chamberIdsRPC())
   {
     RPCDetId id(d);
+    std::cout << "Checking RPC " << id << std::endl;
+
     const int st(detIdToMEStation(id.station(), id.ring()));
     if (stations_to_use_.count(st) == 0) continue;
     int cscchamber = CSCTriggerNumbering::chamberFromTriggerLabels(id.sector(), 0, id.station(), id.subsector());
