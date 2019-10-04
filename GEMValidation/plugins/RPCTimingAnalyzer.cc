@@ -121,7 +121,6 @@ private:
   double simTrackOnlyMuon_;
   int verbose_;
   bool ntupleTrackEff_;
-  bool matchprint_;
   double bendingcutPt_;
   std::vector<string> rpcStations_;
   std::vector<std::pair<int,int> > rpcStationsCo_;
@@ -138,10 +137,8 @@ RPCTimingAnalyzer::RPCTimingAnalyzer(const edm::ParameterSet& ps)
 {
   ievent = 0;
 
-  cscStations_ = cfg_.getParameter<std::vector<string> >("cscStations");
+  rpcStations_ = cfg_.getParameter<std::vector<string> >("rpcStations");
   ntupleTrackEff_ = cfg_.getParameter<bool>("ntupleTrackEff");
-  //matchprint_ = false;
-  matchprint_ =  cfg_.getParameter<bool>("matchprint");
   bendingcutPt_ = cfg_.getUntrackedParameter<double>("bendingcutPt",10);
 
   displacedMuPt_cfg_ = cfg_.getParameter<edm::ParameterSet>("displacedMuPtAssignment");
@@ -455,7 +452,7 @@ void RPCTimingAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
     }
   }
 
-  if (false) for (const auto& d: match_rd.detIds())
+  for (const auto& d: match_rd.detIds())
   {
     RPCDetId id(d);
     const int st(detIdToMEStation(id.station(), id.ring()));
@@ -463,48 +460,50 @@ void RPCTimingAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
     //meanstrip in rpc
     const auto& rpcdigis = match_rd.digisInDetId(id);
     const int rpc_medianstrip(match_rd.median(rpcdigis));
-    const int cscchamber = CSCTriggerNumbering::chamberFromTriggerLabels(id.sector(), 0, id.station(), id.subsector());
-    //std::cout <<"rpc detid " << id << " csc chamebr:"<< cscchamber << std::endl;
-    const bool odd(cscchamber%2 == 1);
+    // convert sector and subsector to chamber
+    const int chamber = CSCTriggerNumbering::chamberFromTriggerLabels(id.sector(), 0, id.station(), id.subsector());
+    std::cout <<"rpc detid " << id << " chamber: "<< chamber << std::endl;
+    const bool odd(chamber%2 == 1);
     if (odd)
     {
       etrk_[st].has_rpc_dg |= 1;
       etrk_[st].strip_rpcdg_odd = rpc_medianstrip;
-      etrk_[st].hsfromrpc_odd = match_rd.extrapolateHsfromRPC( d, rpc_medianstrip);
-      if (is_valid(lct_odd[st]))
-      {
-        const auto& rpc_dg_and_gp = match_gd.digiInRPCClosestToCSC(rpcdigis, gp_lct_odd[st]);
-        best_rpcstrip_odd[st] = rpc_dg_and_gp.second;
-        etrk_[st].bx_rpcstrip_odd = digi_bx(rpc_dg_and_gp.first);
-        etrk_[st].phi_rpcstrip_odd = best_rpcstrip_odd[st].phi();
-        etrk_[st].eta_rpcstrip_odd = best_rpcstrip_odd[st].eta();
-        etrk_[st].dphi_rpcstrip_odd = deltaPhi(etrk_[st].phi_lct_odd, etrk_[st].phi_rpcstrip_odd);
-        etrk_[st].deta_rpcstrip_odd = etrk_[st].eta_lct_odd - etrk_[st].eta_rpcstrip_odd;
-      }
-    }
-    else
-    {
-      etrk_[st].has_rpc_dg |= 2;
-      etrk_[st].strip_rpcdg_even = rpc_medianstrip;
-      etrk_[st].hsfromrpc_even = match_rd.extrapolateHsfromRPC( d, rpc_medianstrip);
-      if (is_valid(lct_even[st]))
-      {
-        const auto& rpc_dg_and_gp = match_gd.digiInRPCClosestToCSC(rpcdigis, gp_lct_even[st]);
-        best_rpcstrip_even[st] = rpc_dg_and_gp.second;
-        etrk_[st].bx_rpcstrip_even = digi_bx(rpc_dg_and_gp.first);
-        etrk_[st].phi_rpcstrip_even = best_rpcstrip_even[st].phi();
-        etrk_[st].eta_rpcstrip_even = best_rpcstrip_even[st].eta();
-        etrk_[st].dphi_rpcstrip_even = deltaPhi(etrk_[st].phi_lct_even, etrk_[st].phi_rpcstrip_even);
-        etrk_[st].deta_rpcstrip_even = etrk_[st].eta_lct_even - etrk_[st].eta_rpcstrip_even;
-      }
+      // etrk_[st].hsfromrpc_odd = match_rd.extrapolateHsfromRPC( d, rpc_medianstrip);
+    //   if (is_valid(lct_odd[st]))
+    //   {
+    //     const auto& rpc_dg_and_gp = match_gd.digiInRPCClosestToCSC(rpcdigis, gp_lct_odd[st]);
+    //     best_rpcstrip_odd[st] = rpc_dg_and_gp.second;
+    //     etrk_[st].bx_rpcstrip_odd = digi_bx(rpc_dg_and_gp.first);
+    //     etrk_[st].phi_rpcstrip_odd = best_rpcstrip_odd[st].phi();
+    //     etrk_[st].eta_rpcstrip_odd = best_rpcstrip_odd[st].eta();
+    //     etrk_[st].dphi_rpcstrip_odd = deltaPhi(etrk_[st].phi_lct_odd, etrk_[st].phi_rpcstrip_odd);
+    //     etrk_[st].deta_rpcstrip_odd = etrk_[st].eta_lct_odd - etrk_[st].eta_rpcstrip_odd;
+    //   }
+    // }
+    // else
+    // {
+    //   etrk_[st].has_rpc_dg |= 2;
+    //   etrk_[st].strip_rpcdg_even = rpc_medianstrip;
+    //   etrk_[st].hsfromrpc_even = match_rd.extrapolateHsfromRPC( d, rpc_medianstrip);
+    //   if (is_valid(lct_even[st]))
+    //   {
+    //     const auto& rpc_dg_and_gp = match_gd.digiInRPCClosestToCSC(rpcdigis, gp_lct_even[st]);
+    //     best_rpcstrip_even[st] = rpc_dg_and_gp.second;
+    //     etrk_[st].bx_rpcstrip_even = digi_bx(rpc_dg_and_gp.first);
+    //     etrk_[st].phi_rpcstrip_even = best_rpcstrip_even[st].phi();
+    //     etrk_[st].eta_rpcstrip_even = best_rpcstrip_even[st].eta();
+    //     etrk_[st].dphi_rpcstrip_even = deltaPhi(etrk_[st].phi_lct_even, etrk_[st].phi_rpcstrip_even);
+    //     etrk_[st].deta_rpcstrip_even = etrk_[st].eta_lct_even - etrk_[st].eta_rpcstrip_even;
+    //   }
+    // }
     }
   }
 
   if (verbose_) std::cout <<"RPCTimingAnalyzer step10 "<< std::endl;
   for (const auto& s: stations_to_use_)
-  {
-    tree_eff_[s]->Fill();
-  }
+    {
+      tree_eff_[s]->Fill();
+    }
 }
 
 
