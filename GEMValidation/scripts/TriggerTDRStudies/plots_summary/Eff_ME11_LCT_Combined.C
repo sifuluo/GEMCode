@@ -1,7 +1,7 @@
 void Eff_ME11_LCT_Combined()
 {
 //=========Macro generated from canvas: c/c
-//=========  (Fri Oct  4 21:48:22 2019) by ROOT version 6.14/09
+//=========  (Fri Oct  4 22:06:02 2019) by ROOT version 6.14/09
    TCanvas *c = new TCanvas("c", "c",0,0,800,600);
    gStyle->SetOptFit(1);
    gStyle->SetOptStat(0);
@@ -134,11 +134,11 @@ tex->SetNDC();
 
    Int_t ci;      // for color index setting
    TColor *color; // for color definition with alpha
-   ci = TColor::GetColor("#cccccc");
+   ci = TColor::GetColor("#999999");
    den_clone1->SetLineColor(ci);
    den_clone1->SetLineWidth(2);
 
-   ci = TColor::GetColor("#cccccc");
+   ci = TColor::GetColor("#999999");
    den_clone1->SetMarkerColor(ci);
    den_clone1->SetMarkerStyle(23);
    den_clone1->Draw("same samep");

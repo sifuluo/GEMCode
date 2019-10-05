@@ -1,7 +1,7 @@
 void Eff_ME21_LCT_Combined()
 {
 //=========Macro generated from canvas: c/c
-//=========  (Fri Oct  4 21:48:24 2019) by ROOT version 6.14/09
+//=========  (Fri Oct  4 22:06:04 2019) by ROOT version 6.14/09
    TCanvas *c = new TCanvas("c", "c",0,0,800,600);
    gStyle->SetOptFit(1);
    gStyle->SetOptStat(0);
@@ -134,13 +134,13 @@ tex->SetNDC();
 
    Int_t ci;      // for color index setting
    TColor *color; // for color definition with alpha
-   ci = TColor::GetColor("#0000ff");
+   ci = TColor::GetColor("#ff0000");
    den_clone12->SetLineColor(ci);
    den_clone12->SetLineWidth(2);
 
-   ci = TColor::GetColor("#0000ff");
+   ci = TColor::GetColor("#ff0000");
    den_clone12->SetMarkerColor(ci);
-   den_clone12->SetMarkerStyle(21);
+   den_clone12->SetMarkerStyle(22);
    den_clone12->Draw("same samep");
    
    TEfficiency * den_clone13 = new TEfficiency("den_clone","",25,1.6,2.4);
@@ -208,13 +208,13 @@ tex->SetNDC();
    den_clone13->SetPassedEvents(26,0);
    den_clone13->SetFillColor(19);
 
-   ci = TColor::GetColor("#ff0000");
+   ci = TColor::GetColor("#0000ff");
    den_clone13->SetLineColor(ci);
    den_clone13->SetLineWidth(2);
 
-   ci = TColor::GetColor("#ff0000");
+   ci = TColor::GetColor("#0000ff");
    den_clone13->SetMarkerColor(ci);
-   den_clone13->SetMarkerStyle(22);
+   den_clone13->SetMarkerStyle(21);
    den_clone13->Draw("same samep");
    
    TEfficiency * den_clone14 = new TEfficiency("den_clone","",25,1.6,2.4);
@@ -294,7 +294,7 @@ tex->SetNDC();
    leg->SetLineWidth(1);
    leg->SetFillColor(0);
    leg->SetFillStyle(0);
-   TLegendEntry *entry=leg->AddEntry("den_clone","PU0 CSC Run-2","pl");
+   TLegendEntry *entry=leg->AddEntry("den_clone","PU0   CSC Run-2","pl");
    entry->SetLineColor(1);
    entry->SetLineStyle(1);
    entry->SetLineWidth(1);
