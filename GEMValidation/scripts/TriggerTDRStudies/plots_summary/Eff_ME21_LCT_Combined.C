@@ -1,7 +1,7 @@
 void Eff_ME21_LCT_Combined()
 {
 //=========Macro generated from canvas: c/c
-//=========  (Fri Oct  4 22:17:36 2019) by ROOT version 6.14/09
+//=========  (Fri Oct  4 22:19:23 2019) by ROOT version 6.14/09
    TCanvas *c = new TCanvas("c", "c",0,0,800,600);
    gStyle->SetOptFit(1);
    gStyle->SetOptStat(0);
@@ -294,7 +294,7 @@ tex->SetNDC();
    leg->SetLineWidth(1);
    leg->SetFillColor(0);
    leg->SetFillStyle(0);
-   TLegendEntry *entry=leg->AddEntry("den_clone","PU0    CSC Run-2","pl");
+   TLegendEntry *entry=leg->AddEntry("den_clone","PU0     CSC Run-2","pl");
    entry->SetLineColor(1);
    entry->SetLineStyle(1);
    entry->SetLineWidth(1);
