@@ -1,7 +1,7 @@
 void Eff_ME11_LCT_Combined_PU300()
 {
 //=========Macro generated from canvas: c/c
-//=========  (Fri Oct  4 22:19:13 2019) by ROOT version 6.14/09
+//=========  (Fri Oct  4 22:30:03 2019) by ROOT version 6.14/09
    TCanvas *c = new TCanvas("c", "c",0,0,800,600);
    gStyle->SetOptFit(1);
    gStyle->SetOptStat(0);
@@ -398,6 +398,9 @@ tex->SetNDC();
    entry->SetMarkerSize(1);
    leg->Draw();
    TText *text = new TText(0.17,0.17,"ME1/1");
+   text->SetNDC();
+   text->Draw();
+   text = new TText(0.17,0.24,"LCT");
    text->SetNDC();
    text->Draw();
    c->Modified();
