@@ -34,6 +34,15 @@ def drawCscLabel(title, x=0.17, y=0.17, font_size=0.):
     SetOwnership(tex, False)
     return tex
 
+#_______________________________________________________________________________
+def drawLabel(title, x=0.17, y=0.24, font_size=0.):
+    tex = TText(x, y, title)
+    tex.SetTextSize(0.05)
+    tex.SetNDC()
+    tex.Draw()
+    SetOwnership(tex, False)
+    return tex
+
 
 #_______________________________________________________________________________
 def drawEtaLabel(minEta, maxEta, x=0.17, y=0.35, font_size=0.):
