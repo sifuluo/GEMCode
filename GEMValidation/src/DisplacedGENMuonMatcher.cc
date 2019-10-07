@@ -21,7 +21,7 @@ DisplacedGENMuonMatcher::DisplacedGENMuonMatcher(const SimTrack& t, const SimVer
   bool getProduct = gemvalidation::getByToken(inputToken_, genParticles, event());
   if(getProduct and run_ and sampleType_ == DarkSUSY) matchDisplacedGENMuonMatcherToSimTrack(*genParticles.product());
   else if (getProduct and run_ and sampleType_ == MuonGun) matchDisplacedGENMuonFromMuonGunMatcherToSimTrack(*genParticles.product());
-  else if (not getProduct) std::cout <<"Can NOT readout GenParticles collections" << std::endl;
+  // else if (not getProduct) std::cout <<"Can NOT readout GenParticles collections" << std::endl;
 
 }
 

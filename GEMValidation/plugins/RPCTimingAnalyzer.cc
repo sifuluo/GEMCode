@@ -476,11 +476,12 @@ void RPCTimingAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
     //     etrk_[st].dphi_rpcstrip_odd = deltaPhi(etrk_[st].phi_lct_odd, etrk_[st].phi_rpcstrip_odd);
     //     etrk_[st].deta_rpcstrip_odd = etrk_[st].eta_lct_odd - etrk_[st].eta_rpcstrip_odd;
     //   }
-    // }
-    // else
-    // {
-    //   etrk_[st].has_rpc_dg |= 2;
-    //   etrk_[st].strip_rpcdg_even = rpc_medianstrip;
+    }
+    else
+    {
+      etrk_[st].has_rpc_dg |= 2;
+      etrk_[st].strip_rpcdg_even = rpc_medianstrip;
+    }
     //   etrk_[st].hsfromrpc_even = match_rd.extrapolateHsfromRPC( d, rpc_medianstrip);
     //   if (is_valid(lct_even[st]))
     //   {
@@ -493,6 +494,40 @@ void RPCTimingAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
     //     etrk_[st].deta_rpcstrip_even = etrk_[st].eta_lct_even - etrk_[st].eta_rpcstrip_even;
     //   }
     // }
+  }
+
+
+  for (const auto& d: match_rpcrh.detIds())
+  {
+    RPCDetId id(d);
+    const int st(detIdToMEStation(id.station(), id.ring()));
+
+    if (stations_to_use_.count(st) == 0) continue;
+
+    const auto& rpcrechits = match_rpcrh.rpcRecHitsInDetId(id);
+
+    std::cout << "Number of matched rechits: " << rpcrechits.size() << std::endl;
+    // pick the first rechit now
+    const auto& candidate_rechit = rpcrechits.at(0);
+
+    // convert sector and subsector to chamber
+    const int chamber = CSCTriggerNumbering::chamberFromTriggerLabels(id.sector(), 0, id.station(), id.subsector());
+    std::cout <<"rpc detid " << id << " chamber: "<< chamber << std::endl;
+
+    const bool odd(chamber%2 == 1);
+    etrk_[st].rpc_BunchX = candidate_rechit.BunchX();
+    etrk_[st].rpc_firstClusterStrip = candidate_rechit.firstClusterStrip();
+    etrk_[st].rpc_clusterSize = candidate_rechit.clusterSize();
+    etrk_[st].rpc_time = candidate_rechit.time();
+    etrk_[st].rpc_timeError = candidate_rechit.timeError();
+
+    if (odd)
+    {
+      etrk_[st].has_rpc_rh |= 1;
+    }
+    else
+    {
+      etrk_[st].has_rpc_rh |= 1;
     }
   }
 
