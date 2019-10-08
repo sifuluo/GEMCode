@@ -504,15 +504,15 @@ void RPCTimingAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
 
     if (stations_to_use_.count(st) == 0) continue;
 
+    // convert sector and subsector to chamber
+    const int chamber = CSCTriggerNumbering::chamberFromTriggerLabels(id.sector(), 0, id.station(), id.subsector());
+    std::cout <<"rpc detid " << id << " chamber: "<< chamber << std::endl;
+
     const auto& rpcrechits = match_rpcrh.rpcRecHitsInDetId(id);
 
     std::cout << "Number of matched rechits: " << rpcrechits.size() << std::endl;
     // pick the first rechit now
     const auto& candidate_rechit = rpcrechits.at(0);
-
-    // convert sector and subsector to chamber
-    const int chamber = CSCTriggerNumbering::chamberFromTriggerLabels(id.sector(), 0, id.station(), id.subsector());
-    std::cout <<"rpc detid " << id << " chamber: "<< chamber << std::endl;
 
     const bool odd(chamber%2 == 1);
     etrk_[st].rpc_BunchX = candidate_rechit.BunchX();
@@ -527,7 +527,7 @@ void RPCTimingAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
     }
     else
     {
-      etrk_[st].has_rpc_rh |= 1;
+      etrk_[st].has_rpc_rh |= 2;
     }
   }
 

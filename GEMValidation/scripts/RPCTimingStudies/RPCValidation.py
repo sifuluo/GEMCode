@@ -20,7 +20,7 @@ if( iPos==0 ): CMS_lumi.relPosX = 0.12
 
 #_______________________________________________________________________________
 def makePlot(plotter, st, toPlot, minBin, maxBin,
-             nBins, cut, xTitle, canvastitle):
+             nBins, cut, xTitle, canvastitle, labeltitle):
 
     index = plotter.stationsToUse.index(st)
 
@@ -45,17 +45,16 @@ def makePlot(plotter, st, toPlot, minBin, maxBin,
     leg.SetBorderSize(0)
     leg.SetFillStyle(0)
     leg.SetTextSize(0.05)
-    leg.AddEntry(h1, canvastitle,"pl")
+    leg.AddEntry(h1, labeltitle,"pl")
     leg.Draw("same")
 
     rpclabel = drawLabel(plotter.stationsS.reverse_mapping[st])
     #    ctitle = drawLabel(canvastitle)
 
-    saveAs = "%s%s_%s_%s"%(
+    saveAs = "%s%s_%s"%(
         plotter.targetDir,
-        xTitle,
-        plotter.stations.reverse_mapping[st][4:],
         canvastitle,
+        plotter.stations.reverse_mapping[st][4:]
     )
 
     c.SaveAs(saveAs + ".C")

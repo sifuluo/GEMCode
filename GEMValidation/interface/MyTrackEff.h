@@ -183,8 +183,8 @@ struct MyTrackEff
   int rpc_BunchX;
   int rpc_firstClusterStrip;
   int rpc_clusterSize;
-  int rpc_time;
-  int rpc_timeError;
+  float rpc_time;
+  float rpc_timeError;
 
   Int_t lct_type;
 
