@@ -1,7 +1,7 @@
 void RPCTiming_RE41_RE42_Combination()
 {
 //=========Macro generated from canvas: c/c
-//=========  (Tue Oct  8 14:50:04 2019) by ROOT version 6.14/09
+//=========  (Tue Oct  8 14:53:19 2019) by ROOT version 6.14/09
    TCanvas *c = new TCanvas("c", "c",0,0,800,600);
    gStyle->SetOptFit(1);
    gStyle->SetOptStat(0);
@@ -137,7 +137,6 @@ void RPCTiming_RE41_RE42_Combination()
    num__3->GetYaxis()->SetLabelOffset(0.007);
    num__3->GetYaxis()->SetLabelSize(0.05);
    num__3->GetYaxis()->SetTitleSize(0.06);
-   num__3->GetYaxis()->SetTitleOffset(1.1);
    num__3->GetYaxis()->SetTitleFont(42);
    num__3->GetZaxis()->SetLabelFont(42);
    num__3->GetZaxis()->SetLabelOffset(0.007);
@@ -271,7 +270,6 @@ void RPCTiming_RE41_RE42_Combination()
    num__4->GetYaxis()->SetLabelOffset(0.007);
    num__4->GetYaxis()->SetLabelSize(0.05);
    num__4->GetYaxis()->SetTitleSize(0.06);
-   num__4->GetYaxis()->SetTitleOffset(1.1);
    num__4->GetYaxis()->SetTitleFont(42);
    num__4->GetZaxis()->SetLabelFont(42);
    num__4->GetZaxis()->SetLabelOffset(0.007);
