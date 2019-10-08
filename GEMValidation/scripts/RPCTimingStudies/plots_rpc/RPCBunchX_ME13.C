@@ -1,13 +1,13 @@
 void RPCBunchX_ME13()
 {
 //=========Macro generated from canvas: c/c
-//=========  (Mon Oct  7 22:46:41 2019) by ROOT version 6.14/09
+//=========  (Tue Oct  8 14:19:50 2019) by ROOT version 6.14/09
    TCanvas *c = new TCanvas("c", "c",0,0,800,600);
    gStyle->SetOptFit(1);
    gStyle->SetOptStat(0);
    gStyle->SetOptTitle(0);
    c->SetHighLightColor(2);
-   c->Range(-6.428571,-0.1575,5.47619,1.155);
+   c->Range(0,0,1,1);
    c->SetFillColor(0);
    c->SetBorderMode(0);
    c->SetBorderSize(2);
@@ -19,42 +19,6 @@ void RPCBunchX_ME13()
    c->SetBottomMargin(0.12);
    c->SetFrameFillStyle(0);
    c->SetFrameBorderMode(0);
-   c->SetFrameFillStyle(0);
-   c->SetFrameBorderMode(0);
-   
-   TH1F *num__8 = new TH1F("num__8","",100,-5,5);
-   num__8->SetMinimum(0);
-
-   Int_t ci;      // for color index setting
-   TColor *color; // for color definition with alpha
-   ci = TColor::GetColor("#0000ff");
-   num__8->SetLineColor(ci);
-   num__8->SetLineStyle(0);
-   num__8->SetLineWidth(2);
-
-   ci = TColor::GetColor("#0000ff");
-   num__8->SetMarkerColor(ci);
-   num__8->SetMarkerStyle(21);
-   num__8->GetXaxis()->SetTitle("RPC bunch crossing");
-   num__8->GetXaxis()->SetLabelFont(42);
-   num__8->GetXaxis()->SetLabelOffset(0.007);
-   num__8->GetXaxis()->SetLabelSize(0.05);
-   num__8->GetXaxis()->SetTitleSize(0.06);
-   num__8->GetXaxis()->SetTitleOffset(0.9);
-   num__8->GetXaxis()->SetTitleFont(42);
-   num__8->GetYaxis()->SetTitle("Number of entries");
-   num__8->GetYaxis()->SetLabelFont(42);
-   num__8->GetYaxis()->SetLabelOffset(0.007);
-   num__8->GetYaxis()->SetLabelSize(0.05);
-   num__8->GetYaxis()->SetTitleSize(0.06);
-   num__8->GetYaxis()->SetTitleOffset(0.9);
-   num__8->GetYaxis()->SetTitleFont(42);
-   num__8->GetZaxis()->SetLabelFont(42);
-   num__8->GetZaxis()->SetLabelOffset(0.007);
-   num__8->GetZaxis()->SetLabelSize(0.05);
-   num__8->GetZaxis()->SetTitleSize(0.06);
-   num__8->GetZaxis()->SetTitleFont(42);
-   num__8->Draw("hist");
    TLatex *   tex = new TLatex(0.96,0.936,"14 TeV");
 tex->SetNDC();
    tex->SetTextAlign(31);

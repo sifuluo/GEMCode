@@ -1,13 +1,13 @@
 void RPCClusterSize_ME12()
 {
 //=========Macro generated from canvas: c/c
-//=========  (Mon Oct  7 22:46:41 2019) by ROOT version 6.14/09
+//=========  (Tue Oct  8 14:19:49 2019) by ROOT version 6.14/09
    TCanvas *c = new TCanvas("c", "c",0,0,800,600);
    gStyle->SetOptFit(1);
    gStyle->SetOptStat(0);
    gStyle->SetOptTitle(0);
    c->SetHighLightColor(2);
-   c->Range(-1.428571,-1442.542,10.47619,10578.64);
+   c->Range(-1.428571,-0.05612569,10.47619,0.4115884);
    c->SetFillColor(0);
    c->SetBorderMode(0);
    c->SetBorderSize(2);
@@ -22,50 +22,57 @@ void RPCClusterSize_ME12()
    c->SetFrameFillStyle(0);
    c->SetFrameBorderMode(0);
    
-   TH1F *num__5 = new TH1F("num__5","",10,0,10);
-   num__5->SetBinContent(2,9159);
-   num__5->SetBinContent(3,8871);
-   num__5->SetBinContent(4,6017);
-   num__5->SetBinContent(5,971);
-   num__5->SetBinContent(6,323);
-   num__5->SetBinContent(7,139);
-   num__5->SetBinContent(8,104);
-   num__5->SetBinContent(9,55);
-   num__5->SetBinContent(10,63);
-   num__5->SetBinContent(11,184);
-   num__5->SetMinimum(0);
-   num__5->SetEntries(25886);
+   TH1F *num__4 = new TH1F("num__4","",10,0,10);
+   num__4->SetBinContent(2,0.3563536);
+   num__4->SetBinContent(3,0.3451482);
+   num__4->SetBinContent(4,0.2341063);
+   num__4->SetBinContent(5,0.03777916);
+   num__4->SetBinContent(6,0.01256712);
+   num__4->SetBinContent(7,0.005408139);
+   num__4->SetBinContent(8,0.004046378);
+   num__4->SetBinContent(9,0.002139911);
+   num__4->SetBinContent(10,0.002451171);
+   num__4->SetBinContent(11,0.007158976);
+   num__4->SetBinError(2,0.003723549);
+   num__4->SetBinError(3,0.003664539);
+   num__4->SetBinError(4,0.003018027);
+   num__4->SetBinError(5,0.001212391);
+   num__4->SetBinError(6,0.000699253);
+   num__4->SetBinError(7,0.0004587124);
+   num__4->SetBinError(8,0.00039678);
+   num__4->SetBinError(9,0.0002885456);
+   num__4->SetBinError(10,0.0003088185);
+   num__4->SetBinError(11,0.0005277667);
+   num__4->SetEntries(25886);
+   num__4->SetDirectory(0);
 
    Int_t ci;      // for color index setting
    TColor *color; // for color definition with alpha
    ci = TColor::GetColor("#0000ff");
-   num__5->SetLineColor(ci);
-   num__5->SetLineStyle(0);
-   num__5->SetLineWidth(2);
-
-   ci = TColor::GetColor("#0000ff");
-   num__5->SetMarkerColor(ci);
-   num__5->SetMarkerStyle(21);
-   num__5->GetXaxis()->SetTitle("RPC cluster size");
-   num__5->GetXaxis()->SetLabelFont(42);
-   num__5->GetXaxis()->SetLabelOffset(0.007);
-   num__5->GetXaxis()->SetLabelSize(0.05);
-   num__5->GetXaxis()->SetTitleSize(0.06);
-   num__5->GetXaxis()->SetTitleOffset(0.9);
-   num__5->GetXaxis()->SetTitleFont(42);
-   num__5->GetYaxis()->SetTitle("Number of entries");
-   num__5->GetYaxis()->SetLabelFont(42);
-   num__5->GetYaxis()->SetLabelOffset(0.007);
-   num__5->GetYaxis()->SetLabelSize(0.05);
-   num__5->GetYaxis()->SetTitleSize(0.06);
-   num__5->GetYaxis()->SetTitleOffset(0.9);
-   num__5->GetYaxis()->SetTitleFont(42);
-   num__5->GetZaxis()->SetLabelFont(42);
-   num__5->GetZaxis()->SetLabelOffset(0.007);
-   num__5->GetZaxis()->SetLabelSize(0.05);
-   num__5->GetZaxis()->SetTitleSize(0.06);
-   num__5->GetZaxis()->SetTitleFont(42);
-   num__5->Draw("hist");
+   num__4->SetLineColor(ci);
+   num__4->SetLineStyle(0);
+   num__4->SetLineWidth(2);
+   num__4->SetMarkerStyle(20);
+   num__4->GetXaxis()->SetTitle("RPC cluster size");
+   num__4->GetXaxis()->SetLabelFont(42);
+   num__4->GetXaxis()->SetLabelOffset(0.007);
+   num__4->GetXaxis()->SetLabelSize(0.05);
+   num__4->GetXaxis()->SetTitleSize(0.06);
+   num__4->GetXaxis()->SetTitleOffset(0.9);
+   num__4->GetXaxis()->SetTitleFont(42);
+   num__4->GetYaxis()->SetTitle("Number of entries");
+   num__4->GetYaxis()->SetLabelFont(42);
+   num__4->GetYaxis()->SetLabelOffset(0.007);
+   num__4->GetYaxis()->SetLabelSize(0.05);
+   num__4->GetYaxis()->SetTitleSize(0.06);
+   num__4->GetYaxis()->SetTitleOffset(1.25);
+   num__4->GetYaxis()->SetTitleFont(42);
+   num__4->GetZaxis()->SetLabelFont(42);
+   num__4->GetZaxis()->SetLabelOffset(0.007);
+   num__4->GetZaxis()->SetLabelSize(0.05);
+   num__4->GetZaxis()->SetTitleSize(0.06);
+   num__4->GetZaxis()->SetTitleFont(42);
+   num__4->Draw("HIST");
    TLatex *   tex = new TLatex(0.96,0.936,"14 TeV");
 tex->SetNDC();
    tex->SetTextAlign(31);
