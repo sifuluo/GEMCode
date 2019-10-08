@@ -1,7 +1,7 @@
 void FirstClusterStrip_ME43_RecHit()
 {
 //=========Macro generated from canvas: c/c
-//=========  (Mon Oct  7 19:41:01 2019) by ROOT version 6.14/09
+//=========  (Mon Oct  7 19:53:43 2019) by ROOT version 6.14/09
    TCanvas *c = new TCanvas("c", "c",0,0,800,600);
    gStyle->SetOptFit(1);
    gStyle->SetOptStat(0);
@@ -22,39 +22,39 @@ void FirstClusterStrip_ME43_RecHit()
    c->SetFrameFillStyle(0);
    c->SetFrameBorderMode(0);
    
-   TH1F *num__39 = new TH1F("num__39","",100,0,100);
-   num__39->SetMinimum(0);
+   TH1F *num__49 = new TH1F("num__49","",100,0,100);
+   num__49->SetMinimum(0);
 
    Int_t ci;      // for color index setting
    TColor *color; // for color definition with alpha
    ci = TColor::GetColor("#0000ff");
-   num__39->SetLineColor(ci);
-   num__39->SetLineStyle(0);
-   num__39->SetLineWidth(2);
+   num__49->SetLineColor(ci);
+   num__49->SetLineStyle(0);
+   num__49->SetLineWidth(2);
 
    ci = TColor::GetColor("#0000ff");
-   num__39->SetMarkerColor(ci);
-   num__39->SetMarkerStyle(21);
-   num__39->GetXaxis()->SetTitle("FirstClusterStrip");
-   num__39->GetXaxis()->SetLabelFont(42);
-   num__39->GetXaxis()->SetLabelOffset(0.007);
-   num__39->GetXaxis()->SetLabelSize(0.05);
-   num__39->GetXaxis()->SetTitleSize(0.06);
-   num__39->GetXaxis()->SetTitleOffset(0.9);
-   num__39->GetXaxis()->SetTitleFont(42);
-   num__39->GetYaxis()->SetTitle("Number of entries");
-   num__39->GetYaxis()->SetLabelFont(42);
-   num__39->GetYaxis()->SetLabelOffset(0.007);
-   num__39->GetYaxis()->SetLabelSize(0.05);
-   num__39->GetYaxis()->SetTitleSize(0.06);
-   num__39->GetYaxis()->SetTitleOffset(0.9);
-   num__39->GetYaxis()->SetTitleFont(42);
-   num__39->GetZaxis()->SetLabelFont(42);
-   num__39->GetZaxis()->SetLabelOffset(0.007);
-   num__39->GetZaxis()->SetLabelSize(0.05);
-   num__39->GetZaxis()->SetTitleSize(0.06);
-   num__39->GetZaxis()->SetTitleFont(42);
-   num__39->Draw("hist");
+   num__49->SetMarkerColor(ci);
+   num__49->SetMarkerStyle(21);
+   num__49->GetXaxis()->SetTitle("FirstClusterStrip");
+   num__49->GetXaxis()->SetLabelFont(42);
+   num__49->GetXaxis()->SetLabelOffset(0.007);
+   num__49->GetXaxis()->SetLabelSize(0.05);
+   num__49->GetXaxis()->SetTitleSize(0.06);
+   num__49->GetXaxis()->SetTitleOffset(0.9);
+   num__49->GetXaxis()->SetTitleFont(42);
+   num__49->GetYaxis()->SetTitle("Number of entries");
+   num__49->GetYaxis()->SetLabelFont(42);
+   num__49->GetYaxis()->SetLabelOffset(0.007);
+   num__49->GetYaxis()->SetLabelSize(0.05);
+   num__49->GetYaxis()->SetTitleSize(0.06);
+   num__49->GetYaxis()->SetTitleOffset(0.9);
+   num__49->GetYaxis()->SetTitleFont(42);
+   num__49->GetZaxis()->SetLabelFont(42);
+   num__49->GetZaxis()->SetLabelOffset(0.007);
+   num__49->GetZaxis()->SetLabelSize(0.05);
+   num__49->GetZaxis()->SetTitleSize(0.06);
+   num__49->GetZaxis()->SetTitleFont(42);
+   num__49->Draw("hist");
    TLatex *   tex = new TLatex(0.96,0.936,"14 TeV");
 tex->SetNDC();
    tex->SetTextAlign(31);

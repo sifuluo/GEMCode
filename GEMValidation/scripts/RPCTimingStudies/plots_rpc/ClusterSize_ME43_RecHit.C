@@ -1,7 +1,7 @@
 void ClusterSize_ME43_RecHit()
 {
 //=========Macro generated from canvas: c/c
-//=========  (Mon Oct  7 19:41:01 2019) by ROOT version 6.14/09
+//=========  (Mon Oct  7 19:53:43 2019) by ROOT version 6.14/09
    TCanvas *c = new TCanvas("c", "c",0,0,800,600);
    gStyle->SetOptFit(1);
    gStyle->SetOptStat(0);
@@ -22,39 +22,39 @@ void ClusterSize_ME43_RecHit()
    c->SetFrameFillStyle(0);
    c->SetFrameBorderMode(0);
    
-   TH1F *num__40 = new TH1F("num__40","",10,0,10);
-   num__40->SetMinimum(0);
+   TH1F *num__50 = new TH1F("num__50","",10,0,10);
+   num__50->SetMinimum(0);
 
    Int_t ci;      // for color index setting
    TColor *color; // for color definition with alpha
    ci = TColor::GetColor("#0000ff");
-   num__40->SetLineColor(ci);
-   num__40->SetLineStyle(0);
-   num__40->SetLineWidth(2);
+   num__50->SetLineColor(ci);
+   num__50->SetLineStyle(0);
+   num__50->SetLineWidth(2);
 
    ci = TColor::GetColor("#0000ff");
-   num__40->SetMarkerColor(ci);
-   num__40->SetMarkerStyle(21);
-   num__40->GetXaxis()->SetTitle("ClusterSize");
-   num__40->GetXaxis()->SetLabelFont(42);
-   num__40->GetXaxis()->SetLabelOffset(0.007);
-   num__40->GetXaxis()->SetLabelSize(0.05);
-   num__40->GetXaxis()->SetTitleSize(0.06);
-   num__40->GetXaxis()->SetTitleOffset(0.9);
-   num__40->GetXaxis()->SetTitleFont(42);
-   num__40->GetYaxis()->SetTitle("Number of entries");
-   num__40->GetYaxis()->SetLabelFont(42);
-   num__40->GetYaxis()->SetLabelOffset(0.007);
-   num__40->GetYaxis()->SetLabelSize(0.05);
-   num__40->GetYaxis()->SetTitleSize(0.06);
-   num__40->GetYaxis()->SetTitleOffset(0.9);
-   num__40->GetYaxis()->SetTitleFont(42);
-   num__40->GetZaxis()->SetLabelFont(42);
-   num__40->GetZaxis()->SetLabelOffset(0.007);
-   num__40->GetZaxis()->SetLabelSize(0.05);
-   num__40->GetZaxis()->SetTitleSize(0.06);
-   num__40->GetZaxis()->SetTitleFont(42);
-   num__40->Draw("hist");
+   num__50->SetMarkerColor(ci);
+   num__50->SetMarkerStyle(21);
+   num__50->GetXaxis()->SetTitle("ClusterSize");
+   num__50->GetXaxis()->SetLabelFont(42);
+   num__50->GetXaxis()->SetLabelOffset(0.007);
+   num__50->GetXaxis()->SetLabelSize(0.05);
+   num__50->GetXaxis()->SetTitleSize(0.06);
+   num__50->GetXaxis()->SetTitleOffset(0.9);
+   num__50->GetXaxis()->SetTitleFont(42);
+   num__50->GetYaxis()->SetTitle("Number of entries");
+   num__50->GetYaxis()->SetLabelFont(42);
+   num__50->GetYaxis()->SetLabelOffset(0.007);
+   num__50->GetYaxis()->SetLabelSize(0.05);
+   num__50->GetYaxis()->SetTitleSize(0.06);
+   num__50->GetYaxis()->SetTitleOffset(0.9);
+   num__50->GetYaxis()->SetTitleFont(42);
+   num__50->GetZaxis()->SetLabelFont(42);
+   num__50->GetZaxis()->SetLabelOffset(0.007);
+   num__50->GetZaxis()->SetLabelSize(0.05);
+   num__50->GetZaxis()->SetTitleSize(0.06);
+   num__50->GetZaxis()->SetTitleFont(42);
+   num__50->Draw("hist");
    TLatex *   tex = new TLatex(0.96,0.936,"14 TeV");
 tex->SetNDC();
    tex->SetTextAlign(31);

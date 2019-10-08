@@ -1,13 +1,13 @@
 void ClusterSize_ME22_RecHit()
 {
 //=========Macro generated from canvas: c/c
-//=========  (Mon Oct  7 19:41:00 2019) by ROOT version 6.14/09
+//=========  (Mon Oct  7 19:53:41 2019) by ROOT version 6.14/09
    TCanvas *c = new TCanvas("c", "c",0,0,800,600);
    gStyle->SetOptFit(1);
    gStyle->SetOptStat(0);
    gStyle->SetOptTitle(0);
    c->SetHighLightColor(2);
-   c->Range(-1.428571,-12.915,10.47619,94.71);
+   c->Range(-1.428571,-12.7575,10.47619,93.555);
    c->SetFillColor(0);
    c->SetBorderMode(0);
    c->SetBorderSize(2);
@@ -22,48 +22,48 @@ void ClusterSize_ME22_RecHit()
    c->SetFrameFillStyle(0);
    c->SetFrameBorderMode(0);
    
-   TH1F *num__12 = new TH1F("num__12","",10,0,10);
-   num__12->SetBinContent(2,60);
-   num__12->SetBinContent(3,82);
-   num__12->SetBinContent(4,59);
-   num__12->SetBinContent(5,10);
-   num__12->SetBinContent(6,2);
-   num__12->SetBinContent(9,1);
-   num__12->SetBinContent(10,1);
-   num__12->SetBinContent(11,1);
-   num__12->SetMinimum(0);
-   num__12->SetEntries(216);
+   TH1F *num__15 = new TH1F("num__15","",10,0,10);
+   num__15->SetBinContent(2,59);
+   num__15->SetBinContent(3,81);
+   num__15->SetBinContent(4,57);
+   num__15->SetBinContent(5,10);
+   num__15->SetBinContent(6,2);
+   num__15->SetBinContent(9,1);
+   num__15->SetBinContent(10,1);
+   num__15->SetBinContent(11,1);
+   num__15->SetMinimum(0);
+   num__15->SetEntries(212);
 
    Int_t ci;      // for color index setting
    TColor *color; // for color definition with alpha
    ci = TColor::GetColor("#0000ff");
-   num__12->SetLineColor(ci);
-   num__12->SetLineStyle(0);
-   num__12->SetLineWidth(2);
+   num__15->SetLineColor(ci);
+   num__15->SetLineStyle(0);
+   num__15->SetLineWidth(2);
 
    ci = TColor::GetColor("#0000ff");
-   num__12->SetMarkerColor(ci);
-   num__12->SetMarkerStyle(21);
-   num__12->GetXaxis()->SetTitle("ClusterSize");
-   num__12->GetXaxis()->SetLabelFont(42);
-   num__12->GetXaxis()->SetLabelOffset(0.007);
-   num__12->GetXaxis()->SetLabelSize(0.05);
-   num__12->GetXaxis()->SetTitleSize(0.06);
-   num__12->GetXaxis()->SetTitleOffset(0.9);
-   num__12->GetXaxis()->SetTitleFont(42);
-   num__12->GetYaxis()->SetTitle("Number of entries");
-   num__12->GetYaxis()->SetLabelFont(42);
-   num__12->GetYaxis()->SetLabelOffset(0.007);
-   num__12->GetYaxis()->SetLabelSize(0.05);
-   num__12->GetYaxis()->SetTitleSize(0.06);
-   num__12->GetYaxis()->SetTitleOffset(0.9);
-   num__12->GetYaxis()->SetTitleFont(42);
-   num__12->GetZaxis()->SetLabelFont(42);
-   num__12->GetZaxis()->SetLabelOffset(0.007);
-   num__12->GetZaxis()->SetLabelSize(0.05);
-   num__12->GetZaxis()->SetTitleSize(0.06);
-   num__12->GetZaxis()->SetTitleFont(42);
-   num__12->Draw("hist");
+   num__15->SetMarkerColor(ci);
+   num__15->SetMarkerStyle(21);
+   num__15->GetXaxis()->SetTitle("ClusterSize");
+   num__15->GetXaxis()->SetLabelFont(42);
+   num__15->GetXaxis()->SetLabelOffset(0.007);
+   num__15->GetXaxis()->SetLabelSize(0.05);
+   num__15->GetXaxis()->SetTitleSize(0.06);
+   num__15->GetXaxis()->SetTitleOffset(0.9);
+   num__15->GetXaxis()->SetTitleFont(42);
+   num__15->GetYaxis()->SetTitle("Number of entries");
+   num__15->GetYaxis()->SetLabelFont(42);
+   num__15->GetYaxis()->SetLabelOffset(0.007);
+   num__15->GetYaxis()->SetLabelSize(0.05);
+   num__15->GetYaxis()->SetTitleSize(0.06);
+   num__15->GetYaxis()->SetTitleOffset(0.9);
+   num__15->GetYaxis()->SetTitleFont(42);
+   num__15->GetZaxis()->SetLabelFont(42);
+   num__15->GetZaxis()->SetLabelOffset(0.007);
+   num__15->GetZaxis()->SetLabelSize(0.05);
+   num__15->GetZaxis()->SetTitleSize(0.06);
+   num__15->GetZaxis()->SetTitleFont(42);
+   num__15->Draw("hist");
    TLatex *   tex = new TLatex(0.96,0.936,"14 TeV");
 tex->SetNDC();
    tex->SetTextAlign(31);

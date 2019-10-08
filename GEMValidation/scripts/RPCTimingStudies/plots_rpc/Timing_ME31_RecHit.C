@@ -1,13 +1,13 @@
 void Timing_ME31_RecHit()
 {
 //=========Macro generated from canvas: c/c
-//=========  (Mon Oct  7 19:41:00 2019) by ROOT version 6.14/09
+//=========  (Mon Oct  7 19:53:41 2019) by ROOT version 6.14/09
    TCanvas *c = new TCanvas("c", "c",0,0,800,600);
    gStyle->SetOptFit(1);
    gStyle->SetOptStat(0);
    gStyle->SetOptTitle(0);
    c->SetHighLightColor(2);
-   c->Range(-6.428571,-3697.627,5.47619,27115.93);
+   c->Range(-6.428571,-3502.327,5.47619,25683.73);
    c->SetFillColor(0);
    c->SetBorderMode(0);
    c->SetBorderSize(2);
@@ -22,49 +22,49 @@ void Timing_ME31_RecHit()
    c->SetFrameFillStyle(0);
    c->SetFrameBorderMode(0);
    
-   TH1F *num__17 = new TH1F("num__17","",100,-5,5);
-   num__17->SetBinContent(11,6);
-   num__17->SetBinContent(21,109);
-   num__17->SetBinContent(31,1133);
-   num__17->SetBinContent(41,5398);
-   num__17->SetBinContent(51,23477);
-   num__17->SetBinContent(61,5075);
-   num__17->SetBinContent(71,1029);
-   num__17->SetBinContent(81,109);
-   num__17->SetBinContent(91,3);
-   num__17->SetMinimum(0);
-   num__17->SetEntries(36339);
+   TH1F *num__21 = new TH1F("num__21","",100,-5,5);
+   num__21->SetBinContent(11,6);
+   num__21->SetBinContent(21,102);
+   num__21->SetBinContent(31,1075);
+   num__21->SetBinContent(41,5103);
+   num__21->SetBinContent(51,22237);
+   num__21->SetBinContent(61,4792);
+   num__21->SetBinContent(71,975);
+   num__21->SetBinContent(81,103);
+   num__21->SetBinContent(91,3);
+   num__21->SetMinimum(0);
+   num__21->SetEntries(34396);
 
    Int_t ci;      // for color index setting
    TColor *color; // for color definition with alpha
    ci = TColor::GetColor("#0000ff");
-   num__17->SetLineColor(ci);
-   num__17->SetLineStyle(0);
-   num__17->SetLineWidth(2);
+   num__21->SetLineColor(ci);
+   num__21->SetLineStyle(0);
+   num__21->SetLineWidth(2);
 
    ci = TColor::GetColor("#0000ff");
-   num__17->SetMarkerColor(ci);
-   num__17->SetMarkerStyle(21);
-   num__17->GetXaxis()->SetTitle("Timing");
-   num__17->GetXaxis()->SetLabelFont(42);
-   num__17->GetXaxis()->SetLabelOffset(0.007);
-   num__17->GetXaxis()->SetLabelSize(0.05);
-   num__17->GetXaxis()->SetTitleSize(0.06);
-   num__17->GetXaxis()->SetTitleOffset(0.9);
-   num__17->GetXaxis()->SetTitleFont(42);
-   num__17->GetYaxis()->SetTitle("Number of entries");
-   num__17->GetYaxis()->SetLabelFont(42);
-   num__17->GetYaxis()->SetLabelOffset(0.007);
-   num__17->GetYaxis()->SetLabelSize(0.05);
-   num__17->GetYaxis()->SetTitleSize(0.06);
-   num__17->GetYaxis()->SetTitleOffset(0.9);
-   num__17->GetYaxis()->SetTitleFont(42);
-   num__17->GetZaxis()->SetLabelFont(42);
-   num__17->GetZaxis()->SetLabelOffset(0.007);
-   num__17->GetZaxis()->SetLabelSize(0.05);
-   num__17->GetZaxis()->SetTitleSize(0.06);
-   num__17->GetZaxis()->SetTitleFont(42);
-   num__17->Draw("hist");
+   num__21->SetMarkerColor(ci);
+   num__21->SetMarkerStyle(21);
+   num__21->GetXaxis()->SetTitle("Timing");
+   num__21->GetXaxis()->SetLabelFont(42);
+   num__21->GetXaxis()->SetLabelOffset(0.007);
+   num__21->GetXaxis()->SetLabelSize(0.05);
+   num__21->GetXaxis()->SetTitleSize(0.06);
+   num__21->GetXaxis()->SetTitleOffset(0.9);
+   num__21->GetXaxis()->SetTitleFont(42);
+   num__21->GetYaxis()->SetTitle("Number of entries");
+   num__21->GetYaxis()->SetLabelFont(42);
+   num__21->GetYaxis()->SetLabelOffset(0.007);
+   num__21->GetYaxis()->SetLabelSize(0.05);
+   num__21->GetYaxis()->SetTitleSize(0.06);
+   num__21->GetYaxis()->SetTitleOffset(0.9);
+   num__21->GetYaxis()->SetTitleFont(42);
+   num__21->GetZaxis()->SetLabelFont(42);
+   num__21->GetZaxis()->SetLabelOffset(0.007);
+   num__21->GetZaxis()->SetLabelSize(0.05);
+   num__21->GetZaxis()->SetTitleSize(0.06);
+   num__21->GetZaxis()->SetTitleFont(42);
+   num__21->Draw("hist");
    TLatex *   tex = new TLatex(0.96,0.936,"14 TeV");
 tex->SetNDC();
    tex->SetTextAlign(31);
