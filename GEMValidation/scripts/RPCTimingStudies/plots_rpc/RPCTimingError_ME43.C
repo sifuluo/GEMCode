@@ -1,13 +1,13 @@
 void RPCTimingError_ME43()
 {
 //=========Macro generated from canvas: c/c
-//=========  (Mon Oct  7 21:18:04 2019) by ROOT version 6.14/09
+//=========  (Mon Oct  7 22:46:43 2019) by ROOT version 6.14/09
    TCanvas *c = new TCanvas("c", "c",0,0,800,600);
    gStyle->SetOptFit(1);
    gStyle->SetOptStat(0);
    gStyle->SetOptTitle(0);
    c->SetHighLightColor(2);
-   c->Range(-0.4285714,-0.1575,3.142857,1.155);
+   c->Range(-0.4285714,-2264.22,3.142857,16604.28);
    c->SetFillColor(0);
    c->SetBorderMode(0);
    c->SetBorderSize(2);
@@ -23,7 +23,39 @@ void RPCTimingError_ME43()
    c->SetFrameBorderMode(0);
    
    TH1F *num__47 = new TH1F("num__47","",30,0,3);
+   num__47->SetBinContent(1,14376);
+   num__47->SetBinContent(2,99);
+   num__47->SetBinContent(3,105);
+   num__47->SetBinContent(4,93);
+   num__47->SetBinContent(5,97);
+   num__47->SetBinContent(6,88);
+   num__47->SetBinContent(7,87);
+   num__47->SetBinContent(8,79);
+   num__47->SetBinContent(9,74);
+   num__47->SetBinContent(10,88);
+   num__47->SetBinContent(11,76);
+   num__47->SetBinContent(12,61);
+   num__47->SetBinContent(13,76);
+   num__47->SetBinContent(14,59);
+   num__47->SetBinContent(15,49);
+   num__47->SetBinContent(16,49);
+   num__47->SetBinContent(17,27);
+   num__47->SetBinContent(18,36);
+   num__47->SetBinContent(19,28);
+   num__47->SetBinContent(20,14);
+   num__47->SetBinContent(21,24);
+   num__47->SetBinContent(22,16);
+   num__47->SetBinContent(23,13);
+   num__47->SetBinContent(24,7);
+   num__47->SetBinContent(25,4);
+   num__47->SetBinContent(26,2);
+   num__47->SetBinContent(27,5);
+   num__47->SetBinContent(28,1);
+   num__47->SetBinContent(29,2);
+   num__47->SetBinContent(30,4);
+   num__47->SetBinContent(31,9);
    num__47->SetMinimum(0);
+   num__47->SetEntries(15748);
 
    Int_t ci;      // for color index setting
    TColor *color; // for color definition with alpha

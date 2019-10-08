@@ -1,13 +1,13 @@
 void RPCTimingError_ME22()
 {
 //=========Macro generated from canvas: c/c
-//=========  (Mon Oct  7 21:18:02 2019) by ROOT version 6.14/09
+//=========  (Mon Oct  7 22:46:41 2019) by ROOT version 6.14/09
    TCanvas *c = new TCanvas("c", "c",0,0,800,600);
    gStyle->SetOptFit(1);
    gStyle->SetOptStat(0);
    gStyle->SetOptTitle(0);
    c->SetHighLightColor(2);
-   c->Range(-0.4285714,-30.24,3.142857,221.76);
+   c->Range(-0.4285714,-3021.952,3.142857,22160.98);
    c->SetFillColor(0);
    c->SetBorderMode(0);
    c->SetBorderSize(2);
@@ -23,21 +23,39 @@ void RPCTimingError_ME22()
    c->SetFrameBorderMode(0);
    
    TH1F *num__12 = new TH1F("num__12","",30,0,3);
-   num__12->SetBinContent(1,192);
-   num__12->SetBinContent(2,2);
-   num__12->SetBinContent(3,2);
-   num__12->SetBinContent(5,2);
-   num__12->SetBinContent(6,2);
-   num__12->SetBinContent(7,1);
-   num__12->SetBinContent(10,2);
-   num__12->SetBinContent(11,2);
-   num__12->SetBinContent(12,1);
-   num__12->SetBinContent(13,3);
-   num__12->SetBinContent(15,1);
-   num__12->SetBinContent(17,1);
-   num__12->SetBinContent(23,1);
+   num__12->SetBinContent(1,19187);
+   num__12->SetBinContent(2,140);
+   num__12->SetBinContent(3,148);
+   num__12->SetBinContent(4,185);
+   num__12->SetBinContent(5,146);
+   num__12->SetBinContent(6,144);
+   num__12->SetBinContent(7,137);
+   num__12->SetBinContent(8,167);
+   num__12->SetBinContent(9,144);
+   num__12->SetBinContent(10,108);
+   num__12->SetBinContent(11,126);
+   num__12->SetBinContent(12,106);
+   num__12->SetBinContent(13,89);
+   num__12->SetBinContent(14,81);
+   num__12->SetBinContent(15,72);
+   num__12->SetBinContent(16,61);
+   num__12->SetBinContent(17,69);
+   num__12->SetBinContent(18,57);
+   num__12->SetBinContent(19,29);
+   num__12->SetBinContent(20,30);
+   num__12->SetBinContent(21,31);
+   num__12->SetBinContent(22,17);
+   num__12->SetBinContent(23,18);
+   num__12->SetBinContent(24,13);
+   num__12->SetBinContent(25,14);
+   num__12->SetBinContent(26,4);
+   num__12->SetBinContent(27,8);
+   num__12->SetBinContent(28,3);
+   num__12->SetBinContent(29,3);
+   num__12->SetBinContent(30,3);
+   num__12->SetBinContent(31,6);
    num__12->SetMinimum(0);
-   num__12->SetEntries(212);
+   num__12->SetEntries(21346);
 
    Int_t ci;      // for color index setting
    TColor *color; // for color definition with alpha

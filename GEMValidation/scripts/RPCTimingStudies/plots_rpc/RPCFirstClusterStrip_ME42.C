@@ -1,13 +1,13 @@
 void RPCFirstClusterStrip_ME42()
 {
 //=========Macro generated from canvas: c/c
-//=========  (Mon Oct  7 21:18:03 2019) by ROOT version 6.14/09
+//=========  (Mon Oct  7 22:46:43 2019) by ROOT version 6.14/09
    TCanvas *c = new TCanvas("c", "c",0,0,800,600);
    gStyle->SetOptFit(1);
    gStyle->SetOptStat(0);
    gStyle->SetOptTitle(0);
    c->SetHighLightColor(2);
-   c->Range(-14.28571,-126.945,104.7619,930.93);
+   c->Range(-14.28571,-176.2425,104.7619,1292.445);
    c->SetFillColor(0);
    c->SetBorderMode(0);
    c->SetBorderSize(2);
@@ -23,40 +23,40 @@ void RPCFirstClusterStrip_ME42()
    c->SetFrameBorderMode(0);
    
    TH1F *num__44 = new TH1F("num__44","",100,0,100);
-   num__44->SetBinContent(2,806);
-   num__44->SetBinContent(3,506);
-   num__44->SetBinContent(4,497);
-   num__44->SetBinContent(5,532);
-   num__44->SetBinContent(6,518);
-   num__44->SetBinContent(7,464);
-   num__44->SetBinContent(8,531);
-   num__44->SetBinContent(9,475);
-   num__44->SetBinContent(10,515);
-   num__44->SetBinContent(11,579);
-   num__44->SetBinContent(12,486);
-   num__44->SetBinContent(13,479);
-   num__44->SetBinContent(14,485);
-   num__44->SetBinContent(15,512);
-   num__44->SetBinContent(16,464);
-   num__44->SetBinContent(17,503);
-   num__44->SetBinContent(18,520);
-   num__44->SetBinContent(19,478);
-   num__44->SetBinContent(20,491);
-   num__44->SetBinContent(21,502);
-   num__44->SetBinContent(22,483);
-   num__44->SetBinContent(23,546);
-   num__44->SetBinContent(24,523);
-   num__44->SetBinContent(25,465);
-   num__44->SetBinContent(26,481);
-   num__44->SetBinContent(27,565);
-   num__44->SetBinContent(28,484);
-   num__44->SetBinContent(29,514);
-   num__44->SetBinContent(30,491);
-   num__44->SetBinContent(31,476);
-   num__44->SetBinContent(32,531);
-   num__44->SetBinContent(33,167);
+   num__44->SetBinContent(2,1119);
+   num__44->SetBinContent(3,678);
+   num__44->SetBinContent(4,669);
+   num__44->SetBinContent(5,716);
+   num__44->SetBinContent(6,712);
+   num__44->SetBinContent(7,651);
+   num__44->SetBinContent(8,729);
+   num__44->SetBinContent(9,661);
+   num__44->SetBinContent(10,694);
+   num__44->SetBinContent(11,760);
+   num__44->SetBinContent(12,655);
+   num__44->SetBinContent(13,658);
+   num__44->SetBinContent(14,661);
+   num__44->SetBinContent(15,697);
+   num__44->SetBinContent(16,627);
+   num__44->SetBinContent(17,675);
+   num__44->SetBinContent(18,704);
+   num__44->SetBinContent(19,656);
+   num__44->SetBinContent(20,686);
+   num__44->SetBinContent(21,682);
+   num__44->SetBinContent(22,669);
+   num__44->SetBinContent(23,700);
+   num__44->SetBinContent(24,692);
+   num__44->SetBinContent(25,620);
+   num__44->SetBinContent(26,645);
+   num__44->SetBinContent(27,745);
+   num__44->SetBinContent(28,684);
+   num__44->SetBinContent(29,682);
+   num__44->SetBinContent(30,666);
+   num__44->SetBinContent(31,655);
+   num__44->SetBinContent(32,730);
+   num__44->SetBinContent(33,235);
    num__44->SetMinimum(0);
-   num__44->SetEntries(16069);
+   num__44->SetEntries(21813);
 
    Int_t ci;      // for color index setting
    TColor *color; // for color definition with alpha

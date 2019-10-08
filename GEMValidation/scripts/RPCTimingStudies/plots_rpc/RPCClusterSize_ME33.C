@@ -1,13 +1,13 @@
 void RPCClusterSize_ME33()
 {
 //=========Macro generated from canvas: c/c
-//=========  (Mon Oct  7 21:18:03 2019) by ROOT version 6.14/09
+//=========  (Mon Oct  7 22:46:43 2019) by ROOT version 6.14/09
    TCanvas *c = new TCanvas("c", "c",0,0,800,600);
    gStyle->SetOptFit(1);
    gStyle->SetOptStat(0);
    gStyle->SetOptTitle(0);
    c->SetHighLightColor(2);
-   c->Range(-1.428571,-0.1575,10.47619,1.155);
+   c->Range(-1.428571,-865.4625,10.47619,6346.725);
    c->SetFillColor(0);
    c->SetBorderMode(0);
    c->SetBorderSize(2);
@@ -23,7 +23,18 @@ void RPCClusterSize_ME33()
    c->SetFrameBorderMode(0);
    
    TH1F *num__35 = new TH1F("num__35","",10,0,10);
+   num__35->SetBinContent(2,5495);
+   num__35->SetBinContent(3,5260);
+   num__35->SetBinContent(4,3607);
+   num__35->SetBinContent(5,654);
+   num__35->SetBinContent(6,222);
+   num__35->SetBinContent(7,116);
+   num__35->SetBinContent(8,62);
+   num__35->SetBinContent(9,49);
+   num__35->SetBinContent(10,29);
+   num__35->SetBinContent(11,89);
    num__35->SetMinimum(0);
+   num__35->SetEntries(15583);
 
    Int_t ci;      // for color index setting
    TColor *color; // for color definition with alpha

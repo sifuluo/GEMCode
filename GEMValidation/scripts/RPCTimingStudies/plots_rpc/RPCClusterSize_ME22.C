@@ -1,13 +1,13 @@
 void RPCClusterSize_ME22()
 {
 //=========Macro generated from canvas: c/c
-//=========  (Mon Oct  7 21:18:02 2019) by ROOT version 6.14/09
+//=========  (Mon Oct  7 22:46:42 2019) by ROOT version 6.14/09
    TCanvas *c = new TCanvas("c", "c",0,0,800,600);
    gStyle->SetOptFit(1);
    gStyle->SetOptStat(0);
    gStyle->SetOptTitle(0);
    c->SetHighLightColor(2);
-   c->Range(-1.428571,-12.7575,10.47619,93.555);
+   c->Range(-1.428571,-1129.59,10.47619,8283.66);
    c->SetFillColor(0);
    c->SetBorderMode(0);
    c->SetBorderSize(2);
@@ -23,16 +23,18 @@ void RPCClusterSize_ME22()
    c->SetFrameBorderMode(0);
    
    TH1F *num__15 = new TH1F("num__15","",10,0,10);
-   num__15->SetBinContent(2,59);
-   num__15->SetBinContent(3,81);
-   num__15->SetBinContent(4,57);
-   num__15->SetBinContent(5,10);
-   num__15->SetBinContent(6,2);
-   num__15->SetBinContent(9,1);
-   num__15->SetBinContent(10,1);
-   num__15->SetBinContent(11,1);
+   num__15->SetBinContent(2,7153);
+   num__15->SetBinContent(3,7172);
+   num__15->SetBinContent(4,5339);
+   num__15->SetBinContent(5,918);
+   num__15->SetBinContent(6,302);
+   num__15->SetBinContent(7,140);
+   num__15->SetBinContent(8,81);
+   num__15->SetBinContent(9,59);
+   num__15->SetBinContent(10,41);
+   num__15->SetBinContent(11,141);
    num__15->SetMinimum(0);
-   num__15->SetEntries(212);
+   num__15->SetEntries(21346);
 
    Int_t ci;      // for color index setting
    TColor *color; // for color definition with alpha

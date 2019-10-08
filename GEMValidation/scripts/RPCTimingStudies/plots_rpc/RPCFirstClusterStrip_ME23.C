@@ -1,13 +1,13 @@
 void RPCFirstClusterStrip_ME23()
 {
 //=========Macro generated from canvas: c/c
-//=========  (Mon Oct  7 21:18:02 2019) by ROOT version 6.14/09
+//=========  (Mon Oct  7 22:46:42 2019) by ROOT version 6.14/09
    TCanvas *c = new TCanvas("c", "c",0,0,800,600);
    gStyle->SetOptFit(1);
    gStyle->SetOptStat(0);
    gStyle->SetOptTitle(0);
    c->SetHighLightColor(2);
-   c->Range(-14.28571,-0.1575,104.7619,1.155);
+   c->Range(-14.28571,-109.935,104.7619,806.19);
    c->SetFillColor(0);
    c->SetBorderMode(0);
    c->SetBorderSize(2);
@@ -23,7 +23,40 @@ void RPCFirstClusterStrip_ME23()
    c->SetFrameBorderMode(0);
    
    TH1F *num__19 = new TH1F("num__19","",100,0,100);
+   num__19->SetBinContent(2,698);
+   num__19->SetBinContent(3,470);
+   num__19->SetBinContent(4,448);
+   num__19->SetBinContent(5,483);
+   num__19->SetBinContent(6,420);
+   num__19->SetBinContent(7,471);
+   num__19->SetBinContent(8,425);
+   num__19->SetBinContent(9,472);
+   num__19->SetBinContent(10,467);
+   num__19->SetBinContent(11,431);
+   num__19->SetBinContent(12,463);
+   num__19->SetBinContent(13,474);
+   num__19->SetBinContent(14,470);
+   num__19->SetBinContent(15,441);
+   num__19->SetBinContent(16,463);
+   num__19->SetBinContent(17,451);
+   num__19->SetBinContent(18,447);
+   num__19->SetBinContent(19,454);
+   num__19->SetBinContent(20,465);
+   num__19->SetBinContent(21,444);
+   num__19->SetBinContent(22,462);
+   num__19->SetBinContent(23,459);
+   num__19->SetBinContent(24,442);
+   num__19->SetBinContent(25,452);
+   num__19->SetBinContent(26,459);
+   num__19->SetBinContent(27,450);
+   num__19->SetBinContent(28,452);
+   num__19->SetBinContent(29,433);
+   num__19->SetBinContent(30,418);
+   num__19->SetBinContent(31,464);
+   num__19->SetBinContent(32,465);
+   num__19->SetBinContent(33,155);
    num__19->SetMinimum(0);
+   num__19->SetEntries(14468);
 
    Int_t ci;      // for color index setting
    TColor *color; // for color definition with alpha
