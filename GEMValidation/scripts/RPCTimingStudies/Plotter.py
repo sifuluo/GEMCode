@@ -9,7 +9,7 @@ def enum(*sequential, **named):
 
 inputFiles = {
   'PU0'    : "out_ana_PU0_RPC.root",
-#  'PU200'  : "out_ana_PU200_RPC.root",
+  'PU200'  : "out_ana_PU200_RPC.root",
 #  'PU300'  : "out_ana_PU300_RPC.root",
 }
 

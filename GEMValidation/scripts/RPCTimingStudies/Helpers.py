@@ -133,7 +133,7 @@ def draw_hist(t, title, h_bins, to_draw, num_cut,
 
     num.SetLineWidth(2)
     num.SetLineColor(color)
-    num.Draw(opt)
+    num.DrawNormalized(opt)
     num.SetMarkerStyle(marker_st)
     num.SetMarkerColor(color)
     num.SetMarkerSize(marker_sz)
