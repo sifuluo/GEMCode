@@ -1,13 +1,13 @@
 void Eff_ME11_ALCTnotCLCT_Combined()
 {
 //=========Macro generated from canvas: c/c
-//=========  (Wed Oct  9 14:05:11 2019) by ROOT version 6.14/09
+//=========  (Wed Oct  9 14:17:47 2019) by ROOT version 6.14/09
    TCanvas *c = new TCanvas("c", "c",0,0,800,600);
    gStyle->SetOptFit(1);
    gStyle->SetOptStat(0);
    gStyle->SetOptTitle(0);
    c->SetHighLightColor(2);
-   c->Range(1.485714,0.42125,2.438095,1.0775);
+   c->Range(1.485714,-0.15375,2.438095,1.1275);
    c->SetFillColor(0);
    c->SetBorderMode(0);
    c->SetBorderSize(2);
@@ -23,7 +23,7 @@ void Eff_ME11_ALCTnotCLCT_Combined()
    c->SetFrameBorderMode(0);
    
    TH1F *base__3 = new TH1F("base__3","",25,1.6,2.4);
-   base__3->SetMinimum(0.5);
+   base__3->SetMinimum(0);
    base__3->SetMaximum(1.025);
    base__3->SetLineStyle(0);
    base__3->SetMarkerStyle(20);
@@ -285,6 +285,80 @@ tex->SetNDC();
    den_clone11->SetMarkerStyle(23);
    den_clone11->Draw("same samep");
    
+   TEfficiency * den_clone12 = new TEfficiency("den_clone","",25,1.6,2.4);
+   
+   den_clone12->SetConfidenceLevel(0.6826895);
+   den_clone12->SetBetaAlpha(1);
+   den_clone12->SetBetaBeta(1);
+   den_clone12->SetWeight(1);
+   den_clone12->SetStatisticOption(0);
+   den_clone12->SetPosteriorMode(0);
+   den_clone12->SetShortestInterval(0);
+   den_clone12->SetTotalEvents(0,0);
+   den_clone12->SetPassedEvents(0,0);
+   den_clone12->SetTotalEvents(1,615);
+   den_clone12->SetPassedEvents(1,28);
+   den_clone12->SetTotalEvents(2,777);
+   den_clone12->SetPassedEvents(2,7);
+   den_clone12->SetTotalEvents(3,852);
+   den_clone12->SetPassedEvents(3,9);
+   den_clone12->SetTotalEvents(4,778);
+   den_clone12->SetPassedEvents(4,17);
+   den_clone12->SetTotalEvents(5,790);
+   den_clone12->SetPassedEvents(5,19);
+   den_clone12->SetTotalEvents(6,783);
+   den_clone12->SetPassedEvents(6,22);
+   den_clone12->SetTotalEvents(7,878);
+   den_clone12->SetPassedEvents(7,22);
+   den_clone12->SetTotalEvents(8,848);
+   den_clone12->SetPassedEvents(8,33);
+   den_clone12->SetTotalEvents(9,761);
+   den_clone12->SetPassedEvents(9,17);
+   den_clone12->SetTotalEvents(10,758);
+   den_clone12->SetPassedEvents(10,15);
+   den_clone12->SetTotalEvents(11,772);
+   den_clone12->SetPassedEvents(11,20);
+   den_clone12->SetTotalEvents(12,784);
+   den_clone12->SetPassedEvents(12,27);
+   den_clone12->SetTotalEvents(13,796);
+   den_clone12->SetPassedEvents(13,29);
+   den_clone12->SetTotalEvents(14,762);
+   den_clone12->SetPassedEvents(14,33);
+   den_clone12->SetTotalEvents(15,770);
+   den_clone12->SetPassedEvents(15,73);
+   den_clone12->SetTotalEvents(16,781);
+   den_clone12->SetPassedEvents(16,64);
+   den_clone12->SetTotalEvents(17,787);
+   den_clone12->SetPassedEvents(17,96);
+   den_clone12->SetTotalEvents(18,765);
+   den_clone12->SetPassedEvents(18,40);
+   den_clone12->SetTotalEvents(19,816);
+   den_clone12->SetPassedEvents(19,34);
+   den_clone12->SetTotalEvents(20,795);
+   den_clone12->SetPassedEvents(20,42);
+   den_clone12->SetTotalEvents(21,752);
+   den_clone12->SetPassedEvents(21,33);
+   den_clone12->SetTotalEvents(22,862);
+   den_clone12->SetPassedEvents(22,54);
+   den_clone12->SetTotalEvents(23,740);
+   den_clone12->SetPassedEvents(23,45);
+   den_clone12->SetTotalEvents(24,855);
+   den_clone12->SetPassedEvents(24,63);
+   den_clone12->SetTotalEvents(25,711);
+   den_clone12->SetPassedEvents(25,61);
+   den_clone12->SetTotalEvents(26,0);
+   den_clone12->SetPassedEvents(26,0);
+   den_clone12->SetFillColor(19);
+
+   ci = TColor::GetColor("#00cc00");
+   den_clone12->SetLineColor(ci);
+   den_clone12->SetLineWidth(2);
+
+   ci = TColor::GetColor("#00cc00");
+   den_clone12->SetMarkerColor(ci);
+   den_clone12->SetMarkerStyle(23);
+   den_clone12->Draw("same samep");
+   
    TLegend *leg = new TLegend(0,0,0,0,NULL,"brNDC");
    leg->SetBorderSize(0);
    leg->SetTextFont(62);
@@ -309,6 +383,13 @@ tex->SetNDC();
    entry->SetMarkerStyle(21);
    entry->SetMarkerSize(1);
    entry=leg->AddEntry("den_clone","PU200 CSC Phase-2","pl");
+   entry->SetLineColor(1);
+   entry->SetLineStyle(1);
+   entry->SetLineWidth(1);
+   entry->SetMarkerColor(1);
+   entry->SetMarkerStyle(21);
+   entry->SetMarkerSize(1);
+   entry=leg->AddEntry("den_clone","PU300 CSC Phase-2","pl");
    entry->SetLineColor(1);
    entry->SetLineStyle(1);
    entry->SetLineWidth(1);

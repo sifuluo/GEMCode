@@ -1,13 +1,13 @@
 void Eff_ME21_LCT_Combined_PU300()
 {
 //=========Macro generated from canvas: c/c
-//=========  (Wed Oct  9 14:05:09 2019) by ROOT version 6.14/09
+//=========  (Wed Oct  9 14:17:38 2019) by ROOT version 6.14/09
    TCanvas *c = new TCanvas("c", "c",0,0,800,600);
    gStyle->SetOptFit(1);
    gStyle->SetOptStat(0);
    gStyle->SetOptTitle(0);
    c->SetHighLightColor(2);
-   c->Range(1.485714,0.42125,2.438095,1.0775);
+   c->Range(1.485714,-0.15375,2.438095,1.1275);
    c->SetFillColor(0);
    c->SetBorderMode(0);
    c->SetBorderSize(2);
@@ -23,7 +23,7 @@ void Eff_ME21_LCT_Combined_PU300()
    c->SetFrameBorderMode(0);
    
    TH1F *base__2 = new TH1F("base__2","",25,1.6,2.4);
-   base__2->SetMinimum(0.5);
+   base__2->SetMinimum(0);
    base__2->SetMaximum(1.025);
    base__2->SetLineStyle(0);
    base__2->SetMarkerStyle(20);
