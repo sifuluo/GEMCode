@@ -1,7 +1,7 @@
 void Eff_ME32_CLCTnotALCT_Combined()
 {
 //=========Macro generated from canvas: c/c
-//=========  (Wed Oct  9 13:30:06 2019) by ROOT version 6.14/09
+//=========  (Wed Oct  9 13:38:04 2019) by ROOT version 6.14/09
    TCanvas *c = new TCanvas("c", "c",0,0,800,600);
    gStyle->SetOptFit(1);
    gStyle->SetOptStat(0);
