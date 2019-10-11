@@ -421,28 +421,23 @@ void GEMCSCAnalyzer::analyze(const edm::Event& ev, const edm::EventSetup& es)
     std::cout << "Total number of SimTrack in this event: " << sim_track.size() << std::endl;
   }
 
-  /*
-  edm::Handle< std::vector< TTTrack< Ref_Phase2TrackerDigi_ > > > TTTrackHandle;
-  ev.getByToken(trackInputLabel_, TTTrackHandle);
-  const std::vector< TTTrack< Ref_Phase2TrackerDigi_ > >& TTTracks = *TTTrackHandle.product();
-
-  if (verboseL1Track_){
-    std::cout << "Total number of L1Track in this event: " << TTTracks.size() << std::endl;
-  }*/
-
-  int trk_no=0;
+  edm::SimTrackContainer sim_track_selected;
   for (const auto& t: sim_track)
   {
     if (!isSimTrackGood(t)) continue;
+    sim_track_selected.push_back(t);
+  }
+
+  int trk_no=0;
+
+  for (const auto& t: sim_track_selected) {
+
     if (verboseSimTrack_){
-      std::cout << "Processing SimTrack " << trk_no + 1 << std::endl;
+      std::cout << "Processing selected SimTrack " << trk_no + 1 << std::endl;
       std::cout << "pt(GeV/c) = " << t.momentum().pt() << ", eta = " << t.momentum().eta()
-                << ", phi = " << t.momentum().phi() << ", Q = " << t.charge() << std::endl;
+                << ", phi = " << t.momentum().phi() << ", Q = " << t.charge() << ", PDGiD =  " << t.type() << std::endl;
     }
 
-//    std::cout<< " initialize SimTrackMatcherManager "<< std::endl;
-    // match hits and digis to this SimTrack
-    //SimTrackMatchManager match(t, sim_vert[t.vertIndex()], cfg_, ev, es);
     SimTrackMatchManager match(t, sim_vert[t.vertIndex()], cfg_, ev, es,
                                genParticleInput_,
                                simVertexInput_,
@@ -555,6 +550,7 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
     etrk_[s].dxy = match.simhits().dxy();
     etrk_[s].charge = t.charge();
     etrk_[s].endcap = (etrk_[s].eta > 0.) ? 1 : -1;
+    etrk_[s].pdgid = t.type();
 
     //etrk_[s].isSimLooseVeto = trkVeto.isLooseVeto();
     //etrk_[s].isSimMediumVeto = trkVeto.isMediumVeto();

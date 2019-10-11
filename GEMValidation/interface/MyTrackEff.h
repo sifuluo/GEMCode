@@ -21,6 +21,7 @@ struct MyTrackEff
   Float_t pt, eta, phi, pz, dxy;
   Char_t charge;
   Char_t endcap;
+  Int_t pdgid;
 
   // Dark photon
   Float_t genGd_m;
@@ -400,6 +401,7 @@ void MyTrackEff::init()
   dxy = -999.;
   charge = -9;
   endcap = -9;
+  pdgid = -9999;
 
   // Dark photon
   genGd_m =0.0;
@@ -904,6 +906,7 @@ TTree* MyTrackEff::book(TTree *t, const std::string & name)
   t->Branch("phi", &phi);
   t->Branch("charge", &charge);
   t->Branch("endcap", &endcap);
+  t->Branch("pdgid", &pdgid);
 
   t->Branch("genGd_m",   &genGd_m,   "genGd_m/F");
   t->Branch("genGd_E",   &genGd_E,   "genGd_E/F");
