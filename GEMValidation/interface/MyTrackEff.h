@@ -177,8 +177,15 @@ struct MyTrackEff
 
   Char_t has_rpc_sh; // bit1: in odd, bit2: even
   Char_t has_rpc_dg; // bit1: in odd, bit2: even
+  Char_t has_rpc_rh; // bit1: in odd, bit2: even
   Int_t strip_rpcdg_odd; // median digis' strip
   Int_t strip_rpcdg_even;
+
+  int rpc_BunchX;
+  int rpc_firstClusterStrip;
+  int rpc_clusterSize;
+  float rpc_time;
+  float rpc_timeError;
 
   Int_t lct_type;
 
@@ -614,8 +621,15 @@ void MyTrackEff::init()
 
   has_rpc_sh = 0;
   has_rpc_dg = 0; // bit1: in odd, bit2: even
+  has_rpc_rh = 0; // bit1: in odd, bit2: even
   strip_rpcdg_odd = -1;
   strip_rpcdg_even = -1;
+
+  rpc_BunchX = -9;
+  rpc_firstClusterStrip = -9;
+  rpc_clusterSize = -9;
+  rpc_time = -9;
+  rpc_timeError = -9;
 
   lct_type = -1;
 
@@ -1108,10 +1122,17 @@ TTree* MyTrackEff::book(TTree *t, const std::string & name)
 
   t->Branch("has_rpc_sh", &has_rpc_sh);
   t->Branch("has_rpc_dg", &has_rpc_dg);
+  t->Branch("has_rpc_rh", &has_rpc_rh);
   t->Branch("strip_rpcdg_odd", &strip_rpcdg_odd);
   t->Branch("strip_rpcdg_even", &strip_rpcdg_even);
   t->Branch("hsfromrpc_odd", &hsfromrpc_odd);
   t->Branch("hsfromrpc_even", &hsfromrpc_even);
+
+  t->Branch("rpc_BunchX", &rpc_BunchX);
+  t->Branch("rpc_firstClusterStrip", &rpc_firstClusterStrip);
+  t->Branch("rpc_clusterSize", &rpc_clusterSize);
+  t->Branch("rpc_time", &rpc_time);
+  t->Branch("rpc_timeError", &rpc_timeError);
 
   t->Branch("lct_type", &lct_type);
 
