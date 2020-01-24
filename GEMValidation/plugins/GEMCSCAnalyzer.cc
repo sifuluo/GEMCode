@@ -133,7 +133,8 @@ private:
   edm::EDGetTokenT<GEMCoPadDigiCollection> gemCoPadDigiInput_;
   edm::EDGetTokenT<GEMRecHitCollection> gemRecHitInput_;
 
-  edm::EDGetTokenT<ME0DigiPreRecoCollection> me0DigiInput_;
+  edm::EDGetTokenT<ME0DigiCollection> me0DigiInput_;
+  edm::EDGetTokenT<ME0PadDigiCollection> me0PadDigiInput_;
   edm::EDGetTokenT<ME0RecHitCollection> me0RecHitInput_;
   edm::EDGetTokenT<ME0SegmentCollection> me0SegmentInput_;
 
@@ -259,9 +260,12 @@ GEMCSCAnalyzer::GEMCSCAnalyzer(const edm::ParameterSet& ps)
   const auto& gemRecHit_= cfg_.getParameter<edm::ParameterSet>("gemRecHit");
   gemRecHitInput_ = consumes<GEMRecHitCollection>(gemRecHit_.getParameter<edm::InputTag>("validInputTags"));
 
-  const auto& me0Digi_= cfg_.getParameter<edm::ParameterSet>("me0DigiPreReco");
-  me0DigiInput_ = consumes<ME0DigiPreRecoCollection>(me0Digi_.getParameter<edm::InputTag>("validInputTags"));
+  const auto& me0Digi_= cfg_.getParameter<edm::ParameterSet>("me0Digi");
+  me0DigiInput_ = consumes<ME0DigiCollection>(me0Digi_.getParameter<edm::InputTag>("validInputTags"));
   minNHitsChamberME0Digi_ =  me0Digi_.getParameter<int>("minNHitsChamber");
+
+  const auto& me0PadDigi_= cfg_.getParameter<edm::ParameterSet>("me0PadDigi");
+  me0PadDigiInput_ = consumes<ME0PadDigiCollection>(me0Digi_.getParameter<edm::InputTag>("validInputTags"));
 
   const auto& me0RecHit_ = cfg_.getParameter<edm::ParameterSet>("me0RecHit");
   me0RecHitInput_ = consumes<ME0RecHitCollection>(me0RecHit_.getParameter<edm::InputTag>("validInputTags"));
@@ -452,6 +456,7 @@ void GEMCSCAnalyzer::analyze(const edm::Event& ev, const edm::EventSetup& es)
                                gemCoPadDigiInput_,
                                gemRecHitInput_,
                                me0DigiInput_,
+                               me0PadDigiInput_,
                                me0RecHitInput_,
                                me0SegmentInput_,
                                cscComparatorDigiInput_,
@@ -1672,7 +1677,7 @@ void GEMCSCAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
   }
 
   //ME0 digis
-  const auto& me0digis(match_me0digi.superChamberIds());
+  const auto& me0digis(match_me0digi.superChamberIdsDigi());
   if (verbose_) std::cout <<"me0 digis , chamber id size "<< me0digis.size() << std::endl;
   for (const auto& d: me0digis){
     const ME0DetId id(d);

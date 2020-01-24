@@ -34,8 +34,8 @@ public:
   typedef std::pair<unsigned int, const GEMPadDigi*> GEMPadBX;
   typedef std::vector<GEMPadBX> GEMPadsBX;
 
-  CSCStubMatcher(const SimHitMatcher& sh, 
-		 const CSCDigiMatcher& dg, 
+  CSCStubMatcher(const SimHitMatcher& sh,
+		 const CSCDigiMatcher& dg,
 		 const GEMDigiMatcher& gem_dg,
                  const edm::EDGetTokenT<CSCCLCTDigiCollection>& clctInputs_,
                  const edm::EDGetTokenT<CSCALCTDigiCollection>& alctInputs_,
@@ -87,6 +87,12 @@ public:
   const CSCCorrelatedLCTDigiContainer& cscLctsInChamber(unsigned int) const;
   const CSCCorrelatedLCTDigiContainer& cscMplctsInChamber(unsigned int) const;
 
+  /// all matching stubs everywhere
+  CSCCLCTDigiContainer cscClcts() const;
+  CSCALCTDigiContainer cscAlcts() const;
+  CSCCorrelatedLCTDigiContainer cscLcts() const;
+  CSCCorrelatedLCTDigiContainer cscMplcts() const;
+
   ///return all lcts matched to simmuon
   std::map<unsigned int, CSCCorrelatedLCTDigiContainer> allLctsMatched2SimMuon() const { return chamber_to_cscLcts_; }
   /// best matching from a particular crossed chamber
@@ -119,6 +125,7 @@ public:
 
   bool checkStubInChamber(const CSCDetId& id, const CSCCorrelatedLCTDigi& lct) const;
   bool wasStubMatchedInChamber(const CSCDetId& id, const CSCCorrelatedLCTDigi& lct) const;
+  bool wasStubMatched(const CSCCorrelatedLCTDigi& lct) const;
 
   // get the position of an LCT in global coordinates
   GlobalPoint getGlobalPosition(unsigned int rawId, const CSCCorrelatedLCTDigi& lct) const;

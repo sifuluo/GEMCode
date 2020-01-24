@@ -40,6 +40,7 @@ ME0RecHitMatcher::ME0RecHitMatcher(const ME0DigiMatcher& dg,
 void
 ME0RecHitMatcher::matchME0RecHitsToSimTrack(const ME0RecHitCollection& rechits)
 {
+  /*
   if (verboseME0RecHit_) cout << "Matching simtrack to ME0 rechits" << endl;
   // fetch all detIds with digis
   const auto& layer_ids = digi_matcher_->detIds();
@@ -79,12 +80,14 @@ ME0RecHitMatcher::matchME0RecHitsToSimTrack(const ME0RecHitCollection& rechits)
       }
     }
   }
+  */
 }
 
 
 void
 ME0RecHitMatcher::matchME0SegmentsToSimTrack(const ME0SegmentCollection& me0Segments)
 {
+  /*
   if (verboseME0Segment_) cout << "Matching simtrack to segments" << endl;
   if (verboseME0Segment_)  dumpAllME0Segments(me0Segments);
   // fetch all chamberIds with digis
@@ -138,6 +141,7 @@ ME0RecHitMatcher::matchME0SegmentsToSimTrack(const ME0SegmentCollection& me0Segm
 
   for (const auto& p : superChamber_to_me0Segment_)
     superChamber_to_bestME0Segment_[ p.first] = findbestME0Segment(p.second);
+  */
 }
 
 void

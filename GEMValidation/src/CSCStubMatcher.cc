@@ -894,6 +894,48 @@ CSCStubMatcher::cscMplctsInChamber(unsigned int detid) const
   return chamber_to_cscMplcts_.at(detid);
 }
 
+CSCCLCTDigiContainer
+CSCStubMatcher::cscClcts() const
+{
+  CSCCLCTDigiContainer out;
+  for (const auto& id : chamberIdsCLCT()){
+    CSCCLCTDigiContainer temp = cscClctsInChamber(id);
+    out.insert(std::end(out), std::begin(temp), std::end(temp));
+  }
+  return out;
+}
+
+CSCALCTDigiContainer CSCStubMatcher::cscAlcts() const
+{
+  CSCALCTDigiContainer out;
+  for (const auto& id : chamberIdsALCT()){
+    CSCALCTDigiContainer temp = cscAlctsInChamber(id);
+    out.insert(std::end(out), std::begin(temp), std::end(temp));
+  }
+  return out;
+}
+
+CSCCorrelatedLCTDigiContainer CSCStubMatcher::cscLcts() const
+{
+  CSCCorrelatedLCTDigiContainer out;
+  for (const auto& id : chamberIdsLCT()){
+    CSCCorrelatedLCTDigiContainer temp = cscLctsInChamber(id);
+    out.insert(std::end(out), std::begin(temp), std::end(temp));
+  }
+  return out;
+}
+
+ CSCCorrelatedLCTDigiContainer CSCStubMatcher::cscMplcts() const
+{
+  CSCCorrelatedLCTDigiContainer out;
+  for (const auto& id : chamberIdsMPLCT()){
+    CSCCorrelatedLCTDigiContainer temp = cscMplctsInChamber(id);
+    out.insert(std::end(out), std::begin(temp), std::end(temp));
+  }
+  return out;
+}
+
+
 CSCCLCTDigi
 CSCStubMatcher::bestCscClctInChamber(unsigned int detid) const
 {
@@ -1166,6 +1208,17 @@ CSCStubMatcher::wasStubMatchedInChamber(const CSCDetId& id, const CSCCorrelatedL
   }
   return false;
 }
+
+
+bool
+CSCStubMatcher::wasStubMatched( const CSCCorrelatedLCTDigi& lct) const
+{
+  for (const auto& stub: cscMplcts()){
+    if (stub==lct) return true;
+  }
+  return false;
+}
+
 
 
 GlobalPoint

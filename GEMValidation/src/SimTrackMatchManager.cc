@@ -18,7 +18,8 @@ SimTrackMatchManager::SimTrackMatchManager(
     edm::EDGetTokenT<GEMPadDigiCollection>& gemPadDigiInput_,
     edm::EDGetTokenT<GEMCoPadDigiCollection>& gemCoPadDigiInput_,
     edm::EDGetTokenT<GEMRecHitCollection>& gemRecHitInput_,
-    edm::EDGetTokenT<ME0DigiPreRecoCollection>& me0DigiInput_,
+    edm::EDGetTokenT<ME0DigiCollection>& me0DigiInput_,
+    edm::EDGetTokenT<ME0PadDigiCollection>& me0PadDigiInput_,
     edm::EDGetTokenT<ME0RecHitCollection>& me0RecHitInput_,
     edm::EDGetTokenT<ME0SegmentCollection>& me0SegmentInput_,
     edm::EDGetTokenT<CSCComparatorDigiCollection>& cscComparatorDigiInput_,
@@ -51,14 +52,14 @@ SimTrackMatchManager::SimTrackMatchManager(
              rpcSimHitInput_, me0SimHitInput_, dtSimHitInput_)
   , gem_digis_(simhits_, gemDigiInput_, gemPadDigiInput_, gemCoPadDigiInput_)
   , gem_rechits_(simhits_, gemRecHitInput_)
-  , me0_digis_(simhits_, me0DigiInput_)
+  , me0_digis_(simhits_, me0DigiInput_, me0PadDigiInput_)
   , me0_rechits_(me0_digis_, me0RecHitInput_, me0SegmentInput_)
   , rpc_digis_(simhits_, rpcDigiInput_)
   , rpc_rechits_(simhits_, rpcRecHitInput_)
   , csc_digis_(simhits_, cscComparatorDigiInput_, cscWireDigiInput_)
   , csc_stubs_(simhits_,
                csc_digis_, gem_digis_,
-               clctInputs_, alctInputs_, 
+               clctInputs_, alctInputs_,
 	       lctInputs_, mplctInputs_)
   , csc_rechits_(simhits_,
                  cscRecHit2DInput_, cscSegmentInput_)

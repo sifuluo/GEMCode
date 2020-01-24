@@ -33,15 +33,205 @@ using namespace matching;
 
 static const int NumOfTrees = 13;
 
+typedef std::vector<CSCALCTDigi> CSCALCTDigiContainer;
+typedef std::vector<CSCCLCTDigi> CSCCLCTDigiContainer;
+typedef std::vector<CSCCorrelatedLCTDigi> CSCCorrelatedLCTDigiContainer;
 
-// --------------------------- RPCTimingAnalyzer ---------------------------
-class RPCTimingAnalyzer : public edm::EDAnalyzer
+struct ChamberOccupancy
+{
+  int nLCT_ME11p[36];
+  int nLCT_ME11m[36];
+
+  int nLCT_ME12p[36];
+  int nLCT_ME12m[36];
+
+  int nLCT_ME13p[36];
+  int nLCT_ME13m[36];
+
+  int nLCT_ME21p[18];
+  int nLCT_ME21m[18];
+
+  int nLCT_ME22p[36];
+  int nLCT_ME22m[36];
+
+  int nLCT_ME31p[18];
+  int nLCT_ME31m[18];
+
+  int nLCT_ME32p[36];
+  int nLCT_ME32m[36];
+
+  int nLCT_ME41p[18];
+  int nLCT_ME41m[18];
+
+  int nLCT_ME42p[36];
+  int nLCT_ME42m[36];
+
+  int nLCT_ME11p_mu[36];
+  int nLCT_ME11m_mu[36];
+
+  int nLCT_ME12p_mu[36];
+  int nLCT_ME12m_mu[36];
+
+  int nLCT_ME13p_mu[36];
+  int nLCT_ME13m_mu[36];
+
+  int nLCT_ME21p_mu[18];
+  int nLCT_ME21m_mu[18];
+
+  int nLCT_ME22p_mu[36];
+  int nLCT_ME22m_mu[36];
+
+  int nLCT_ME31p_mu[18];
+  int nLCT_ME31m_mu[18];
+
+  int nLCT_ME32p_mu[36];
+  int nLCT_ME32m_mu[36];
+
+  int nLCT_ME41p_mu[18];
+  int nLCT_ME41m_mu[18];
+
+  int nLCT_ME42p_mu[36];
+  int nLCT_ME42m_mu[36];
+
+  void init();
+  TTree* book(TTree *t);
+};
+
+void ChamberOccupancy::init()
+{
+  for (unsigned i = 0; i<18; i++){
+    nLCT_ME21p[i] = 0;
+    nLCT_ME21m[i] = 0;
+
+    nLCT_ME31p[i] = 0;
+    nLCT_ME31m[i] = 0;
+
+    nLCT_ME41p[i] = 0;
+    nLCT_ME41m[i] = 0;
+  }
+  for (unsigned i = 0; i<36; i++){
+    nLCT_ME11p[i] = 0;
+    nLCT_ME11m[i] = 0;
+
+    nLCT_ME12p[i] = 0;
+    nLCT_ME12m[i] = 0;
+
+    nLCT_ME13p[i] = 0;
+    nLCT_ME13m[i] = 0;
+
+    nLCT_ME22p[i] = 0;
+    nLCT_ME22m[i] = 0;
+
+    nLCT_ME32p[i] = 0;
+    nLCT_ME32m[i] = 0;
+
+    nLCT_ME42p[i] = 0;
+    nLCT_ME42m[i] = 0;
+  }
+
+
+  for (unsigned i = 0; i<18; i++){
+    nLCT_ME21p_mu[i] = 0;
+    nLCT_ME21m_mu[i] = 0;
+
+    nLCT_ME31p_mu[i] = 0;
+    nLCT_ME31m_mu[i] = 0;
+
+    nLCT_ME41p_mu[i] = 0;
+    nLCT_ME41m_mu[i] = 0;
+  }
+  for (unsigned i = 0; i<36; i++){
+    nLCT_ME11p_mu[i] = 0;
+    nLCT_ME11m_mu[i] = 0;
+
+    nLCT_ME12p_mu[i] = 0;
+    nLCT_ME12m_mu[i] = 0;
+
+    nLCT_ME13p_mu[i] = 0;
+    nLCT_ME13m_mu[i] = 0;
+
+    nLCT_ME22p_mu[i] = 0;
+    nLCT_ME22m_mu[i] = 0;
+
+    nLCT_ME32p_mu[i] = 0;
+    nLCT_ME32m_mu[i] = 0;
+
+    nLCT_ME42p_mu[i] = 0;
+    nLCT_ME42m_mu[i] = 0;
+  }
+}
+
+TTree * ChamberOccupancy::book(TTree *t)
+{
+  edm::Service< TFileService > fs;
+  t = fs->make<TTree>("ChamberOccupancy", "ChamberOccupancy");
+
+  t->Branch("nLCT_ME11p", &nLCT_ME11p, "nLCT_ME11p[36]/I");
+  t->Branch("nLCT_ME11m", &nLCT_ME11m, "nLCT_ME11m[36]/I");
+
+  t->Branch("nLCT_ME12p", &nLCT_ME12p, "nLCT_ME12p[36]/I");
+  t->Branch("nLCT_ME12m", &nLCT_ME12m, "nLCT_ME12m[36]/I");
+
+  t->Branch("nLCT_ME13p", &nLCT_ME13p, "nLCT_ME13p[36]/I");
+  t->Branch("nLCT_ME13m", &nLCT_ME13m, "nLCT_ME13m[36]/I");
+
+  t->Branch("nLCT_ME21p", &nLCT_ME21p, "nLCT_ME21p[18]/I");
+  t->Branch("nLCT_ME21m", &nLCT_ME21m, "nLCT_ME21m[18]/I");
+
+  t->Branch("nLCT_ME22p", &nLCT_ME22p, "nLCT_ME22p[36]/I");
+  t->Branch("nLCT_ME22m", &nLCT_ME22m, "nLCT_ME22m[36]/I");
+
+  t->Branch("nLCT_ME31p", &nLCT_ME31p, "nLCT_ME31p[18]/I");
+  t->Branch("nLCT_ME31m", &nLCT_ME31m, "nLCT_ME31m[18]/I");
+
+  t->Branch("nLCT_ME32p", &nLCT_ME32p, "nLCT_ME32p[36]/I");
+  t->Branch("nLCT_ME32m", &nLCT_ME32m, "nLCT_ME32m[36]/I");
+
+  t->Branch("nLCT_ME41p", &nLCT_ME41p, "nLCT_ME41p[18]/I");
+  t->Branch("nLCT_ME41m", &nLCT_ME41m, "nLCT_ME41m[18]/I");
+
+  t->Branch("nLCT_ME42p", &nLCT_ME42p, "nLCT_ME42p[36]/I");
+  t->Branch("nLCT_ME42m", &nLCT_ME42m, "nLCT_ME42m[36]/I");
+
+
+  t->Branch("nLCT_ME11p_mu", &nLCT_ME11p_mu, "nLCT_ME11p_mu[36]/I");
+  t->Branch("nLCT_ME11m_mu", &nLCT_ME11m_mu, "nLCT_ME11m_mu[36]/I");
+
+  t->Branch("nLCT_ME12p_mu", &nLCT_ME12p_mu, "nLCT_ME12p_mu[36]/I");
+  t->Branch("nLCT_ME12m_mu", &nLCT_ME12m_mu, "nLCT_ME12m_mu[36]/I");
+
+  t->Branch("nLCT_ME13p_mu", &nLCT_ME13p_mu, "nLCT_ME13p_mu[36]/I");
+  t->Branch("nLCT_ME13m_mu", &nLCT_ME13m_mu, "nLCT_ME13m_mu[36]/I");
+
+  t->Branch("nLCT_ME21p_mu", &nLCT_ME21p_mu, "nLCT_ME21p_mu[18]/I");
+  t->Branch("nLCT_ME21m_mu", &nLCT_ME21m_mu, "nLCT_ME21m_mu[18]/I");
+
+  t->Branch("nLCT_ME22p_mu", &nLCT_ME22p_mu, "nLCT_ME22p_mu[36]/I");
+  t->Branch("nLCT_ME22m_mu", &nLCT_ME22m_mu, "nLCT_ME22m_mu[36]/I");
+
+  t->Branch("nLCT_ME31p_mu", &nLCT_ME31p_mu, "nLCT_ME31p_mu[18]/I");
+  t->Branch("nLCT_ME31m_mu", &nLCT_ME31m_mu, "nLCT_ME31m_mu[18]/I");
+
+  t->Branch("nLCT_ME32p_mu", &nLCT_ME32p_mu, "nLCT_ME32p_mu[36]/I");
+  t->Branch("nLCT_ME32m_mu", &nLCT_ME32m_mu, "nLCT_ME32m_mu[36]/I");
+
+  t->Branch("nLCT_ME41p_mu", &nLCT_ME41p_mu, "nLCT_ME41p_mu[18]/I");
+  t->Branch("nLCT_ME41m_mu", &nLCT_ME41m_mu, "nLCT_ME41m_mu[18]/I");
+
+  t->Branch("nLCT_ME42p_mu", &nLCT_ME42p_mu, "nLCT_ME42p_mu[36]/I");
+  t->Branch("nLCT_ME42m_mu", &nLCT_ME42m_mu, "nLCT_ME42m_mu[36]/I");
+
+  return t;
+}
+
+// --------------------------- LCTFakeRateAnalyzer ---------------------------
+class LCTFakeRateAnalyzer : public edm::EDAnalyzer
 {
 public:
 
-  explicit RPCTimingAnalyzer(const edm::ParameterSet&);
+  explicit LCTFakeRateAnalyzer(const edm::ParameterSet&);
 
-  ~RPCTimingAnalyzer() {}
+  ~LCTFakeRateAnalyzer() {}
 
   virtual void beginRun(const edm::Run&, const edm::EventSetup&);
 
@@ -63,6 +253,12 @@ private:
 
   edm::ParameterSet cfg_;
   edm::ParameterSet displacedMuPt_cfg_;
+
+  edm::EDGetTokenT<CSCALCTDigiCollection> alcts_d_token_;
+  edm::EDGetTokenT<CSCCLCTDigiCollection> clcts_d_token_;
+  edm::EDGetTokenT<CSCCorrelatedLCTDigiCollection> lcts_tmb_d_token_;
+  edm::EDGetTokenT<CSCCorrelatedLCTDigiCollection> lcts_mpc_d_token_;
+
 
   edm::EDGetTokenT<reco::GenParticleCollection> genParticleInput_;
   edm::EDGetTokenT<edm::SimVertexContainer> simVertexInput_;
@@ -123,22 +319,30 @@ private:
   int verbose_;
   bool ntupleTrackEff_;
   double bendingcutPt_;
-  std::vector<string> rpcStations_;
-  std::vector<std::pair<int,int> > rpcStationsCo_;
+  std::vector<string> cscStations_;
+  std::vector<std::pair<int,int> > cscStationsCo_;
   std::set<int> stations_to_use_;
 
   TTree *tree_eff_[NumOfTrees];
   MyTrackEff  etrk_[NumOfTrees];
+
+  TTree *tree_occ_;
+  ChamberOccupancy occ_;
 };
 
 
-RPCTimingAnalyzer::RPCTimingAnalyzer(const edm::ParameterSet& ps)
+LCTFakeRateAnalyzer::LCTFakeRateAnalyzer(const edm::ParameterSet& ps)
 : cfg_(ps.getParameterSet("simTrackMatching"))
 , verbose_(ps.getUntrackedParameter<int>("verbose", 0))
 {
   ievent = 0;
 
-  rpcStations_ = cfg_.getParameter<std::vector<string> >("rpcStations");
+  std::string lctProducerData_ = "simCscTriggerPrimitiveDigis";
+  alcts_d_token_ = consumes<CSCALCTDigiCollection>(edm::InputTag(lctProducerData_,"","MyCSC"));
+  clcts_d_token_ = consumes<CSCCLCTDigiCollection>(edm::InputTag(lctProducerData_,"","MyCSC"));
+  lcts_tmb_d_token_ = consumes<CSCCorrelatedLCTDigiCollection>(edm::InputTag(lctProducerData_,"","MyCSC"));
+
+  cscStations_ = cfg_.getParameter<std::vector<string> >("cscStations");
   ntupleTrackEff_ = cfg_.getParameter<bool>("ntupleTrackEff");
   bendingcutPt_ = cfg_.getUntrackedParameter<double>("bendingcutPt",10);
 
@@ -185,11 +389,11 @@ RPCTimingAnalyzer::RPCTimingAnalyzer(const edm::ParameterSet& ps)
   const auto& gemRecHit_= cfg_.getParameter<edm::ParameterSet>("gemRecHit");
   gemRecHitInput_ = consumes<GEMRecHitCollection>(gemRecHit_.getParameter<edm::InputTag>("validInputTags"));
 
-  const auto& me0Digi_= cfg_.getParameter<edm::ParameterSet>("me0Digi");
+  const auto& me0Digi_= cfg_.getParameter<edm::ParameterSet>("me0StripDigi");
   me0DigiInput_ = consumes<ME0DigiCollection>(me0Digi_.getParameter<edm::InputTag>("validInputTags"));
 
-  const auto& me0PadDigi_= cfg_.getParameter<edm::ParameterSet>("me0PadDigi");
-  me0PadDigiInput_ = consumes<ME0PadDigiCollection>(me0Digi_.getParameter<edm::InputTag>("validInputTags"));
+  const auto& me0Pad_= cfg_.getParameter<edm::ParameterSet>("me0PadDigi");
+  me0PadDigiInput_ = consumes<ME0PadDigiCollection>(me0Pad_.getParameter<edm::InputTag>("validInputTags"));
 
   const auto& me0RecHit_ = cfg_.getParameter<edm::ParameterSet>("me0RecHit");
   me0RecHitInput_ = consumes<ME0RecHitCollection>(me0RecHit_.getParameter<edm::InputTag>("validInputTags"));
@@ -270,49 +474,49 @@ RPCTimingAnalyzer::RPCTimingAnalyzer(const edm::ParameterSet& ps)
 
   if (ntupleTrackEff_)
   {
-    vector<int> stations = cfg_.getParameter<vector<int> >("rpcStationsToUse");
+    vector<int> stations = cfg_.getParameter<vector<int> >("cscStationsToUse");
     copy(stations.begin(), stations.end(), inserter(stations_to_use_, stations_to_use_.end()) );
 
     for(const auto& s: stations_to_use_)
     {
       stringstream ss;
-      ss << "trk_eff_"<< rpcStations_[s];
-      std::cout <<"station to use "<< rpcStations_[s]  << std::endl;
+      ss << "trk_eff_"<< cscStations_[s];
+      // std::cout <<"station to use "<< cscStations_[s]  << std::endl;
       tree_eff_[s] = etrk_[s].book(tree_eff_[s], ss.str());
     }
   }
 
-  rpcStationsCo_.push_back(std::make_pair(-99,-99));
+  tree_occ_ = occ_.book(tree_occ_);
 
-  rpcStationsCo_.push_back(std::make_pair(1,2));
-  rpcStationsCo_.push_back(std::make_pair(1,3));
-
-  rpcStationsCo_.push_back(std::make_pair(2,2));
-  rpcStationsCo_.push_back(std::make_pair(2,3));
-
-  rpcStationsCo_.push_back(std::make_pair(3,1));
-  rpcStationsCo_.push_back(std::make_pair(3,2));
-  rpcStationsCo_.push_back(std::make_pair(3,3));
-
-  rpcStationsCo_.push_back(std::make_pair(4,1));
-  rpcStationsCo_.push_back(std::make_pair(4,2));
-  rpcStationsCo_.push_back(std::make_pair(4,3));
+  cscStationsCo_.push_back(std::make_pair(-99,-99));
+  cscStationsCo_.push_back(std::make_pair(1,-99));
+  cscStationsCo_.push_back(std::make_pair(1,4));
+  cscStationsCo_.push_back(std::make_pair(1,1));
+  cscStationsCo_.push_back(std::make_pair(1,2));
+  cscStationsCo_.push_back(std::make_pair(1,3));
+  cscStationsCo_.push_back(std::make_pair(2,1));
+  cscStationsCo_.push_back(std::make_pair(2,2));
+  cscStationsCo_.push_back(std::make_pair(3,1));
+  cscStationsCo_.push_back(std::make_pair(3,2));
+  cscStationsCo_.push_back(std::make_pair(4,1));
+  cscStationsCo_.push_back(std::make_pair(4,2));
+  cscStationsCo_.push_back(std::make_pair(0,1));
 }
 
 
-int RPCTimingAnalyzer::detIdToMEStation(int st, int ri)
+int LCTFakeRateAnalyzer::detIdToMEStation(int st, int ri)
 {
   const auto& p(std::make_pair(st, ri));
-  return std::find(rpcStationsCo_.begin(), rpcStationsCo_.end(), p) - rpcStationsCo_.begin();
+  return std::find(cscStationsCo_.begin(), cscStationsCo_.end(), p) - cscStationsCo_.begin();
 }
 
 
-void RPCTimingAnalyzer::beginRun(const edm::Run &iRun, const edm::EventSetup &iSetup)
+void LCTFakeRateAnalyzer::beginRun(const edm::Run &iRun, const edm::EventSetup &iSetup)
 {
 }
 
 
-bool RPCTimingAnalyzer::isSimTrackGood(const SimTrack &t)
+bool LCTFakeRateAnalyzer::isSimTrackGood(const SimTrack &t)
 {
   // SimTrack selection
   if (t.noVertex()) return false;
@@ -328,8 +532,10 @@ bool RPCTimingAnalyzer::isSimTrackGood(const SimTrack &t)
 }
 
 
-void RPCTimingAnalyzer::analyze(const edm::Event& ev, const edm::EventSetup& es)
+void LCTFakeRateAnalyzer::analyze(const edm::Event& ev, const edm::EventSetup& es)
 {
+  occ_.init();
+
   ievent ++;
   edm::Handle<edm::SimTrackContainer> sim_tracks;
   ev.getByToken(simTrackInput_, sim_tracks);
@@ -339,9 +545,27 @@ void RPCTimingAnalyzer::analyze(const edm::Event& ev, const edm::EventSetup& es)
   ev.getByToken(simVertexInput_, sim_vertices);
   const edm::SimVertexContainer & sim_vert = *sim_vertices.product();
 
+  // load the alct, clct and lct collection
+  edm::Handle<CSCALCTDigiCollection> all_alctsh;
+  edm::Handle<CSCCLCTDigiCollection> all_clctsh;
+  edm::Handle<CSCCorrelatedLCTDigiCollection> all_lctsh;
+  ev.getByToken(alcts_d_token_, all_alctsh);
+  ev.getByToken(clcts_d_token_, all_clctsh);
+  ev.getByToken(lcts_tmb_d_token_, all_lctsh);
+
+  const CSCALCTDigiCollection* all_alcts = all_alctsh.product();
+  const CSCCLCTDigiCollection* all_clcts = all_clctsh.product();
+  const CSCCorrelatedLCTDigiCollection* all_lcts = all_lctsh.product();
+
   if (verboseSimTrack_){
     std::cout << "Total number of SimTrack in this event: " << sim_track.size() << std::endl;
   }
+
+  std::vector<SimTrackMatchManager> matchercontainer;
+
+  CSCALCTDigiContainer allMatchedALCTs;
+  CSCCLCTDigiContainer allMatchedCLCTs;
+  CSCCorrelatedLCTDigiContainer allMatchedLCTs;
 
   int trk_no=0;
   for (const auto& t: sim_track)
@@ -393,27 +617,139 @@ void RPCTimingAnalyzer::analyze(const edm::Event& ev, const edm::EventSetup& es)
                                recoTrackExtraInputLabel_,
                                recoTrackInputLabel_,
                                recoChargedCandidateInputLabel_
-			       );
+                               );
+    //    matchercontainer.push_back(match);
+    auto temp = match.cscStubs().cscAlcts();
+    allMatchedALCTs.insert(std::end(allMatchedALCTs), std::begin(temp), std::end(temp));
+
+    auto temp2 = match.cscStubs().cscClcts();
+    allMatchedCLCTs.insert(std::end(allMatchedCLCTs), std::begin(temp2), std::end(temp2));
+
+    auto temp3 = match.cscStubs().cscLcts();
+    allMatchedLCTs.insert(std::end(allMatchedLCTs), std::begin(temp3), std::end(temp3));
 
     if (ntupleTrackEff_) analyzeTrackEff(match, trk_no);
+
     ++trk_no;
   }
+
+  // analyze the rate
+  for (auto adetUnitIt = all_lcts->begin(); adetUnitIt != all_lcts->end(); adetUnitIt++) {
+    const CSCDetId& id = (*adetUnitIt).first;
+      int ch = id.chamber() - 1;
+
+    const auto& range = (*adetUnitIt).second;
+    for (auto digiIt = range.first; digiIt != range.second; digiIt++) {
+      bool lct_valid = (*digiIt).isValid();
+      const auto& lct = *digiIt;
+
+      if (!lct_valid) continue;
+
+      if (std::abs(lct.getBX() - CSCConstants::LCT_CENTRAL_BX) > 1) continue;
+
+      if (id.zendcap() == 1) {
+        if (id.station() == 1) {
+          if (id.ring() == 1) occ_.nLCT_ME11p[ch]++;
+          if (id.ring() == 2) occ_.nLCT_ME12p[ch]++;
+          if (id.ring() == 3) occ_.nLCT_ME13p[ch]++;
+        }
+        else if (id.station() == 2) {
+          if (id.ring() == 1) occ_.nLCT_ME21p[ch]++;
+          if (id.ring() == 2) occ_.nLCT_ME22p[ch]++;
+        }
+        else if (id.station() == 3) {
+          if (id.ring() == 1) occ_.nLCT_ME31p[ch]++;
+          if (id.ring() == 2) occ_.nLCT_ME32p[ch]++;
+        }
+        else if (id.station() == 4){
+          if (id.ring() == 1) occ_.nLCT_ME41p[ch]++;
+          if (id.ring() == 2) occ_.nLCT_ME42p[ch]++;
+        }
+      }
+      else {
+        if (id.station() == 1) {
+          if (id.ring() == 1) occ_.nLCT_ME11m[ch]++;
+          if (id.ring() == 2) occ_.nLCT_ME12m[ch]++;
+          if (id.ring() == 3) occ_.nLCT_ME13m[ch]++;
+        }
+        else if (id.station() == 2) {
+          if (id.ring() == 1) occ_.nLCT_ME21m[ch]++;
+          if (id.ring() == 2) occ_.nLCT_ME22m[ch]++;
+        }
+        else if (id.station() == 3) {
+          if (id.ring() == 1) occ_.nLCT_ME31m[ch]++;
+          if (id.ring() == 2) occ_.nLCT_ME32m[ch]++;
+        }
+        else if (id.station() == 4){
+          if (id.ring() == 1) occ_.nLCT_ME41m[ch]++;
+          if (id.ring() == 2) occ_.nLCT_ME42m[ch]++;
+        }
+      }
+
+      // if contained in matched stubs
+      if(std::find(allMatchedLCTs.begin(), allMatchedLCTs.end(), lct) != allMatchedLCTs.end()) {
+
+        if (id.zendcap() == 1) {
+          if (id.station() == 1) {
+            if (id.ring() == 1) occ_.nLCT_ME11p_mu[ch]++;
+            if (id.ring() == 2) occ_.nLCT_ME12p_mu[ch]++;
+            if (id.ring() == 3) occ_.nLCT_ME13p_mu[ch]++;
+          }
+          else if (id.station() == 2) {
+            if (id.ring() == 1) occ_.nLCT_ME21p_mu[ch]++;
+            if (id.ring() == 2) occ_.nLCT_ME22p_mu[ch]++;
+          }
+          else if (id.station() == 3) {
+            if (id.ring() == 1) occ_.nLCT_ME31p_mu[ch]++;
+            if (id.ring() == 2) occ_.nLCT_ME32p_mu[ch]++;
+          }
+          else if (id.station() == 4){
+            if (id.ring() == 1) occ_.nLCT_ME41p_mu[ch]++;
+            if (id.ring() == 2) occ_.nLCT_ME42p_mu[ch]++;
+          }
+        }
+        else {
+          if (id.station() == 1) {
+            if (id.ring() == 1) occ_.nLCT_ME11m_mu[ch]++;
+            if (id.ring() == 2) occ_.nLCT_ME12m_mu[ch]++;
+            if (id.ring() == 3) occ_.nLCT_ME13m_mu[ch]++;
+          }
+          else if (id.station() == 2) {
+            if (id.ring() == 1) occ_.nLCT_ME21m_mu[ch]++;
+            if (id.ring() == 2) occ_.nLCT_ME22m_mu[ch]++;
+          }
+          else if (id.station() == 3) {
+            if (id.ring() == 1) occ_.nLCT_ME31m_mu[ch]++;
+            if (id.ring() == 2) occ_.nLCT_ME32m_mu[ch]++;
+          }
+          else if (id.station() == 4){
+            if (id.ring() == 1) occ_.nLCT_ME41m_mu[ch]++;
+            if (id.ring() == 2) occ_.nLCT_ME42m_mu[ch]++;
+          }
+        }
+
+
+      }
+
+    }
+    //std::cout << "CSC Occ ME+1/1/" << ch+1 << ": " << occ_.nLCT_ME11p[ch] << std::endl;
+  }
+
+  tree_occ_->Fill();
 }
 
 
 
-void RPCTimingAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
+void LCTFakeRateAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
 {
-
   const DisplacedGENMuonMatcher& match_gen = match.genMuons();
   const SimHitMatcher& match_sh = match.simhits();
-  const RPCDigiMatcher& match_rd = match.rpcDigis();
-  const RPCRecHitMatcher& match_rpcrh = match.rpcRecHits();
+  const CSCStubMatcher& match_csc = match.cscStubs();
   const SimTrack &t = match_sh.trk();
 
   float randtest1 = CLHEP::RandFlat::shoot(0.0,1.0) ;
   float randtest2 = CLHEP::RandFlat::shoot(0.0,1.0) ;
-  if (verbose_) std::cout <<"RPCTimingAnalyzer step1 "<< std::endl;
+  if (verbose_) std::cout <<"LCTFakeRateAnalyzer step1 "<< std::endl;
   for (const auto& s: stations_to_use_)
   {
     etrk_[s].init();
@@ -432,111 +768,7 @@ void RPCTimingAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
     etrk_[s].endcap = (etrk_[s].eta > 0.) ? 1 : -1;
   }
 
-
-  // placeholders for best mtching rpcstrips
-  GlobalPoint best_rpcstrip_odd[12];
-  GlobalPoint best_rpcstrip_even[12];
-
-  for (const auto& d: match_sh.chamberIdsRPC())
-  {
-    RPCDetId id(d);
-    std::cout << "Checking RPC " << id << std::endl;
-
-    const int st(detIdToMEStation(id.station(), id.ring()));
-    if (stations_to_use_.count(st) == 0) continue;
-    int cscchamber = CSCTriggerNumbering::chamberFromTriggerLabels(id.sector(), 0, id.station(), id.subsector());
-    cscchamber = (cscchamber+16)%18+1;
-    if ( (match_sh.hitsInChamber(d)).size() >0 )
-    {
-      bool odd(cscchamber%2 == 1);
-      if (odd)   etrk_[st].has_rpc_sh |= 1;
-      else etrk_[st].has_rpc_sh |=2;
-    }
-  }
-
-  for (const auto& d: match_rd.detIds())
-  {
-    RPCDetId id(d);
-    const int st(detIdToMEStation(id.station(), id.ring()));
-    if (stations_to_use_.count(st) == 0) continue;
-    //meanstrip in rpc
-    const auto& rpcdigis = match_rd.digisInDetId(id);
-    const int rpc_medianstrip(match_rd.median(rpcdigis));
-    // convert sector and subsector to chamber
-    const int chamber = CSCTriggerNumbering::chamberFromTriggerLabels(id.sector(), 0, id.station(), id.subsector());
-    std::cout <<"rpc detid " << id << " chamber: "<< chamber << std::endl;
-    const bool odd(chamber%2 == 1);
-    if (odd)
-    {
-      etrk_[st].has_rpc_dg |= 1;
-      etrk_[st].strip_rpcdg_odd = rpc_medianstrip;
-      // etrk_[st].hsfromrpc_odd = match_rd.extrapolateHsfromRPC( d, rpc_medianstrip);
-    //   if (is_valid(lct_odd[st]))
-    //   {
-    //     const auto& rpc_dg_and_gp = match_gd.digiInRPCClosestToCSC(rpcdigis, gp_lct_odd[st]);
-    //     best_rpcstrip_odd[st] = rpc_dg_and_gp.second;
-    //     etrk_[st].bx_rpcstrip_odd = digi_bx(rpc_dg_and_gp.first);
-    //     etrk_[st].phi_rpcstrip_odd = best_rpcstrip_odd[st].phi();
-    //     etrk_[st].eta_rpcstrip_odd = best_rpcstrip_odd[st].eta();
-    //     etrk_[st].dphi_rpcstrip_odd = deltaPhi(etrk_[st].phi_lct_odd, etrk_[st].phi_rpcstrip_odd);
-    //     etrk_[st].deta_rpcstrip_odd = etrk_[st].eta_lct_odd - etrk_[st].eta_rpcstrip_odd;
-    //   }
-    }
-    else
-    {
-      etrk_[st].has_rpc_dg |= 2;
-      etrk_[st].strip_rpcdg_even = rpc_medianstrip;
-    }
-    //   etrk_[st].hsfromrpc_even = match_rd.extrapolateHsfromRPC( d, rpc_medianstrip);
-    //   if (is_valid(lct_even[st]))
-    //   {
-    //     const auto& rpc_dg_and_gp = match_gd.digiInRPCClosestToCSC(rpcdigis, gp_lct_even[st]);
-    //     best_rpcstrip_even[st] = rpc_dg_and_gp.second;
-    //     etrk_[st].bx_rpcstrip_even = digi_bx(rpc_dg_and_gp.first);
-    //     etrk_[st].phi_rpcstrip_even = best_rpcstrip_even[st].phi();
-    //     etrk_[st].eta_rpcstrip_even = best_rpcstrip_even[st].eta();
-    //     etrk_[st].dphi_rpcstrip_even = deltaPhi(etrk_[st].phi_lct_even, etrk_[st].phi_rpcstrip_even);
-    //     etrk_[st].deta_rpcstrip_even = etrk_[st].eta_lct_even - etrk_[st].eta_rpcstrip_even;
-    //   }
-    // }
-  }
-
-
-  for (const auto& d: match_rpcrh.detIds())
-  {
-    RPCDetId id(d);
-    const int st(detIdToMEStation(id.station(), id.ring()));
-
-    if (stations_to_use_.count(st) == 0) continue;
-
-    // convert sector and subsector to chamber
-    const int chamber = CSCTriggerNumbering::chamberFromTriggerLabels(id.sector(), 0, id.station(), id.subsector());
-    std::cout <<"rpc detid " << id << " chamber: "<< chamber << std::endl;
-
-    const auto& rpcrechits = match_rpcrh.rpcRecHitsInDetId(id);
-
-    std::cout << "Number of matched rechits: " << rpcrechits.size() << std::endl;
-    // pick the first rechit now
-    const auto& candidate_rechit = rpcrechits.at(0);
-
-    const bool odd(chamber%2 == 1);
-    etrk_[st].rpc_BunchX = candidate_rechit.BunchX();
-    etrk_[st].rpc_firstClusterStrip = candidate_rechit.firstClusterStrip();
-    etrk_[st].rpc_clusterSize = candidate_rechit.clusterSize();
-    etrk_[st].rpc_time = candidate_rechit.time();
-    etrk_[st].rpc_timeError = candidate_rechit.timeError();
-
-    if (odd)
-    {
-      etrk_[st].has_rpc_rh |= 1;
-    }
-    else
-    {
-      etrk_[st].has_rpc_rh |= 2;
-    }
-  }
-
-  if (verbose_) std::cout <<"RPCTimingAnalyzer step10 "<< std::endl;
+  if (verbose_) std::cout <<"LCTFakeRateAnalyzer step10 "<< std::endl;
   for (const auto& s: stations_to_use_)
     {
       tree_eff_[s]->Fill();
@@ -545,7 +777,7 @@ void RPCTimingAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no)
 
 
 // ------------ method fills 'descriptions' with the allowed parameters for the module  ------------
-void RPCTimingAnalyzer::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
+void LCTFakeRateAnalyzer::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
   // The following says we do not know what parameters are allowed so do no validation
   // Please change this to state exactly what you do use, even if it is no parameters
   edm::ParameterSetDescription desc;
@@ -553,4 +785,4 @@ void RPCTimingAnalyzer::fillDescriptions(edm::ConfigurationDescriptions& descrip
   descriptions.addDefault(desc);
 }
 
-DEFINE_FWK_MODULE(RPCTimingAnalyzer);
+DEFINE_FWK_MODULE(LCTFakeRateAnalyzer);

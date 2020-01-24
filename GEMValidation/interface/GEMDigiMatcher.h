@@ -30,10 +30,10 @@ class GEMDigiMatcher : public DigiMatcher
 public:
 
   GEMDigiMatcher(const SimHitMatcher& sh,
-                 const edm::EDGetTokenT<GEMDigiCollection>& gemDigiInput_, 
-		 const edm::EDGetTokenT<GEMPadDigiCollection>& gemPadDigiInput_, 
+                 const edm::EDGetTokenT<GEMDigiCollection>& gemDigiInput_,
+		 const edm::EDGetTokenT<GEMPadDigiCollection>& gemPadDigiInput_,
                  const edm::EDGetTokenT<GEMCoPadDigiCollection>& gemCoPadDigiInput_);
-  
+
   ~GEMDigiMatcher();
 
   // partition GEM detIds with digis
@@ -113,7 +113,7 @@ private:
   void matchCoPadsToSimTrack(const GEMCoPadDigiCollection&);
 
   std::set<unsigned int> selectDetIds(const Id2DigiContainer &, int) const;
-  
+
 
   int minBXGEMDigi_, maxBXGEMDigi_;
   int minBXGEMPad_, maxBXGEMPad_;
