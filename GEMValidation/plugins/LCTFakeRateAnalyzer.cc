@@ -39,6 +39,12 @@ typedef std::vector<CSCCorrelatedLCTDigi> CSCCorrelatedLCTDigiContainer;
 
 struct ChamberOccupancy
 {
+  int nME0p[18];
+  int nME0m[18];
+
+  int nME0p_mu[18];
+  int nME0m_mu[18];
+
   int nLCT_ME11p[36];
   int nLCT_ME11m[36];
 
@@ -100,6 +106,9 @@ struct ChamberOccupancy
 void ChamberOccupancy::init()
 {
   for (unsigned i = 0; i<18; i++){
+    nME0p[i] = 0;
+    nME0m[i] = 0;
+
     nLCT_ME21p[i] = 0;
     nLCT_ME21m[i] = 0;
 
@@ -139,6 +148,9 @@ void ChamberOccupancy::init()
 
     nLCT_ME41p_mu[i] = 0;
     nLCT_ME41m_mu[i] = 0;
+
+    nME0p_mu[i] = 0;
+    nME0m_mu[i] = 0;
   }
   for (unsigned i = 0; i<36; i++){
     nLCT_ME11p_mu[i] = 0;
@@ -221,6 +233,14 @@ TTree * ChamberOccupancy::book(TTree *t)
   t->Branch("nLCT_ME42p_mu", &nLCT_ME42p_mu, "nLCT_ME42p_mu[36]/I");
   t->Branch("nLCT_ME42m_mu", &nLCT_ME42m_mu, "nLCT_ME42m_mu[36]/I");
 
+
+
+  t->Branch("nME0p", &nME0p, "nME0p[18]/I");
+  t->Branch("nME0m", &nME0m, "nME0m[18]/I");
+
+  t->Branch("nME0p_mu", &nME0p_mu, "nME0p_mu[18]/I");
+  t->Branch("nME0m_mu", &nME0m_mu, "nME0m_mu[18]/I");
+
   return t;
 }
 
@@ -258,7 +278,7 @@ private:
   edm::EDGetTokenT<CSCCLCTDigiCollection> clcts_d_token_;
   edm::EDGetTokenT<CSCCorrelatedLCTDigiCollection> lcts_tmb_d_token_;
   edm::EDGetTokenT<CSCCorrelatedLCTDigiCollection> lcts_mpc_d_token_;
-
+  edm::EDGetTokenT<ME0SegmentCollection> me0_token_;
 
   edm::EDGetTokenT<reco::GenParticleCollection> genParticleInput_;
   edm::EDGetTokenT<edm::SimVertexContainer> simVertexInput_;
@@ -549,13 +569,17 @@ void LCTFakeRateAnalyzer::analyze(const edm::Event& ev, const edm::EventSetup& e
   edm::Handle<CSCALCTDigiCollection> all_alctsh;
   edm::Handle<CSCCLCTDigiCollection> all_clctsh;
   edm::Handle<CSCCorrelatedLCTDigiCollection> all_lctsh;
+  edm::Handle<ME0SegmentCollection> all_me0sh;
+
   ev.getByToken(alcts_d_token_, all_alctsh);
   ev.getByToken(clcts_d_token_, all_clctsh);
   ev.getByToken(lcts_tmb_d_token_, all_lctsh);
+  ev.getByToken(me0_token_, all_me0sh);
 
   const CSCALCTDigiCollection* all_alcts = all_alctsh.product();
   const CSCCLCTDigiCollection* all_clcts = all_clctsh.product();
   const CSCCorrelatedLCTDigiCollection* all_lcts = all_lctsh.product();
+  const ME0SegmentCollection* all_me0 = all_me0sh.product();
 
   if (verboseSimTrack_){
     std::cout << "Total number of SimTrack in this event: " << sim_track.size() << std::endl;
@@ -633,7 +657,229 @@ void LCTFakeRateAnalyzer::analyze(const edm::Event& ev, const edm::EventSetup& e
     ++trk_no;
   }
 
-  // analyze the rate
+  // analyze the ME0 rate
+  for(auto iC = all_me0->id_begin(); iC != all_me0->id_end(); ++iC){
+    const auto& ch_segs = all_me0->get(*iC);
+    for(auto iS = ch_segs.first; iS != ch_segs.second; ++iS){
+      int region = iS->me0DetId().region();
+      int chamber = iS->me0DetId().chamber() - 1;
+      if (region == -1) {
+        occ_.nME0m[chamber]++;
+      }
+      else {
+        occ_.nME0p[chamber]++;
+      }
+    }
+  }
+
+
+  // // analyze the ALCT rate
+  // for (auto adetUnitIt = all_alcts->begin(); adetUnitIt != all_alcts->end(); adetUnitIt++) {
+  //   const CSCDetId& id = (*adetUnitIt).first;
+  //     int ch = id.chamber() - 1;
+
+  //   const auto& range = (*adetUnitIt).second;
+  //   for (auto digiIt = range.first; digiIt != range.second; digiIt++) {
+  //     bool lct_valid = (*digiIt).isValid();
+  //     const auto& lct = *digiIt;
+
+  //     if (!lct_valid) continue;
+
+  //     if (std::abs(lct.getBX() - CSCConstants::LCT_CENTRAL_BX) > 1) continue;
+
+  //     if (id.zendcap() == 1) {
+  //       if (id.station() == 1) {
+  //         if (id.ring() == 1) occ_.nLCT_ME11p[ch]++;
+  //         if (id.ring() == 2) occ_.nLCT_ME12p[ch]++;
+  //         if (id.ring() == 3) occ_.nLCT_ME13p[ch]++;
+  //       }
+  //       else if (id.station() == 2) {
+  //         if (id.ring() == 1) occ_.nLCT_ME21p[ch]++;
+  //         if (id.ring() == 2) occ_.nLCT_ME22p[ch]++;
+  //       }
+  //       else if (id.station() == 3) {
+  //         if (id.ring() == 1) occ_.nLCT_ME31p[ch]++;
+  //         if (id.ring() == 2) occ_.nLCT_ME32p[ch]++;
+  //       }
+  //       else if (id.station() == 4){
+  //         if (id.ring() == 1) occ_.nLCT_ME41p[ch]++;
+  //         if (id.ring() == 2) occ_.nLCT_ME42p[ch]++;
+  //       }
+  //     }
+  //     else {
+  //       if (id.station() == 1) {
+  //         if (id.ring() == 1) occ_.nLCT_ME11m[ch]++;
+  //         if (id.ring() == 2) occ_.nLCT_ME12m[ch]++;
+  //         if (id.ring() == 3) occ_.nLCT_ME13m[ch]++;
+  //       }
+  //       else if (id.station() == 2) {
+  //         if (id.ring() == 1) occ_.nLCT_ME21m[ch]++;
+  //         if (id.ring() == 2) occ_.nLCT_ME22m[ch]++;
+  //       }
+  //       else if (id.station() == 3) {
+  //         if (id.ring() == 1) occ_.nLCT_ME31m[ch]++;
+  //         if (id.ring() == 2) occ_.nLCT_ME32m[ch]++;
+  //       }
+  //       else if (id.station() == 4){
+  //         if (id.ring() == 1) occ_.nLCT_ME41m[ch]++;
+  //         if (id.ring() == 2) occ_.nLCT_ME42m[ch]++;
+  //       }
+  //     }
+
+  //     // if contained in matched stubs
+  //     if(std::find(allMatchedLCTs.begin(), allMatchedLCTs.end(), lct) != allMatchedLCTs.end()) {
+
+  //       if (id.zendcap() == 1) {
+  //         if (id.station() == 1) {
+  //           if (id.ring() == 1) occ_.nLCT_ME11p_mu[ch]++;
+  //           if (id.ring() == 2) occ_.nLCT_ME12p_mu[ch]++;
+  //           if (id.ring() == 3) occ_.nLCT_ME13p_mu[ch]++;
+  //         }
+  //         else if (id.station() == 2) {
+  //           if (id.ring() == 1) occ_.nLCT_ME21p_mu[ch]++;
+  //           if (id.ring() == 2) occ_.nLCT_ME22p_mu[ch]++;
+  //         }
+  //         else if (id.station() == 3) {
+  //           if (id.ring() == 1) occ_.nLCT_ME31p_mu[ch]++;
+  //           if (id.ring() == 2) occ_.nLCT_ME32p_mu[ch]++;
+  //         }
+  //         else if (id.station() == 4){
+  //           if (id.ring() == 1) occ_.nLCT_ME41p_mu[ch]++;
+  //           if (id.ring() == 2) occ_.nLCT_ME42p_mu[ch]++;
+  //         }
+  //       }
+  //       else {
+  //         if (id.station() == 1) {
+  //           if (id.ring() == 1) occ_.nLCT_ME11m_mu[ch]++;
+  //           if (id.ring() == 2) occ_.nLCT_ME12m_mu[ch]++;
+  //           if (id.ring() == 3) occ_.nLCT_ME13m_mu[ch]++;
+  //         }
+  //         else if (id.station() == 2) {
+  //           if (id.ring() == 1) occ_.nLCT_ME21m_mu[ch]++;
+  //           if (id.ring() == 2) occ_.nLCT_ME22m_mu[ch]++;
+  //         }
+  //         else if (id.station() == 3) {
+  //           if (id.ring() == 1) occ_.nLCT_ME31m_mu[ch]++;
+  //           if (id.ring() == 2) occ_.nLCT_ME32m_mu[ch]++;
+  //         }
+  //         else if (id.station() == 4){
+  //           if (id.ring() == 1) occ_.nLCT_ME41m_mu[ch]++;
+  //           if (id.ring() == 2) occ_.nLCT_ME42m_mu[ch]++;
+  //         }
+  //       }
+
+
+  //     }
+
+  //   }
+  //   //std::cout << "CSC Occ ME+1/1/" << ch+1 << ": " << occ_.nLCT_ME11p[ch] << std::endl;
+  // }
+
+
+  // // analyze the CLCT rate
+  // for (auto adetUnitIt = all_lcts->begin(); adetUnitIt != all_lcts->end(); adetUnitIt++) {
+  //   const CSCDetId& id = (*adetUnitIt).first;
+  //     int ch = id.chamber() - 1;
+
+  //   const auto& range = (*adetUnitIt).second;
+  //   for (auto digiIt = range.first; digiIt != range.second; digiIt++) {
+  //     bool lct_valid = (*digiIt).isValid();
+  //     const auto& lct = *digiIt;
+
+  //     if (!lct_valid) continue;
+
+  //     if (std::abs(lct.getBX() - CSCConstants::LCT_CENTRAL_BX) > 1) continue;
+
+  //     if (id.zendcap() == 1) {
+  //       if (id.station() == 1) {
+  //         if (id.ring() == 1) occ_.nLCT_ME11p[ch]++;
+  //         if (id.ring() == 2) occ_.nLCT_ME12p[ch]++;
+  //         if (id.ring() == 3) occ_.nLCT_ME13p[ch]++;
+  //       }
+  //       else if (id.station() == 2) {
+  //         if (id.ring() == 1) occ_.nLCT_ME21p[ch]++;
+  //         if (id.ring() == 2) occ_.nLCT_ME22p[ch]++;
+  //       }
+  //       else if (id.station() == 3) {
+  //         if (id.ring() == 1) occ_.nLCT_ME31p[ch]++;
+  //         if (id.ring() == 2) occ_.nLCT_ME32p[ch]++;
+  //       }
+  //       else if (id.station() == 4){
+  //         if (id.ring() == 1) occ_.nLCT_ME41p[ch]++;
+  //         if (id.ring() == 2) occ_.nLCT_ME42p[ch]++;
+  //       }
+  //     }
+  //     else {
+  //       if (id.station() == 1) {
+  //         if (id.ring() == 1) occ_.nLCT_ME11m[ch]++;
+  //         if (id.ring() == 2) occ_.nLCT_ME12m[ch]++;
+  //         if (id.ring() == 3) occ_.nLCT_ME13m[ch]++;
+  //       }
+  //       else if (id.station() == 2) {
+  //         if (id.ring() == 1) occ_.nLCT_ME21m[ch]++;
+  //         if (id.ring() == 2) occ_.nLCT_ME22m[ch]++;
+  //       }
+  //       else if (id.station() == 3) {
+  //         if (id.ring() == 1) occ_.nLCT_ME31m[ch]++;
+  //         if (id.ring() == 2) occ_.nLCT_ME32m[ch]++;
+  //       }
+  //       else if (id.station() == 4){
+  //         if (id.ring() == 1) occ_.nLCT_ME41m[ch]++;
+  //         if (id.ring() == 2) occ_.nLCT_ME42m[ch]++;
+  //       }
+  //     }
+
+  //     // if contained in matched stubs
+  //     if(std::find(allMatchedLCTs.begin(), allMatchedLCTs.end(), lct) != allMatchedLCTs.end()) {
+
+  //       if (id.zendcap() == 1) {
+  //         if (id.station() == 1) {
+  //           if (id.ring() == 1) occ_.nLCT_ME11p_mu[ch]++;
+  //           if (id.ring() == 2) occ_.nLCT_ME12p_mu[ch]++;
+  //           if (id.ring() == 3) occ_.nLCT_ME13p_mu[ch]++;
+  //         }
+  //         else if (id.station() == 2) {
+  //           if (id.ring() == 1) occ_.nLCT_ME21p_mu[ch]++;
+  //           if (id.ring() == 2) occ_.nLCT_ME22p_mu[ch]++;
+  //         }
+  //         else if (id.station() == 3) {
+  //           if (id.ring() == 1) occ_.nLCT_ME31p_mu[ch]++;
+  //           if (id.ring() == 2) occ_.nLCT_ME32p_mu[ch]++;
+  //         }
+  //         else if (id.station() == 4){
+  //           if (id.ring() == 1) occ_.nLCT_ME41p_mu[ch]++;
+  //           if (id.ring() == 2) occ_.nLCT_ME42p_mu[ch]++;
+  //         }
+  //       }
+  //       else {
+  //         if (id.station() == 1) {
+  //           if (id.ring() == 1) occ_.nLCT_ME11m_mu[ch]++;
+  //           if (id.ring() == 2) occ_.nLCT_ME12m_mu[ch]++;
+  //           if (id.ring() == 3) occ_.nLCT_ME13m_mu[ch]++;
+  //         }
+  //         else if (id.station() == 2) {
+  //           if (id.ring() == 1) occ_.nLCT_ME21m_mu[ch]++;
+  //           if (id.ring() == 2) occ_.nLCT_ME22m_mu[ch]++;
+  //         }
+  //         else if (id.station() == 3) {
+  //           if (id.ring() == 1) occ_.nLCT_ME31m_mu[ch]++;
+  //           if (id.ring() == 2) occ_.nLCT_ME32m_mu[ch]++;
+  //         }
+  //         else if (id.station() == 4){
+  //           if (id.ring() == 1) occ_.nLCT_ME41m_mu[ch]++;
+  //           if (id.ring() == 2) occ_.nLCT_ME42m_mu[ch]++;
+  //         }
+  //       }
+
+
+  //     }
+
+  //   }
+  //   //std::cout << "CSC Occ ME+1/1/" << ch+1 << ": " << occ_.nLCT_ME11p[ch] << std::endl;
+  // }
+
+
+  // analyze the LCT rate
   for (auto adetUnitIt = all_lcts->begin(); adetUnitIt != all_lcts->end(); adetUnitIt++) {
     const CSCDetId& id = (*adetUnitIt).first;
       int ch = id.chamber() - 1;

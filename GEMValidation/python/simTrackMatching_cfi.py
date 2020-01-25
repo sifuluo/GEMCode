@@ -71,7 +71,7 @@ SimTrackMatching = cms.PSet(
         run = cms.bool(True),
         minBX = cms.int32(-1),
         maxBX = cms.int32(1),
-     ),
+    ),
     gemCoPadDigi = cms.PSet(
         verbose = cms.int32(0),
         validInputTags = cms.InputTag("simCscTriggerPrimitiveDigis"),
@@ -96,15 +96,21 @@ SimTrackMatching = cms.PSet(
         discardEleHits = cms.bool(False),
         minNHitsChamber = cms.int32(4),
     ),
-    me0DigiPreReco = cms.PSet(
+    me0StripDigi = cms.PSet(
         verbose = cms.int32(0),
-        validInputTags = cms.InputTag("simMuonME0Digis192"),
+        validInputTags = cms.InputTag("simMuonME0Digis"),
         run = cms.bool(True),
-        minBX = cms.int32(0),
-        maxBX = cms.int32(0),
+        minBX = cms.int32(-1),
+        maxBX = cms.int32(1),
         matchDeltaStrip = cms.int32(1),
-        minNHitsChamber = cms.int32(4),
     ),
+    me0PadDigi = cms.PSet(
+        verbose = cms.int32(0),
+        validInputTags = cms.InputTag("simMuonME0PadDigis"),
+        run = cms.bool(True),
+        minBX = cms.int32(-1),
+        maxBX = cms.int32(1),
+     ),
     me0ReDigiPreReco = cms.PSet(
         verbose = cms.int32(0),
         validInputTags = cms.InputTag("simMuonME0ReDigis192"),

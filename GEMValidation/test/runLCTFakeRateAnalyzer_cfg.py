@@ -16,7 +16,7 @@ process.load('TrackPropagation.SteppingHelixPropagator.SteppingHelixPropagatorOp
 process.load('TrackPropagation.SteppingHelixPropagator.SteppingHelixPropagatorAlong_cfi')
 
 process.source = cms.Source("PoolSource",
-	fileNames = cms.untracked.vstring('file:/afs/cern.ch/work/d/dildick/public/GEM/BackPortGEMUpdatesL1T/CMSSW_10_6_1_patch2/src/025D27E1-8363-B54D-8E59-15E4E4D8D0A4.root')
+	fileNames = cms.untracked.vstring('file:/afs/cern.ch/work/d/dildick/public/GEM/BackPortGEMUpdatesL1T/CMSSW_10_6_1_patch2/src/FFB3195D-E113-3744-877D-44E21C060358_NuPU200.root')
 )
 
 #InputDir = ['/eos/uscms/store/user/dildick/DarkSUSY_mH_125_mGammaD_20_cT_0_14TeV/DarkSUSY_mH_125_mGammaD_20_cT_0_14TeV_REGEN/170723_232821/0000/']

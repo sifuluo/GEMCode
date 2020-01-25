@@ -95,8 +95,6 @@ private:
   ME0PadDigiContainer no_pads_;
 };
 
-#endif
-
 template <class T>
 std::set<unsigned int> ME0DigiMatcher::selectDetIds(const T &digis) const
 {
@@ -108,3 +106,5 @@ std::set<unsigned int> ME0DigiMatcher::selectDetIds(const T &digis) const
   }
   return result;
 }
+
+#endif
