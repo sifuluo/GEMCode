@@ -174,6 +174,7 @@ public:
   std::set<int> hitStripsInDetId(unsigned int, int margin_n_strips = 0) const;  // GEM/ME0 or CSC
   std::set<int> hitWiregroupsInDetId(unsigned int, int margin_n_wg = 0) const; // CSC
   std::set<int> hitPadsInDetId(unsigned int) const; // GEM
+  std::set<int> hitME0PadsInDetId(unsigned int) const; // GEM
   std::set<int> hitCoPadsInDetId(unsigned int) const; // GEM coincidence pads with hits
   std::set<unsigned int> hitWiresInDTLayerId(unsigned int, int margin_n_wires = 0) const;  // DT
   std::set<unsigned int> hitWiresInDTSuperLayerId(unsigned int, int margin_n_wires = 0) const;  // DT
@@ -248,6 +249,7 @@ private:
 
   // detids with hits in pads
   std::map<unsigned int, std::set<int> > gem_detids_to_pads_;
+  std::map<unsigned int, std::set<int> > me0_detids_to_pads_;
   // detids with hits in 2-layer pad coincidences
   std::map<unsigned int, std::set<int> > gem_detids_to_copads_;
 

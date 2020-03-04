@@ -376,6 +376,7 @@ SimHitMatcher::matchGEMSimHitsToSimTrack(std::vector<unsigned int> track_ids, co
     gem_detids_to_pads_[d] = pads;
   }
 
+
   // find 2-layer coincidence pads with hits
   for (const auto& d: detids) {
     GEMDetId id1(d);
@@ -448,6 +449,18 @@ SimHitMatcher::matchME0SimHitsToSimTrack(std::vector<unsigned int> track_ids, co
       me0_chamber_to_hits_[ layer_id.layerId().rawId() ].push_back(h);
       me0_superchamber_to_hits_[ layer_id.chamberId().rawId() ].push_back(h);
     }
+  }
+
+  for (const auto& d: detIdsME0()) {
+    ME0DetId id(d);
+    const auto& hits = hitsInDetId(d);
+    const auto& roll = getME0Geometry()->etaPartition(id);
+    set<int> pads;
+    for (const auto& h: hits) {
+      const LocalPoint& lp = h.entryPoint();
+      pads.insert( static_cast<int>(roll->padTopology().channel(lp)) );
+    }
+    me0_detids_to_pads_[d] = pads;
   }
 }
 
@@ -1493,6 +1506,14 @@ SimHitMatcher::hitPadsInDetId(unsigned int detid) const
   set<int> none;
   if (gem_detids_to_pads_.find(detid) == gem_detids_to_pads_.end()) return none;
   return gem_detids_to_pads_.at(detid);
+}
+
+std::set<int>
+SimHitMatcher::hitME0PadsInDetId(unsigned int detid) const
+{
+  set<int> none;
+  if (me0_detids_to_pads_.find(detid) == me0_detids_to_pads_.end()) return none;
+  return me0_detids_to_pads_.at(detid);
 }
 
 

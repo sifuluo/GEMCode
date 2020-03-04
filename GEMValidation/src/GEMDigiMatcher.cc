@@ -93,6 +93,7 @@ GEMDigiMatcher::matchDigisToSimTrack(const GEMDigiCollection& digis)
 void
 GEMDigiMatcher::matchPadsToSimTrack(const GEMPadDigiCollection& pads)
 {
+  if (verbosePad_) cout << "Matching simtrack to GEM pads" << endl;
   const auto& det_ids = simhit_matcher_->detIdsGEM();
   for (const auto& id: det_ids)
   {

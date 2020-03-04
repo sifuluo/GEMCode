@@ -357,10 +357,11 @@ LCTFakeRateAnalyzer::LCTFakeRateAnalyzer(const edm::ParameterSet& ps)
 {
   ievent = 0;
 
-  std::string lctProducerData_ = "simCscTriggerPrimitiveDigis";
+  std::string lctProducerData_ = "cscTriggerPrimitiveDigis";
   alcts_d_token_ = consumes<CSCALCTDigiCollection>(edm::InputTag(lctProducerData_,"","MyCSC"));
   clcts_d_token_ = consumes<CSCCLCTDigiCollection>(edm::InputTag(lctProducerData_,"","MyCSC"));
   lcts_tmb_d_token_ = consumes<CSCCorrelatedLCTDigiCollection>(edm::InputTag(lctProducerData_,"","MyCSC"));
+  me0_token_ = consumes<ME0SegmentCollection>(edm::InputTag("me0TriggerPseudoDigis"));
 
   cscStations_ = cfg_.getParameter<std::vector<string> >("cscStations");
   ntupleTrackEff_ = cfg_.getParameter<bool>("ntupleTrackEff");

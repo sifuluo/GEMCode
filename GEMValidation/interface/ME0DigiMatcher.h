@@ -47,6 +47,7 @@ public:
   const ME0PadDigiContainer& padsInDetId(unsigned int) const;
   const ME0PadDigiContainer& padsInChamber(unsigned int) const;
   const ME0PadDigiContainer& padsInSuperChamber(unsigned int) const;
+  ME0PadDigiContainer pads() const;
 
   // #layers with digis from this simtrack
   int nLayersWithDigisInSuperChamber(unsigned int) const;

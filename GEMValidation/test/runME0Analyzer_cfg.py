@@ -31,9 +31,9 @@ process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase2_realistic', '')
 
 # the analyzer configuration
 from GEMCode.GEMValidation.simTrackMatching_cfi import SimTrackMatching
-process.ME0Analyzer = cms.EDAnalyzer(
-  "ME0Analyzer",
-  verbose = cms.untracked.int32(0),
+process.ME0TriggerAnalyzer = cms.EDAnalyzer(
+  "ME0TriggerAnalyzer",
+    verbose = cms.untracked.int32(1),
   simTrackMatching = SimTrackMatching
 )
 
@@ -41,7 +41,7 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
 
 process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 
-process.p = cms.Path(process.ME0Analyzer)
+process.p = cms.Path(process.ME0TriggerAnalyzer)
 
 ## messages
 print

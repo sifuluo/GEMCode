@@ -96,9 +96,11 @@ struct MyHits
   TTree* book(TTree *t, const std::string & name = "hits");
 
   int nME0 = 0;
+  int endcap[nMaxME0Hits];
   int chamber[nMaxME0Hits];
   int layer[nMaxME0Hits];
   int pad[nMaxME0Hits];
+  int bx[nMaxME0Hits];
   int part[nMaxME0Hits];
   int isMu[nMaxME0Hits];
 };
@@ -110,6 +112,7 @@ void MyHits::init()
   nME0 = 0;
 
   for (int i=0; i<nME0; ++i) {
+    endcap[i] = -1;
     chamber[i] = -1;
     layer[i] = -1;
     pad[i] = -1;
@@ -125,11 +128,13 @@ TTree* MyHits::book(TTree *t, const std::string & name)
   t = fs->make<TTree>(name.c_str(), name.c_str());
 
   t->Branch("nME0", &nME0);
+  t->Branch("endcap", endcap, "endcap[nME0]/I");
   t->Branch("chamber", chamber, "chamber[nME0]/I");
   t->Branch("layer", layer, "layer[nME0]/I");
   t->Branch("pad", pad, "pad[nME0]/I");
   t->Branch("part", part, "part[nME0]/I");
   t->Branch("isMu", isMu, "isMu[nME0]/I");
+  t->Branch("bx", isMu, "bx[nME0]/I");
 
   return t;
 }
@@ -221,8 +226,12 @@ private:
   bool ntupleTrackEff_;
 
   TTree *tree_eff_;
+  TTree *tree_hit_;
 
   MyTrackEff  etrk_;
+  MyHits  hits_;
+
+  edm::Handle<ME0PadDigiCollection> all_me0sh;
 };
 
 
@@ -351,6 +360,7 @@ ME0TriggerAnalyzer::ME0TriggerAnalyzer(const edm::ParameterSet& ps)
   recoChargedCandidateInputLabel_ = consumes<reco::RecoChargedCandidateCollection>(recoChargedCandidate.getParameter<edm::InputTag>("validInputTags"));
 
   tree_eff_ = etrk_.book(tree_eff_, "ME0");
+  tree_hit_ = hits_.book(tree_hit_, "ME0");
 }
 
 
@@ -386,6 +396,8 @@ void ME0TriggerAnalyzer::analyze(const edm::Event& ev, const edm::EventSetup& es
   ev.getByToken(simVertexInput_, sim_vertices);
   const edm::SimVertexContainer & sim_vert = *sim_vertices.product();
 
+  ev.getByToken(me0PadDigiInput_, all_me0sh);
+
   if (verboseSimTrack_){
     std::cout << "Total number of SimTrack in this event: " << sim_track.size() << std::endl;
   }
@@ -399,6 +411,7 @@ void ME0TriggerAnalyzer::analyze(const edm::Event& ev, const edm::EventSetup& es
 
   int trk_no=0;
 
+  std::vector<ME0PadDigi> allMatchedME0Pads;
   for (const auto& t: sim_track_selected) {
 
     if (verboseSimTrack_){
@@ -448,8 +461,40 @@ void ME0TriggerAnalyzer::analyze(const edm::Event& ev, const edm::EventSetup& es
                                );
 
     if (ntupleTrackEff_) analyzeTrackEff(match, trk_no);
+    auto temp3 = match.me0Digis().pads();
+    allMatchedME0Pads.insert(std::end(allMatchedME0Pads), std::begin(temp3), std::end(temp3));
     ++trk_no;
   }
+
+  const ME0PadDigiCollection* all_me0 = all_me0sh.product();
+
+  // do a loop over the ME0 pad collection
+  int nME0Pad = 0;
+  for (auto adetUnitIt = all_me0->begin(); adetUnitIt != all_me0->end(); adetUnitIt++) {
+    const ME0DetId& id = (*adetUnitIt).first;
+    int ch = id.chamber() ;
+
+    const auto& digis_in_det = all_me0->get(id);
+    for (auto digiIt = digis_in_det.first; digiIt != digis_in_det.second; digiIt++) {
+      const auto& lct = *digiIt;
+      std::cout << id << " " << lct << std::endl;
+      hits_.endcap[nME0Pad] = id.region();
+      hits_.chamber[nME0Pad] = id.chamber();
+      hits_.layer[nME0Pad] = id.layer();
+      hits_.part[nME0Pad] = id.roll();
+      hits_.pad[nME0Pad] = lct.pad();
+      hits_.bx[nME0Pad] = lct.bx();
+      // check if originating from real muon or not
+      if(std::find(allMatchedME0Pads.begin(), allMatchedME0Pads.end(), lct) != allMatchedME0Pads.end()) {
+        hits_.isMu[nME0Pad] = 1;
+      std::cout << "is muon " << std::endl;
+      }
+      nME0Pad++;
+    }
+  }
+  hits_.nME0 = nME0Pad;
+  tree_hit_->Fill();
+
 }
 
 
@@ -459,6 +504,7 @@ void ME0TriggerAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no
   const SimHitMatcher& match_sh = match.simhits();
   const ME0DigiMatcher& match_me0digi = match.me0Digis();
   const SimTrack &t = match_sh.trk();
+
 
   if (verbose_) std::cout <<"ME0TriggerAnalyzer step1 "<< std::endl;
 
@@ -476,95 +522,6 @@ void ME0TriggerAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no
   etrk_.endcap = (etrk_.eta > 0.) ? 1 : -1;
   etrk_.pdgid = t.type();
 
-  // do a loop over the ME0 digi collection
-
-  /*
-  //ME0 simhits
-  const auto& me0_simhits(match_sh.superChamberIdsME0());
-  if (verbose_) std::cout <<"me0 simthits , chamber id size "<< me0_simhits.size() << std::endl;
-  for (const auto& d : me0_simhits){
-    const ME0DetId id(d);
-    int nlayers = match_sh.nLayersWithHitsInSuperChamber(d);
-    if (verbose_) std::cout <<"ME0 Detid "<< id <<" nlayer hits "<< nlayers << std::endl;
-    if (nlayers < minNHitsChamberME0SimHit_) continue;
-    bool odd(id.chamber()%2 == 1);
-    //ME0DetId(int region, int layer,int chamber, int roll)
-    const GlobalVector& ym = match_sh.simHitsMeanMomentum(match_sh.hitsInSuperChamber(d));
-    const GlobalPoint& keygp(match_sh.simHitsMeanPosition(match_sh.hitsInSuperChamber(d)));
-    //etrk_[ME0].bending_sh = match_sh.LocalBendingInChamber(d);
-    const ME0DetId id1(id.region(), 1, id.chamber(), 0);
-    const ME0DetId id6(id.region(), 6, id.chamber(), 0);
-    const GlobalPoint& gp1 = match_sh.simHitsMeanPosition(match_sh.hitsInChamber(id1.rawId()));
-    const GlobalPoint& gp6 = match_sh.simHitsMeanPosition(match_sh.hitsInChamber(id6.rawId()));
-    if (odd)  etrk_[ME0].nlayers_csc_sh_odd = nlayers;
-    else  etrk_[ME0].nlayers_csc_sh_even = nlayers;
-    if (odd) etrk_[ME0].has_csc_sh |= 1;
-    else etrk_[ME0].has_csc_sh |= 2;
-    if (odd) etrk_[ME0].chamber_sh_odd = id.chamber();
-    else etrk_[ME0].chamber_sh_even = id.chamber();
-    if (odd) etrk_[ME0].eta_cscsh_odd = keygp.eta();
-    else     etrk_[ME0].eta_cscsh_even = keygp.eta();
-    if (odd) etrk_[ME0].phi_cscsh_odd = keygp.phi();
-    else     etrk_[ME0].phi_cscsh_even = keygp.phi();
-    if (odd) etrk_[ME0].perp_cscsh_odd = keygp.perp();
-    if (odd) etrk_[ME0].perp_cscsh_even = keygp.perp();
-    if (odd){
-    	etrk_[ME0].pteta_sh_odd = ym.eta();
-    	etrk_[ME0].ptphi_sh_odd = ym.phi();
-    	etrk_[ME0].pt_sh_odd = ym.perp();
-    }else{
-    	etrk_[ME0].pteta_sh_even = ym.eta();
-    	etrk_[ME0].ptphi_sh_even = ym.phi();
-    	etrk_[ME0].pt_sh_even = ym.perp();
-    }
-    if (odd){
-    	if (match_sh.hitsInChamber(id1.rawId()).size()>0){
-        etrk_[ME0].eta_layer1_sh_odd = gp1.eta();
-        etrk_[ME0].phi_layer1_sh_odd = gp1.phi();
-        etrk_[ME0].perp_layer1_sh_odd = gp1.perp();
-        etrk_[ME0].z_layer1_sh_odd = gp1.z();
-      }
-    	if (match_sh.hitsInChamber(id6.rawId()).size()>0){
-        etrk_[ME0].eta_layer6_sh_odd = gp6.eta();
-        etrk_[ME0].phi_layer6_sh_odd = gp6.phi();
-        etrk_[ME0].perp_layer6_sh_odd = gp6.perp();
-        etrk_[ME0].z_layer6_sh_odd = gp6.z();
-      }
-    }else{
-    	if (match_sh.hitsInChamber(id1.rawId()).size()>0){
-        etrk_[ME0].eta_layer1_sh_even = gp1.eta();
-        etrk_[ME0].phi_layer1_sh_even = gp1.phi();
-        etrk_[ME0].perp_layer1_sh_even = gp1.perp();
-        etrk_[ME0].z_layer1_sh_even = gp1.z();
-      }
-    	if (match_sh.hitsInChamber(id6.rawId()).size()>0){
-        etrk_[ME0].eta_layer6_sh_even = gp6.eta();
-        etrk_[ME0].phi_layer6_sh_even = gp6.phi();
-        etrk_[ME0].perp_layer6_sh_even = gp6.perp();
-        etrk_[ME0].z_layer6_sh_even = gp6.z();
-      }
-    }
-
-  }
-
-  //ME0 digis
-  const auto& me0digis(match_me0digi.superChamberIds());
-  if (verbose_) std::cout <<"me0 digis , chamber id size "<< me0digis.size() << std::endl;
-  for (const auto& d: me0digis){
-    const ME0DetId id(d);
-    int nlayers = match_me0digi.nLayersWithDigisInSuperChamber(d);
-    if (verbose_) std::cout <<"ME0 Detid "<< id <<" nlayer hits "<< nlayers << std::endl;
-    if (nlayers < minNHitsChamberME0Digi_) continue;
-    bool odd(id.chamber()%2 == 1);
-    if (odd) etrk_[ME0].has_csc_strips |= 1;
-    else etrk_[ME0].has_csc_strips |= 2;
-    if (odd) etrk_[ME0].nlayers_st_dg_odd = nlayers;
-    else etrk_[ME0].nlayers_st_dg_even = nlayers;
-  }
-
-  */
-
-  if (verbose_) std::cout <<"ME0TriggerAnalyzer step10 "<< std::endl;
   tree_eff_->Fill();
 }
 

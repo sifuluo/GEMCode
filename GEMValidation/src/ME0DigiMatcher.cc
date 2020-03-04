@@ -79,7 +79,7 @@ ME0DigiMatcher::matchPadsToSimTrack(const ME0PadDigiCollection& pads)
     ME0DetId p_id(id);
     ME0DetId superch_id(p_id.region(), 0, p_id.chamber(), 0);
 
-    const auto& hit_pads = simhit_matcher_->hitPadsInDetId(id);
+    const auto& hit_pads = simhit_matcher_->hitME0PadsInDetId(id);
     const auto& pads_in_det = pads.get(p_id);
 
     if (verbosePad_)
@@ -91,17 +91,23 @@ ME0DigiMatcher::matchPadsToSimTrack(const ME0PadDigiCollection& pads)
 
     for (auto pad = pads_in_det.first; pad != pads_in_det.second; ++pad)
     {
-      if (verbosePad_) cout<<"chp "<<*pad<<endl;
+      if (verboseDigi_) cout<<"ME0PadDigi "<<p_id<<" "<<*pad<<endl;
       // check that the pad BX is within the range
       if (pad->bx() < minBXME0Pad_ || pad->bx() > maxBXME0Pad_) continue;
-      if (verbosePad_) cout<<"chp1"<<endl;
       // check that it matches a pad that was hit by SimHits from our track
-      if (hit_pads.find(pad->pad()) == hit_pads.end()) continue;
-      if (verbosePad_) cout<<"chp2"<<endl;
+      int padn = pad->pad();
+      int strip1 = padn*2;
+      int strip2 = padn*2 + 1;
 
-      detid_to_pads_[id].push_back(*pad);
-      chamber_to_pads_[ p_id.chamberId().rawId() ].push_back(*pad);
-      superchamber_to_pads_[ superch_id() ].push_back(*pad);
+      for (const auto& p : stripNumbersInDetId(id)) {
+        if (strip1 == p or strip2 == p) {
+          if (verbosePad_) cout<<"...was matched!"<<endl;
+          detid_to_pads_[id].push_back(*pad);
+          chamber_to_pads_[ p_id.chamberId().rawId() ].push_back(*pad);
+          superchamber_to_pads_[ superch_id() ].push_back(*pad);
+          break;
+        }
+      }
     }
   }
 }
@@ -283,4 +289,14 @@ ME0DigiMatcher::partitionNumbers() const
     result.insert( idd.roll() );
   }
   return result;
+}
+
+ME0PadDigiContainer ME0DigiMatcher::pads() const
+{
+  ME0PadDigiContainer out;
+  for (const auto& id : chamberIdsPad()){
+    ME0PadDigiContainer temp = padsInChamber(id);
+    out.insert(std::end(out), std::begin(temp), std::end(temp));
+  }
+  return out;
 }

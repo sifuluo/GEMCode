@@ -89,7 +89,7 @@ SimTrackMatching = cms.PSet(
     ),
     ## ME0
     me0SimHit = cms.PSet(
-        verbose = cms.int32(0),
+        verbose = cms.int32(1),
         validInputTags = cms.InputTag("g4SimHits", "MuonME0Hits"),
         run = cms.bool(True),
         simMuOnly = cms.bool(False),
@@ -97,7 +97,7 @@ SimTrackMatching = cms.PSet(
         minNHitsChamber = cms.int32(4),
     ),
     me0StripDigi = cms.PSet(
-        verbose = cms.int32(0),
+        verbose = cms.int32(1),
         validInputTags = cms.InputTag("simMuonME0Digis"),
         run = cms.bool(True),
         minBX = cms.int32(-1),
@@ -105,7 +105,7 @@ SimTrackMatching = cms.PSet(
         matchDeltaStrip = cms.int32(1),
     ),
     me0PadDigi = cms.PSet(
-        verbose = cms.int32(0),
+        verbose = cms.int32(1),
         validInputTags = cms.InputTag("simMuonME0PadDigis"),
         run = cms.bool(True),
         minBX = cms.int32(-1),
