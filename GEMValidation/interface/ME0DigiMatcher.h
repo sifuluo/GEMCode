@@ -64,6 +64,7 @@ public:
 
   GlobalPoint getGlobalPointDigi(unsigned int rawId, const ME0Digi& d) const;
   GlobalPoint getGlobalPointPad(unsigned int rawId, const ME0PadDigi& tp) const;
+  GlobalPoint getGlobalPointPad() const;
 
 private:
 

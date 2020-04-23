@@ -45,9 +45,12 @@ struct MyTrack
   Int_t event;
 
   Float_t pt, eta, phi, pz, dxy;
-  Char_t charge;
-  Char_t endcap;
+  int charge;
+  int endcap;
   Int_t pdgid;
+  int chamber;
+  int pad1;
+  int pad6;
 };
 
 
@@ -65,6 +68,9 @@ void MyTrack::init()
   charge = -9;
   endcap = -9;
   pdgid = -9999;
+  chamber = -1;
+  pad1 = -1;
+  pad6 = -1;
 }
 
 
@@ -85,7 +91,9 @@ TTree* MyTrack::book(TTree *t, const std::string & name)
   t->Branch("charge", &charge);
   t->Branch("endcap", &endcap);
   t->Branch("pdgid", &pdgid);
-
+  t->Branch("chamber", &chamber);
+  t->Branch("pad1", &pad1);
+  t->Branch("pad6", &pad6);
   return t;
 }
 
@@ -100,9 +108,26 @@ struct MyHits
   int chamber[nMaxME0Hits];
   int layer[nMaxME0Hits];
   int pad[nMaxME0Hits];
-  int bx[nMaxME0Hits];
   int part[nMaxME0Hits];
   int isMu[nMaxME0Hits];
+  int bx[nMaxME0Hits];
+
+  float global_x[nMaxME0Hits];
+  float global_y[nMaxME0Hits];
+  float global_z[nMaxME0Hits];
+
+  float local_x[nMaxME0Hits];
+  float local_y[nMaxME0Hits];
+  float local_z[nMaxME0Hits];
+
+  int nCSC = 0;
+  float csc_global_x[nMaxME0Hits];
+  float csc_global_y[nMaxME0Hits];
+  float csc_global_z[nMaxME0Hits];
+
+  float csc_local_x[nMaxME0Hits];
+  float csc_local_y[nMaxME0Hits];
+  float csc_local_z[nMaxME0Hits];
 };
 
 
@@ -118,6 +143,23 @@ void MyHits::init()
     pad[i] = -1;
     part[i] = -1;
     isMu[i] = 0;
+    bx[i] = -9;
+
+    global_x[i] = -999;
+    global_y[i] = -999;
+    global_z[i] = -999;
+
+    local_x[i] = -999;
+    local_y[i] = -999;
+    local_z[i] = -999;
+
+    csc_global_x[i] = -999;
+    csc_global_y[i] = -999;
+    csc_global_z[i] = -999;
+
+    csc_local_x[i] = -999;
+    csc_local_y[i] = -999;
+    csc_local_z[i] = -999;
   }
 }
 
@@ -135,6 +177,24 @@ TTree* MyHits::book(TTree *t, const std::string & name)
   t->Branch("part", part, "part[nME0]/I");
   t->Branch("isMu", isMu, "isMu[nME0]/I");
   t->Branch("bx", isMu, "bx[nME0]/I");
+
+  t->Branch("global_x", global_x, "global_x[nME0]/F");
+  t->Branch("global_y", global_y, "global_y[nME0]/F");
+  t->Branch("global_z", global_z, "global_z[nME0]/F");
+
+  t->Branch("local_x", local_x, "local_x[nME0]/F");
+  t->Branch("local_y", local_y, "local_y[nME0]/F");
+  t->Branch("local_z", local_z, "local_z[nME0]/F");
+
+
+  t->Branch("nCSC", &nCSC);
+  t->Branch("csc_global_x", csc_global_x, "csc_global_x[nCSC]/F");
+  t->Branch("csc_global_y", csc_global_y, "csc_global_y[nCSC]/F");
+  t->Branch("csc_global_z", csc_global_z, "csc_global_z[nCSC]/F");
+
+  t->Branch("csc_local_x", csc_local_x, "csc_local_x[nCSC]/F");
+  t->Branch("csc_local_y", csc_local_y, "csc_local_y[nCSC]/F");
+  t->Branch("csc_local_z", csc_local_z, "csc_local_z[nCSC]/F");
 
   return t;
 }
@@ -359,8 +419,8 @@ ME0TriggerAnalyzer::ME0TriggerAnalyzer(const edm::ParameterSet& ps)
   const auto& recoChargedCandidate = cfg_.getParameter<edm::ParameterSet>("recoChargedCandidate");
   recoChargedCandidateInputLabel_ = consumes<reco::RecoChargedCandidateCollection>(recoChargedCandidate.getParameter<edm::InputTag>("validInputTags"));
 
-  tree_eff_ = etrk_.book(tree_eff_, "ME0");
-  tree_hit_ = hits_.book(tree_hit_, "ME0");
+  tree_eff_ = etrk_.book(tree_eff_, "ME0Track");
+  tree_hit_ = hits_.book(tree_hit_, "ME0Hit");
 }
 
 
@@ -397,6 +457,19 @@ void ME0TriggerAnalyzer::analyze(const edm::Event& ev, const edm::EventSetup& es
   const edm::SimVertexContainer & sim_vert = *sim_vertices.product();
 
   ev.getByToken(me0PadDigiInput_, all_me0sh);
+
+  // geometry
+  const ME0Geometry* me0_geometry_;
+  edm::ESHandle<ME0Geometry> me0_geom_;
+  es.get<MuonGeometryRecord>().get(me0_geom_);
+  me0_geometry_ = &*me0_geom_;
+
+  /*
+  const CSCGeometry* csc_geometry_;
+  edm::ESHandle<CSCGeometry> csc_geom_;
+  es.get<MuonGeometryRecord>().get(csc_geom_);
+  csc_geometry_ = &*csc_geom_;
+  */
 
   if (verboseSimTrack_){
     std::cout << "Total number of SimTrack in this event: " << sim_track.size() << std::endl;
@@ -474,6 +547,8 @@ void ME0TriggerAnalyzer::analyze(const edm::Event& ev, const edm::EventSetup& es
     const ME0DetId& id = (*adetUnitIt).first;
     int ch = id.chamber() ;
 
+    const auto& part = me0_geometry_->etaPartition(id);
+
     const auto& digis_in_det = all_me0->get(id);
     for (auto digiIt = digis_in_det.first; digiIt != digis_in_det.second; digiIt++) {
       const auto& lct = *digiIt;
@@ -484,11 +559,23 @@ void ME0TriggerAnalyzer::analyze(const edm::Event& ev, const edm::EventSetup& es
       hits_.part[nME0Pad] = id.roll();
       hits_.pad[nME0Pad] = lct.pad();
       hits_.bx[nME0Pad] = lct.bx();
-      // check if originating from real muon or not
+      //x check if originating from real muon or not
       if(std::find(allMatchedME0Pads.begin(), allMatchedME0Pads.end(), lct) != allMatchedME0Pads.end()) {
         hits_.isMu[nME0Pad] = 1;
-      std::cout << "is muon " << std::endl;
+        std::cout << "is muon " << std::endl;
       }
+
+      // geometry
+      const auto& lp = part->centreOfPad(lct.pad());
+      hits_.local_x[nME0Pad] = lp.x();
+      hits_.local_y[nME0Pad] = lp.y();
+      hits_.local_z[nME0Pad] = lp.z();
+
+      const auto& gp = part->toGlobal(lp);
+      hits_.global_x[nME0Pad] = gp.x();
+      hits_.global_y[nME0Pad] = gp.y();
+      hits_.global_z[nME0Pad] = gp.z();
+
       nME0Pad++;
     }
   }
@@ -505,7 +592,6 @@ void ME0TriggerAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no
   const ME0DigiMatcher& match_me0digi = match.me0Digis();
   const SimTrack &t = match_sh.trk();
 
-
   if (verbose_) std::cout <<"ME0TriggerAnalyzer step1 "<< std::endl;
 
   etrk_.init();
@@ -521,6 +607,8 @@ void ME0TriggerAnalyzer::analyzeTrackEff(SimTrackMatchManager& match, int trk_no
   etrk_.charge = t.charge();
   etrk_.endcap = (etrk_.eta > 0.) ? 1 : -1;
   etrk_.pdgid = t.type();
+
+  // hits at the ME0 chamber
 
   tree_eff_->Fill();
 }

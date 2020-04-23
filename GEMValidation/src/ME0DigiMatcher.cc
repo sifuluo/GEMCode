@@ -300,3 +300,21 @@ ME0PadDigiContainer ME0DigiMatcher::pads() const
   }
   return out;
 }
+
+GlobalPoint
+ME0DigiMatcher::getGlobalPointDigi(unsigned int rawId, const ME0Digi& d) const
+{
+  ME0DetId gem_id(rawId);
+  const LocalPoint& gem_lp = getME0Geometry()->etaPartition(gem_id)->centreOfStrip(d.strip());
+  const GlobalPoint& gem_gp = getME0Geometry()->idToDet(gem_id)->surface().toGlobal(gem_lp);
+  return gem_gp;
+}
+
+GlobalPoint
+ME0DigiMatcher::getGlobalPointPad(unsigned int rawId, const ME0PadDigi& tp) const
+{
+  ME0DetId gem_id(rawId);
+  const LocalPoint& gem_lp = getME0Geometry()->etaPartition(gem_id)->centreOfPad(tp.pad());
+  const GlobalPoint& gem_gp = getME0Geometry()->idToDet(gem_id)->surface().toGlobal(gem_lp);
+  return gem_gp;
+}
