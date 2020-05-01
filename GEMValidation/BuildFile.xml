@@ -46,6 +46,9 @@
 <use   name="L1Trigger/DTTriggerServerPhi"/>
 <use   name="L1Trigger/DTTriggerServerTheta"/>
 <use   name="L1Trigger/DTSectorCollector"/>
+<use name="Validation/MuonCSCDigis"/>
+<use name="Validation/MuonGEMDigis"/>
+
 <export>
   <lib   name="1"/>
 </export>

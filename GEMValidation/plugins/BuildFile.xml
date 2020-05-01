@@ -22,6 +22,8 @@
 <use name="CommonTools/UtilAlgos"/>
 <use name="Utilities/General"/>
 <use name="GEMCode/GEMValidation"/>
+<use name="Validation/MuonCSCDigis"/>
+<use name="Validation/MuonGEMDigis"/>
 
 <library name="GEMCodeGEMValidation_plugins" file="*.cc">
   <flags EDM_PLUGIN="1" />
