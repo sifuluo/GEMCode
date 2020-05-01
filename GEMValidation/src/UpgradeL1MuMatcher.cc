@@ -6,14 +6,13 @@
 #include <map>
 
 UpgradeL1MuMatcher::UpgradeL1MuMatcher(CSCStubMatcher& csc,
-                     		       SimHitMatcher& sh,
-                                       edm::EDGetTokenT<l1t::EMTFTrackCollection> &emtfTrackInputLabel_,
-                                       edm::EDGetTokenT< BXVector<l1t::RegionalMuonCand> > & regionalMuonCandInputLabel_,
-                                       edm::EDGetTokenT< BXVector<l1t::Muon> > & gmtInputLabel_)
-  : BaseMatcher(csc.trk(), csc.vtx(), csc.conf(), csc.event(), csc.eventSetup())
-  ,csc_stub_matcher_(&csc)
-  ,simhit_matcher_(&sh)
-{
+                                       SimHitMatcher& sh,
+                                       edm::EDGetTokenT<l1t::EMTFTrackCollection>& emtfTrackInputLabel_,
+                                       edm::EDGetTokenT<BXVector<l1t::RegionalMuonCand>>& regionalMuonCandInputLabel_,
+                                       edm::EDGetTokenT<BXVector<l1t::Muon>>& gmtInputLabel_)
+    : BaseMatcher(csc.trk(), csc.vtx(), csc.conf(), csc.event(), csc.eventSetup()),
+      csc_stub_matcher_(&csc),
+      simhit_matcher_(&sh) {
   const auto& tfTrack = conf().getParameter<edm::ParameterSet>("upgradeEmtfTrack");
   minBXEMTFTrack_ = tfTrack.getParameter<int>("minBX");
   maxBXEMTFTrack_ = tfTrack.getParameter<int>("maxBX");
@@ -46,66 +45,55 @@ UpgradeL1MuMatcher::UpgradeL1MuMatcher(CSCStubMatcher& csc,
 
   // tracks produced by EMEMTF
   edm::Handle<l1t::EMTFTrackCollection> hl1Tracks;
-  if (runEMTFTrack_ and gemvalidation::getByToken(emtfTrackInputLabel_,hl1Tracks, event()))
+  if (runEMTFTrack_ and gemvalidation::getByToken(emtfTrackInputLabel_, hl1Tracks, event()))
     matchEmtfTrackToSimTrack(*hl1Tracks.product());
-  else if ( runEMTFTrack_)
-    std::cout  <<"failed readout EMTFTracks " << std::endl;
+  else if (runEMTFTrack_)
+    std::cout << "failed readout EMTFTracks " << std::endl;
 
   edm::Handle<BXVector<l1t::RegionalMuonCand>> hRegMuonCand;
-  if (runRegMuCand_ and gemvalidation::getByToken(regionalMuonCandInputLabel_,hRegMuonCand, event()))
+  if (runRegMuCand_ and gemvalidation::getByToken(regionalMuonCandInputLabel_, hRegMuonCand, event()))
     matchRegionalMuonCandToSimTrack(*hRegMuonCand.product());
-  else if ( runRegMuCand_)
-    std::cout  <<"failed readout RegionalMuonCand " << std::endl;
+  else if (runRegMuCand_)
+    std::cout << "failed readout RegionalMuonCand " << std::endl;
 
   edm::Handle<BXVector<l1t::Muon>> hGMT;
-  if (runGMT_ and gemvalidation::getByToken(gmtInputLabel_,hGMT, event()))
+  if (runGMT_ and gemvalidation::getByToken(gmtInputLabel_, hGMT, event()))
     matchGMTToSimTrack(*hGMT.product());
-  else if ( runGMT_)
-    std::cout  <<"failed readout GMT " << std::endl;
+  else if (runGMT_)
+    std::cout << "failed readout GMT " << std::endl;
 }
 
-UpgradeL1MuMatcher::~UpgradeL1MuMatcher()
-{
-}
+UpgradeL1MuMatcher::~UpgradeL1MuMatcher() {}
 
-void
-UpgradeL1MuMatcher::clear()
-{
+void UpgradeL1MuMatcher::clear() {
   bestTrack = NULL;
   bestGMT = NULL;
   tfTracks_.clear();
 }
 
-void
-UpgradeL1MuMatcher::matchEmtfTrackToSimTrack(const l1t::EMTFTrackCollection& tracks)
-{
+void UpgradeL1MuMatcher::matchEmtfTrackToSimTrack(const l1t::EMTFTrackCollection& tracks) {
   const GlobalPoint& gp_st2(propagatedPositionSt2());
   mindREMTFTrack = deltaREMTFTrack_;
   if (verboseEMTFTrack_)
-    std::cout <<"propaget position to st2 eta "
-              << float(gp_st2.eta()) <<" phi "<< float(gp_st2.phi()) << std::endl;
+    std::cout << "propaget position to st2 eta " << float(gp_st2.eta()) << " phi " << float(gp_st2.phi()) << std::endl;
   for (const auto& trk : tracks) {
     if (verboseEMTFTrack_)
-      std::cout <<"track BX "<< trk.BX()
-                <<  " pt "<< trk.Pt()
-                <<" eta "<< trk.Eta()
-                <<" phi "<< emtf::deg_to_rad(trk.Phi_glob())
-                <<" phi_local "<< emtf::deg_to_rad(trk.Phi_loc()) << std::endl;
-    if (trk.BX() < minBXEMTFTrack_ or trk.BX() > maxBXEMTFTrack_) continue;
+      std::cout << "track BX " << trk.BX() << " pt " << trk.Pt() << " eta " << trk.Eta() << " phi "
+                << emtf::deg_to_rad(trk.Phi_glob()) << " phi_local " << emtf::deg_to_rad(trk.Phi_loc()) << std::endl;
+    if (trk.BX() < minBXEMTFTrack_ or trk.BX() > maxBXEMTFTrack_)
+      continue;
     float dR = 10.0;
-    dR = deltaR(float(gp_st2.eta()), float(gp_st2.phi()),
-                trk.Eta(), emtf::deg_to_rad(trk.Phi_glob()));
+    dR = deltaR(float(gp_st2.eta()), float(gp_st2.phi()), trk.Eta(), emtf::deg_to_rad(trk.Phi_glob()));
     if (verboseEMTFTrack_)
-      std::cout <<"dR (track, sim) "<< dR <<" deltaREMTFTrack_ "
-                << deltaREMTFTrack_ << std::endl;
-    if (dR < deltaREMTFTrack_){
-      TFTrack* track  = new TFTrack(&trk);
+      std::cout << "dR (track, sim) " << dR << " deltaREMTFTrack_ " << deltaREMTFTrack_ << std::endl;
+    if (dR < deltaREMTFTrack_) {
+      TFTrack* track = new TFTrack(&trk);
       track->setDR(dR);
-      if (verboseEMTFTrack_){
+      if (verboseEMTFTrack_) {
         track->print();
       }
       tfTracks_.push_back(track);
-      if (dR < mindREMTFTrack){
+      if (dR < mindREMTFTrack) {
         mindREMTFTrack = dR;
         bestTrack = track;
       }
@@ -118,33 +106,35 @@ UpgradeL1MuMatcher::matchEmtfTrackToSimTrack(const l1t::EMTFTrackCollection& tra
     //     for (const auto& sim_stub: sim_stubs){
     //       if (csc_stub==sim_stub.
     //     }
-   }
-   if (verboseGMT_ and bestTrack){
-       std::cout <<"all matched TFTRack size "<< tfTracks_.size() << std::endl;
-       std::cout <<"best TFTrack ";  bestTrack->print();
-   }
+  }
+  if (verboseGMT_ and bestTrack) {
+    std::cout << "all matched TFTRack size " << tfTracks_.size() << std::endl;
+    std::cout << "best TFTrack ";
+    bestTrack->print();
+  }
 }
 
-void UpgradeL1MuMatcher::matchRegionalMuonCandToSimTrack(const BXVector<l1t::RegionalMuonCand>& regMuCands)
-{
-  if (tfTracks_.size()  ==  0) return;
+void UpgradeL1MuMatcher::matchRegionalMuonCandToSimTrack(const BXVector<l1t::RegionalMuonCand>& regMuCands) {
+  if (tfTracks_.size() == 0)
+    return;
   float mindPtRel = 0.5;
   mindRRegMuCand = deltaRRegMuCand_;
-  for (int bx = regMuCands.getFirstBX(); bx <= regMuCands.getLastBX(); bx++ ){
-    if ( bx < minBXRegMuCand_ or bx > maxBXRegMuCand_) continue;
-    for (auto cand = regMuCands.begin(bx); cand != regMuCands.end(bx); ++cand ){
-      TFCand *L1Mu = new TFCand(&(*cand));
+  for (int bx = regMuCands.getFirstBX(); bx <= regMuCands.getLastBX(); bx++) {
+    if (bx < minBXRegMuCand_ or bx > maxBXRegMuCand_)
+      continue;
+    for (auto cand = regMuCands.begin(bx); cand != regMuCands.end(bx); ++cand) {
+      TFCand* L1Mu = new TFCand(&(*cand));
       L1Mu->setBx(bx);
       float pt = L1Mu->pt();
-      float phi = L1Mu->phi_local() ;
+      float phi = L1Mu->phi_local();
       float eta = L1Mu->eta();
-      for (const auto& trk : tfTracks_){
+      for (const auto& trk : tfTracks_) {
         float dR = deltaR(trk->eta(), trk->phi_local(), eta, phi);
-        float dPtRel = std::fabs(trk->pt() - pt)/pt;
-        if (dR < deltaRRegMuCand_ and dPtRel < mindPtRel){
-          L1Mu->setDR( dR );
+        float dPtRel = std::fabs(trk->pt() - pt) / pt;
+        if (dR < deltaRRegMuCand_ and dPtRel < mindPtRel) {
+          L1Mu->setDR(dR);
           L1Mu->setGlobalPhi(trk->phi());
-          L1Mu->setMatchedTFTrack( trk );
+          L1Mu->setMatchedTFTrack(trk);
           regMuCands_.push_back(L1Mu);
         }
       }
@@ -152,39 +142,41 @@ void UpgradeL1MuMatcher::matchRegionalMuonCandToSimTrack(const BXVector<l1t::Reg
         L1Mu->print();
     }
   }
-  for (const auto& cand : regMuCands_){
+  for (const auto& cand : regMuCands_) {
     float phi = cand->phi_local();
     float eta = cand->eta();
     float dR = deltaR(bestTrack->eta(), bestTrack->phi_local(), eta, phi);
-    if (dR < mindRRegMuCand){
+    if (dR < mindRRegMuCand) {
       mindRRegMuCand = dR;
       bestRegMuCand = cand;
-      if (verboseRegMuCand_){
-        std::cout <<"bestRegMuCand "; bestRegMuCand->print();
+      if (verboseRegMuCand_) {
+        std::cout << "bestRegMuCand ";
+        bestRegMuCand->print();
       }
     }
   }
 }
 
-void UpgradeL1MuMatcher::matchGMTToSimTrack(const BXVector<l1t::Muon>& gmtCands)
-{
-  if (tfTracks_.size()  ==  0) return;
+void UpgradeL1MuMatcher::matchGMTToSimTrack(const BXVector<l1t::Muon>& gmtCands) {
+  if (tfTracks_.size() == 0)
+    return;
   float mindPtRel = 0.5;
   mindRGMT = deltaRGMT_;
-  for (int bx = gmtCands.getFirstBX(); bx <= gmtCands.getLastBX(); bx++ ){
-    if ( bx < minBXGMT_ or bx > maxBXGMT_) continue;
-    for (auto cand = gmtCands.begin(bx); cand != gmtCands.end(bx); ++cand ){
-      TFCand *L1Mu = new TFCand(&(*cand));
+  for (int bx = gmtCands.getFirstBX(); bx <= gmtCands.getLastBX(); bx++) {
+    if (bx < minBXGMT_ or bx > maxBXGMT_)
+      continue;
+    for (auto cand = gmtCands.begin(bx); cand != gmtCands.end(bx); ++cand) {
+      TFCand* L1Mu = new TFCand(&(*cand));
       L1Mu->setBx(bx);
       float pt = L1Mu->pt();
-      float phi = L1Mu->phi() ;
+      float phi = L1Mu->phi();
       float eta = L1Mu->eta();
-      for (const auto& trk : tfTracks_){
+      for (const auto& trk : tfTracks_) {
         float dR = deltaR(trk->eta(), trk->phi(), eta, phi);
-        float dPtRel = std::fabs(trk->pt() - pt)/pt;
-        if (dR < deltaRGMT_ and dPtRel < mindPtRel){
-          L1Mu->setDR( dR );
-          L1Mu->setMatchedTFTrack( trk );
+        float dPtRel = std::fabs(trk->pt() - pt) / pt;
+        if (dR < deltaRGMT_ and dPtRel < mindPtRel) {
+          L1Mu->setDR(dR);
+          L1Mu->setMatchedTFTrack(trk);
           gmts_.push_back(L1Mu);
         }
       }
@@ -192,17 +184,17 @@ void UpgradeL1MuMatcher::matchGMTToSimTrack(const BXVector<l1t::Muon>& gmtCands)
         L1Mu->print();
     }
   }
-  for (const auto& cand : gmts_){
+  for (const auto& cand : gmts_) {
     float phi = cand->phi();
     float eta = cand->eta();
     float dR = deltaR(bestTrack->eta(), bestTrack->phi(), eta, phi);
-    if (dR < mindRGMT){
+    if (dR < mindRGMT) {
       mindRGMT = dR;
       bestGMT = cand;
-      if (verboseGMT_){
-        std::cout <<"bestGMT "; bestGMT->print();
+      if (verboseGMT_) {
+        std::cout << "bestGMT ";
+        bestGMT->print();
       }
     }
   }
 }
-

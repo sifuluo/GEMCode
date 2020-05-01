@@ -23,10 +23,8 @@ class ME0Geometry;
 class RPCGeometry;
 class DTGeometry;
 
-class SimHitMatcher : public BaseMatcher
-{
+class SimHitMatcher : public BaseMatcher {
 public:
-
   SimHitMatcher(const SimTrack& t,
                 const SimVertex& v,
                 const edm::ParameterSet& ps,
@@ -45,15 +43,15 @@ public:
   /// access to all the Muon SimHits (use MuonSubdetId::SubSystem)
   const edm::PSimHitContainer& simHits(enum MuonType) const;
   /// access to all the GEM SimHits
-  const edm::PSimHitContainer& simHitsGEM() const {return gem_hits_;}
+  const edm::PSimHitContainer& simHitsGEM() const { return gem_hits_; }
   /// access to all the CSC SimHits
-  const edm::PSimHitContainer& simHitsCSC() const {return csc_hits_;}
+  const edm::PSimHitContainer& simHitsCSC() const { return csc_hits_; }
   /// access to all the ME0 SimHits
-  const edm::PSimHitContainer& simHitsME0() const {return me0_hits_;}
+  const edm::PSimHitContainer& simHitsME0() const { return me0_hits_; }
   /// access to all the RPC SimHits
-  const edm::PSimHitContainer& simHitsRPC() const {return rpc_hits_;}
+  const edm::PSimHitContainer& simHitsRPC() const { return rpc_hits_; }
   /// access to all the DT SimHits
-  const edm::PSimHitContainer& simHitsDT() const {return dt_hits_;}
+  const edm::PSimHitContainer& simHitsDT() const { return dt_hits_; }
 
   /// GEM partitions' detIds with SimHits
   std::set<unsigned int> detIdsGEM(int gem_type = GEM_ALL) const;
@@ -90,7 +88,6 @@ public:
   /// DT station detIds with SimHits
   std::set<unsigned int> chamberIdsDTStation(int station) const;
 
-
   /// GEM superchamber detIds with SimHits
   std::set<unsigned int> superChamberIdsGEM() const;
   /// GEM superchamber detIds with SimHits 2 layers of coincidence pads
@@ -118,10 +115,10 @@ public:
   bool hitStationRPC(int) const;
 
   // number of stations with hits in at least X layers
-  int nStationsCSC(int nl=4) const;
-  int nStationsDT(int nsl=1, int nl=3) const;
+  int nStationsCSC(int nl = 4) const;
+  int nStationsDT(int nsl = 1, int nl = 3) const;
   int nStationsRPC() const;
-  int nStationsGEM(int nl=2) const;
+  int nStationsGEM(int nl = 2) const;
 
   int nCellsWithHitsInLayerDT(unsigned int) const;
   int nLayersWithHitsInSuperLayerDT(unsigned int) const;
@@ -155,7 +152,7 @@ public:
   /// calculate Global average momentum for a provided collection of simhits in CSC
   GlobalVector simHitsMeanMomentum(const edm::PSimHitContainer& sim_hits) const;
 
-  float	simHitsGEMCentralPosition(const edm::PSimHitContainer& sim_hits) const;
+  float simHitsGEMCentralPosition(const edm::PSimHitContainer& sim_hits) const;
   ///
   float LocalBendingInChamber(unsigned int detid) const;
 
@@ -172,26 +169,26 @@ public:
   GlobalPoint simHitsMeanPositionStation(int n) const;
 
   std::set<int> hitStripsInDetId(unsigned int, int margin_n_strips = 0) const;  // GEM/ME0 or CSC
-  std::set<int> hitWiregroupsInDetId(unsigned int, int margin_n_wg = 0) const; // CSC
-  std::set<int> hitPadsInDetId(unsigned int) const; // GEM
-  std::set<int> hitME0PadsInDetId(unsigned int) const; // GEM
-  std::set<int> hitCoPadsInDetId(unsigned int) const; // GEM coincidence pads with hits
-  std::set<unsigned int> hitWiresInDTLayerId(unsigned int, int margin_n_wires = 0) const;  // DT
+  std::set<int> hitWiregroupsInDetId(unsigned int, int margin_n_wg = 0) const;  // CSC
+  std::set<int> hitPadsInDetId(unsigned int) const;                             // GEM
+  std::set<int> hitME0PadsInDetId(unsigned int) const;                          // GEM
+  std::set<int> hitCoPadsInDetId(unsigned int) const;                           // GEM coincidence pads with hits
+  std::set<unsigned int> hitWiresInDTLayerId(unsigned int, int margin_n_wires = 0) const;       // DT
   std::set<unsigned int> hitWiresInDTSuperLayerId(unsigned int, int margin_n_wires = 0) const;  // DT
-  std::set<unsigned int> hitWiresInDTChamberId(unsigned int, int margin_n_wires = 0) const;  // DT
+  std::set<unsigned int> hitWiresInDTChamberId(unsigned int, int margin_n_wires = 0) const;     // DT
 
   // what unique partitions numbers were hit by this simtrack?
-  std::set<int> hitPartitions() const; // GEM
+  std::set<int> hitPartitions() const;  // GEM
 
   void cscChamberIdsToString(const std::set<unsigned int>&) const;
   void dtChamberIdsToString(const std::set<unsigned int>&) const;
 
 private:
-
   void init();
 
-  std::vector<unsigned int> getIdsOfSimTrackShower(unsigned  trk_id,
-      const edm::SimTrackContainer& simTracks, const edm::SimVertexContainer& simVertices);
+  std::vector<unsigned int> getIdsOfSimTrackShower(unsigned trk_id,
+                                                   const edm::SimTrackContainer& simTracks,
+                                                   const edm::SimVertexContainer& simVertices);
 
   void matchCSCSimHitsToSimTrack(std::vector<unsigned int> track_ids, const edm::PSimHitContainer& csc_hits);
   void matchRPCSimHitsToSimTrack(std::vector<unsigned int> track_ids, const edm::PSimHitContainer& rpc_hits);
@@ -224,28 +221,28 @@ private:
   edm::PSimHitContainer no_hits_;
 
   edm::PSimHitContainer csc_hits_;
-  std::map<unsigned int, edm::PSimHitContainer > csc_detid_to_hits_;
-  std::map<unsigned int, edm::PSimHitContainer > csc_chamber_to_hits_;
+  std::map<unsigned int, edm::PSimHitContainer> csc_detid_to_hits_;
+  std::map<unsigned int, edm::PSimHitContainer> csc_chamber_to_hits_;
 
   edm::PSimHitContainer gem_hits_;
-  std::map<unsigned int, edm::PSimHitContainer > gem_detid_to_hits_;
-  std::map<unsigned int, edm::PSimHitContainer > gem_chamber_to_hits_;
-  std::map<unsigned int, edm::PSimHitContainer > gem_superchamber_to_hits_;
+  std::map<unsigned int, edm::PSimHitContainer> gem_detid_to_hits_;
+  std::map<unsigned int, edm::PSimHitContainer> gem_chamber_to_hits_;
+  std::map<unsigned int, edm::PSimHitContainer> gem_superchamber_to_hits_;
 
   edm::PSimHitContainer me0_hits_;
-  std::map<unsigned int, edm::PSimHitContainer > me0_detid_to_hits_;
-  std::map<unsigned int, edm::PSimHitContainer > me0_chamber_to_hits_;
-  std::map<unsigned int, edm::PSimHitContainer > me0_superchamber_to_hits_;
+  std::map<unsigned int, edm::PSimHitContainer> me0_detid_to_hits_;
+  std::map<unsigned int, edm::PSimHitContainer> me0_chamber_to_hits_;
+  std::map<unsigned int, edm::PSimHitContainer> me0_superchamber_to_hits_;
 
   edm::PSimHitContainer rpc_hits_;
-  std::map<unsigned int, edm::PSimHitContainer > rpc_detid_to_hits_;
-  std::map<unsigned int, edm::PSimHitContainer > rpc_chamber_to_hits_;
+  std::map<unsigned int, edm::PSimHitContainer> rpc_detid_to_hits_;
+  std::map<unsigned int, edm::PSimHitContainer> rpc_chamber_to_hits_;
 
   edm::PSimHitContainer dt_hits_;
-  std::map<unsigned int, edm::PSimHitContainer > dt_detid_to_hits_;
-  std::map<unsigned int, edm::PSimHitContainer > dt_layer_to_hits_;
-  std::map<unsigned int, edm::PSimHitContainer > dt_superlayer_to_hits_;
-  std::map<unsigned int, edm::PSimHitContainer > dt_chamber_to_hits_;
+  std::map<unsigned int, edm::PSimHitContainer> dt_detid_to_hits_;
+  std::map<unsigned int, edm::PSimHitContainer> dt_layer_to_hits_;
+  std::map<unsigned int, edm::PSimHitContainer> dt_superlayer_to_hits_;
+  std::map<unsigned int, edm::PSimHitContainer> dt_chamber_to_hits_;
 
   // detids with hits in pads
   std::map<unsigned int, std::set<int> > gem_detids_to_pads_;

@@ -7,18 +7,11 @@
 
 using namespace std;
 
-UpgradeL1TrackMatcher::UpgradeL1TrackMatcher(
-    UpgradeL1MuMatcher& matcher) :
-    //edm::EDGetTokenT<L1TTTrackCollectionType>& trackInputLabel,
-    //edm::EDGetTokenT<l1t::L1TkMuonParticleCollection>& trackMuonInputLabel) :
-  BaseMatcher(matcher.trk(),
-              matcher.vtx(),
-              matcher.conf(),
-              matcher.event(),
-              matcher.eventSetup())
-  , matcher_(&matcher)
-{
-
+UpgradeL1TrackMatcher::UpgradeL1TrackMatcher(UpgradeL1MuMatcher& matcher)
+    :  //edm::EDGetTokenT<L1TTTrackCollectionType>& trackInputLabel,
+      //edm::EDGetTokenT<l1t::L1TkMuonParticleCollection>& trackMuonInputLabel) :
+      BaseMatcher(matcher.trk(), matcher.vtx(), matcher.conf(), matcher.event(), matcher.eventSetup()),
+      matcher_(&matcher) {
   /*
   clear();
 
@@ -37,10 +30,7 @@ UpgradeL1TrackMatcher::UpgradeL1TrackMatcher(
     */
 }
 
-
-UpgradeL1TrackMatcher::~UpgradeL1TrackMatcher()
-{
-}
+UpgradeL1TrackMatcher::~UpgradeL1TrackMatcher() {}
 /*
 void
 UpgradeL1TrackMatcher::clear()

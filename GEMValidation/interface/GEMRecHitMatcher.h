@@ -22,17 +22,15 @@
 class SimHitMatcher;
 class GEMGeometry;
 
-class GEMRecHitMatcher : BaseMatcher
-{
+class GEMRecHitMatcher : BaseMatcher {
 public:
-
   typedef matching::Digi RecHit;
   typedef matching::DigiContainer RecHitContainer;
 
   typedef std::vector<GEMRecHit> GEMRecHitContainer;
 
   GEMRecHitMatcher(const SimHitMatcher& sh, const edm::EDGetTokenT<GEMRecHitCollection>& gemRecHitInput_);
-  
+
   ~GEMRecHitMatcher();
 
   // partition GEM detIds with rechits
@@ -74,7 +72,6 @@ public:
   GlobalPoint recHitMeanPosition(const RecHitContainer& rechits) const;
 
 private:
-
   void matchRecHitsToSimTrack(const GEMRecHitCollection& recHits);
 
   const SimHitMatcher* simhit_matcher_;

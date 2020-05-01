@@ -35,13 +35,13 @@
 #include "DataFormats/GEMRecHit/interface/ME0SegmentCollection.h"
 //#include "GEMCode/GEMValidation/interface/CSCStubPatterns.h"
 
-class BaseMatcher
-{
+class BaseMatcher {
 public:
-
-
-  BaseMatcher(const SimTrack& t, const SimVertex& v,
-      const edm::ParameterSet& ps, const edm::Event& ev, const edm::EventSetup& es);
+  BaseMatcher(const SimTrack& t,
+              const SimVertex& v,
+              const edm::ParameterSet& ps,
+              const edm::Event& ev,
+              const edm::EventSetup& es);
 
   ~BaseMatcher();
 
@@ -49,13 +49,13 @@ public:
   BaseMatcher(const BaseMatcher&) = delete;
   BaseMatcher& operator=(const BaseMatcher&) = delete;
 
-  const SimTrack& trk() const {return trk_;}
-  const SimVertex& vtx() const {return vtx_;}
+  const SimTrack& trk() const { return trk_; }
+  const SimVertex& vtx() const { return vtx_; }
 
-  const edm::ParameterSet& conf() const {return conf_;}
+  const edm::ParameterSet& conf() const { return conf_; }
 
-  const edm::Event& event() const {return ev_;}
-  const edm::EventSetup& eventSetup() const {return es_;}
+  const edm::Event& event() const { return ev_; }
+  const edm::EventSetup& eventSetup() const { return es_; }
 
   /// check if CSC chamber type is in the used list
   bool useCSCChamberType(int csc_type);
@@ -70,16 +70,19 @@ public:
   float dxy() const;
 
   /// general interface to propagation
-  GlobalPoint propagateToZ(const GlobalPoint &inner_point, const GlobalVector &inner_vector, float z) const;
+  GlobalPoint propagateToZ(const GlobalPoint& inner_point, const GlobalVector& inner_vector, float z) const;
 
   /// general interface to propagation
-  GlobalPoint propagateToZCharge(const GlobalPoint &inner_point, const GlobalVector &inner_vector, float z, int charge) const;
+  GlobalPoint propagateToZCharge(const GlobalPoint& inner_point,
+                                 const GlobalVector& inner_vector,
+                                 float z,
+                                 int charge) const;
 
   /// propagation for a track starting from a vertex
   GlobalPoint propagateToZ(float z) const;
 
   /// general interface to propagation
-  GlobalPoint propagateToR(const GlobalPoint &inner_point, const GlobalVector &inner_vector, float r) const;
+  GlobalPoint propagateToR(const GlobalPoint& inner_point, const GlobalVector& inner_vector, float r) const;
   /// propagation for a track starting from a vertex
   GlobalPoint propagateToR(float r) const;
 
@@ -93,25 +96,24 @@ public:
   GlobalPoint propagateFromME0ToCSC(const ME0Segment& segment, float pt, int charge, int st, bool evenodd) const;
 
   /// geometry
-  void setGEMGeometry(const GEMGeometry *geom) {gemGeometry_ = geom;}
-  void setRPCGeometry(const RPCGeometry *geom) {rpcGeometry_ = geom;}
-  void setME0Geometry(const ME0Geometry *geom) {me0Geometry_ = geom;}
-  void setCSCGeometry(const CSCGeometry *geom) {cscGeometry_ = geom;}
-  void setDTGeometry(const DTGeometry *geom) {dtGeometry_ = geom;}
+  void setGEMGeometry(const GEMGeometry* geom) { gemGeometry_ = geom; }
+  void setRPCGeometry(const RPCGeometry* geom) { rpcGeometry_ = geom; }
+  void setME0Geometry(const ME0Geometry* geom) { me0Geometry_ = geom; }
+  void setCSCGeometry(const CSCGeometry* geom) { cscGeometry_ = geom; }
+  void setDTGeometry(const DTGeometry* geom) { dtGeometry_ = geom; }
 
-  const GEMGeometry* getGEMGeometry() const {return gemGeometry_;}
-  const RPCGeometry* getRPCGeometry() const {return rpcGeometry_;}
-  const ME0Geometry* getME0Geometry() const {return me0Geometry_;}
-  const CSCGeometry* getCSCGeometry() const {return cscGeometry_;}
-  const DTGeometry* getDTGeometry() const {return dtGeometry_;}
+  const GEMGeometry* getGEMGeometry() const { return gemGeometry_; }
+  const RPCGeometry* getRPCGeometry() const { return rpcGeometry_; }
+  const ME0Geometry* getME0Geometry() const { return me0Geometry_; }
+  const CSCGeometry* getCSCGeometry() const { return cscGeometry_; }
+  const DTGeometry* getDTGeometry() const { return dtGeometry_; }
 
   double phiHeavyCorr(double pt, double eta, double phi, double charge) const;
   bool passDPhicut(const CSCDetId& id, int chargesign, float dphi, float pt) const;
 
   const CSCLayerGeometry* retriveCSCKeyLayerGeometry(int rawid) const;
 
- protected:
-
+protected:
   bool hasGEMGeometry_;
   bool hasRPCGeometry_;
   bool hasME0Geometry_;
@@ -127,8 +129,7 @@ public:
   const ME0Geometry* me0Geometry_;
   const DTGeometry* dtGeometry_;
 
- private:
-
+private:
   const SimTrack& trk_;
   const SimVertex& vtx_;
 
@@ -140,7 +141,7 @@ public:
   int verbose_;
 
   // list of CSC chamber types to use
-  bool useCSCChamberTypes_[13];// add ME0 as special CSC
+  bool useCSCChamberTypes_[13];  // add ME0 as special CSC
   bool useGEMChamberTypes_[3];
   bool useRPCChamberTypes_[31];
   bool useDTChamberTypes_[21];

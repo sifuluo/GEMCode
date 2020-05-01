@@ -18,26 +18,26 @@
 #include <map>
 #include <set>
 
-class ChamberMatcher : public BaseMatcher
-{
+class ChamberMatcher : public BaseMatcher {
 public:
-  
-  ChamberMatcher(const SimTrack& t, const SimVertex& v,
-      const edm::ParameterSet& ps, const edm::Event& ev, const edm::EventSetup& es);
-  
+  ChamberMatcher(const SimTrack& t,
+                 const SimVertex& v,
+                 const edm::ParameterSet& ps,
+                 const edm::Event& ev,
+                 const edm::EventSetup& es);
+
   ~ChamberMatcher();
 
-  /// GEM partitions' detIds 
-  std::set<unsigned int> detIdsGEM(int gem_type = GEM_ME11 ) const;
-  /// RPC partitions' detIds 
+  /// GEM partitions' detIds
+  std::set<unsigned int> detIdsGEM(int gem_type = GEM_ME11) const;
+  /// RPC partitions' detIds
   std::set<unsigned int> detIdsRPC(int rpc_type = RPC_RE12) const;
-  /// ME0 partitions' detIds 
+  /// ME0 partitions' detIds
   std::set<unsigned int> detIdsME0() const;
-  /// CSC layers' detIds 
+  /// CSC layers' detIds
   std::set<unsigned int> detIdsCSC(int csc_type = CSC_ME1b) const;
 
 private:
-
   void init();
 
   std::string simInputLabel_;
@@ -52,4 +52,3 @@ private:
 };
 
 #endif
-

@@ -20,21 +20,17 @@
 
 typedef std::vector<CSCComparatorDigi> CSCComparatorDigiContainer;
 typedef std::vector<CSCWireDigi> CSCWireDigiContainer;
-typedef std::vector<std::pair<unsigned int, CSCComparatorDigi> > 
-  CSCComparatorDigiDetIdContainer;
-typedef std::vector<std::pair<unsigned int, CSCWireDigi> > 
-  CSCWireDigiDetIdContainer;
+typedef std::vector<std::pair<unsigned int, CSCComparatorDigi> > CSCComparatorDigiDetIdContainer;
+typedef std::vector<std::pair<unsigned int, CSCWireDigi> > CSCWireDigiDetIdContainer;
 
 class SimHitMatcher;
 
-class CSCDigiMatcher : public DigiMatcher
-{
+class CSCDigiMatcher : public DigiMatcher {
 public:
-
   CSCDigiMatcher(const SimHitMatcher& sh,
-                 const edm::EDGetTokenT<CSCComparatorDigiCollection>& cscComparatorDigiInput_, 
+                 const edm::EDGetTokenT<CSCComparatorDigiCollection>& cscComparatorDigiInput_,
                  const edm::EDGetTokenT<CSCWireDigiCollection>& cscWireDigiInput_);
-  
+
   ~CSCDigiMatcher();
 
   /// layer detIds with digis
@@ -81,12 +77,10 @@ public:
   std::set<int> wiregroupsInChamber(unsigned int, int max_gap_to_fill = 0) const;
 
 private:
-
   void matchStripsToSimTrack(const CSCComparatorDigiCollection& comparators);
   void matchWiresToSimTrack(const CSCWireDigiCollection& wires);
 
-  std::set<unsigned int> selectDetIds(const Id2DigiContainer &digis, int csc_type) const;
-  
+  std::set<unsigned int> selectDetIds(const Id2DigiContainer& digis, int csc_type) const;
 
   int minBXCSCComp_, maxBXCSCComp_;
   int minBXCSCWire_, maxBXCSCWire_;

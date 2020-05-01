@@ -20,13 +20,9 @@
 //     }
 //   }
 
-
 // }
 
-
-TFTrack::TFTrack(const l1t::EMTFTrack *t)
-{
-
+TFTrack::TFTrack(const l1t::EMTFTrack* t) {
   trackType_ = EMTF_Track;
   trackHits_ = t->Hits();
   l1track_ = t;
@@ -36,8 +32,10 @@ TFTrack::TFTrack(const l1t::EMTFTrack *t)
   phi_ = emtf::deg_to_rad(t->Phi_glob());
   phi_local_ = emtf::deg_to_rad(t->Phi_loc());
   charge_ = t->Charge();
-  if (charge_>0) chargesign_ = 1;
-  else chargesign_ = 0;
+  if (charge_ > 0)
+    chargesign_ = 1;
+  else
+    chargesign_ = 0;
   //dPhi12_ = (unsigned)t->DPhi_12();
   //dPhi23_ = (unsigned)t->DPhi_23();
   //quality_ = t->Quality();
@@ -46,24 +44,21 @@ TFTrack::TFTrack(const l1t::EMTFTrack *t)
   nstubs = 0;
   dr_ = 10.0;
   for (const auto& hit : trackHits_)
-      if (hit.Is_CSC()) nstubs++;
-
+    if (hit.Is_CSC())
+      nstubs++;
 }
 
-TFTrack::TFTrack(const TFTrack& rhs)
-{}
+TFTrack::TFTrack(const TFTrack& rhs) {}
 
-TFTrack::~TFTrack()
-{
-//  std::cout<<" deconstrcution of TFTrack"<< std::endl;
+TFTrack::~TFTrack() {
+  //  std::cout<<" deconstrcution of TFTrack"<< std::endl;
   triggerDigis_.clear();
   triggerIds_.clear();
   triggerEtaPhis_.clear();
   // triggerStubs_.clear();
   mplcts_.clear();
-  ids_.clear(); // chamber ids_
+  ids_.clear();  // chamber ids_
   trackHits_.clear();
-
 }
 
 // void
@@ -96,19 +91,13 @@ TFTrack::~TFTrack()
 //   dr_ = 10.0;
 // }
 
+void TFTrack::setDR(double dr) { dr_ = dr; }
 
-void
-TFTrack::setDR(double dr)
-{
-  dr_ = dr;
-}
-
-bool
-TFTrack::hasStubEndcap(int st) const
-{
-  if (trackType_ == EMTF_Track){
+bool TFTrack::hasStubEndcap(int st) const {
+  if (trackType_ == EMTF_Track) {
     for (const auto& stub : trackHits_)
-      if (stub.Is_CSC() and stub.Station() == st) return true;
+      if (stub.Is_CSC() and stub.Station() == st)
+        return true;
   }
   return false;
 }
@@ -126,7 +115,6 @@ TFTrack::hasStubEndcap(int st) const
 //   else return hasStubEndcap(st);
 // }
 
-
 // bool
 // TFTrack::hasStubCSCOk(int st) const
 // {
@@ -142,7 +130,6 @@ TFTrack::hasStubEndcap(int st) const
 //   return true;
 // }
 
-
 // unsigned int
 // TFTrack::nStubs(bool mb1, bool me1, bool me2, bool me3, bool me4) const
 // {
@@ -151,14 +138,12 @@ TFTrack::hasStubEndcap(int st) const
 // 	   (me4 and hasStubStation(4)) );
 // }
 
-
 // unsigned int
 // TFTrack::nStubsCSCOk(bool me1, bool me2, bool me3, bool me4) const
 // {
 //   return ( (me1 and hasStubCSCOk(1)) + (me2 and hasStubCSCOk(2)) +
 // 	   (me3 and hasStubCSCOk(3)) + (me4 and hasStubCSCOk(4)) );
 // }
-
 
 // bool
 // TFTrack::passStubsMatch(double steta, int minLowHStubs, int minMidHStubs, int minHighHStubs) const
@@ -171,84 +156,82 @@ TFTrack::hasStubEndcap(int st) const
 //   else                         return nstubsok >=2 and nstubs >= minHighHStubs;
 // }
 
-
-void
-TFTrack::print()
-{
-
-    std::cout<<"TFTrack \t bx:"<<bx_<<" pt: "<<pt_<<"  eta: "<<eta_<<"  phi: "<<phi_ << " local phi "<< phi_local_ <<"  dr: "<<dr_<<" quality "<< quality_ <<std::endl;
-  if (trackType_ == CSCTF_Track){
-//    std::cout<<"#### TFTRACK PRINT: "<<msg<<" #####"<<std::endl;
+void TFTrack::print() {
+  std::cout << "TFTrack \t bx:" << bx_ << " pt: " << pt_ << "  eta: " << eta_ << "  phi: " << phi_ << " local phi "
+            << phi_local_ << "  dr: " << dr_ << " quality " << quality_ << std::endl;
+  if (trackType_ == CSCTF_Track) {
+    //    std::cout<<"#### TFTRACK PRINT: "<<msg<<" #####"<<std::endl;
     //std::cout<<"## L1MuRegionalCand print: ";
     //l1track_->print();
     //std::cout<<"\n## L1Track Print: ";
     //l1track_->Print();
     //std::cout<<"## TFTRACK:
-    std::cout<<"\tpt_packed: "<<pt_packed_<<"  eta_packed: " << eta_packed_<<"  phi_packed: " << phi_packed_<<"  q_packed: "<< q_packed_<<"  bx: "<<bx_<<std::endl;
-  /*  std::cout<<"\tMB1 ME1 ME2 ME3 ME4 = "<<l1track_->mb1ID()<<" "<<l1track_->me1ID()<<" "<<l1track_->me2ID()<<" "<<l1track_->me3ID()<<" "<<l1track_->me4ID()
+    std::cout << "\tpt_packed: " << pt_packed_ << "  eta_packed: " << eta_packed_ << "  phi_packed: " << phi_packed_
+              << "  q_packed: " << q_packed_ << "  bx: " << bx_ << std::endl;
+    /*  std::cout<<"\tMB1 ME1 ME2 ME3 ME4 = "<<l1track_->mb1ID()<<" "<<l1track_->me1ID()<<" "<<l1track_->me2ID()<<" "<<l1track_->me3ID()<<" "<<l1track_->me4ID()
         <<" ("<<hasStub(0)<<" "<<hasStub(1)<<" "<<hasStub(2)<<" "<<hasStub(3)<<" "<<hasStub(4)<<")  "
         <<" ("<<hasStubCSCOk(1)<<" "<<hasStubCSCOk(2)<<" "<<hasStubCSCOk(3)<<" "<<hasStubCSCOk(4)<<")"<<std::endl;*/
     // std::cout<<"\tptAddress: 0x"<<std::hex<<l1track_->ptLUTAddress()<<std::dec<<"  dphi12: "<<dPhi12()<<"  dphi23: "<<dPhi23()<<std::endl;
-    std::cout<<"\thas "<<triggerDigis_.size()<<" stubs in " << std::endl;
-    for (size_t s=0; s<triggerDigis_.size(); s++)
-        std::cout<<CSCDetId(triggerIds_[s])<<" w:"<<triggerDigis_[s]->getKeyWG()+1<<" hs:"<<triggerDigis_[s]->getStrip()+1 <<" p:"<<triggerDigis_[s]->getPattern()<<" bx:"<<triggerDigis_[s]->getBX()<<"; " << std::endl;
+    std::cout << "\thas " << triggerDigis_.size() << " stubs in " << std::endl;
+    for (size_t s = 0; s < triggerDigis_.size(); s++)
+      std::cout << CSCDetId(triggerIds_[s]) << " w:" << triggerDigis_[s]->getKeyWG() + 1
+                << " hs:" << triggerDigis_[s]->getStrip() + 1 << " p:" << triggerDigis_[s]->getPattern()
+                << " bx:" << triggerDigis_[s]->getBX() << "; " << std::endl;
 
-    std::cout<<"\tstub_etaphis:" << std::endl;
-    for (size_t s=0; s<triggerEtaPhis_.size(); s++)
-        std::cout<<" eta: "<<triggerEtaPhis_[s].first<<" phi: "<<triggerEtaPhis_[s].second << std::endl;
+    std::cout << "\tstub_etaphis:" << std::endl;
+    for (size_t s = 0; s < triggerEtaPhis_.size(); s++)
+      std::cout << " eta: " << triggerEtaPhis_[s].first << " phi: " << triggerEtaPhis_[s].second << std::endl;
     /*std::cout<<"\tstub_petaphis:";
     for (size_t s=0; s<triggerStubs_.size(); s++)
         std::cout<<"  "<<triggerStubs_[s].etaPacked()<<" "<<triggerStubs_[s].phiPacked();
     std::cout<<std::endl;*/
-/*    std::cout<<"\thas "<<mplcts_.size()<<" associated MPCs in ";
+    /*    std::cout<<"\thas "<<mplcts_.size()<<" associated MPCs in ";
     for (size_t s=0; s<ids_.size(); s++)
         std::cout<<ids_[s]<<" w:"<<mplcts_[s]->trgdigi->getKeyWG()<<" s:"<<mplcts_[s]->trgdigi->getStrip()/2 + 1<<" Ok="<<mplcts_[s]->deltaOk<<"; " << std::endl;
     std::cout<<"\tMPCs meEtap and mePhip: ";
     for (size_t s=0; s<ids_.size(); s++) std::cout<<mplcts_[s]->meEtap<<", "<<mplcts_[s]->mePhip<<";  ";
     std::cout<<std::endl;*/
   }
-    std::cout<<"#### TFTRACK END PRINT #####"<<std::endl;
-
+  std::cout << "#### TFTRACK END PRINT #####" << std::endl;
 }
 
-unsigned int TFTrack::digiInME(int st, int ring) const
-{
-  if (trackType_ == CSCTF_Track){
-      if (triggerDigis_.size() != triggerIds_.size()) std::cout<<" BUG " <<std::endl;
-      for (unsigned int i=0; i<triggerDigis_.size(); i++)
-      {
-	 const auto& id(triggerIds_.at(i));
-	 if (id.station()==st && id.ring()==ring) return i;
-	 else continue;
-      }
-  }else if (trackType_ == EMTF_Track){
-      unsigned int i =0;
-      for (const auto& hit : trackHits_){
-     	if (hit.Station() == st and hit.Ring() == ring and hit.Is_CSC())
-	    return i;
-	i++;
-      }
+unsigned int TFTrack::digiInME(int st, int ring) const {
+  if (trackType_ == CSCTF_Track) {
+    if (triggerDigis_.size() != triggerIds_.size())
+      std::cout << " BUG " << std::endl;
+    for (unsigned int i = 0; i < triggerDigis_.size(); i++) {
+      const auto& id(triggerIds_.at(i));
+      if (id.station() == st && id.ring() == ring)
+        return i;
+      else
+        continue;
+    }
+  } else if (trackType_ == EMTF_Track) {
+    unsigned int i = 0;
+    for (const auto& hit : trackHits_) {
+      if (hit.Station() == st and hit.Ring() == ring and hit.Is_CSC())
+        return i;
+      i++;
+    }
   }
-  return 999;//invalid return, larger than triggerDigis_.size();
-
+  return 999;  //invalid return, larger than triggerDigis_.size();
 }
 
-bool TFTrack::passDPhicutTFTrack(int st, float pt) const
-{
-
-
+bool TFTrack::passDPhicutTFTrack(int st, float pt) const {
   //std::cout <<"TFTracks size() " << tfTracks().size() << std::endl;
   //auto GEMdPhi( st==1 ? ME11GEMdPhi : ME21GEMdPhi);
   //std::cout <<" sizeof(GEMdPhi) "  << sizeof(GEMdPhi[][]) <<" sizeof(GEMdPhi[0])" << sizeof(GEMdPhi[0]) << std::endl;
   //std::cout <<" sizeof(ME11GEMdPhi) "  << sizeof(ME11GEMdPhi) <<" sizeof(GEMdPhi[0])" << sizeof(ME11GEMdPhi[0]) << std::endl;
   //std::cout <<" sizeof(ME21GEMdPhi) "  << sizeof(ME21GEMdPhi) <<" sizeof(GEMdPhi[0])" << sizeof(ME21GEMdPhi[0]) << std::endl;
-  unsigned int lct_n = digiInME(st,1);
-  if (lct_n == 999 and st==1)
-      lct_n = digiInME(st, 4);
-  if (lct_n == 999) return false;//no stub in Station
+  unsigned int lct_n = digiInME(st, 1);
+  if (lct_n == 999 and st == 1)
+    lct_n = digiInME(st, 4);
+  if (lct_n == 999)
+    return false;  //no stub in Station
   //CAN NOT find GEMDPhi in LCT
-  else return true;
-   /*
+  else
+    return true;
+  /*
   auto lct(triggerDigis_.at(lct_n));
   auto id(triggerIds_.at(lct_n));
   //std::cout <<" id " << id << " LCT " << (*lct) << std::endl;
@@ -280,29 +263,13 @@ bool TFTrack::passDPhicutTFTrack(int st, float pt) const
 
    return pass;
    */
-
 }
 
+void TFTrack::addTriggerDigi(const CSCCorrelatedLCTDigi* digi) { triggerDigis_.push_back(digi); }
 
+void TFTrack::addTriggerDigiId(const CSCDetId& id) { triggerIds_.push_back(id); }
 
-
-void
-TFTrack::addTriggerDigi(const CSCCorrelatedLCTDigi* digi)
-{
-  triggerDigis_.push_back(digi);
-}
-
-void
-TFTrack::addTriggerDigiId(const CSCDetId& id)
-{
-  triggerIds_.push_back(id);
-}
-
-void
-TFTrack::addTriggerEtaPhi(const std::pair<float,float>& p)
-{
-  triggerEtaPhis_.push_back(p);
-}
+void TFTrack::addTriggerEtaPhi(const std::pair<float, float>& p) { triggerEtaPhis_.push_back(p); }
 
 // void
 // TFTrack::addTriggerStub(const csctf::TrackStub& st)

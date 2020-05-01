@@ -19,14 +19,12 @@
 
 class SimHitMatcher;
 
-class RPCDigiMatcher : public DigiMatcher
-{
+class RPCDigiMatcher : public DigiMatcher {
 public:
-
   typedef std::vector<RPCDigi> RPCDigiContainer;
 
   RPCDigiMatcher(const SimHitMatcher& sh, const edm::EDGetTokenT<RPCDigiCollection>& rpcDigiInput_);
-  
+
   ~RPCDigiMatcher();
 
   // partition RPC detIds with digis
@@ -34,7 +32,6 @@ public:
 
   // chamber detIds with digis
   std::set<unsigned int> chamberIds(int rpc_type = RPC_ALL) const;
-
 
   // RPC digis from a particular partition, chamber or superchamber
   const DigiContainer& digisInDetId(unsigned int) const;
@@ -47,7 +44,7 @@ public:
   /// How many pads in RPC did this simtrack get in total?
   int nStrips() const;
 
-  int extrapolateHsfromRPC(unsigned int, int) const; 
+  int extrapolateHsfromRPC(unsigned int, int) const;
 
   std::set<int> stripsInDetId(unsigned int) const;
 
@@ -55,10 +52,9 @@ public:
   std::set<int> partitionNumbers() const;
 
 private:
-
   void matchDigisToSimTrack(const RPCDigiCollection&);
 
-  std::set<unsigned int> selectDetIds(const Id2DigiContainer &, int) const;
+  std::set<unsigned int> selectDetIds(const Id2DigiContainer&, int) const;
 
   int minBXRPC_, maxBXRPC_;
 

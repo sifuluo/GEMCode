@@ -16,10 +16,8 @@ typedef std::vector<ME0PadDigi> ME0PadDigiContainer;
 
 class SimHitMatcher;
 
-class ME0DigiMatcher : public DigiMatcher
-{
+class ME0DigiMatcher : public DigiMatcher {
 public:
-
   ME0DigiMatcher(const SimHitMatcher& sh,
                  const edm::EDGetTokenT<ME0DigiCollection>& me0DigiInput_,
                  const edm::EDGetTokenT<ME0PadDigiCollection>& me0PadDigiInput_);
@@ -66,12 +64,11 @@ public:
   GlobalPoint getGlobalPointPad(unsigned int rawId, const ME0PadDigi& tp) const;
 
 private:
-
   void matchDigisToSimTrack(const ME0DigiCollection&);
   void matchPadsToSimTrack(const ME0PadDigiCollection&);
 
   template <class T>
-  std::set<unsigned int> selectDetIds(const T &) const;
+  std::set<unsigned int> selectDetIds(const T&) const;
 
   int minBXME0Digi_, maxBXME0Digi_;
   int minBXME0Pad_, maxBXME0Pad_;
@@ -97,11 +94,9 @@ private:
 };
 
 template <class T>
-std::set<unsigned int> ME0DigiMatcher::selectDetIds(const T &digis) const
-{
+std::set<unsigned int> ME0DigiMatcher::selectDetIds(const T& digis) const {
   std::set<unsigned int> result;
-  for (auto& p: digis)
-  {
+  for (auto& p : digis) {
     const auto& id = p.first;
     result.insert(p.first);
   }

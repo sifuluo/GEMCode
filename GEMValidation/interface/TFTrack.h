@@ -35,52 +35,51 @@
 
 #include "L1Trigger/L1TMuonEndCap/interface/TrackTools.h"
 #include <L1Trigger/CSCCommonTrigger/interface/CSCConstants.h>
-//#include "L1Trigger/CSCCommonTrigger/interface/CSCTriggerGeometry.h" 
+//#include "L1Trigger/CSCCommonTrigger/interface/CSCTriggerGeometry.h"
 /* header file out-of-date
  *
  */
 
 #include "DataFormats/GeometryVector/interface/GlobalPoint.h"
 
-class TFTrack
-{
- public:
+class TFTrack {
+public:
   /// constructor
   /* TFTrack(const csc::L1Track* t, const CSCCorrelatedLCTDigiCollection*); */
 
-  TFTrack(const l1t::EMTFTrack *t);
+  TFTrack(const l1t::EMTFTrack* t);
   /// copy constructor
   TFTrack(const TFTrack&);
   /// destructor
   ~TFTrack();
 
   //l1t::tftype = enum{bmtf, omtf_neg, omtf_pos, emtf_neg, emtf_pos};
-  enum {CSCTF_Track, EMTF_Track, OMTF_Track};
+  enum { CSCTF_Track, EMTF_Track, OMTF_Track };
   /* void init(edm::ESHandle< L1MuTriggerScales > &muScales, */
-	/*     edm::ESHandle< L1MuTriggerPtScale > &muPtScale); */
+  /*     edm::ESHandle< L1MuTriggerPtScale > &muPtScale); */
 
   void setDR(double dr);
 
   /// L1 track
   /* const csc::L1Track* getL1Track() const {return l1track_;} */
   /// collection of trigger digis
-  std::vector<const CSCCorrelatedLCTDigi*> getTriggerDigis() const {return triggerDigis_;}
+  std::vector<const CSCCorrelatedLCTDigi*> getTriggerDigis() const { return triggerDigis_; }
   /// collection of MPC LCTs
-  std::vector<CSCDetId> getTriggerDigisIds() const {return triggerIds_;}
-  std::vector<std::pair<float, float>> getTriggerEtaPhis() {return triggerEtaPhis_;}
+  std::vector<CSCDetId> getTriggerDigisIds() const { return triggerIds_; }
+  std::vector<std::pair<float, float>> getTriggerEtaPhis() { return triggerEtaPhis_; }
   //std::vector<csctf::TrackStub> getTriggerStubs() const {return triggerStubs_;}
-  std::vector<matching::Digi*> getTriggerMPLCTs() const {return mplcts_;}
-  std::vector<CSCDetId> getChamberIds() const {return ids_;}
+  std::vector<matching::Digi*> getTriggerMPLCTs() const { return mplcts_; }
+  std::vector<CSCDetId> getChamberIds() const { return ids_; }
 
   unsigned int digiInME(int st, int ring) const;
 
   void addTriggerDigi(const CSCCorrelatedLCTDigi*);
   void addTriggerDigiId(const CSCDetId&);
-  void addTriggerEtaPhi(const std::pair<float,float>&);
+  void addTriggerEtaPhi(const std::pair<float, float>&);
   /* void addTriggerStub(const csctf::TrackStub&); */
 
   int tracktype() const { return trackType_; }
-  unsigned int nStubs() const {return l1track_->NumHits();}
+  unsigned int nStubs() const { return l1track_->NumHits(); }
   /// how many stubs?
   /* unsigned int nStubs(bool mb1, bool me1, bool me2, bool me3, bool me4) const; */
   /* unsigned int nStubs() const {return nstubs;} */
@@ -100,40 +99,38 @@ class TFTrack
   /// print some information
   void print();
 
-
-
   /// bending angles
-  unsigned dPhi12() const { return dPhi12_;}
-  unsigned dPhi23() const { return dPhi23_;}
+  unsigned dPhi12() const { return dPhi12_; }
+  unsigned dPhi23() const { return dPhi23_; }
 
-  unsigned ptPacked() const {return pt_packed_;}
-  unsigned etaPacked() const {return eta_packed_;}
-  unsigned phiPacked() const {return phi_packed_;}
-  unsigned qPacked() const {return q_packed_;}
-  unsigned int chargesign() const {return chargesign_;}
-  int charge() const {return charge_;}
-  double pt() const {return pt_;}
-  double eta() const {return eta_;}
-  double phi() const {return phi_;}
-  double phi_local() const {return phi_local_;}
-  double dr() const {return dr_;}
-  int quality() const {return quality_;}
-  int bx() const {return bx_;}
+  unsigned ptPacked() const { return pt_packed_; }
+  unsigned etaPacked() const { return eta_packed_; }
+  unsigned phiPacked() const { return phi_packed_; }
+  unsigned qPacked() const { return q_packed_; }
+  unsigned int chargesign() const { return chargesign_; }
+  int charge() const { return charge_; }
+  double pt() const { return pt_; }
+  double eta() const { return eta_; }
+  double phi() const { return phi_; }
+  double phi_local() const { return phi_local_; }
+  double dr() const { return dr_; }
+  int quality() const { return quality_; }
+  int bx() const { return bx_; }
   std::vector<bool> deltaOk();
-  bool debug() const {return debug_;}
+  bool debug() const { return debug_; }
   bool passDPhicutTFTrack(int st, float pt) const;
 
- private:
+private:
   int trackType_;
   const l1t::EMTFTrack* l1track_;
   //l1t::EMTFHitCollection trackHits_copy;
   std::vector<const CSCCorrelatedLCTDigi*> triggerDigis_;
-  l1t::EMTFHitCollection  trackHits_; //similar to triggerDigis_ + triggerDigis_
+  l1t::EMTFHitCollection trackHits_;  //similar to triggerDigis_ + triggerDigis_
   std::vector<CSCDetId> triggerIds_;
   std::vector<std::pair<float, float>> triggerEtaPhis_;
   /* std::vector<csctf::TrackStub> triggerStubs_; */
   std::vector<matching::Digi*> mplcts_;
-  std::vector<CSCDetId> ids_; // chamber ids
+  std::vector<CSCDetId> ids_;  // chamber ids
   unsigned phi_packed_;
   unsigned eta_packed_;
   unsigned pt_packed_;

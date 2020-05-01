@@ -26,17 +26,15 @@ typedef std::vector<CSCCorrelatedLCTDigi> CSCCorrelatedLCTDigiContainer;
 
 class SimHitMatcher;
 
-class CSCStubMatcher : public DigiMatcher
-{
+class CSCStubMatcher : public DigiMatcher {
 public:
-
   typedef std::map<int, std::vector<std::pair<unsigned int, const GEMPadDigi*> > > GEMPads;
   typedef std::pair<unsigned int, const GEMPadDigi*> GEMPadBX;
   typedef std::vector<GEMPadBX> GEMPadsBX;
 
   CSCStubMatcher(const SimHitMatcher& sh,
-		 const CSCDigiMatcher& dg,
-		 const GEMDigiMatcher& gem_dg,
+                 const CSCDigiMatcher& dg,
+                 const GEMDigiMatcher& gem_dg,
                  const edm::EDGetTokenT<CSCCLCTDigiCollection>& clctInputs_,
                  const edm::EDGetTokenT<CSCALCTDigiCollection>& alctInputs_,
                  const edm::EDGetTokenT<CSCCorrelatedLCTDigiCollection>& lctInputs_,
@@ -102,10 +100,8 @@ public:
   CSCCorrelatedLCTDigi bestCscMplctInChamber(unsigned int) const;
 
   // get matching comparator digis for a given stub in a chamber
-  CSCComparatorDigiDetIdContainer
-    matchingComparatorDigisLCT(unsigned int, const CSCCorrelatedLCTDigi&) const;
-  CSCWireDigiDetIdContainer
-    matchingWireDigisLCT(unsigned int, const CSCCorrelatedLCTDigi&) const;
+  CSCComparatorDigiDetIdContainer matchingComparatorDigisLCT(unsigned int, const CSCCorrelatedLCTDigi&) const;
+  CSCWireDigiDetIdContainer matchingWireDigisLCT(unsigned int, const CSCCorrelatedLCTDigi&) const;
 
   //get global position of matching comparator digi in each layer
   void positionsOfComparatorInLCT(unsigned int, const CSCCorrelatedLCTDigi&, std::vector<GlobalPoint>&) const;
@@ -137,7 +133,6 @@ public:
   float getAverageBendingLCT(unsigned int rawId, const CSCCorrelatedLCTDigi& lct) const;
 
 private:
-
   void matchCLCTsToSimTrack(const CSCCLCTDigiCollection&);
   void matchALCTsToSimTrack(const CSCALCTDigiCollection&);
   void matchLCTsToSimTrack(const CSCCorrelatedLCTDigiCollection&);
@@ -177,8 +172,8 @@ private:
   std::map<unsigned int, CSCCorrelatedLCTDigiContainer> chamber_to_cscLcts_;
   std::map<unsigned int, CSCCorrelatedLCTDigiContainer> chamber_to_cscMplcts_;
 
-  template<class D>
-  std::set<unsigned int> selectDetIds(D &, int) const;
+  template <class D>
+  std::set<unsigned int> selectDetIds(D&, int) const;
 
   bool addGhostLCTs_;
   bool addGhostMPLCTs_;
@@ -215,19 +210,15 @@ private:
   CSCCorrelatedLCTDigiContainer no_csc_mplcts_;
 };
 
-
-template<class D>
-std::set<unsigned int>
-CSCStubMatcher::selectDetIds(D &digis, int csc_type) const
-{
+template <class D>
+std::set<unsigned int> CSCStubMatcher::selectDetIds(D& digis, int csc_type) const {
   std::set<unsigned int> result;
-  for (auto& p: digis)
-  {
+  for (auto& p : digis) {
     auto id = p.first;
-    if (csc_type > 0)
-    {
+    if (csc_type > 0) {
       CSCDetId detId(id);
-      if (gemvalidation::toCSCType(detId.station(), detId.ring()) != csc_type) continue;
+      if (gemvalidation::toCSCType(detId.station(), detId.ring()) != csc_type)
+        continue;
     }
     result.insert(p.first);
   }

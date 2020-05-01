@@ -21,10 +21,8 @@
 
 class SimHitMatcher;
 
-class CSCRecHitMatcher : public BaseMatcher
-{
+class CSCRecHitMatcher : public BaseMatcher {
 public:
-
   typedef std::vector<CSCRecHit2D> CSCRecHit2DContainer;
   typedef std::vector<CSCSegment> CSCSegmentContainer;
 
@@ -57,8 +55,8 @@ public:
 
   int nCSCRecHits() const;
   int nCSCSegments() const;
-  bool areCSCSegmentsSame(const CSCSegment&,const CSCSegment&) const;
-  bool areCSCRecHit2DsSame(const CSCRecHit2D&,const CSCRecHit2D&) const;
+  bool areCSCSegmentsSame(const CSCSegment&, const CSCSegment&) const;
+  bool areCSCRecHit2DsSame(const CSCRecHit2D&, const CSCRecHit2D&) const;
 
   int nCSCRecHit2DsInLayer(unsigned int) const;
   int nCSCRecHit2DsInChamber(unsigned int) const;
@@ -69,7 +67,6 @@ public:
   GlobalPoint globalPoint(const CSCSegment&) const;
 
 private:
-
   const SimHitMatcher* simhit_matcher_;
 
   void matchCSCRecHit2DsToSimTrack(const CSCRecHit2DCollection&);

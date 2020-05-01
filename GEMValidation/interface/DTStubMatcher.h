@@ -19,14 +19,12 @@
 
 class SimHitMatcher;
 
-class DTStubMatcher : public DigiMatcher
-{
+class DTStubMatcher : public DigiMatcher {
 public:
-
   typedef std::vector<DTLocalTrigger> DTLocalTriggerContainer;
 
   DTStubMatcher(const SimHitMatcher& sh, const edm::EDGetTokenT<DTLocalTriggerCollection>& input_);
-  
+
   ~DTStubMatcher();
 
   // chamber detIds with stubs
@@ -38,7 +36,6 @@ public:
   int nDTLocalTriggersInChamber(unsigned int) const;
 
 private:
-
   void matchDTLocalTriggersToSimTrack(const DTLocalTriggerCollection&);
 
   std::set<unsigned int> selectDetIds(const std::map<unsigned int, DTLocalTriggerContainer>&, int) const;

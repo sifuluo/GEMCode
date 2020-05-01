@@ -21,24 +21,26 @@
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "DataFormats/TrackReco/interface/TrackFwd.h"
 
-class HLTTrackMatcher : public BaseMatcher
-{
- public:
+class HLTTrackMatcher : public BaseMatcher {
+public:
   /// constructor
-  HLTTrackMatcher(CSCRecHitMatcher&, DTRecHitMatcher&, 
-                  RPCRecHitMatcher&, GEMRecHitMatcher&,
+  HLTTrackMatcher(CSCRecHitMatcher&,
+                  DTRecHitMatcher&,
+                  RPCRecHitMatcher&,
+                  GEMRecHitMatcher&,
                   edm::EDGetTokenT<reco::TrackExtraCollection>&,
                   edm::EDGetTokenT<reco::TrackCollection>&,
                   edm::EDGetTokenT<reco::RecoChargedCandidateCollection>&);
   /// destructor
   ~HLTTrackMatcher();
 
-  const reco::TrackExtraCollection& getMatchedRecoTrackExtras() const {return matchedRecoTrackExtras_;}
-  const reco::TrackCollection& getMatchedRecoTracks() const {return matchedRecoTracks_;}
-  const reco::RecoChargedCandidateCollection& getMatchedRecoChargedCandidates() const {return matchedRecoChargedCandidates_;}
+  const reco::TrackExtraCollection& getMatchedRecoTrackExtras() const { return matchedRecoTrackExtras_; }
+  const reco::TrackCollection& getMatchedRecoTracks() const { return matchedRecoTracks_; }
+  const reco::RecoChargedCandidateCollection& getMatchedRecoChargedCandidates() const {
+    return matchedRecoChargedCandidates_;
+  }
 
- private:
-
+private:
   void init();
   void clear();
 
@@ -46,7 +48,7 @@ class HLTTrackMatcher : public BaseMatcher
   void matchRecoTrackToSimTrack(const reco::TrackCollection&);
   void matchRecoChargedCandidateToSimTrack(const reco::RecoChargedCandidateCollection&);
 
-  template<typename T>
+  template <typename T>
   bool areRecoTrackSame(const T&, const T&) const;
 
   const GEMRecHitMatcher* gem_rechit_matcher_;

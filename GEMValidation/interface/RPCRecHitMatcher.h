@@ -22,18 +22,15 @@
 class SimHitMatcher;
 class RPCGeometry;
 
-class RPCRecHitMatcher : BaseMatcher
-{
+class RPCRecHitMatcher : BaseMatcher {
 public:
-
   typedef matching::Digi RecHit;
   typedef matching::DigiContainer RecHitContainer;
-  
+
   typedef std::vector<RPCRecHit> RPCRecHitContainer;
 
-
   RPCRecHitMatcher(const SimHitMatcher& sh, const edm::EDGetTokenT<RPCRecHitCollection>& rpcRecHitInput_);
-  
+
   ~RPCRecHitMatcher();
 
   // partition RPC detIds with rechits
@@ -67,7 +64,6 @@ public:
   GlobalPoint recHitMeanPosition(const RecHitContainer& rechits) const;
 
 private:
-
   void matchRecHitsToSimTrack(const RPCRecHitCollection& recHits);
 
   const SimHitMatcher* simhit_matcher_;

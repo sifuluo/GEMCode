@@ -19,38 +19,38 @@
 #include <map>
 #include <set>
 
-class DisplacedGENMuonMatcher : public BaseMatcher
-{
+class DisplacedGENMuonMatcher : public BaseMatcher {
 public:
-  
-  DisplacedGENMuonMatcher(const SimTrack& t, const SimVertex& v,
-      const edm::ParameterSet& ps, const edm::Event& ev, const edm::EventSetup& es,
+  DisplacedGENMuonMatcher(const SimTrack& t,
+                          const SimVertex& v,
+                          const edm::ParameterSet& ps,
+                          const edm::Event& ev,
+                          const edm::EventSetup& es,
                           edm::EDGetTokenT<reco::GenParticleCollection>& inputToken_);
-  
+
   ~DisplacedGENMuonMatcher();
 
-  const reco::GenParticle* getMatchedGENMuon() const {return matchedGENMuon_;} 
-  std::vector<const reco::GenParticle*> getMatchedGENMuons() const {return matchedGENMuons_;}
-  const reco::GenParticle* getMatchedDarkBoson() const {return matchedDarkBoson_;}
+  const reco::GenParticle* getMatchedGENMuon() const { return matchedGENMuon_; }
+  std::vector<const reco::GenParticle*> getMatchedGENMuons() const { return matchedGENMuons_; }
+  const reco::GenParticle* getMatchedDarkBoson() const { return matchedDarkBoson_; }
 
-  int darkBosonIndex() const {return darkBosonIndex_;}
-  int genMuonIndex() const {return genMuonIndex_;}
-  bool checkRunOK() const {return runOK_;}
+  int darkBosonIndex() const { return darkBosonIndex_; }
+  int genMuonIndex() const { return genMuonIndex_; }
+  bool checkRunOK() const { return runOK_; }
 
-  double darkBosonDeltaR() const {return genGd0Gd1_m;}
-  double darkBosonInvM() const {return genGd0Gd1_dR;}
-  double matchedGenMudxy() const {return matchedGenMu_dxy;}
-  double matchedGenMudR() const {return matchedGenMu_dR;}
+  double darkBosonDeltaR() const { return genGd0Gd1_m; }
+  double darkBosonInvM() const { return genGd0Gd1_dR; }
+  double matchedGenMudxy() const { return matchedGenMu_dxy; }
+  double matchedGenMudR() const { return matchedGenMu_dR; }
 
-  void testprint() const ;
+  void testprint() const;
 
 private:
-
   void init();
 
   int verbose_;
   bool run_;
-  enum {MuonGun, DarkSUSY};
+  enum { MuonGun, DarkSUSY };
   int sampleType_;
 
   void matchDisplacedGENMuonMatcherToSimTrack(const reco::GenParticleCollection& genParticles);
@@ -89,7 +89,7 @@ private:
   Float_t genH_vy;
   Float_t genH_vz;
 
-  // Dark photon  
+  // Dark photon
   Float_t genGd_m[2];
   Float_t genGd_E[2];
   Float_t genGd_p[2];

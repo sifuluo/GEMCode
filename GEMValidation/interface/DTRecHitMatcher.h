@@ -20,19 +20,17 @@
 
 class SimHitMatcher;
 
-class DTRecHitMatcher : public BaseMatcher
-{
+class DTRecHitMatcher : public BaseMatcher {
 public:
-  
   typedef std::vector<DTRecHit1DPair> DTRecHit1DPairContainer;
   typedef std::vector<DTRecSegment2D> DTRecSegment2DContainer;
   typedef std::vector<DTRecSegment4D> DTRecSegment4DContainer;
-  
-  DTRecHitMatcher(const SimHitMatcher& sh, 
+
+  DTRecHitMatcher(const SimHitMatcher& sh,
                   const edm::EDGetTokenT<DTRecHitCollection>& dtRecHit1DPairInput_,
                   const edm::EDGetTokenT<DTRecSegment2DCollection>& dtRecSegment2DInput_,
                   const edm::EDGetTokenT<DTRecSegment4DCollection>& dtRecSegment4DInput_);
-  
+
   ~DTRecHitMatcher() {}
 
   // layer detIds with DTRecHit1DPair
@@ -79,10 +77,9 @@ public:
   bool isDTRecHit1DPairMatched(const DTRecHit1DPair&) const;
   bool isDTRecSegment2DMatched(const DTRecSegment2D&) const;
   bool isDTRecSegment4DMatched(const DTRecSegment4D&) const;
-  bool areDTRecSegment4DSame(const DTRecSegment4D&,const DTRecSegment4D&) const;
+  bool areDTRecSegment4DSame(const DTRecSegment4D&, const DTRecSegment4D&) const;
 
 private:
-
   const SimHitMatcher* simhit_matcher_;
 
   void matchDTRecHit1DPairsToSimTrack(const DTRecHitCollection&);

@@ -18,10 +18,8 @@
 #include <map>
 #include <set>
 
-class ME0RecHitMatcher : public BaseMatcher
-{
+class ME0RecHitMatcher : public BaseMatcher {
 public:
-
   typedef std::vector<ME0RecHit> ME0RecHitContainer;
   typedef std::vector<ME0Segment> ME0SegmentContainer;
 
@@ -59,8 +57,8 @@ public:
 
   int nME0RecHits() const;
   int nME0Segments() const;
-  bool areME0SegmentsSame(const ME0Segment&,const ME0Segment&) const;
-  bool areME0RecHitsSame(const ME0RecHit&,const ME0RecHit&) const;
+  bool areME0SegmentsSame(const ME0Segment&, const ME0Segment&) const;
+  bool areME0RecHitsSame(const ME0RecHit&, const ME0RecHit&) const;
 
   int nME0RecHitsInChamber(unsigned int) const;
   int nME0RecHitsInSuperChamber(unsigned int) const;
@@ -71,20 +69,18 @@ public:
   float me0DeltaPhi(ME0Segment Seg) const;
 
   ME0Segment bestME0Segment(unsigned int);
-  ME0Segment bestME0Segment_bydR(unsigned int) const ;
-  ME0Segment findbestME0Segment(ME0SegmentContainer allSegs) const ;
-  ME0Segment findbestME0Segment_bydR(ME0SegmentContainer allSegs, GlobalPoint gp) const ;
+  ME0Segment bestME0Segment_bydR(unsigned int) const;
+  ME0Segment findbestME0Segment(ME0SegmentContainer allSegs) const;
+  ME0Segment findbestME0Segment_bydR(ME0SegmentContainer allSegs, GlobalPoint gp) const;
 
   GlobalPoint globalPoint(const ME0Segment&) const;
 
 private:
-
   const ME0DigiMatcher* digi_matcher_;
 
   void matchME0RecHitsToSimTrack(const ME0RecHitCollection&);
   void matchME0SegmentsToSimTrack(const ME0SegmentCollection&);
   void matchME0SegmentsToSimTrackBydR(const ME0SegmentCollection&);
-
 
   int verboseME0RecHit_;
   bool runME0RecHit_;

@@ -14,10 +14,8 @@
 
 #include "DataFormats/GeometryVector/interface/GlobalPoint.h"
 
-class DigiMatcher : public BaseMatcher
-{
+class DigiMatcher : public BaseMatcher {
 public:
-
   typedef matching::Digi Digi;
   typedef matching::DigiContainer DigiContainer;
   typedef std::map<unsigned int, Digi> Id2Digi;
@@ -25,7 +23,7 @@ public:
   typedef std::map<unsigned int, DigiContainer> Id2DigiContainer;
 
   DigiMatcher(const SimHitMatcher& sh);
-  
+
   ~DigiMatcher();
 
   /// calculate Global position for a digi
@@ -47,18 +45,15 @@ public:
 
   /// for GEM:
   /// find a GEM digi with its position that is the closest in deltaR to the provided CSC global position
-  std::pair<Digi, GlobalPoint>
-  digiInGEMClosestToCSC(const DigiContainer& gem_digis, const GlobalPoint& csc_gp) const;
+  std::pair<Digi, GlobalPoint> digiInGEMClosestToCSC(const DigiContainer& gem_digis, const GlobalPoint& csc_gp) const;
 
   /// for RPC:
   /// find a RPC digi with its position that is the closest in deltaR to the provided CSC global position
-  std::pair<Digi, GlobalPoint>
-  digiInRPCClosestToCSC(const DigiContainer& rpc_digis, const GlobalPoint& csc_gp) const;
+  std::pair<Digi, GlobalPoint> digiInRPCClosestToCSC(const DigiContainer& rpc_digis, const GlobalPoint& csc_gp) const;
 
-  const SimHitMatcher* simHitMatcher() const {return simhit_matcher_;}
+  const SimHitMatcher* simHitMatcher() const { return simhit_matcher_; }
 
 protected:
-
   const SimHitMatcher* simhit_matcher_;
 
   const DigiContainer no_digis_;

@@ -18,25 +18,23 @@
 #include "L1Trigger/L1TMuonEndCap/interface/TrackTools.h"
 #include "DataFormats/L1Trigger/interface/Muon.h"
 
-class UpgradeL1MuMatcher : public BaseMatcher
-{
- public:
+class UpgradeL1MuMatcher : public BaseMatcher {
+public:
   /// constructor
   UpgradeL1MuMatcher(CSCStubMatcher&,
                      SimHitMatcher&,
-                     edm::EDGetTokenT<l1t::EMTFTrackCollection> &,
-                     edm::EDGetTokenT< BXVector<l1t::RegionalMuonCand> > &,
-			edm::EDGetTokenT< BXVector<l1t::Muon> > &);
+                     edm::EDGetTokenT<l1t::EMTFTrackCollection>&,
+                     edm::EDGetTokenT<BXVector<l1t::RegionalMuonCand> >&,
+                     edm::EDGetTokenT<BXVector<l1t::Muon> >&);
   /// destructor
   ~UpgradeL1MuMatcher();
 
-  std::vector<TFTrack*> tfTracks() const  {return tfTracks_;}
+  std::vector<TFTrack*> tfTracks() const { return tfTracks_; }
   TFTrack* bestTFTrack() const { return bestTrack; }
   TFCand* bestGMTCand() const { return bestGMT; }
   std::vector<TFCand*> gmts() const { return gmts_; }
 
- private:
-
+private:
   void clear();
 
   float simPt;

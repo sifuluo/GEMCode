@@ -19,14 +19,12 @@
 
 class SimHitMatcher;
 
-class DTDigiMatcher : public DigiMatcher
-{
+class DTDigiMatcher : public DigiMatcher {
 public:
-
   typedef std::vector<DTDigi> DTDigiContainer;
 
   DTDigiMatcher(const SimHitMatcher& sh, const edm::EDGetTokenT<DTDigiCollection>& dtDigiInput_);
-  
+
   ~DTDigiMatcher();
 
   // partition GEM detIds with digis
@@ -55,11 +53,9 @@ public:
   std::set<int> wireNumbersInDetId(unsigned int) const;
 
 private:
-
   void matchDigisToSimTrack(const DTDigiCollection&);
 
   std::set<unsigned int> selectDetIds(const std::map<unsigned int, DTDigiContainer>&, int) const;
-
 
   bool verboseDigi_;
   bool runDTDigi_;

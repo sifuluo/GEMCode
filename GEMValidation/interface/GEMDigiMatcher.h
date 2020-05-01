@@ -25,13 +25,11 @@ typedef std::vector<GEMCoPadDigi> GEMCoPadDigiContainer;
 
 class SimHitMatcher;
 
-class GEMDigiMatcher : public DigiMatcher
-{
+class GEMDigiMatcher : public DigiMatcher {
 public:
-
   GEMDigiMatcher(const SimHitMatcher& sh,
                  const edm::EDGetTokenT<GEMDigiCollection>& gemDigiInput_,
-		 const edm::EDGetTokenT<GEMPadDigiCollection>& gemPadDigiInput_,
+                 const edm::EDGetTokenT<GEMPadDigiCollection>& gemPadDigiInput_,
                  const edm::EDGetTokenT<GEMCoPadDigiCollection>& gemCoPadDigiInput_);
 
   ~GEMDigiMatcher();
@@ -78,7 +76,9 @@ public:
   const GEMCoPadDigiContainer& gemCoPadsInSuperChamber(unsigned int) const;
 
   const std::map<unsigned int, GEMPadDigiContainer> allGempadsMatch2SimMuon() const { return detid_to_gempads_; }
-  const std::map<unsigned int, GEMPadDigiContainer> allGempadsMatch2SimMuon_2strip() const { return detid_to_gempads_2strip_; }
+  const std::map<unsigned int, GEMPadDigiContainer> allGempadsMatch2SimMuon_2strip() const {
+    return detid_to_gempads_2strip_;
+  }
   // #layers with digis from this simtrack
   int nLayersWithDigisInSuperChamber(unsigned int) const;
   int nLayersWithPadsInSuperChamber(unsigned int) const;
@@ -92,8 +92,8 @@ public:
   std::set<int> stripNumbersInDetId(unsigned int) const;
   std::set<int> padNumbersInDetId(unsigned int) const;
 
-  int extrapolateHsfromGEMPad(unsigned int , int) const;
-  int extrapolateHsfromGEMStrip(unsigned int , int) const;
+  int extrapolateHsfromGEMPad(unsigned int, int) const;
+  int extrapolateHsfromGEMStrip(unsigned int, int) const;
   // what unique partitions numbers with digis from this simtrack?
   std::set<int> partitionNumbers() const;
   std::set<int> partitionNumbersWithCoPads() const;
@@ -107,13 +107,11 @@ public:
   GlobalPoint getGlobalPointPad(unsigned int rawId, const GEMPadDigi& tp) const;
 
 private:
-
   void matchDigisToSimTrack(const GEMDigiCollection&);
   void matchPadsToSimTrack(const GEMPadDigiCollection&);
   void matchCoPadsToSimTrack(const GEMCoPadDigiCollection&);
 
-  std::set<unsigned int> selectDetIds(const Id2DigiContainer &, int) const;
-
+  std::set<unsigned int> selectDetIds(const Id2DigiContainer&, int) const;
 
   int minBXGEMDigi_, maxBXGEMDigi_;
   int minBXGEMPad_, maxBXGEMPad_;
@@ -154,7 +152,6 @@ private:
   GEMDigiContainer no_gem_digis_;
   GEMPadDigiContainer no_gem_pads_;
   GEMCoPadDigiContainer no_gem_copads_;
-
 };
 
 #endif

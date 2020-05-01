@@ -56,7 +56,7 @@
 
 #include <vector>
 #include <map>
-#include <math.h>       /* atan */
+#include <math.h> /* atan */
 
 //=================================
 //this class take DT stubs or CSC stubs to assign displaced muons L1 pt
@@ -76,12 +76,10 @@ typedef std::pair<GEMDetId, GEMPadDigi> GEMPadDigiId;
 typedef std::vector<GEMPadDigi> GEMPadDigiContainer;
 
 typedef std::vector<std::vector<L1MuDTTrackSegPhi> > L1MuDTTrackSegPhiContainer;
-typedef std::vector<std::pair<L1MuDTTrack,std::vector<L1MuDTTrackSegPhi> > > L1MuDTTrackCollection;
+typedef std::vector<std::pair<L1MuDTTrack, std::vector<L1MuDTTrackSegPhi> > > L1MuDTTrackCollection;
 
-class DisplacedMuonTriggerPtassignment
-{
+class DisplacedMuonTriggerPtassignment {
 public:
-
   //endcap, we need LCTs and associated cscid, gempads and associated gemid, and all gemometry
   //to get position from fitting, we also need all comparator digis
   //step0 get LCTs and associated cscids, GEMPads and associated gemids, and geometry.
@@ -103,9 +101,9 @@ public:
 
   DisplacedMuonTriggerPtassignment(std::map<unsigned int, CSCCorrelatedLCTDigiContainer> chamberid_lct,
                                    //std::map<unsigned int, GEMPadDigiContainer> detid_pads,
-				   edm::EDGetTokenT<GEMPadDigiCollection>& gemPadDigiInput_,
-				   edm::EDGetTokenT<ME0SegmentCollection>& me0SegmentInput_,
-				   const edm::ParameterSet& ps,
+                                   edm::EDGetTokenT<GEMPadDigiCollection>& gemPadDigiInput_,
+                                   edm::EDGetTokenT<ME0SegmentCollection>& me0SegmentInput_,
+                                   const edm::ParameterSet& ps,
                                    const edm::EventSetup& es,
                                    const edm::Event& iEvent);
 
@@ -115,7 +113,7 @@ public:
                                    const CSCCorrelatedLCTDigiCollection&,
                                    bool doStubRecovery,
                                    bool matchGEMPads,
-				   const edm::ParameterSet& ps,
+                                   const edm::ParameterSet& ps,
                                    const edm::EventSetup& es,
                                    const edm::Event& iEvent);
 
@@ -126,17 +124,17 @@ public:
                                    GlobalPoint gp_ge11,
                                    GlobalPoint gp_ge21,
                                    int npar,
-				   const edm::ParameterSet& ps,
+                                   const edm::ParameterSet& ps,
                                    const edm::EventSetup& es,
-                                   const  edm::Event& iEvent); //sim level
+                                   const edm::Event& iEvent);  //sim level
 
   // constructor for barrel
   DisplacedMuonTriggerPtassignment(const L1MuDTTrackSegPhiContainer&,
-				   const edm::ParameterSet& ps,
+                                   const edm::ParameterSet& ps,
                                    const edm::EventSetup& es,
                                    const edm::Event& iEvent);
 
-  DisplacedMuonTriggerPtassignment(); //test constructor
+  DisplacedMuonTriggerPtassignment();  //test constructor
 
   ~DisplacedMuonTriggerPtassignment();
 
@@ -148,16 +146,16 @@ public:
   int verbose() const { return verbose_; }
 
   // muon geometry
-  void setGEMGeometry(const GEMGeometry *geom) {gemGeometry_ = geom;}
-  void setRPCGeometry(const RPCGeometry *geom) {rpcGeometry_ = geom;}
-  void setME0Geometry(const ME0Geometry *geom) {me0Geometry_ = geom;}
-  void setCSCGeometry(const CSCGeometry *geom) {cscGeometry_ = geom;}
-  void setDTGeometry(const DTGeometry *geom) {dtGeometry_ = geom;}
-  const GEMGeometry* getGEMGeometry() const {return gemGeometry_;}
-  const RPCGeometry* getRPCGeometry() const {return rpcGeometry_;}
-  const ME0Geometry* getME0Geometry() const {return me0Geometry_;}
-  const CSCGeometry* getCSCGeometry() const {return cscGeometry_;}
-  const DTGeometry* getDTGeometry() const {return dtGeometry_;}
+  void setGEMGeometry(const GEMGeometry* geom) { gemGeometry_ = geom; }
+  void setRPCGeometry(const RPCGeometry* geom) { rpcGeometry_ = geom; }
+  void setME0Geometry(const ME0Geometry* geom) { me0Geometry_ = geom; }
+  void setCSCGeometry(const CSCGeometry* geom) { cscGeometry_ = geom; }
+  void setDTGeometry(const DTGeometry* geom) { dtGeometry_ = geom; }
+  const GEMGeometry* getGEMGeometry() const { return gemGeometry_; }
+  const RPCGeometry* getRPCGeometry() const { return rpcGeometry_; }
+  const ME0Geometry* getME0Geometry() const { return me0Geometry_; }
+  const CSCGeometry* getCSCGeometry() const { return cscGeometry_; }
+  const DTGeometry* getDTGeometry() const { return dtGeometry_; }
 
   // pT assignment algorithms
   bool runPositionbased();
@@ -165,19 +163,19 @@ public:
   bool runPositionbasedBarrel();
   bool runDirectionbasedGE21(bool useME0GE11);
   bool runDirectionbasedCSConly(bool useME0GE11);
-  bool runHybrid(float pt,bool useME0GE11,  bool useGE21);
+  bool runHybrid(float pt, bool useME0GE11, bool useGE21);
   void runHybrid(bool useME0GE11, bool useGE21);
 
   // helper functions
   int getHalfStrip(const CSCComparatorDigi& digi);
-  float getFractionalStrip(const CSCComparatorDigi&d);
+  float getFractionalStrip(const CSCComparatorDigi& d);
 
   float getTrackEta() const { return eta_st2; }
-  int getNParity() const {return npar; }
-  int getMeRing() const {return meRing; }
-  float getPositionPt() const {return position_pt; }
-  float getDirectionPt() const {return direction_pt; }
-  float getHybridPt() const {return hybrid_pt; }
+  int getNParity() const { return npar; }
+  int getMeRing() const { return meRing; }
+  float getPositionPt() const { return position_pt; }
+  float getDirectionPt() const { return direction_pt; }
+  float getHybridPt() const { return hybrid_pt; }
   float assignedPositionPt();
   float assignedDirectionPt();
   float getdeltaY12() const { return deltaY12; }
@@ -185,37 +183,35 @@ public:
   float getdeltaY123() const { return ddY123; }
   float getlocalPhiDirection(int st) const;
   float getdeltaPhiDirection(int st1, int st2) const;
-  float getRadiusSt(int st) const  { return radius_st_ME[st-1]; }
-  float getGEMPhi(int st) const {return phi_gem[st-1]; }
-  float getCSCPhi(int st) const {return gp_st_layer3[st-1].phi(); }
-  float getCSCEta(int st) const {return gp_st_layer3[st-1].eta(); }
+  float getRadiusSt(int st) const { return radius_st_ME[st - 1]; }
+  float getGEMPhi(int st) const { return phi_gem[st - 1]; }
+  float getCSCPhi(int st) const { return gp_st_layer3[st - 1].phi(); }
+  float getCSCEta(int st) const { return gp_st_layer3[st - 1].eta(); }
   bool checkME0Region() const { return (fabs(gp_st_layer3[0].eta()) > me0MinEta_); }
-  bool  checkhasGEM(int st ) const {return hasGEMPad_st[st-1]; }
-  bool  checkhasME0() const {return hasME0; }
+  bool checkhasGEM(int st) const { return hasGEMPad_st[st - 1]; }
+  bool checkhasME0() const { return hasME0; }
   float getNStubs() const { return nstubs; }
 
-
   void setCharge(int x) { charge = x; }
-  void setRadiusSt(float x, int st) { radius_st_ME[st-1] = x; }
-  void setNParity(int x) { npar=x; }
+  void setRadiusSt(float x, int st) { radius_st_ME[st - 1] = x; }
+  void setNParity(int x) { npar = x; }
   void setxfactor(float x) { xfactor = x; }
-  void setPhiGEM(float x, int st) { phi_gem[st-1] = x; }
-  void setPositionPhi(float x, int st, int layer) { phi_st_layers[st-1][layer-1] = x; }
-  void setPositionZ(float x, int st, int layer) { z_st_layers[st-1][layer-1] = x; }
+  void setPhiGEM(float x, int st) { phi_gem[st - 1] = x; }
+  void setPositionPhi(float x, int st, int layer) { phi_st_layers[st - 1][layer - 1] = x; }
+  void setPositionZ(float x, int st, int layer) { z_st_layers[st - 1][layer - 1] = x; }
 
   //pad/stub recovery functions in case we are not using simTrack matched objects
   double phiL1DTTrack(const L1MuDTTrack& track);
 
   bool stubInCSCTFTracks(const CSCCorrelatedLCTDigi& candidateStub, const l1t::EMTFTrackCollection& l1Tracks) const;
   bool stubInDTTFTracks(const L1MuDTTrackSegPhi& candidateStub, const L1MuDTTrackCollection& l1Tracks) const;
-  CSCCorrelatedLCTDigiId pickBestMatchingStub(float xref, float yref,
+  CSCCorrelatedLCTDigiId pickBestMatchingStub(float xref,
+                                              float yref,
                                               const CSCCorrelatedLCTDigiId& oldStub,
                                               const CSCCorrelatedLCTDigiId& newStub,
                                               int refBx) const;
-  GEMPadDigiId pickBestMatchingPad(float xref, float yref,
-                                      const GEMPadDigiId& oldPad,
-                                      const GEMPadDigiId& newPad,
-                                      int bxref) const;
+  GEMPadDigiId pickBestMatchingPad(
+      float xref, float yref, const GEMPadDigiId& oldPad, const GEMPadDigiId& newPad, int bxref) const;
   //pt assignment
   float deltaYcalculation(GlobalPoint gp1, GlobalPoint gp2) const;
   float deltadeltaYcalculation(GlobalPoint gp1, GlobalPoint gp2, GlobalPoint gp3, float eta, int par) const;
@@ -228,20 +224,21 @@ public:
   //r3);//?
   float phiMomentum_Xfactor(float phi_CSC, float phi_GEM, float xfactor) const;
   //void fitComparatorsLCT(const CSCComparatorDigiCollection&, const CSCCorrelatedLCTDigi& tp,
- //	                          CSCDetId chid, float& fit_phi_layer1, float& fit_phi_layer3, float& fit_phi_layer6,
+  //	                          CSCDetId chid, float& fit_phi_layer1, float& fit_phi_layer3, float& fit_phi_layer6,
   //				  float& fit_z_layer1, float& fit_z_layer3, float& fit_z_layer6, float& perp);
   void fitComparatorsLCT(const CSCComparatorDigiCollection&,
                          const CSCCorrelatedLCTDigi& tp,
                          CSCDetId chid,
-                         float* fit_phi_layers, float* fit_z_layers, float& perp);
+                         float* fit_phi_layers,
+                         float* fit_z_layers,
+                         float& perp);
   void fitTrackRadius(GlobalPoint* gps, float* radius);
 
   //void matchME0SegmentsToTrack(const ME0SegmentCollection& me0segments, ME0DetId id);
   void matchME0SegmentsToTrack(const ME0SegmentCollection& me0segments);
   void matchGEMPadsToTrack(const GEMPadDigiCollection& gemPads, GEMDetId id);
 
- private:
-
+private:
   // setup functions
   void initVariables();
   void setupGeometry(const edm::EventSetup& es);
@@ -266,7 +263,7 @@ public:
 
   int verbose_;
   unsigned int region_;
-  
+
   float minGEMCSCdPhi_;
   float minGEMCSCdEta_;
   float me0MinEta_;
@@ -282,7 +279,7 @@ public:
   edm::ESHandle<DTGeometry> dt_geom_;
 
   //extra collection to get better CSC positions
-  edm::Handle< CSCComparatorDigiCollection > hCSCComparators;
+  edm::Handle<CSCComparatorDigiCollection> hCSCComparators;
 
   // trigger scale
   /* bool hasMuScales_; */
@@ -294,44 +291,40 @@ public:
   /* edm::ESHandle< L1MuTriggerScales > muScales_; */
   /* edm::ESHandle< L1MuTriggerPtScale > muPtScale_; */
 
-
   void globalPositionOfLCT(const CSCCorrelatedLCTDigi stub, CSCDetId chid);
   void globalPositionOfLCT(CSCCorrelatedLCTDigiContainer stubs, CSCDetId chid);
   void globalPositionOfGEMPad(const GEMPadDigi gempad, GEMDetId gemid);
   void globalPositionOfGEMPad(GEMPadDigiContainer gempads, GEMDetId gemid);
 
-
   //endcap, direction based
   int charge;
   int nstubs;
   bool hasStub_st[4] = {false, false, false, false};
-  bool isEven[4]={false, false, false, false};
+  bool isEven[4] = {false, false, false, false};
   bool hasGEMPad_st[2] = {false, false};
   bool hasME0;
   float radius_st_ME[4] = {-1.0, -1.0, -1.0, -1.0};
   float xfactor;
   float eta_st2;
   int npar;
-  int meRing ;
-  int meRing_st1 ;
+  int meRing;
+  int meRing_st1;
   float eta_st[4] = {-9, -9, -9, -9};
   float phi_gem[2] = {-9, -9};
   float phi_me0 = -9;
   float dphi_gemcsc_st[2] = {-99, -99};
   float dphi_me0_st1 = -9;
-  float phi_st_layers[4][6] = {{-9, -9, -9, -9, -9, -9},
-      			       {-9, -9, -9, -9, -9, -9},
-      			       {-9, -9, -9, -9, -9, -9},
-      			       {-9, -9, -9, -9, -9, -9}};
+  float phi_st_layers[4][6] = {
+      {-9, -9, -9, -9, -9, -9}, {-9, -9, -9, -9, -9, -9}, {-9, -9, -9, -9, -9, -9}, {-9, -9, -9, -9, -9, -9}};
   float z_st_layers[4][6] = {{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
-  				{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
-  				{0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
-  				{0.0, 0.0, 0.0, 0.0, 0.0, 0.0}};
+                             {0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+                             {0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
+                             {0.0, 0.0, 0.0, 0.0, 0.0, 0.0}};
   GlobalPoint gp_st_layer3[4];
   GlobalPoint gp_st_layer1[4];
   GlobalPoint gp_st_layer6[4];
   //GlobalPoint gp_ge11, gp_ge21;
-  GlobalPoint gp_ge[2];//
+  GlobalPoint gp_ge[2];  //
   GlobalPoint gp_me0;
 
   //position-based
