@@ -181,18 +181,20 @@ void GEMCSCAnalyzer::analyze(const edm::Event& ev, const edm::EventSetup& es)
 
 void GEMCSCAnalyzer::analyze(const SimTrack& t, const SimVertex& v)
 {
+  // do the match for each simtrack
   matcher_->match(t, v);
- /*
-  const GEMSimHitMatcher& match_gem_sh = match.gemsimhits();
-  const CSCSimHitMatcher& match_csc_sh = match.cscsimhits();
-  const GEMDigiMatcher& match_gem_dg = match.gemDigis();
-  const CSCDigiMatcher& match_csc_dg = match.cscDigis();
-  const CSCStubMatcher& match_csc_lct = match.cscStubs();
 
+  // get the objects
+  const GEMSimHitMatcher& match_gem_sh = *(matcher_->gemsimhits());
+  const CSCSimHitMatcher& match_csc_sh = *(matcher_->cscsimhits());
+  const GEMDigiMatcher& match_gem_dg = *(matcher_->gemDigis());
+  const CSCDigiMatcher& match_csc_dg = *(matcher_->cscDigis());
+  const CSCStubMatcher& match_csc_lct = *(matcher_->cscStubs());
+
+  // tracks
   for (const auto& s: stations_to_use_)
   {
     etrk_[s].init();
-
     etrk_[s].pt = t.momentum().pt();
     etrk_[s].pz = t.momentum().pz();
     etrk_[s].phi = t.momentum().phi();
@@ -203,17 +205,18 @@ void GEMCSCAnalyzer::analyze(const SimTrack& t, const SimVertex& v)
     etrk_[s].pdgid = t.type();
   }
 
-  int chargesign = (t.charge()>0? 1:0);
-  float pt = t.momentum().pt();
-  // SimHits
-  const auto& csc_simhits(match_sh.chamberIdsCSC(0));
+  // CSC SimHit position
+  for(const auto& d: match_sh.chamberIdsCSC(0))
+  {
+  }
+    /*
   GlobalPoint gp_sh_odd[NumOfTrees];
   GlobalPoint gp_sh_even[NumOfTrees];
   GlobalVector gv_sh_odd[NumOfTrees];
   GlobalVector gv_sh_even[NumOfTrees];
+
   for(const auto& d: csc_simhits)
   {
-
     CSCDetId id(d);
     const int st(detIdToMEStation(id.station(),id.ring()));
     if (stations_to_use_.count(st) == 0) continue;
@@ -239,7 +242,6 @@ void GEMCSCAnalyzer::analyze(const SimTrack& t, const SimVertex& v)
     }
     //std::cout <<"CSCid with simhits "<< id << " nlayer "<< nlayers << std::endl;
     if (nlayers < minNHitsChamberCSCSimHit_) continue;
-    const GlobalVector& ym = match_sh.simHitsMeanMomentum(match_sh.hitsInChamber(d));
     etrk_[st].bending_sh = match_sh.LocalBendingInChamber(d);
     const CSCDetId id1(id.endcap(), id.station(), id.ring(), id.chamber(), 1);
     const CSCDetId id6(id.endcap(), id.station(), id.ring(), id.chamber(), 6);
@@ -249,44 +251,31 @@ void GEMCSCAnalyzer::analyze(const SimTrack& t, const SimVertex& v)
     if (odd) etrk_[st].has_csc_sh |= 1;
     else etrk_[st].has_csc_sh |= 2;
     if (odd){
-    	etrk_[st].pteta_sh_odd = ym.eta();
-    	etrk_[st].ptphi_sh_odd = ym.phi();
-    	etrk_[st].pt_sh_odd = ym.perp();
-    }else{
-    	etrk_[st].pteta_sh_even = ym.eta();
-    	etrk_[st].ptphi_sh_even = ym.phi();
-    	etrk_[st].pt_sh_even = ym.perp();
-    }
-    if (odd){
     	if (match_sh.hitsInDetId(id1.rawId()).size()>0){
-		etrk_[st].eta_layer1_sh_odd = gp1.eta();
-		etrk_[st].phi_layer1_sh_odd = gp1.phi();
-		etrk_[st].perp_layer1_sh_odd = gp1.perp();
-		etrk_[st].z_layer1_sh_odd = gp1.z();
-		//std::cout <<"layer1 id "<< id1 <<" phi "<< gp1.phi() <<" eta "<< gp1.eta() <<" x "<< gp1.x()<<" y "<< gp1.y()<<" z "<< gp1.z() <<" perp "<< gp1.perp() << std::endl;
-		}
+        etrk_[st].eta_layer1_sh_odd = gp1.eta();
+        etrk_[st].phi_layer1_sh_odd = gp1.phi();
+        etrk_[st].perp_layer1_sh_odd = gp1.perp();
+        etrk_[st].z_layer1_sh_odd = gp1.z();
+      }
     	if (match_sh.hitsInDetId(id6.rawId()).size()>0){
-		etrk_[st].eta_layer6_sh_odd = gp6.eta();
-		etrk_[st].phi_layer6_sh_odd = gp6.phi();
-		etrk_[st].perp_layer6_sh_odd = gp6.perp();
-		etrk_[st].z_layer6_sh_odd = gp6.z();
-		//std::cout <<"layer6 id "<< id6 <<" phi "<< gp6.phi() <<" eta "<< gp6.eta() <<" x "<< gp6.x()<<" y "<< gp6.y()<<" z "<< gp6.z() <<" perp "<< gp6.perp() << std::endl;
-		}
+        etrk_[st].eta_layer6_sh_odd = gp6.eta();
+        etrk_[st].phi_layer6_sh_odd = gp6.phi();
+        etrk_[st].perp_layer6_sh_odd = gp6.perp();
+        etrk_[st].z_layer6_sh_odd = gp6.z();
+      }
     }else{
     	if (match_sh.hitsInDetId(id1.rawId()).size()>0){
-		etrk_[st].eta_layer1_sh_even = gp1.eta();
-		etrk_[st].phi_layer1_sh_even = gp1.phi();
-		etrk_[st].perp_layer1_sh_even = gp1.perp();
-		etrk_[st].z_layer1_sh_even = gp1.z();
-		//std::cout <<"layer1 id "<< id1 <<" phi "<< gp1.phi() <<" eta "<< gp1.eta() <<" x "<< gp1.x()<<" y "<< gp1.y()<<" z "<< gp1.z() <<" perp "<< gp1.perp() << std::endl;
-		}
+        etrk_[st].eta_layer1_sh_even = gp1.eta();
+        etrk_[st].phi_layer1_sh_even = gp1.phi();
+        etrk_[st].perp_layer1_sh_even = gp1.perp();
+        etrk_[st].z_layer1_sh_even = gp1.z();
+      }
     	if (match_sh.hitsInDetId(id6.rawId()).size()>0){
-		etrk_[st].eta_layer6_sh_even = gp6.eta();
-		etrk_[st].phi_layer6_sh_even = gp6.phi();
-		etrk_[st].perp_layer6_sh_even = gp6.perp();
-		etrk_[st].z_layer6_sh_even = gp6.z();
-		//std::cout <<"layer6 id "<< id6 <<" phi "<< gp6.phi() <<" eta "<< gp6.eta() <<" x "<< gp6.x()<<" y "<< gp6.y()<<" z "<< gp6.z() <<" perp "<< gp6.perp() << std::endl;
-		}
+        etrk_[st].eta_layer6_sh_even = gp6.eta();
+        etrk_[st].phi_layer6_sh_even = gp6.phi();
+        etrk_[st].perp_layer6_sh_even = gp6.perp();
+        etrk_[st].z_layer6_sh_even = gp6.z();
+      }
     }
 
     if (odd) etrk_[st].chamber_sh_odd = id.chamber();
@@ -294,8 +283,6 @@ void GEMCSCAnalyzer::analyze(const SimTrack& t, const SimVertex& v)
     if (odd) etrk_[st].nlayers_csc_sh_odd = nlayers;
     else etrk_[st].nlayers_csc_sh_even = nlayers;
 
-    if (odd) gv_sh_odd[st] = ym;
-    else gv_sh_even[st] = ym;
     const GlobalPoint& keygp(match_sh.simHitPositionKeyLayer(id));
     if (odd) gp_sh_odd[st] = keygp;
     else gp_sh_even[st] = keygp;
@@ -376,6 +363,7 @@ void GEMCSCAnalyzer::analyze(const SimTrack& t, const SimVertex& v)
 
   }
 
+  /*
 
 
   if (verbose_) std::cout <<"GEMCSCAnalyzer step2 "<< std::endl;
