@@ -1,4 +1,5 @@
 import FWCore.ParameterSet.Config as cms
+from Configuration.Eras.Era_Run_3_cff import Run_3_cff
 
 process = cms.Process("GEMCSCANA")
 
@@ -39,8 +40,7 @@ process.TFileService = cms.Service("TFileService",
 
 ## global tag for upgrade studies
 from Configuration.AlCa.GlobalTag import GlobalTag
-#process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:run2_mc', '')
-process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase2_realistic', '')
+process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase1_2021_realistic', '')
 
 # the analyzer configuration
 def enum(*sequential, **named):
