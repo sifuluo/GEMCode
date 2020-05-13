@@ -52,7 +52,6 @@ private:
   double simTrackMinPt_;
   double simTrackMinEta_;
   double simTrackMaxEta_;
-  double simTrackOnlyMuon_;
   int verbose_;
   std::vector<string> cscStations_;
   std::vector<std::pair<int, int> > cscStationsCo_;
@@ -74,37 +73,27 @@ private:
   std::unique_ptr<SimTrackMatchManager> matcher_;
 };
 
-GEMCSCAnalyzer::GEMCSCAnalyzer(const edm::ParameterSet& ps)
-    : cfg_(ps.getParameterSet("simTrackMatching")), verbose_(ps.getUntrackedParameter<int>("verbose", 0)) {
-  cscStations_ = cfg_.getParameter<std::vector<string> >("cscStations");
+GEMCSCAnalyzer::GEMCSCAnalyzer(const edm::ParameterSet& ps) :
+  verbose_(ps.getUntrackedParameter<int>("verbose", 0))
+{
+  cscStations_ = ps.getParameter<std::vector<string> >("cscStations");
 
-  const auto& simVertex = cfg_.getParameter<edm::ParameterSet>("simVertex");
-  simVertexInput_ = consumes<edm::SimVertexContainer>(simVertex.getParameter<edm::InputTag>("validInputTags"));
+  const auto& simVertex = ps.getParameter<edm::ParameterSet>("simVertex");
+  simVertexInput_ = consumes<edm::SimVertexContainer>(simVertex.getParameter<edm::InputTag>("inputTag"));
 
-  const auto& simTrack = cfg_.getParameter<edm::ParameterSet>("simTrack");
+  const auto& simTrack = ps.getParameter<edm::ParameterSet>("simTrack");
   verboseSimTrack_ = simTrack.getParameter<int>("verbose");
-  simTrackInput_ = consumes<edm::SimTrackContainer>(simTrack.getParameter<edm::InputTag>("validInputTags"));
+  simTrackInput_ = consumes<edm::SimTrackContainer>(simTrack.getParameter<edm::InputTag>("inputTag"));
   simTrackMinPt_ = simTrack.getParameter<double>("minPt");
   simTrackMinEta_ = simTrack.getParameter<double>("minEta");
   simTrackMaxEta_ = simTrack.getParameter<double>("maxEta");
-  simTrackOnlyMuon_ = simTrack.getParameter<bool>("onlyMuon");
 
-  const auto& cscSimHit_= cfg_.getParameter<edm::ParameterSet>("cscSimHit");
-  const auto& cscComparatorDigi = cfg_.getParameter<edm::ParameterSet>("cscStripDigi");
-  const auto& cscWireDigi = cfg_.getParameter<edm::ParameterSet>("cscWireDigi");
-  const auto& cscCLCT = cfg_.getParameter<edm::ParameterSet>("cscCLCT");
-  const auto& cscALCT = cfg_.getParameter<edm::ParameterSet>("cscALCT");
-  const auto& cscLCT = cfg_.getParameter<edm::ParameterSet>("cscLCT");
+  minNHitsChamberCSCSimHit_ = 4;
+  minNHitsChamberCSCStripDigi_ = 4;
+  minNHitsChamberCSCWireDigi_ = 4;
 
-  minNHitsChamberCSCSimHit_ = cscSimHit_.getParameter<int>("minNHitsChamber");
-  minNHitsChamberCSCStripDigi_ = cscComparatorDigi.getParameter<int>("minNHitsChamber");
-  minNHitsChamberCSCWireDigi_ = cscWireDigi.getParameter<int>("minNHitsChamber");
-  minNHitsChamberCLCT_ = cscCLCT.getParameter<int>("minNHitsChamber");
-  minNHitsChamberALCT_ = cscALCT.getParameter<int>("minNHitsChamber");
-  minNHitsChamberLCT_ = cscLCT.getParameter<int>("minNHitsChamber");
-
-  vector<int> stations = cfg_.getParameter<vector<int> >("cscStationsToUse");
-  copy(stations.begin(), stations.end(), inserter(stations_to_use_, stations_to_use_.end()));
+  // always use all stations
+  stations_to_use_ = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
 
   for (const auto& s : stations_to_use_) {
     stringstream ss;
@@ -143,7 +132,7 @@ bool GEMCSCAnalyzer::isSimTrackGood(const SimTrack& t) {
   if (t.noGenpart())
     return false;
   // only muons
-  if (std::abs(t.type()) != 13 and simTrackOnlyMuon_)
+  if (std::abs(t.type()) != 13)
     return false;
   // pt selection
   if (t.momentum().pt() < simTrackMinPt_)
