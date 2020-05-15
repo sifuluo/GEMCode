@@ -6,7 +6,7 @@ from ROOT import *
 import sys
 sys.argv.append( '-b' )
 
-import ROOT 
+import ROOT
 gROOT.SetBatch(1)
 
 from GEMCSCValidation import simTrackToCscSimHitMatching
@@ -26,10 +26,10 @@ def enum(*sequential, **named):
 class MuonUpgradeTDREfficiencyPlotter():
   def __init__(self):
     self.inputDir = os.getenv("CMSSW_BASE") + "/src/GEMCode/GEMValidation/scripts/MuonUpgradeTDRStudies/"
-    self.inputFile = "../../test/out_ana_efficiency.root"
-    self.targetDir = "GEMCSCValidation_Plots/"
-    self.ext = ".png"
-    self.analyzer = "MuonUpgradeTDREfficiency"
+    self.inputFile = "../../../..//out_ana.root"
+    self.targetDir = "plots/"
+    self.ext = ".pdf"
+    self.analyzer = "GEMCSCAnalyzer"
     self.effSt = "trk_eff_"
     self.stations = enum('CSC_ALL','CSC_ME11','CSC_ME1a','CSC_ME1b',
                          'CSC_ME12','CSC_ME13','CSC_ME21','CSC_ME22',
@@ -71,5 +71,3 @@ for i in range(len(plotter.stationsToUse)):
   simTrackToCscAlctClctMatching_2(plotter,st)
   simTrackToCscLctMatching(plotter,st)
   #simTrackToCscMpLctMatching(plotter,st)
-
-  
