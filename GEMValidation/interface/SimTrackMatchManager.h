@@ -2,6 +2,7 @@
 #define GEMCode_GEMValidation_SimTrackMatchManager_h
 
 #include "Validation/MuonCSCDigis/interface/CSCStubMatcher.h"
+#include "Validation/MuonGEMRecHits/interface/GEMRecHitMatcher.h"
 
 class SimTrackMatchManager {
 public:
@@ -14,17 +15,20 @@ public:
   /// do the matching
   void match(const SimTrack& t, const SimVertex& v);
 
-  std::shared_ptr<GEMSimHitMatcher> gemsimhits() const { return csc_stubs_->gemDigiMatcher()->muonSimHitMatcher(); }
-  std::shared_ptr<CSCSimHitMatcher> cscsimhits() const { return csc_stubs_->cscDigiMatcher()->muonSimHitMatcher(); }
+  std::shared_ptr<GEMSimHitMatcher> gemSimHits() const { return csc_stubs_->gemDigiMatcher()->muonSimHitMatcher(); }
+  std::shared_ptr<CSCSimHitMatcher> cscSimHits() const { return csc_stubs_->cscDigiMatcher()->muonSimHitMatcher(); }
 
   std::shared_ptr<GEMDigiMatcher> gemDigis() const { return csc_stubs_->gemDigiMatcher(); }
   std::shared_ptr<CSCDigiMatcher> cscDigis() const { return csc_stubs_->cscDigiMatcher(); }
 
   std::shared_ptr<CSCStubMatcher> cscStubs() const { return csc_stubs_; }
 
+  std::shared_ptr<GEMRecHitMatcher> gemRecHits() const { return gem_rechits_; }
+
 private:
   // top level matcher right now
   std::shared_ptr<CSCStubMatcher> csc_stubs_;
+  std::shared_ptr<GEMRecHitMatcher> gem_rechits_;
 };
 
 #endif

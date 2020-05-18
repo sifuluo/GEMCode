@@ -183,8 +183,8 @@ void GEMCSCAnalyzer::analyze(const SimTrack& t, const SimVertex& v) {
   matcher_->match(t, v);
 
   // get the objects
-  const GEMSimHitMatcher& match_gem_sh = *(matcher_->gemsimhits());
-  const CSCSimHitMatcher& match_csc_sh = *(matcher_->cscsimhits());
+  const GEMSimHitMatcher& match_gem_sh = *(matcher_->gemSimHits());
+  const CSCSimHitMatcher& match_csc_sh = *(matcher_->cscSimHits());
   const GEMDigiMatcher& match_gd = *(matcher_->gemDigis());
   const CSCDigiMatcher& match_cd = *(matcher_->cscDigis());
   const CSCStubMatcher& match_lct = *(matcher_->cscStubs());
