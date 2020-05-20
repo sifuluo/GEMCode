@@ -78,7 +78,17 @@ process.FEVTDEBUGoutput = cms.OutputModule("PoolOutputModule",
     outputCommands = process.FEVTDEBUGEventContent.outputCommands,
     splitLevel = cms.untracked.int32(0)
 )
+
+## keep all CSC trigger versions
 process.FEVTDEBUGoutput.outputCommands.append('keep *_simCscTriggerPrimitiveDigis*_*_*')
+
+## drop all calorimetry, tracker and raw
+process.FEVTDEBUGoutput.outputCommands.append('drop *_simHcal*_*_*')
+process.FEVTDEBUGoutput.outputCommands.append('drop *_simEcal*_*_*')
+process.FEVTDEBUGoutput.outputCommands.append('drop *_g4SimHits_Tracker*_*')
+process.FEVTDEBUGoutput.outputCommands.append('drop *_rawDataCollector_*_*')
+process.FEVTDEBUGoutput.outputCommands.append('drop *_g4SimHits_Ecal*_*')
+process.FEVTDEBUGoutput.outputCommands.append('drop *_g4SimHits_Hcal*_*')
 
 # Additional output definition
 
@@ -96,7 +106,7 @@ process.simCscTriggerPrimitiveDigisRun3CCLUT = process.simCscTriggerPrimitiveDig
 process.simCscTriggerPrimitiveDigisRun3CCLUT.clctParam07.useComparatorCodes = cms.bool(True)
 process.simCscTriggerPrimitiveDigisRun3CCLUT.clctSLHC.useComparatorCodes = cms.bool(True)
 
-process.SimL1Emulator = cms.Sequence(process.simMuonGEMPadDigis * process.simMuonGEMPadDigiClusters * process.simCscTriggerPrimitiveDigis * process.simCscTriggerPrimitiveDigisRun3 * process.simCscTriggerPrimitiveDigisRun3CCLUT)
+process.SimL1Emulator = cms.Sequence(process.simMuonGEMPadDigis * process.simMuonGEMPadDigiClusters * process.simCscTriggerPrimitiveDigis * process.simCscTriggerPrimitiveDigisRun3 * process.simCscTriggerPrimitiveDigisRun3CCLUT * process.simEmtfDigis)
 process.simMuonGEMPadDigis.InputCollection = "muonGEMDigis"
 
 # Path and EndPath definitions
