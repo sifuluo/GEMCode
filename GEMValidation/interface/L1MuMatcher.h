@@ -37,6 +37,8 @@ class L1MuMatcher
   const l1t::RegionalMuonCand* emtfCand() const { return emtfCand_; }
   const l1t::Muon* muon() const { return muon_; }
 
+  std::shared_ptr<CSCStubMatcher> cscStubMatcher() { return cscStubMatcher_; }
+
  private:
 
   void clear();

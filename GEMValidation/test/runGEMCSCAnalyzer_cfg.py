@@ -5,6 +5,8 @@ from Validation.MuonHits.muonSimHitMatcherPSet import muonSimHitMatcherPSet
 from Validation.MuonCSCDigis.muonCSCDigiPSet import muonCSCDigiPSet
 from Validation.MuonCSCDigis.muonCSCStubPSet import muonCSCStubPSet
 from Validation.MuonGEMDigis.muonGEMDigiPSet import muonGEMDigiPSet
+from Validation.MuonGEMRecHits.muonGEMRecHitPSet import gemRecHit
+from GEMCode.GEMValidation.muonPSet import muonPSet
 
 process = cms.Process("GEMCSCANA", Run3)
 
@@ -24,6 +26,7 @@ process.load('TrackPropagation.SteppingHelixPropagator.SteppingHelixPropagatorAl
 process.source = cms.Source(
   "PoolSource",
   fileNames = cms.untracked.vstring('file:step2bis.root'),
+#  fileNames = cms.untracked.vstring('/store/user/awarden/MiniBias/SingleMu_May2020_MC_step2/200512_202254/0000/step2_1.root')
 )
 
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
@@ -37,7 +40,7 @@ from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase1_2021_realistic', '')
 
 # the analyzer configuration
-muonGEMDigiPSet.gemStripDigi.inputTag = "muonGEMDigis"
+#muonGEMDigiPSet.gemStripDigi.inputTag = "muonGEMDigis"
 muonGEMDigiPSet.gemStripDigi.verbose = 1
 muonCSCStubPSet.cscALCT.verbose = 1
 muonCSCStubPSet.cscALCT.minBX = 3
@@ -53,6 +56,8 @@ process.GEMCSCAnalyzer = cms.EDAnalyzer(
     muonCSCDigiPSet,
     muonCSCStubPSet,
     muonGEMDigiPSet,
+    muonPSet,
+    gemRecHit = gemRecHit,
     verbose = cms.untracked.int32(0),
     cscStations = cms.vstring("CSC_ALL","CSC_ME11", "CSC_ME1a", "CSC_ME1b", "CSC_ME12", "CSC_ME13",
                               "CSC_ME21", "CSC_ME22", "CSC_ME31", "CSC_ME32", "CSC_ME41", "CSC_ME42")
@@ -66,8 +71,8 @@ process.p = cms.Path(process.GEMCSCAnalyzer)
 print
 #print 'Input files:'
 print '----------------------------------------'
-#print process.source.fileNames
-#print
+print process.source.fileNames
+print
 print 'Output file:'
 print '----------------------------------------'
 print process.TFileService.fileName
