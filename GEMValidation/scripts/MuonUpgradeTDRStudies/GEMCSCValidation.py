@@ -4,7 +4,7 @@ from Helpers import drawCscLabel
 from Helpers import drawEtaLabel
 from Helpers import drawPuLabel
 from Helpers import draw_geff
-from Helpers import setTDRStyle
+from tdrstyle import setTDRStyle
 
 #_______________________________________________________________________________
 def simTrackToCscSimHitMatching(plotter,st=1):
