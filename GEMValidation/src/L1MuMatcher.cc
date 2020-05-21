@@ -72,6 +72,8 @@ void
 L1MuMatcher::matchEmtfTrackToSimTrack(const l1t::EMTFTrackCollection& tracks)
 {
   for (const auto& trk : tracks) {
+    int bx = trk.BX();
+    if ( bx < minBXEMTFTrack_ or bx > maxBXEMTFTrack_) continue;
     int nMatchingStubs = 0;
     int nMaxMatchingStubs = 0;
     if (verboseEMTFTrack_)
