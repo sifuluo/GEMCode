@@ -81,6 +81,7 @@ process.FEVTDEBUGoutput = cms.OutputModule("PoolOutputModule",
 
 ## keep all CSC trigger versions
 process.FEVTDEBUGoutput.outputCommands.append('keep *_simCscTriggerPrimitiveDigis*_*_*')
+process.FEVTDEBUGoutput.outputCommands.append('keep *_simEmtfDigis_*_*')
 
 ## drop all calorimetry, tracker and raw
 process.FEVTDEBUGoutput.outputCommands.append('drop *_simHcal*_*_*')
