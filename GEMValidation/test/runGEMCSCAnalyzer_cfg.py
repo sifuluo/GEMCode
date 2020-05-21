@@ -40,7 +40,7 @@ from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase1_2021_realistic', '')
 
 # the analyzer configuration
-#muonGEMDigiPSet.gemStripDigi.inputTag = "muonGEMDigis"
+muonGEMDigiPSet.gemStripDigi.inputTag = "muonGEMDigis"
 muonGEMDigiPSet.gemStripDigi.verbose = 1
 muonCSCStubPSet.cscALCT.verbose = 1
 muonCSCStubPSet.cscALCT.minBX = 3
