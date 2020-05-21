@@ -5,6 +5,7 @@
 #include "Validation/MuonGEMRecHits/interface/GEMRecHitMatcher.h"
 #include "GEMCode/GEMValidation/interface/L1MuMatcher.h"
 #include "GEMCode/GEMValidation/interface/L1TrackMatcher.h"
+#include "GEMCode/GEMValidation/interface/ME0DigiMatcher.h"
 
 class SimTrackMatchManager
 {
@@ -24,6 +25,7 @@ public:
 
   std::shared_ptr<GEMDigiMatcher> gemDigis() const { return cscStubs()->gemDigiMatcher(); }
   std::shared_ptr<CSCDigiMatcher> cscDigis() const { return cscStubs()->cscDigiMatcher(); }
+  std::shared_ptr<ME0DigiMatcher> me0Digis() const { return me0_digis_; }
 
   std::shared_ptr<CSCStubMatcher> cscStubs() const { return muons_->cscStubMatcher(); }
 
@@ -38,6 +40,7 @@ private:
   std::shared_ptr<L1MuMatcher> muons_;
   std::shared_ptr<L1TrackMatcher> tracks_;
   std::shared_ptr<GEMRecHitMatcher> gem_rechits_;
+  std::shared_ptr<ME0DigiMatcher> me0_digis_;
 };
 
 #endif
