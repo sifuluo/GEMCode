@@ -7,15 +7,9 @@
 
  Original Author:  "Sven Dildick"
 */
-/* #include "GEMCode/GEMValidation/interface/TFTrack.h" */
-/* #include "GEMCode/GEMValidation/interface/TFCand.h" */
 
 #include "Validation/MuonCSCDigis/interface/CSCStubMatcher.h"
-#include "DataFormats/L1TMuon/interface/RegionalMuonCand.h"
-#include "DataFormats/L1TMuon/interface/EMTFTrack.h"
-#include "DataFormats/L1TMuon/interface/EMTFHit.h"
-#include "L1Trigger/L1TMuonEndCap/interface/TrackTools.h"
-#include "DataFormats/L1Trigger/interface/Muon.h"
+#include "GEMCode/GEMValidation/interface/EMTFTrack.h"
 
 class L1MuMatcher
 {
@@ -33,9 +27,9 @@ class L1MuMatcher
   void match(const SimTrack& t, const SimVertex& v);
 
   // return best matching tracks
-  const l1t::EMTFTrack* emtfTrack() const { return emtfTrack_; }
-  const l1t::RegionalMuonCand* emtfCand() const { return emtfCand_; }
-  const l1t::Muon* muon() const { return muon_; }
+  std::shared_ptr<gem::EMTFTrack> emtfTrack() const { return emtfTrack_; }
+  std::shared_ptr<gem::EMTFCand> emtfCand() const { return emtfCand_; }
+  std::shared_ptr<gem::EMTFCand> muon() const { return muon_; }
 
   std::shared_ptr<CSCStubMatcher> cscStubMatcher() { return cscStubMatcher_; }
 
@@ -72,9 +66,9 @@ class L1MuMatcher
   double deltaRGMT_;
   bool runGMT_;
 
-  const l1t::EMTFTrack* emtfTrack_;
-  const l1t::RegionalMuonCand* emtfCand_;
-  const l1t::Muon* muon_;
+  std::shared_ptr<gem::EMTFTrack> emtfTrack_;
+  std::shared_ptr<gem::EMTFCand> emtfCand_;
+  std::shared_ptr<gem::EMTFCand> muon_;
 };
 
 #endif

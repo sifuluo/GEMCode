@@ -98,23 +98,20 @@ L1MuMatcher::matchEmtfTrackToSimTrack(const l1t::EMTFTrackCollection& tracks)
       }
       if (nMatchingStubs>=2) {
         if (nMatchingStubs > nMaxMatchingStubs){
-          emtfTrack_ = &trk;
+          emtfTrack_.reset(new gem::EMTFTrack(trk));
           nMaxMatchingStubs = nMatchingStubs;
         }
       }
     }
   }
-  // if (verboseEMTFTrack_ and emtfTrack_){
-  //   std::cout <<"best EMTFTrack  ;  bestTrack->print();
-  // }
 }
 
 void L1MuMatcher::matchRegionalMuonCandToSimTrack(const l1t::RegionalMuonCandBxCollection& regMuCands)
 {
   // EMTF track properties
-  float track_pt = emtfTrack_->Pt();
-  float track_eta = emtfTrack_->Eta();
-  float track_phi = emtf::deg_to_rad(emtfTrack_->Phi_glob());
+  float track_pt = emtfTrack_->pt();
+  float track_eta = emtfTrack_->eta();
+  float track_phi = emtfTrack_->phi();
 
   if (verboseRegMuCand_)
     std::cout << "EMTF "<< track_pt << " " << track_eta << " " << track_phi << std::endl;
@@ -124,12 +121,14 @@ void L1MuMatcher::matchRegionalMuonCandToSimTrack(const l1t::RegionalMuonCandBxC
 
   for (int bx = regMuCands.getFirstBX(); bx <= regMuCands.getLastBX(); bx++ ){
     if ( bx < minBXRegMuCand_ or bx > maxBXRegMuCand_) continue;
-    for (auto cand = regMuCands.begin(bx); cand != regMuCands.end(bx); ++cand ){
+    for (auto emtfCand = regMuCands.begin(bx); emtfCand != regMuCands.end(bx); ++emtfCand ){
+
+      const gem::EMTFCand& cand(*emtfCand);
 
       // EMTF candidate properties
-      float cand_pt = cand->hwPt() * 0.5;
-      float cand_eta = cand->hwEta() * 0.010875;
-      float cand_phi = normalizedPhi((((cand->hwPhi() + cand->processor() * 96 + 576 + 24) % 576) / 576.) * 2.0 * 3.1415926);
+      float cand_pt = cand.pt();
+      float cand_eta = cand.eta();
+      float cand_phi = cand.phi();
 
       if (verboseRegMuCand_)
         std::cout << "candidate regional muon " << cand_pt << " " << cand_eta << " " << cand_phi << std::endl;
@@ -139,7 +138,7 @@ void L1MuMatcher::matchRegionalMuonCandToSimTrack(const l1t::RegionalMuonCandBxC
       float dPtRel = std::fabs(track_pt - cand_pt)/cand_pt;
       if (dR < mindRRegMuCand and dPtRel < mindPtRel){
         mindRRegMuCand = dR;
-        emtfCand_ = &(*cand);
+        emtfCand_.reset(new gem::EMTFCand(cand));
       }
     }
   }
@@ -148,9 +147,9 @@ void L1MuMatcher::matchRegionalMuonCandToSimTrack(const l1t::RegionalMuonCandBxC
 void L1MuMatcher::matchGMTToSimTrack(const BXVector<l1t::Muon>& gmtCands)
 {
   // EMTF candidate properties
-  float cand_pt = emtfCand_->hwPt() * 0.5;
-  float cand_eta = emtfCand_->hwEta() * 0.010875;
-  float cand_phi = normalizedPhi((((emtfCand_->hwPhi() + emtfCand_->processor() * 96 + 576 + 24) % 576) / 576.) * 2.0 * 3.1415926);
+  float cand_pt = emtfCand_->pt();
+  float cand_eta = emtfCand_->eta();
+  float cand_phi = emtfCand_->phi();
 
   if (verboseRegMuCand_)
     std::cout << "candidate regional muon " << cand_pt << " " << cand_eta << " " << cand_phi << std::endl;
@@ -160,19 +159,21 @@ void L1MuMatcher::matchGMTToSimTrack(const BXVector<l1t::Muon>& gmtCands)
 
   for (int bx = gmtCands.getFirstBX(); bx <= gmtCands.getLastBX(); bx++ ){
     if ( bx < minBXGMT_ or bx > maxBXGMT_) continue;
-    for (auto cand = gmtCands.begin(bx); cand != gmtCands.end(bx); ++cand ){
+    for (auto emtfCand = gmtCands.begin(bx); emtfCand != gmtCands.end(bx); ++emtfCand ){
+
+      const gem::EMTFCand& cand(*emtfCand);
 
       // Muon properties
-      float muon_pt = cand->pt();
-      float muon_eta = cand->eta();
-      float muon_phi = cand->phi();
+      float muon_pt = cand.pt();
+      float muon_eta = cand.eta();
+      float muon_phi = cand.phi();
 
       float dR = deltaR(muon_eta, muon_phi, cand_eta, cand_phi);
 
       float dPtRel = std::fabs(cand_pt - muon_pt)/muon_pt;
       if (dR < mindRGMT and dPtRel < mindPtRel){
         mindRGMT = dR;
-        muon_ = &(*cand);
+        muon_.reset(new gem::EMTFCand(cand));
       }
     }
   }
