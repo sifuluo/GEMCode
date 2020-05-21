@@ -3,9 +3,6 @@
 #include "DataFormats/Math/interface/deltaPhi.h"
 #include "DataFormats/Math/interface/normalizedPhi.h"
 
-#include "TLorentzVector.h"
-#include <map>
-
 L1MuMatcher::L1MuMatcher(const edm::ParameterSet& ps, edm::ConsumesCollector&& iC)
 {
   cscStubMatcher_.reset(new CSCStubMatcher(ps, std::move(iC)));

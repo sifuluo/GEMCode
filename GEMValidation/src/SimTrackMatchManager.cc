@@ -2,11 +2,13 @@
 
 SimTrackMatchManager::SimTrackMatchManager(const edm::ParameterSet& iPS, edm::ConsumesCollector&& iC) {
   muons_.reset(new L1MuMatcher(iPS, std::move(iC)));
+  tracks_.reset(new L1TrackMatcher(iPS, std::move(iC)));
   //  gem_rechits_.reset(new GEMRecHitMatcher(iPS, std::move(iC)));
 }
 
 void SimTrackMatchManager::init(const edm::Event& e, const edm::EventSetup& eventSetup) {
   muons_->init(e, eventSetup);
+  tracks_->init(e, eventSetup);
   //  gem_rechits_->init(e, eventSetup);
 }
 
