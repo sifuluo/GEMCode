@@ -1,17 +1,17 @@
-#include "GEMCode/GEMValidation/interface/HLTTrackMatcher.h"
+#include "GEMCode/GEMValidation/interface/RecoTrackMatcher.h"
 #include "DataFormats/Math/interface/deltaR.h"
 #include "DataFormats/Math/interface/deltaPhi.h"
 
 #include "TLorentzVector.h"
 #include <map>
 
-HLTTrackMatcher::HLTTrackMatcher(CSCRecHitMatcher& csc,
+L1TrackMatcher::L1TrackMatcher(const edm::ParameterSet& ps, edm::ConsumesCollector&& iC)
+{
+RecoTrackMatcher::RecoTrackMatcher(CSCRecHitMatcher& csc,
                                  DTRecHitMatcher& dt,
                                  RPCRecHitMatcher& rpc,
                                  GEMRecHitMatcher& gem,
-                                 edm::EDGetTokenT<reco::TrackExtraCollection> &recoTrackExtraInputLabel_,
-                                 edm::EDGetTokenT<reco::TrackCollection> &recoTrackInputLabel_,
-                                 edm::EDGetTokenT<reco::RecoChargedCandidateCollection> &recoChargedCandidateInputLabel_
+
                                  )
   : BaseMatcher(csc.trk(), csc.vtx(), csc.conf(), csc.event(), csc.eventSetup())
 , gem_rechit_matcher_(&gem)
@@ -51,17 +51,17 @@ HLTTrackMatcher::HLTTrackMatcher(CSCRecHitMatcher& csc,
 }
 
 
-HLTTrackMatcher::~HLTTrackMatcher()
+RecoTrackMatcher::~RecoTrackMatcher()
 {
 }
 
 void
-HLTTrackMatcher::clear()
+RecoTrackMatcher::clear()
 {
 }
 
 void
-HLTTrackMatcher::matchRecoTrackExtraToSimTrack(const reco::TrackExtraCollection& tracks)
+RecoTrackMatcher::matchRecoTrackExtraToSimTrack(const reco::TrackExtraCollection& tracks)
 {
   if (verboseRecoTrackExtra_) std::cout << "Number of RecoTrackExtras: " <<tracks.size() << std::endl;
   for(const auto& track: tracks) {
@@ -159,7 +159,7 @@ HLTTrackMatcher::matchRecoTrackExtraToSimTrack(const reco::TrackExtraCollection&
 
 
 void
-HLTTrackMatcher::matchRecoTrackToSimTrack(const reco::TrackCollection& tracks)
+RecoTrackMatcher::matchRecoTrackToSimTrack(const reco::TrackCollection& tracks)
 {
   if (verboseRecoTrack_) std::cout << "Number of RecoTracks: " <<tracks.size() << std::endl;
   int i=0;
@@ -184,7 +184,7 @@ HLTTrackMatcher::matchRecoTrackToSimTrack(const reco::TrackCollection& tracks)
 
 
 void
-HLTTrackMatcher::matchRecoChargedCandidateToSimTrack(const reco::RecoChargedCandidateCollection& candidates)
+RecoTrackMatcher::matchRecoChargedCandidateToSimTrack(const reco::RecoChargedCandidateCollection& candidates)
 {
   if (verboseRecoTrack_) std::cout << "Number of RecoChargedCandidates: " <<candidates.size() << std::endl;
   int i=0;
@@ -210,7 +210,7 @@ HLTTrackMatcher::matchRecoChargedCandidateToSimTrack(const reco::RecoChargedCand
 
 template<typename T>
 bool
-HLTTrackMatcher::areRecoTrackSame(const T& l, const T& r) const
+RecoTrackMatcher::areRecoTrackSame(const T& l, const T& r) const
 {
   return (l.outerPosition()==r.outerPosition() and
 	  l.outerMomentum()==r.outerMomentum() and
@@ -221,4 +221,3 @@ HLTTrackMatcher::areRecoTrackSame(const T& l, const T& r) const
 	  l.innerOk()==r.innerOk() and
 	  l.outerDetId()==r.outerDetId());
 }
-

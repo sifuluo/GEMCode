@@ -1,7 +1,7 @@
-#ifndef GEMCode_GEMValidation_HLTTrackMatcher_h
-#define GEMCode_GEMValidation_HLTTrackMatcher_h
+#ifndef GEMCode_GEMValidation_RecoTrackMatcher_h
+#define GEMCode_GEMValidation_RecoTrackMatcher_h
 
-/**\class HLTTrackMatcher
+/**\class RecoTrackMatcher
 
  Description: Matching of tracks to SimTrack
 
@@ -11,8 +11,7 @@
 #include "GEMCode/GEMValidation/interface/CSCRecHitMatcher.h"
 #include "GEMCode/GEMValidation/interface/DTRecHitMatcher.h"
 #include "GEMCode/GEMValidation/interface/RPCRecHitMatcher.h"
-#include "GEMCode/GEMValidation/interface/GEMRecHitMatcher.h"
-//#include "GEMCode/GEMValidation/interface/ME0RecHitMatcher.h"
+#include "Validation/MuonGEMRecHits/interface/GEMRecHitMatcher.h"
 
 #include "DataFormats/RecoCandidate/interface/RecoChargedCandidate.h"
 #include "DataFormats/RecoCandidate/interface/RecoChargedCandidateFwd.h"
@@ -21,17 +20,20 @@
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "DataFormats/TrackReco/interface/TrackFwd.h"
 
-class HLTTrackMatcher : public BaseMatcher
+class RecoTrackMatcher
 {
  public:
   /// constructor
-  HLTTrackMatcher(CSCRecHitMatcher&, DTRecHitMatcher&, 
-                  RPCRecHitMatcher&, GEMRecHitMatcher&,
-                  edm::EDGetTokenT<reco::TrackExtraCollection>&,
-                  edm::EDGetTokenT<reco::TrackCollection>&,
-                  edm::EDGetTokenT<reco::RecoChargedCandidateCollection>&);
+  RecoTrackMatcher(edm::ParameterSet const& iPS, edm::ConsumesCollector&& iC);
+
   /// destructor
-  ~HLTTrackMatcher();
+  ~RecoTrackMatcher() {}
+
+  /// initialize the event
+  void init(const edm::Event& e, const edm::EventSetup& eventSetup);
+
+  /// do the matching
+  void match(const SimTrack& t, const SimVertex& v);
 
   const reco::TrackExtraCollection& getMatchedRecoTrackExtras() const {return matchedRecoTrackExtras_;}
   const reco::TrackCollection& getMatchedRecoTracks() const {return matchedRecoTracks_;}
@@ -39,7 +41,6 @@ class HLTTrackMatcher : public BaseMatcher
 
  private:
 
-  void init();
   void clear();
 
   void matchRecoTrackExtraToSimTrack(const reco::TrackExtraCollection&);
@@ -49,10 +50,14 @@ class HLTTrackMatcher : public BaseMatcher
   template<typename T>
   bool areRecoTrackSame(const T&, const T&) const;
 
-  const GEMRecHitMatcher* gem_rechit_matcher_;
-  const DTRecHitMatcher* dt_rechit_matcher_;
-  const RPCRecHitMatcher* rpc_rechit_matcher_;
-  const CSCRecHitMatcher* csc_rechit_matcher_;
+  edm::EDGetTokenT<reco::TrackExtraCollection> &recoTrackExtraInputLabel_;
+  edm::EDGetTokenT<reco::TrackCollection> &recoTrackInputLabel_;
+  edm::EDGetTokenT<reco::RecoChargedCandidateCollection> &recoChargedCandidateInputLabel_;
+
+  std::shared_ptr<GEMRecHitMatcher> gem_rechit_matcher_;
+  std::shared_ptr<DTRecHitMatcher> dt_rechit_matcher_;
+  std::shared_ptr<RPCRecHitMatcher> rpc_rechit_matcher_;
+  std::shared_ptr<CSCRecHitMatcher> csc_rechit_matcher_;
 
   int minBXRecoTrackExtra_, maxBXRecoTrackExtra_;
   int verboseRecoTrackExtra_;
