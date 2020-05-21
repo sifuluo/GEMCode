@@ -86,11 +86,13 @@ L1MuMatcher::matchEmtfTrackToSimTrack(const l1t::EMTFTrackCollection& tracks)
       const CSCCorrelatedLCTDigi& csc_stub = stub.CreateCSCCorrelatedLCTDigi();
       const CSCDetId& csc_id = stub.CSC_DetId();
       if (verboseEMTFTrack_)
-        std::cout << "L1 " << csc_id << " "
-                  << csc_stub << " "
+        std::cout << "\tCSCDetId " << csc_id << " CSC stub "
+                  << csc_stub << " available stubs in this chamber: "
                   << cscStubMatcher_->lctsInChamber(csc_id.rawId()).size() << std::endl;
+
       for (const auto& sim_stub: cscStubMatcher_->lctsInChamber(csc_id.rawId())){
-        if (verboseEMTFTrack_) std::cout << "\tSIM " << csc_id << " " << sim_stub << std::endl;
+        if (verboseEMTFTrack_)
+          std::cout << "\tSIM " << csc_id << " " << sim_stub << std::endl;
         if (csc_stub == sim_stub) {
           nMatchingStubs++;
         }
@@ -107,13 +109,15 @@ L1MuMatcher::matchEmtfTrackToSimTrack(const l1t::EMTFTrackCollection& tracks)
 
 void L1MuMatcher::matchRegionalMuonCandToSimTrack(const l1t::RegionalMuonCandBxCollection& regMuCands)
 {
+  if (emtfTrack_ == nullptr) return;
+
   // EMTF track properties
   float track_pt = emtfTrack_->pt();
   float track_eta = emtfTrack_->eta();
   float track_phi = emtfTrack_->phi();
 
   if (verboseRegMuCand_)
-    std::cout << "EMTF "<< track_pt << " " << track_eta << " " << track_phi << std::endl;
+    std::cout << "Matched EMTF track "<< track_pt << " " << track_eta << " " << track_phi << std::endl;
 
   float mindPtRel = 0.5;
   float mindRRegMuCand = 1;
@@ -130,14 +134,17 @@ void L1MuMatcher::matchRegionalMuonCandToSimTrack(const l1t::RegionalMuonCandBxC
       float cand_phi = cand.phi();
 
       if (verboseRegMuCand_)
-        std::cout << "candidate regional muon " << cand_pt << " " << cand_eta << " " << cand_phi << std::endl;
+        std::cout << "\tcandidate regional muon " << cand_pt << " " << cand_eta << " " << cand_phi << std::endl;
 
       float dR = deltaR(track_eta, track_phi, cand_eta, cand_phi);
-
       float dPtRel = std::fabs(track_pt - cand_pt)/cand_pt;
+
+      if (verboseRegMuCand_)
+        std::cout << "\tdR " << dR << " dPtRel " << dPtRel << std::endl<< std::endl;
+
       if (dR < mindRRegMuCand and dPtRel < mindPtRel){
         mindRRegMuCand = dR;
-        emtfCand_.reset(new gem::EMTFCand(cand));
+        emtfCand_.reset(new gem::EMTFCand(*emtfCand));
       }
     }
   }
@@ -145,15 +152,18 @@ void L1MuMatcher::matchRegionalMuonCandToSimTrack(const l1t::RegionalMuonCandBxC
 
 void L1MuMatcher::matchGMTToSimTrack(const BXVector<l1t::Muon>& gmtCands)
 {
+  std::cout << "matchGMTToSimTrack" << std::endl;
+  if (emtfCand_ == nullptr) return;
+
   // EMTF candidate properties
   float cand_pt = emtfCand_->pt();
   float cand_eta = emtfCand_->eta();
   float cand_phi = emtfCand_->phi();
 
-  if (verboseRegMuCand_)
-    std::cout << "candidate regional muon " << cand_pt << " " << cand_eta << " " << cand_phi << std::endl;
+  if (verboseGMT_)
+    std::cout << "Matched regional muon " << cand_pt << " " << cand_eta << " " << cand_phi << std::endl;
 
-  float mindPtRel = 0.5;
+  float mindPtRel = 1;
   float mindRGMT = 1;
 
   for (int bx = gmtCands.getFirstBX(); bx <= gmtCands.getLastBX(); bx++ ){
@@ -167,13 +177,26 @@ void L1MuMatcher::matchGMTToSimTrack(const BXVector<l1t::Muon>& gmtCands)
       float muon_eta = cand.eta();
       float muon_phi = cand.phi();
 
-      float dR = deltaR(muon_eta, muon_phi, cand_eta, cand_phi);
+      if (verboseGMT_)
+        std::cout << "\tcandidate muon " << muon_pt << " " << muon_eta << " " << muon_phi << std::endl;
 
+      float dR = deltaR(muon_eta, muon_phi, cand_eta, cand_phi);
       float dPtRel = std::fabs(cand_pt - muon_pt)/muon_pt;
-      if (dR < mindRGMT and dPtRel < mindPtRel){
+
+      if (verboseGMT_)
+        std::cout << "\tdR " << dR << " dPtRel " << dPtRel << std::endl << std::endl;
+
+      if (dR < mindRGMT and dPtRel <= mindPtRel){
         mindRGMT = dR;
-        muon_.reset(new gem::EMTFCand(cand));
+        muon_.reset(new gem::EMTFCand(*emtfCand));
       }
     }
+  }
+
+  if (verboseGMT_) {
+    if (emtfCand_ != nullptr)
+      std::cout << "Matched muon " << muon_->pt() << " " << muon_->eta() << " " << muon_->phi() << std::endl;
+    else
+      std::cout << "No Matched muon" << std::endl;
   }
 }

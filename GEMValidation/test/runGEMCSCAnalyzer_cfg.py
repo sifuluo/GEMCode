@@ -23,6 +23,18 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 process.load('TrackPropagation.SteppingHelixPropagator.SteppingHelixPropagatorOpposite_cfi')
 process.load('TrackPropagation.SteppingHelixPropagator.SteppingHelixPropagatorAlong_cfi')
 
+process.MessageLogger = cms.Service("MessageLogger",
+    destinations = cms.untracked.vstring("debug"),
+    debug = cms.untracked.PSet(
+ #       extension = cms.untracked.string(".txt"),
+        threshold = cms.untracked.string("DEBUG"),
+        # threshold = cms.untracked.string("WARNING"),
+        lineLength = cms.untracked.int32(132),
+        noLineBreaks = cms.untracked.bool(True)
+    ),
+    debugModules = cms.untracked.vstring("GEMCSCAnalyzer")
+)
+
 process.source = cms.Source(
   "PoolSource",
   fileNames = cms.untracked.vstring('file:step2bis.root'),
@@ -40,12 +52,14 @@ from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase1_2021_realistic', '')
 
 # the analyzer configuration
+muonSimHitMatcherPSet.simTrack.minEta = 1.2
+muonSimHitMatcherPSet.simTrack.maxEta = 2.4
 muonGEMDigiPSet.gemStripDigi.inputTag = "muonGEMDigis"
-muonGEMDigiPSet.gemStripDigi.verbose = 1
-muonCSCStubPSet.cscALCT.verbose = 1
+muonGEMDigiPSet.gemStripDigi.verbose = 0
+muonCSCStubPSet.cscALCT.verbose = 0
 muonCSCStubPSet.cscALCT.minBX = 3
 muonCSCStubPSet.cscALCT.maxBX = 3
-muonCSCStubPSet.cscCLCT.verbose = 1
+muonCSCStubPSet.cscCLCT.verbose = 0
 muonCSCStubPSet.cscCLCT.minBX = 7
 muonCSCStubPSet.cscCLCT.maxBX = 7
 muonCSCStubPSet.cscLCT.verbose = 0
@@ -58,7 +72,7 @@ process.GEMCSCAnalyzer = cms.EDAnalyzer(
     muonGEMDigiPSet,
     muonPSet,
     gemRecHit = gemRecHit,
-    verbose = cms.untracked.int32(0),
+    verbose = cms.untracked.int32(1),
     cscStations = cms.vstring("CSC_ALL","CSC_ME11", "CSC_ME1a", "CSC_ME1b", "CSC_ME12", "CSC_ME13",
                               "CSC_ME21", "CSC_ME22", "CSC_ME31", "CSC_ME32", "CSC_ME41", "CSC_ME42")
 )
