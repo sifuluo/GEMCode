@@ -3,6 +3,7 @@
 
 #include "Validation/MuonCSCDigis/interface/CSCStubMatcher.h"
 #include "Validation/MuonGEMRecHits/interface/GEMRecHitMatcher.h"
+#include "GEMCode/GEMValidation/interface/ME0RecHitMatcher.h"
 #include "GEMCode/GEMValidation/interface/L1MuMatcher.h"
 #include "GEMCode/GEMValidation/interface/L1TrackMatcher.h"
 #include "GEMCode/GEMValidation/interface/ME0DigiMatcher.h"
@@ -44,6 +45,7 @@ public:
   std::shared_ptr<RPCRecHitMatcher> rpcRecHits() const { return recoTracks_->rpcRecHits(); }
   std::shared_ptr<CSCRecHitMatcher> cscRecHits() const { return recoTracks_->cscRecHits(); }
   std::shared_ptr<DTRecHitMatcher> dtRecHits() const { return recoTracks_->dtRecHits(); }
+  std::shared_ptr<ME0RecHitMatcher> me0RecHits() const { return me0_rechits_; }
 
   std::shared_ptr<L1MuMatcher> l1Muons() const { return l1Muons_; }
   std::shared_ptr<L1TrackMatcher> l1Tracks() const { return l1Tracks_; }
@@ -53,6 +55,7 @@ private:
   // top level matcher right now
   std::shared_ptr<GenParticleMatcher> genParticles_;
   std::shared_ptr<ME0DigiMatcher> me0_digis_;
+  std::shared_ptr<ME0RecHitMatcher> me0_rechits_;
   std::shared_ptr<L1MuMatcher> l1Muons_;
   std::shared_ptr<L1TrackMatcher> l1Tracks_;
   std::shared_ptr<RecoTrackMatcher> recoTracks_;
