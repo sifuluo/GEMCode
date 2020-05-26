@@ -55,6 +55,8 @@ public:
 
   GlobalPoint getGlobalPointDigi(unsigned int rawId, const RPCDigi& d) const;
 
+  std::shared_ptr<RPCSimHitMatcher>muonSimHitMatcher() const { return muonSimHitMatcher_; }
+
 private:
 
   void matchDigisToSimTrack(const RPCDigiCollection&);
@@ -63,7 +65,7 @@ private:
 
   edm::Handle<RPCDigiCollection> rpcDigisH_;
 
-  std::unique_ptr<RPCSimHitMatcher> muonSimHitMatcher_;
+  std::shared_ptr<RPCSimHitMatcher> muonSimHitMatcher_;
 
   edm::ESHandle<RPCGeometry> rpc_geom_;
   const RPCGeometry* rpcGeometry_;

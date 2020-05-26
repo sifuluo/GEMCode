@@ -40,6 +40,11 @@ class RecoTrackMatcher
   std::shared_ptr<reco::Track> getMatchedRecoTrack() const {return matchedRecoTrack_;}
   std::shared_ptr<reco::RecoChargedCandidate> getMatchedRecoChargedCandidate() const {return matchedRecoChargedCandidate_;}
 
+  std::shared_ptr<GEMRecHitMatcher> gemRecHits() const { return gem_rechit_matcher_; }
+  std::shared_ptr<DTRecHitMatcher> dtRecHits() const { return dt_rechit_matcher_; }
+  std::shared_ptr<RPCRecHitMatcher> rpcRecHits() const { return rpc_rechit_matcher_; }
+  std::shared_ptr<CSCRecHitMatcher> cscRecHits() const { return csc_rechit_matcher_; }
+
  private:
 
   void clear();

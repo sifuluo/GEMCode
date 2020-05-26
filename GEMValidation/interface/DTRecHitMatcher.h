@@ -91,9 +91,11 @@ class DTRecHitMatcher
   bool isDTRecSegment4DMatched(const DTRecSegment4D&) const;
   bool areDTRecSegment4DSame(const DTRecSegment4D&,const DTRecSegment4D&) const;
 
+  std::shared_ptr<DTDigiMatcher> dtDigiMatcher() const {return dtDigiMatcher_;}
+
 private:
 
-  std::unique_ptr<DTDigiMatcher> dtDigiMatcher_;
+  std::shared_ptr<DTDigiMatcher> dtDigiMatcher_;
 
   edm::EDGetTokenT<DTRecHitCollection> dtRecHit1DPairToken_;
   edm::EDGetTokenT<DTRecSegment2DCollection> dtRecSegment2DToken_;
