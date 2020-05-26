@@ -11,6 +11,7 @@
 #include "GEMCode/GEMValidation/interface/CSCRecHitMatcher.h"
 #include "GEMCode/GEMValidation/interface/DTRecHitMatcher.h"
 #include "GEMCode/GEMValidation/interface/RPCRecHitMatcher.h"
+#include "GEMCode/GEMValidation/interface/Helpers.h"
 #include "Validation/MuonGEMRecHits/interface/GEMRecHitMatcher.h"
 
 #include "DataFormats/RecoCandidate/interface/RecoChargedCandidate.h"
@@ -35,9 +36,9 @@ class RecoTrackMatcher
   /// do the matching
   void match(const SimTrack& t, const SimVertex& v);
 
-  std::shared_ptr<reco::TrackExtraCollection> getMatchedRecoTrackExtra() const {return matchedRecoTrackExtra_;}
-  std::shared_ptr<reco::TrackCollection> getMatchedRecoTrack() const {return matchedRecoTrack_;}
-  std::shared_ptr<reco::RecoChargedCandidateCollection> getMatchedRecoChargedCandidate() const {return matchedRecoChargedCandidate_;}
+  std::shared_ptr<reco::TrackExtra> getMatchedRecoTrackExtra() const {return matchedRecoTrackExtra_;}
+  std::shared_ptr<reco::Track> getMatchedRecoTrack() const {return matchedRecoTrack_;}
+  std::shared_ptr<reco::RecoChargedCandidate> getMatchedRecoChargedCandidate() const {return matchedRecoChargedCandidate_;}
 
  private:
 
@@ -75,9 +76,9 @@ class RecoTrackMatcher
   int verboseRecoChargedCandidate_;
   bool runRecoChargedCandidate_;
 
-  std::shared_ptr<reco::TrackExtraCollection> matchedRecoTrackExtra_;
-  std::shared_ptr<reco::TrackCollection> matchedRecoTrack_;
-  std::shared_ptr<reco::RecoChargedCandidateCollection> matchedRecoChargedCandidate_;
+  std::shared_ptr<reco::TrackExtra> matchedRecoTrackExtra_;
+  std::shared_ptr<reco::Track> matchedRecoTrack_;
+  std::shared_ptr<reco::RecoChargedCandidate> matchedRecoChargedCandidate_;
 };
 
 #endif
