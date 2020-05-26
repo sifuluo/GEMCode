@@ -5,64 +5,70 @@
 #include "TLorentzVector.h"
 #include <map>
 
-L1TrackMatcher::L1TrackMatcher(const edm::ParameterSet& ps, edm::ConsumesCollector&& iC)
+RecoTrackMatcher::RecoTrackMatcher(edm::ParameterSet const& iPS, edm::ConsumesCollector&& iC)
 {
-RecoTrackMatcher::RecoTrackMatcher(CSCRecHitMatcher& csc,
-                                 DTRecHitMatcher& dt,
-                                 RPCRecHitMatcher& rpc,
-                                 GEMRecHitMatcher& gem,
-
-                                 )
-  : BaseMatcher(csc.trk(), csc.vtx(), csc.conf(), csc.event(), csc.eventSetup())
-, gem_rechit_matcher_(&gem)
-, dt_rechit_matcher_(&dt)
-, rpc_rechit_matcher_(&rpc)
-, csc_rechit_matcher_(&csc)
-{
-  const auto& recoTrackExtra = conf().getParameter<edm::ParameterSet>("recoTrackExtra");
+  const auto& recoTrackExtra = iPS.getParameter<edm::ParameterSet>("recoTrackExtra");
   minBXRecoTrackExtra_ = recoTrackExtra.getParameter<int>("minBX");
   maxBXRecoTrackExtra_ = recoTrackExtra.getParameter<int>("minBX");
   verboseRecoTrackExtra_ = recoTrackExtra.getParameter<int>("verbose");
   runRecoTrackExtra_ = recoTrackExtra.getParameter<bool>("run");
 
-  const auto& recoTrack = conf().getParameter<edm::ParameterSet>("recoTrack");
+  const auto& recoTrack = iPS.getParameter<edm::ParameterSet>("recoTrack");
   minBXRecoTrack_ = recoTrack.getParameter<int>("minBX");
   maxBXRecoTrack_ = recoTrack.getParameter<int>("minBX");
   verboseRecoTrack_ = recoTrack.getParameter<int>("verbose");
   runRecoTrack_ = recoTrack.getParameter<bool>("run");
 
-  const auto& recoChargedCandidate = conf().getParameter<edm::ParameterSet>("recoChargedCandidate");
+  const auto& recoChargedCandidate = iPS.getParameter<edm::ParameterSet>("recoChargedCandidate");
   minBXRecoChargedCandidate_ = recoChargedCandidate.getParameter<int>("minBX");
   maxBXRecoChargedCandidate_ = recoChargedCandidate.getParameter<int>("minBX");
   verboseRecoChargedCandidate_ = recoChargedCandidate.getParameter<int>("verbose");
   runRecoChargedCandidate_ = recoChargedCandidate.getParameter<bool>("run");
 
-  // RecoTrackExtra
-  edm::Handle<reco::TrackExtraCollection> recoTrackExtras;
-  if (gemvalidation::getByToken(recoTrackExtraInputLabel_, recoTrackExtras, event())) if (runRecoTrackExtra_) matchRecoTrackExtraToSimTrack(*recoTrackExtras.product());
-
-  // RecoTrack
-  edm::Handle<reco::TrackCollection> recoTracks;
-  if (gemvalidation::getByToken(recoTrackInputLabel_, recoTracks, event())) if (runRecoTrack_) matchRecoTrackToSimTrack(*recoTracks.product());
-
-  // RecoChargedCandidate
-  edm::Handle<reco::RecoChargedCandidateCollection> recoChargedCandidates;
-  if (gemvalidation::getByToken(recoChargedCandidateInputLabel_, recoChargedCandidates, event())) if (runRecoChargedCandidate_) matchRecoChargedCandidateToSimTrack(*recoChargedCandidates.product());
-}
-
-
-RecoTrackMatcher::~RecoTrackMatcher()
-{
+  recoTrackExtraToken_ = iC.consumes<reco::TrackExtraCollection>(recoTrackExtra.getParameter<edm::InputTag>("inputTag"));
+  recoTrackToken_ = iC.consumes<reco::TrackCollection>(recoTrack.getParameter<edm::InputTag>("inputTag"));
+  recoChargedCandidateToken_ = iC.consumes<reco::RecoChargedCandidateCollection>(recoChargedCandidate.getParameter<edm::InputTag>("inputTag"));
 }
 
 void
-RecoTrackMatcher::clear()
+RecoTrackMatcher::init(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
+  gem_rechit_matcher_->init(iEvent, iSetup);
+  dt_rechit_matcher_->init(iEvent, iSetup);
+  rpc_rechit_matcher_->init(iEvent, iSetup);
+  csc_rechit_matcher_->init(iEvent, iSetup);
+
+  iEvent.getByToken(recoTrackExtraToken_, recoTrackExtrasHandle_);
+  iEvent.getByToken(recoTrackToken_, recoTracksHandle_);
+  iEvent.getByToken(recoChargedCandidateToken_, recoChargedCandidatesHandle_);
+}
+
+void
+RecoTrackMatcher::match(const SimTrack& t, const SimVertex& v)
+{
+  clear();
+
+  gem_rechit_matcher_->match(t, v);
+  dt_rechit_matcher_->match(t, v);
+  rpc_rechit_matcher_->match(t, v);
+  csc_rechit_matcher_->match(t, v);
+
+  matchRecoTrackExtraToSimTrack(*recoTrackExtrasHandle_.product());
+  matchRecoTrackToSimTrack(*recoTracksHandle_.product());
+  matchRecoChargedCandidateToSimTrack(*recoChargedCandidatesHandle_.product());
+}
+
+void RecoTrackMatcher::clear()
+{
+  matchedRecoTrackExtra_ = nullptr;
+  matchedRecoTrack_ = nullptr;
+  matchedRecoChargedCandidate_ = nullptr;
 }
 
 void
 RecoTrackMatcher::matchRecoTrackExtraToSimTrack(const reco::TrackExtraCollection& tracks)
 {
+  /*
   if (verboseRecoTrackExtra_) std::cout << "Number of RecoTrackExtras: " <<tracks.size() << std::endl;
   for(const auto& track: tracks) {
     // do not anlyze tracsks with large deltaR
@@ -155,12 +161,14 @@ RecoTrackMatcher::matchRecoTrackExtraToSimTrack(const reco::TrackExtraCollection
       matchedRecoTrackExtras_.push_back(track);
     }
   }
+*/
 }
 
 
 void
 RecoTrackMatcher::matchRecoTrackToSimTrack(const reco::TrackCollection& tracks)
 {
+  /*
   if (verboseRecoTrack_) std::cout << "Number of RecoTracks: " <<tracks.size() << std::endl;
   int i=0;
   for(const auto& track: tracks) {
@@ -180,12 +188,14 @@ RecoTrackMatcher::matchRecoTrackToSimTrack(const reco::TrackCollection& tracks)
     }
     ++i;
   }
+  */
 }
 
 
 void
 RecoTrackMatcher::matchRecoChargedCandidateToSimTrack(const reco::RecoChargedCandidateCollection& candidates)
 {
+  /*
   if (verboseRecoTrack_) std::cout << "Number of RecoChargedCandidates: " <<candidates.size() << std::endl;
   int i=0;
   for(const auto& candidate: candidates) {
@@ -205,6 +215,7 @@ RecoTrackMatcher::matchRecoChargedCandidateToSimTrack(const reco::RecoChargedCan
     }
     ++i;
   }
+  */
 }
 
 

@@ -35,9 +35,9 @@ class RecoTrackMatcher
   /// do the matching
   void match(const SimTrack& t, const SimVertex& v);
 
-  const reco::TrackExtraCollection& getMatchedRecoTrackExtras() const {return matchedRecoTrackExtras_;}
-  const reco::TrackCollection& getMatchedRecoTracks() const {return matchedRecoTracks_;}
-  const reco::RecoChargedCandidateCollection& getMatchedRecoChargedCandidates() const {return matchedRecoChargedCandidates_;}
+  std::shared_ptr<reco::TrackExtraCollection> getMatchedRecoTrackExtra() const {return matchedRecoTrackExtra_;}
+  std::shared_ptr<reco::TrackCollection> getMatchedRecoTrack() const {return matchedRecoTrack_;}
+  std::shared_ptr<reco::RecoChargedCandidateCollection> getMatchedRecoChargedCandidate() const {return matchedRecoChargedCandidate_;}
 
  private:
 
@@ -50,9 +50,13 @@ class RecoTrackMatcher
   template<typename T>
   bool areRecoTrackSame(const T&, const T&) const;
 
-  edm::EDGetTokenT<reco::TrackExtraCollection> &recoTrackExtraInputLabel_;
-  edm::EDGetTokenT<reco::TrackCollection> &recoTrackInputLabel_;
-  edm::EDGetTokenT<reco::RecoChargedCandidateCollection> &recoChargedCandidateInputLabel_;
+  edm::Handle<reco::TrackExtraCollection> recoTrackExtrasHandle_;
+  edm::Handle<reco::TrackCollection> recoTracksHandle_;
+  edm::Handle<reco::RecoChargedCandidateCollection> recoChargedCandidatesHandle_;
+
+  edm::EDGetTokenT<reco::TrackExtraCollection> recoTrackExtraToken_;
+  edm::EDGetTokenT<reco::TrackCollection> recoTrackToken_;
+  edm::EDGetTokenT<reco::RecoChargedCandidateCollection> recoChargedCandidateToken_;
 
   std::shared_ptr<GEMRecHitMatcher> gem_rechit_matcher_;
   std::shared_ptr<DTRecHitMatcher> dt_rechit_matcher_;
@@ -71,9 +75,9 @@ class RecoTrackMatcher
   int verboseRecoChargedCandidate_;
   bool runRecoChargedCandidate_;
 
-  reco::TrackExtraCollection matchedRecoTrackExtras_;
-  reco::TrackCollection matchedRecoTracks_;
-  reco::RecoChargedCandidateCollection matchedRecoChargedCandidates_;
+  std::shared_ptr<reco::TrackExtraCollection> matchedRecoTrackExtra_;
+  std::shared_ptr<reco::TrackCollection> matchedRecoTrack_;
+  std::shared_ptr<reco::RecoChargedCandidateCollection> matchedRecoChargedCandidate_;
 };
 
 #endif
