@@ -1,13 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 from Configuration.Eras.Era_Run3_cff import Run3
 
-from Validation.MuonHits.muonSimHitMatcherPSet import muonSimHitMatcherPSet
-from Validation.MuonCSCDigis.muonCSCDigiPSet import muonCSCDigiPSet
-from Validation.MuonCSCDigis.muonCSCStubPSet import muonCSCStubPSet
-from Validation.MuonGEMDigis.muonGEMDigiPSet import muonGEMDigiPSet
-from Validation.MuonGEMRecHits.muonGEMRecHitPSet import gemRecHit
-from GEMCode.GEMValidation.muonPSet import muonPSet
-
 process = cms.Process("GEMCSCANA", Run3)
 
 ## Standard sequence
@@ -51,6 +44,8 @@ process.TFileService = cms.Service("TFileService",
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase1_2021_realistic', '')
 
+from GEMCode.GEMValidation.simTrackMatching_cfi import *
+
 # the analyzer configuration
 muonSimHitMatcherPSet.simTrack.minEta = 1.2
 muonSimHitMatcherPSet.simTrack.maxEta = 2.4
@@ -71,6 +66,7 @@ process.GEMCSCAnalyzer = cms.EDAnalyzer(
     muonCSCStubPSet,
     muonGEMDigiPSet,
     muonPSet,
+    l1TrackPSet,
     gemRecHit = gemRecHit,
     verbose = cms.untracked.int32(1),
     cscStations = cms.vstring("CSC_ALL","CSC_ME11", "CSC_ME1a", "CSC_ME1b", "CSC_ME12", "CSC_ME13",
