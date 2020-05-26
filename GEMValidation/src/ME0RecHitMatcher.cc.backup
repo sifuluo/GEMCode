@@ -4,25 +4,23 @@
 using namespace std;
 
 
-ME0RecHitMatcher::ME0RecHitMatcher(const ME0DigiMatcher& dg,
-                                   const edm::EDGetTokenT<ME0RecHitCollection>& me0RecHitInput_,
-                                   const edm::EDGetTokenT<ME0SegmentCollection>& me0SegmentInput_)
-  : BaseMatcher(dg.trk(), dg.vtx(), dg.conf(), dg.event(), dg.eventSetup())
-  , digi_matcher_(&dg)
+RPCRecHitMatcher::RPCRecHitMatcher(const edm::ParameterSet& pset, edm::ConsumesCollector && iC)
 {
-  const auto& me0RecHit = conf().getParameter<edm::ParameterSet>("me0RecHit");
+  const auto& me0RecHit = pset.getParameter<edm::ParameterSet>("me0RecHit");
   maxBXME0RecHit_ = me0RecHit.getParameter<int>("maxBX");
   minBXME0RecHit_ = me0RecHit.getParameter<int>("minBX");
   verboseME0RecHit_ = me0RecHit.getParameter<int>("verbose");
   runME0RecHit_ = me0RecHit.getParameter<bool>("run");
 
-  const auto& me0Segment = conf().getParameter<edm::ParameterSet>("me0Segment");
+  const auto& me0Segment = pset.getParameter<edm::ParameterSet>("me0Segment");
   maxBXME0Segment_ = me0Segment.getParameter<int>("maxBX");
   minBXME0Segment_ = me0Segment.getParameter<int>("minBX");
   verboseME0Segment_ = me0Segment.getParameter<int>("verbose");
   runME0Segment_ = me0Segment.getParameter<bool>("run");
   minNHitsSegment_ = me0Segment.getParameter<int>("minNHits");
 
+const edm::EDGetTokenT<ME0RecHitCollection>& me0RecHitInput_,
+                                   const edm::EDGetTokenT<ME0SegmentCollection>& me0SegmentInput_
   if (hasME0Geometry_) {
     edm::Handle<ME0RecHitCollection> me0_rechits;
     if (gemvalidation::getByToken(me0RecHitInput_, me0_rechits, event()) and runME0RecHit_) matchME0RecHitsToSimTrack(*me0_rechits.product());
@@ -34,6 +32,20 @@ ME0RecHitMatcher::ME0RecHitMatcher(const ME0DigiMatcher& dg,
       matchME0SegmentsToSimTrackBydR(*me0_segments.product());
     }else if (verboseME0Segment_) std::cout <<"Not running matchME0SegmentsToSimTrack "<< std::endl;
   }
+}
+
+
+/// do the matching
+void RPCRecHitMatcher::match(const SimTrack& t, const SimVertex& v)
+{
+  // match digis first
+  rpcDigiMatcher_->match(t,v);
+
+  // get the rechit collection
+  const RPCRecHitCollection& recHits = *recHitH_.product();
+
+  // now match the rechits
+  matchRecHitsToSimTrack(recHits);
 }
 
 

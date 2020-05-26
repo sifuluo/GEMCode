@@ -3,12 +3,11 @@
 
 /**\class DigiMatcher
 
- Description: Matching of rechits and segments for SimTrack in CSC
+ Description: Matching of rechits and segments for SimTrack in ME0
 
  Original Author:  Sven Dildick
 */
 
-#include "GEMCode/GEMValidation/interface/BaseMatcher.h"
 #include "GEMCode/GEMValidation/interface/ME0DigiMatcher.h"
 
 #include "DataFormats/GEMRecHit/interface/ME0RecHitCollection.h"
@@ -18,18 +17,24 @@
 #include <map>
 #include <set>
 
-class ME0RecHitMatcher : public BaseMatcher
+class ME0RecHitMatcher
 {
 public:
 
   typedef std::vector<ME0RecHit> ME0RecHitContainer;
   typedef std::vector<ME0Segment> ME0SegmentContainer;
 
-  ME0RecHitMatcher(const ME0DigiMatcher& sh,
-                   const edm::EDGetTokenT<ME0RecHitCollection>& me0RecHitInput_,
-                   const edm::EDGetTokenT<ME0SegmentCollection>& me0SegmentInput_);
+  // constructor
+  ME0RecHitMatcher(edm::ParameterSet const& iPS, edm::ConsumesCollector && iC);
 
+  // destructor
   ~ME0RecHitMatcher() {}
+
+  // initialize the event
+  void init(const edm::Event& e, const edm::EventSetup& eventSetup);
+
+  // do the matching
+  void match(const SimTrack& t, const SimVertex& v);
 
   // chamber detIds with ME0RecHit
   std::set<unsigned int> chamberIdsME0RecHit() const;
@@ -77,9 +82,11 @@ public:
 
   GlobalPoint globalPoint(const ME0Segment&) const;
 
+  std::shared_ptr<ME0DigiMatcher> me0DigiMatcher() const { return me0DigiMatcher_; }
+
 private:
 
-  const ME0DigiMatcher* digi_matcher_;
+  std::shared_ptr<ME0DigiMatcher> digi_matcher_;
 
   void matchME0RecHitsToSimTrack(const ME0RecHitCollection&);
   void matchME0SegmentsToSimTrack(const ME0SegmentCollection&);
