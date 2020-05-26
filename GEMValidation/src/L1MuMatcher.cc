@@ -152,7 +152,6 @@ void L1MuMatcher::matchRegionalMuonCandToSimTrack(const l1t::RegionalMuonCandBxC
 
 void L1MuMatcher::matchGMTToSimTrack(const BXVector<l1t::Muon>& gmtCands)
 {
-  std::cout << "matchGMTToSimTrack" << std::endl;
   if (emtfCand_ == nullptr) return;
 
   // EMTF candidate properties
