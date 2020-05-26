@@ -1,15 +1,10 @@
 #ifndef GEMCode_GEMValidation_SimTrackMatchManager_h
 #define GEMCode_GEMValidation_SimTrackMatchManager_h
 
-#include "Validation/MuonCSCDigis/interface/CSCStubMatcher.h"
-#include "Validation/MuonGEMRecHits/interface/GEMRecHitMatcher.h"
+#include "GEMCode/GEMValidation/interface/GenParticleMatcher.h"
 #include "GEMCode/GEMValidation/interface/ME0RecHitMatcher.h"
 #include "GEMCode/GEMValidation/interface/L1MuMatcher.h"
 #include "GEMCode/GEMValidation/interface/L1TrackMatcher.h"
-#include "GEMCode/GEMValidation/interface/ME0DigiMatcher.h"
-#include "GEMCode/GEMValidation/interface/RPCDigiMatcher.h"
-#include "GEMCode/GEMValidation/interface/DTDigiMatcher.h"
-#include "GEMCode/GEMValidation/interface/GenParticleMatcher.h"
 #include "GEMCode/GEMValidation/interface/RecoTrackMatcher.h"
 
 class SimTrackMatchManager
