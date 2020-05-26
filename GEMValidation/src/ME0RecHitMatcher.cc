@@ -4,7 +4,7 @@
 using namespace std;
 
 
-RPCRecHitMatcher::RPCRecHitMatcher(const edm::ParameterSet& pset, edm::ConsumesCollector && iC)
+ME0RecHitMatcher::ME0RecHitMatcher(const edm::ParameterSet& pset, edm::ConsumesCollector && iC)
 {
   const auto& me0RecHit = pset.getParameter<edm::ParameterSet>("me0RecHit");
   maxBXME0RecHit_ = me0RecHit.getParameter<int>("maxBX");
@@ -19,33 +19,43 @@ RPCRecHitMatcher::RPCRecHitMatcher(const edm::ParameterSet& pset, edm::ConsumesC
   runME0Segment_ = me0Segment.getParameter<bool>("run");
   minNHitsSegment_ = me0Segment.getParameter<int>("minNHits");
 
-const edm::EDGetTokenT<ME0RecHitCollection>& me0RecHitInput_,
-                                   const edm::EDGetTokenT<ME0SegmentCollection>& me0SegmentInput_
-  if (hasME0Geometry_) {
-    edm::Handle<ME0RecHitCollection> me0_rechits;
-    if (gemvalidation::getByToken(me0RecHitInput_, me0_rechits, event()) and runME0RecHit_) matchME0RecHitsToSimTrack(*me0_rechits.product());
-    else if (verboseME0RecHit_) std::cout <<"Not running matchME0RecHitsToSimTrack "<< std::endl;
+  // make a new digi matcher
+  me0DigiMatcher_.reset(new ME0DigiMatcher(pset, std::move(iC)));
 
-    edm::Handle<ME0SegmentCollection> me0_segments;
-    if (gemvalidation::getByToken(me0SegmentInput_, me0_segments, event()) and runME0Segment_){
-      matchME0SegmentsToSimTrack(*me0_segments.product());
-      matchME0SegmentsToSimTrackBydR(*me0_segments.product());
-    }else if (verboseME0Segment_) std::cout <<"Not running matchME0SegmentsToSimTrack "<< std::endl;
-  }
+  me0RecHitToken_ = iC.consumes<ME0RecHitCollection>(me0RecHit.getParameter<edm::InputTag>("inputTag"));
+  me0SegmentToken_ = iC.consumes<ME0SegmentCollection>(me0Segment.getParameter<edm::InputTag>("inputTag"));
 }
 
 
+void ME0RecHitMatcher::init(const edm::Event& iEvent, const edm::EventSetup& iSetup)
+{
+  me0DigiMatcher_->init(iEvent, iSetup);
+
+  iEvent.getByToken(me0RecHitToken_, me0RecHitH_);
+  iEvent.getByToken(me0SegmentToken_, me0SegmentH_);
+
+  iSetup.get<MuonGeometryRecord>().get(me0_geom_);
+  if (me0_geom_.isValid()) {
+    me0Geometry_ = &*me0_geom_;
+  } else {
+    edm::LogWarning("ME0RecHitMatcher")
+        << "+++ Info: ME0 geometry is unavailable. +++\n";
+  }
+}
+
 /// do the matching
-void RPCRecHitMatcher::match(const SimTrack& t, const SimVertex& v)
+void ME0RecHitMatcher::match(const SimTrack& t, const SimVertex& v)
 {
   // match digis first
-  rpcDigiMatcher_->match(t,v);
+  me0DigiMatcher_->match(t,v);
 
   // get the rechit collection
-  const RPCRecHitCollection& recHits = *recHitH_.product();
+  const ME0RecHitCollection& me0RecHits = *me0RecHitH_.product();
+  const ME0SegmentCollection& me0Segments = *me0SegmentH_.product();
 
   // now match the rechits
-  matchRecHitsToSimTrack(recHits);
+  matchME0RecHitsToSimTrack(me0RecHits);
+  matchME0SegmentsToSimTrack(me0Segments);
 }
 
 
@@ -72,9 +82,9 @@ ME0RecHitMatcher::matchME0RecHitsToSimTrack(const ME0RecHitCollection& rechits)
 
       // match the rechit to the digis if the TOF, x and y are the same
       bool match = false;
-      ME0DigiPreRecoContainer digis = digi_matcher_->digisInDetId(id);
+      ME0DigiContainer digis = digi_matcher_->digisInDetId(id);
       for (const auto& digi: digis){
-	if (std::fabs(digi.tof() - rr->tof()) > 1) continue;
+        if (std::fabs(digi.tof() - rr->tof()) > 1) continue;
         if (std::fabs(digi.x() - rr->localPosition().x())<1 and
             std::fabs(digi.y() - rr->localPosition().y())<1 ) {
           match = true;
@@ -84,15 +94,15 @@ ME0RecHitMatcher::matchME0RecHitsToSimTrack(const ME0RecHitCollection& rechits)
       // this rechit was matched to a matching digi
       if (match) {
         if (verboseME0RecHit_) cout << "\t...was matched!" << endl;
-	layer_to_me0RecHit_[id].push_back(*rr);
-	ME0DetId ch_id(p_id.region(), p_id.layer(), p_id.chamber(), 0);
-	if (verboseME0RecHit_) cout <<"layerid "<< p_id <<" chamberid "<< ch_id <<" superId "<< p_id.chamberId() << endl;
+        layer_to_me0RecHit_[id].push_back(*rr);
+        ME0DetId ch_id(p_id.region(), p_id.layer(), p_id.chamber(), 0);
+        if (verboseME0RecHit_) cout <<"layerid "<< p_id <<" chamberid "<< ch_id <<" superId "<< p_id.chamberId() << endl;
         chamber_to_me0RecHit_[ch_id.rawId()].push_back(*rr);
         superChamber_to_me0RecHit_[p_id.chamberId().rawId()].push_back(*rr);
       }
     }
   }
-  */
+*/
 }
 
 
@@ -157,11 +167,12 @@ ME0RecHitMatcher::matchME0SegmentsToSimTrack(const ME0SegmentCollection& me0Segm
 }
 
 void
-ME0RecHitMatcher::matchME0SegmentsToSimTrackBydR(const ME0SegmentCollection& segments)
+ME0RecHitMatcher::matchME0SegmentsToSimTrackBydR(const ME0SegmentCollection& segments, const SimTrack& trk)
 {
+  /*
   if (verboseME0Segment_) cout <<"\t matchME0SegmentsToSimTrackBydR "<< endl;
   if (verboseME0Segment_) dumpAllME0Segments( segments );
-  const int endcap((trk().momentum().eta() > 0.) ? 1 : -1);
+  const int endcap((trk.momentum().eta() > 0.) ? 1 : -1);
   GlobalPoint gp_propagated(propagateToZ(AVERAGE_ME0_Z*endcap));
   for(auto iC = segments.id_begin(); iC != segments.id_end(); ++iC){
     const auto& ch_segs = segments.get(*iC);
@@ -183,7 +194,7 @@ ME0RecHitMatcher::matchME0SegmentsToSimTrackBydR(const ME0SegmentCollection& seg
 
   for (const auto& p : superChamber_to_me0Segment_bydR_)
     superChamber_to_bestME0Segment_bydR_[ p.first] = findbestME0Segment_bydR(p.second, gp_propagated);
-
+  */
 }
 
 void ME0RecHitMatcher::dumpAllME0Segments(const ME0SegmentCollection& segments) const
@@ -473,13 +484,13 @@ ME0RecHitMatcher::findbestME0Segment_bydR(ME0SegmentContainer allSegs, GlobalPoi
 GlobalPoint
 ME0RecHitMatcher::globalPoint(const ME0Segment& c) const
 {
-  return getME0Geometry()->idToDet(c.me0DetId())->surface().toGlobal(c.localPosition());
+  return me0Geometry_->idToDet(c.me0DetId())->surface().toGlobal(c.localPosition());
 }
 
 float
 ME0RecHitMatcher::me0DeltaPhi(ME0Segment Seg) const
 {
-  const auto& chamber = getME0Geometry()->chamber(Seg.me0DetId());
+  const auto& chamber = me0Geometry_->chamber(Seg.me0DetId());
   float dPhi = chamber->computeDeltaPhi(Seg.localPosition(), Seg.localDirection());
   //std::cout <<"ME0detId "<< Seg.me0DetId()<<" Segment "<< Seg <<" dPhi here "<< dPhi << std::endl;
   return dPhi;

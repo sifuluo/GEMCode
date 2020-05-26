@@ -86,12 +86,20 @@ public:
 
 private:
 
-  std::shared_ptr<ME0DigiMatcher> digi_matcher_;
+  std::shared_ptr<ME0DigiMatcher> me0DigiMatcher_;
 
   void matchME0RecHitsToSimTrack(const ME0RecHitCollection&);
   void matchME0SegmentsToSimTrack(const ME0SegmentCollection&);
-  void matchME0SegmentsToSimTrackBydR(const ME0SegmentCollection&);
+  void matchME0SegmentsToSimTrackBydR(const ME0SegmentCollection&, const SimTrack& trk);
 
+  edm::EDGetTokenT<ME0RecHitCollection> me0RecHitToken_;
+  edm::EDGetTokenT<ME0SegmentCollection> me0SegmentToken_;
+
+  edm::Handle<ME0RecHitCollection> me0RecHitH_;
+  edm::Handle<ME0SegmentCollection> me0SegmentH_;
+
+  edm::ESHandle<ME0Geometry> me0_geom_;
+  const ME0Geometry* me0Geometry_;
 
   int verboseME0RecHit_;
   bool runME0RecHit_;
