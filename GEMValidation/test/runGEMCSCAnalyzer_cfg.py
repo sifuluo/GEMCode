@@ -11,8 +11,6 @@ process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
 process.load('Configuration.StandardSequences.MagneticField_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
-
-## TrackingComponentsRecord required for matchers
 process.load('TrackPropagation.SteppingHelixPropagator.SteppingHelixPropagatorOpposite_cfi')
 process.load('TrackPropagation.SteppingHelixPropagator.SteppingHelixPropagatorAlong_cfi')
 
@@ -44,34 +42,28 @@ process.TFileService = cms.Service("TFileService",
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase1_2021_realistic', '')
 
-from GEMCode.GEMValidation.simTrackMatching_cfi import *
-
 # the analyzer configuration
-muonSimHitMatcherPSet.simTrack.minEta = 1.2
-muonSimHitMatcherPSet.simTrack.maxEta = 2.4
-muonGEMDigiPSet.gemStripDigi.inputTag = "muonGEMDigis"
-muonGEMDigiPSet.gemStripDigi.verbose = 0
-muonCSCStubPSet.cscALCT.verbose = 0
-muonCSCStubPSet.cscALCT.minBX = 3
-muonCSCStubPSet.cscALCT.maxBX = 3
-muonCSCStubPSet.cscCLCT.verbose = 0
-muonCSCStubPSet.cscCLCT.minBX = 7
-muonCSCStubPSet.cscCLCT.maxBX = 7
-muonCSCStubPSet.cscLCT.verbose = 0
-
+from GEMCode.GEMValidation.simTrackMatching_cfi import simTrackPSet
 process.GEMCSCAnalyzer = cms.EDAnalyzer(
     "GEMCSCAnalyzer",
-    muonSimHitMatcherPSet,
-    muonCSCDigiPSet,
-    muonCSCStubPSet,
-    muonGEMDigiPSet,
-    muonPSet,
-    l1TrackPSet,
-    gemRecHit = gemRecHit,
+    simTrackPSet,
     verbose = cms.untracked.int32(1),
     cscStations = cms.vstring("CSC_ALL","CSC_ME11", "CSC_ME1a", "CSC_ME1b", "CSC_ME12", "CSC_ME13",
                               "CSC_ME21", "CSC_ME22", "CSC_ME31", "CSC_ME32", "CSC_ME41", "CSC_ME42")
 )
+
+ana = process.GEMCSCAnalyzer
+ana.simTrack.minEta = 1.2
+ana.simTrack.maxEta = 2.4
+ana.gemStripDigi.inputTag = "muonGEMDigis"
+ana.gemStripDigi.verbose = 0
+ana.cscALCT.verbose = 0
+ana.cscALCT.minBX = 3
+ana.cscALCT.maxBX = 3
+ana.cscCLCT.verbose = 0
+ana.cscCLCT.minBX = 7
+ana.cscCLCT.maxBX = 7
+ana.cscLCT.verbose = 0
 
 process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 

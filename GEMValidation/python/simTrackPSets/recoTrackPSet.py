@@ -28,5 +28,5 @@ recoTrackPSet = cms.PSet(
         run = cms.bool(True),
         minBX = cms.int32(-1),
         maxBX = cms.int32(1),
-    ),
+    )
 )

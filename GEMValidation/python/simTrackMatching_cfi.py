@@ -7,14 +7,43 @@ from Validation.MuonCSCDigis.muonCSCStubPSet import muonCSCStubPSet
 from Validation.MuonGEMDigis.muonGEMDigiPSet import muonGEMDigiPSet
 from Validation.MuonGEMRecHits.muonGEMRecHitPSet import gemRecHit
 
+CMSSWPSets = cms.PSet(
+    muonSimHitMatcherPSet,
+    muonCSCDigiPSet,
+    muonCSCStubPSet,
+    muonGEMDigiPSet,
+    gemRecHit = gemRecHit
+)
+
 ## in GEMCode
-from GEMCode.GEMValidation.simTrackPSets import genParticlePSet
-from GEMCode.GEMValidation.simTrackPSets import me0HitPSet
-from GEMCode.GEMValidation.simTrackPSets import muonRPCDigiPSet
-from GEMCode.GEMValidation.simTrackPSets import muonDTDigisPSet
-from GEMCode.GEMValidation.simTrackPSets import muonDTStubPSet
-from GEMCode.GEMValidation.simTrackPSets import muonPSet
-from GEMCode.GEMValidation.simTrackPSets import l1TrackPSet
-from GEMCode.GEMValidation.simTrackPSets import rpcRecHitPSet
-from GEMCode.GEMValidation.simTrackPSets import cscRecHitPSet
-from GEMCode.GEMValidation.simTrackPSets import recoTrackPSet
+from GEMCode.GEMValidation.simTrackPSets.genParticlePSet import genParticlePSet
+from GEMCode.GEMValidation.simTrackPSets.me0HitPSet import me0HitPSet
+from GEMCode.GEMValidation.simTrackPSets.muonRPCDigiPSet import muonRPCDigiPSet
+from GEMCode.GEMValidation.simTrackPSets.muonDTDigisPSet import muonDTDigisPSet
+from GEMCode.GEMValidation.simTrackPSets.muonDTStubPSet import muonDTStubPSet
+from GEMCode.GEMValidation.simTrackPSets.l1MuonPSet import l1MuonPSet
+from GEMCode.GEMValidation.simTrackPSets.l1TrackPSet import l1TrackPSet
+from GEMCode.GEMValidation.simTrackPSets.rpcRecHitPSet import rpcRecHitPSet
+from GEMCode.GEMValidation.simTrackPSets.cscRecHitPSet import cscRecHitPSet
+from GEMCode.GEMValidation.simTrackPSets.dtRecHitPSet import dtRecHitPSet
+from GEMCode.GEMValidation.simTrackPSets.recoTrackPSet import recoTrackPSet
+
+GEMCodePSet = cms.PSet(
+    genParticlePSet,
+    me0HitPSet,
+    muonRPCDigiPSet,
+    muonDTDigisPSet,
+    muonDTStubPSet,
+    l1MuonPSet,
+    l1TrackPSet,
+    cscRecHitPSet,
+    rpcRecHitPSet,
+    dtRecHitPSet,
+    recoTrackPSet
+)
+
+## combine into single pset
+simTrackPSet = cms.PSet(
+    CMSSWPSets,
+    GEMCodePSet,
+)

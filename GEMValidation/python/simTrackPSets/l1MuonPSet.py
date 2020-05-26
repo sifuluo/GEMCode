@@ -1,6 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 
-muonPSet = cms.PSet(
+l1MuonPSet = cms.PSet(
     emtfTrack = cms.PSet(
         verbose = cms.int32(0),
         run = cms.bool(True),
