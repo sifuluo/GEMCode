@@ -25,33 +25,44 @@ void GEMDigiAnalyzer::analyze(gem::MyTrack track[NumOfTrees], std::set<int> stat
     if (stations_to_use_.count(st) == 0) continue;
 
     const bool odd(id.chamber()%2==1);
-    if (match_.nLayersWithDigisInSuperChamber(d) > 1) {
+
+    if (match_.digisInSuperChamber(d).size() > 0) {
+      if (odd) track[st].has_gem_dg |= 1;
+      else     track[st].has_gem_dg |= 2;
+    }
+
+    if (match_.nLayersWithDigisInSuperChamber(d) >= 2) {
       if (odd) track[st].has_gem_dg2 |= 1;
       else     track[st].has_gem_dg2 |= 2;
     }
 
-    const auto& digis = match_.digisInSuperChamber(d);
-    // const int median_strip(match_.median(digis));
-    if (odd && digis.size() > 0) {
-      track[st].has_gem_dg |= 1;
-      // track[st].strip_gemdg_odd = median_strip;
-    }
-    else if (digis.size() > 0) {
-      track[st].has_gem_dg |= 2;
-      // track[st].strip_gemdg_even = median_strip;
+    if (match_.padsInSuperChamber(d).size() > 0) {
+      if (odd) track[st].has_gem_pad |= 1;
+      else     track[st].has_gem_pad |= 2;
     }
 
-    if (match_.nLayersWithPadsInSuperChamber(d) > 1) {
+    if (match_.nLayersWithPadsInSuperChamber(d) >= 2) {
       if (odd) track[st].has_gem_pad2 |= 1;
       else     track[st].has_gem_pad2 |= 2;
     }
-    for (int layer=1; layer<3; layer++){
+
+    // // const int median_strip(match_.median(digis));
+    // if (odd && digis.size() > 0) {
+    //   // track[st].strip_gemdg_odd = median_strip;
+    // }
+    // else if (digis.size() > 0) {
+    //   // track[st].strip_gemdg_even = median_strip;
+    // }
+
+    for (int layer=1; layer<=2; layer++){
       GEMDetId id_tmp(id.region(), id.ring(), id.station(), layer, id.chamber(), 0);
+
       const auto& pads = match_.padsInChamber(id_tmp.rawId());
       if(pads.size() == 0) continue;
 
       const auto& collection(match_.muonSimHitMatcher()->hitsInChamber(id_tmp.rawId()));
       const GlobalPoint& keygp = match_.muonSimHitMatcher()->simHitsMeanPosition(collection);
+
       // const auto& bestgem_dg_and_gp = match_.digiInGEMClosestToCSC(pads, keygp);
       if (odd) {
         // best_pad_odd[st] = bestgem_dg_and_gp.second;
