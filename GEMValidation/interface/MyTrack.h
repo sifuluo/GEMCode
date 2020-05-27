@@ -258,6 +258,28 @@ namespace gem {
     Bool_t hasSt1St2St3;
     Bool_t hasSt3orSt4_sh;
 
+    // reco track properties
+    Int_t has_recoTrackExtra;
+    Float_t recoTrackExtra_pt_inner;
+    Float_t recoTrackExtra_eta_inner;
+    Float_t recoTrackExtra_phi_inner;
+    Float_t recoTrackExtra_pt_outer;
+    Float_t recoTrackExtra_eta_outer;
+    Float_t recoTrackExtra_phi_outer;
+    Int_t has_recoTrack;
+    Float_t recoTrack_pt_outer;
+    Float_t recoTrack_eta_outer;
+    Float_t recoTrack_phi_outer;
+    Int_t has_recoChargedCandidate;
+    Float_t recoChargedCandidate_pt;
+    Float_t recoChargedCandidate_eta;
+    Float_t recoChargedCandidate_phi;
+
+    Int_t recoChargedCandidate_nValidCSCHits;
+    Int_t recoChargedCandidate_nValidRPCHits;
+    Int_t recoChargedCandidate_nValidDTHits;
+
+
     // initialize to default values
     void init() {
       pt = 0.;
@@ -412,7 +434,23 @@ namespace gem {
       deta_pad_odd = -9.;
       deta_pad_even = -9.;
 
+      has_recoTrackExtra = 0;
+      recoTrackExtra_pt_inner = - 99.;
+      recoTrackExtra_eta_inner = - 99.;
+      recoTrackExtra_phi_inner = - 99.;
+      recoTrackExtra_pt_outer = - 99.;
+      recoTrackExtra_eta_outer = - 99.;
+      recoTrackExtra_phi_outer = - 99.;
+      has_recoTrack = 0;
+      recoTrack_pt_outer = - 99.;
+      recoTrack_eta_outer = - 99.;
+      recoTrack_phi_outer = - 99.;
+      has_recoChargedCandidate = 0;
+      recoChargedCandidate_pt = - 99.;
+      recoChargedCandidate_eta = - 99.;
+      recoChargedCandidate_phi = - 99.;
     };
+
     TTree* book(TTree* t, const std::string& name = "track") {
       edm::Service<TFileService> fs;
       t = fs->make<TTree>(name.c_str(), name.c_str());
@@ -567,10 +605,28 @@ namespace gem {
       t->Branch("deta_pad_odd", &deta_pad_odd);
       t->Branch("deta_pad_even", &deta_pad_even);
 
+      t->Branch("has_recoTrackExtra", &has_recoTrackExtra);
+      t->Branch("recoTrackExtra_pt_inner", &recoTrackExtra_pt_inner);
+      t->Branch("recoTrackExtra_eta_inner", &recoTrackExtra_eta_inner);
+      t->Branch("recoTrackExtra_phi_inner", &recoTrackExtra_phi_inner);
+      t->Branch("recoTrackExtra_pt_outer", &recoTrackExtra_pt_outer);
+      t->Branch("recoTrackExtra_eta_outer", &recoTrackExtra_eta_outer);
+      t->Branch("recoTrackExtra_phi_outer", &recoTrackExtra_phi_outer);
+      t->Branch("has_recoTrack", &has_recoTrack);
+      t->Branch("recoTrack_pt_outer", &recoTrack_pt_outer);
+      t->Branch("recoTrack_eta_outer", &recoTrack_eta_outer);
+      t->Branch("recoTrack_phi_outer", &recoTrack_phi_outer);
+      t->Branch("has_recoChargedCandidate", &has_recoChargedCandidate);
+      t->Branch("recoChargedCandidate_pt", &recoChargedCandidate_pt);
+      t->Branch("recoChargedCandidate_eta", &recoChargedCandidate_eta);
+      t->Branch("recoChargedCandidate_phi", &recoChargedCandidate_phi);
+
+      t->Branch("recoChargedCandidate_nValidDTHits", &recoChargedCandidate_nValidDTHits);
+      t->Branch("recoChargedCandidate_nValidCSCHits", &recoChargedCandidate_nValidCSCHits);
+      t->Branch("recoChargedCandidate_nValidRPCHits", &recoChargedCandidate_nValidRPCHits);
+
       return t;
-
     }
-
   };
 }  // namespace
 
