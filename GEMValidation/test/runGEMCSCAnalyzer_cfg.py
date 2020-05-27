@@ -48,6 +48,11 @@ process.GEMCSCAnalyzer = cms.EDAnalyzer(
     "GEMCSCAnalyzer",
     simTrackPSet,
     verbose = cms.untracked.int32(1),
+    minNHitsChamberGEMSimHit = cms.int32(1),
+    minNHitsChamberCSCSimHit = cms.int32(4),
+    minNHitsChamberCSCDigi = cms.int32(4),
+    minNHitsChamberGEMDigi = cms.int32(1),
+    minNHitsChamberCSCStub = cms.int32(4),
     cscStations = cms.vstring("CSC_ALL","CSC_ME11", "CSC_ME1a", "CSC_ME1b", "CSC_ME12", "CSC_ME13",
                               "CSC_ME21", "CSC_ME22", "CSC_ME31", "CSC_ME32", "CSC_ME41", "CSC_ME42")
 )
