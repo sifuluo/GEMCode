@@ -10,6 +10,7 @@
 
 #include "GEMCode/GEMValidation/interface/Helpers.h"
 #include "GEMCode/GEMValidation/interface/SimTrackMatchManager.h"
+#include "GEMCode/GEMValidation/interface/SimTrackAnalyzerManager.h"
 #include "GEMCode/GEMValidation/interface/MyTrack.h"
 
 #include <iomanip>
@@ -178,12 +179,8 @@ void GEMCSCAnalyzer::analyze(const SimTrack& t, const SimVertex& v) {
   // do the match for each simtrack
   matcher_->match(t, v);
 
-  // get the objects
-  const GEMSimHitMatcher& match_gem_sh = *(matcher_->gemSimHits());
-  const CSCSimHitMatcher& match_csc_sh = *(matcher_->cscSimHits());
-  const GEMDigiMatcher& match_gd = *(matcher_->gemDigis());
-  const CSCDigiMatcher& match_cd = *(matcher_->cscDigis());
-  const CSCStubMatcher& match_lct = *(matcher_->cscStubs());
+  SimTrackAnalyzerManager analyzer(*matcher_);
+  analyzer.analyze(etrk_);
 
   // tracks
   for (const auto& s : stations_to_use_) {
@@ -197,6 +194,14 @@ void GEMCSCAnalyzer::analyze(const SimTrack& t, const SimVertex& v) {
     etrk_[s].endcap = (etrk_[s].eta > 0.) ? 1 : -1;
     etrk_[s].pdgid = t.type();
   }
+
+  /*
+  // get the objects
+  const GEMSimHitMatcher& match_gem_sh = *(matcher_->gemSimHits());
+  const CSCSimHitMatcher& match_csc_sh = *(matcher_->cscSimHits());
+  const GEMDigiMatcher& match_gd = *(matcher_->gemDigis());
+  const CSCDigiMatcher& match_cd = *(matcher_->cscDigis());
+  const CSCStubMatcher& match_lct = *(matcher_->cscStubs());
 
   // CSC SimHit
   const auto& csc_simhits(match_csc_sh.chamberIds(0));
@@ -606,7 +611,6 @@ void GEMCSCAnalyzer::analyze(const SimTrack& t, const SimVertex& v) {
     }
   }
 
-  /*
     if (verbose_) std::cout <<"GEMCSCAnalyzer step6 "<< std::endl;
     for(const auto& d: match_gd.superChamberIdsCoPad())
     {

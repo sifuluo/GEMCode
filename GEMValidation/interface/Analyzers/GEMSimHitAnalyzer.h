@@ -1,26 +1,26 @@
-#ifndef GEMCode_GEMValidation_CSCSimHitAnalyzer_h
-#define GEMCode_GEMValidation_CSCSimHitAnalyzer_h
+#ifndef GEMCode_GEMValidation_GEMSimHitAnalyzer_h
+#define GEMCode_GEMValidation_GEMSimHitAnalyzer_h
 
 #include "GEMCode/GEMValidation/interface/Helpers.h"
 #include "GEMCode/GEMValidation/interface/MyTrack.h"
 #include "GEMCode/GEMValidation/interface/SimTrackMatchManager.h"
 
-class CSCSimHitAnalyzer
+class GEMSimHitAnalyzer
 {
 public:
 
   // constructor
-  CSCSimHitAnalyzer(const CSCSimHitMatcher& match_sh);
+  GEMSimHitAnalyzer(const GEMSimHitMatcher& match_sh);
 
   // destructor
-  ~CSCSimHitAnalyzer() {}
+  ~GEMSimHitAnalyzer() {}
 
   // initialize the event
   void analyze(MyTrack track[NumOfTrees]);
 
  private:
 
-  CSCSimHitMatcher match_;
+  GEMSimHitMatcher match_;
 };
 
 #endif
