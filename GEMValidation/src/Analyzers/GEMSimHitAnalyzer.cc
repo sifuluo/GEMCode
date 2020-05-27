@@ -32,7 +32,7 @@ void GEMSimHitAnalyzer::analyze(gem::MyTrack track[NumOfTrees], std::set<int> st
       else     track[st].strip_gemsh_even = mean_strip;
     }
 
-    if (match_.nLayersWithHitsInSuperChamber(d) > 1) {
+    if (match_.nLayersWithHitsInSuperChamber(d) >= 2) {
       //std::cout <<"GEM detid "<< id <<" has at 2 layer hits "<< std::endl;
       if (odd) track[st].has_gem_sh2 |= 1;
       else     track[st].has_gem_sh2 |= 2;
@@ -53,7 +53,7 @@ void GEMSimHitAnalyzer::analyze(gem::MyTrack track[NumOfTrees], std::set<int> st
       if (odd) track[1].strip_gemsh_odd = mean_strip;
       else     track[1].strip_gemsh_even = mean_strip;
 
-      if (match_.nLayersWithHitsInSuperChamber(d) > 1) {
+      if (match_.nLayersWithHitsInSuperChamber(d) >= 2) {
         if (odd) track[1].has_gem_sh2 |= 1;
         else     track[1].has_gem_sh2 |= 2;
 

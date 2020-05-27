@@ -26,9 +26,16 @@ void GEMDigiAnalyzer::analyze(gem::MyTrack track[NumOfTrees], std::set<int> stat
 
     const bool odd(id.chamber()%2==1);
 
+    const int median_strip(median(match_.digisInSuperChamber(d)));
     if (match_.digisInSuperChamber(d).size() > 0) {
-      if (odd) track[st].has_gem_dg |= 1;
-      else     track[st].has_gem_dg |= 2;
+      if (odd) {
+        track[st].has_gem_dg |= 1;
+        track[st].strip_gemdg_odd = median_strip;
+      }
+      else {
+        track[st].has_gem_dg |= 2;
+        track[st].strip_gemdg_even = median_strip;
+      }
     }
 
     if (match_.nLayersWithDigisInSuperChamber(d) >= 2) {
@@ -45,14 +52,6 @@ void GEMDigiAnalyzer::analyze(gem::MyTrack track[NumOfTrees], std::set<int> stat
       if (odd) track[st].has_gem_pad2 |= 1;
       else     track[st].has_gem_pad2 |= 2;
     }
-
-    // // const int median_strip(match_.median(digis));
-    // if (odd && digis.size() > 0) {
-    //   // track[st].strip_gemdg_odd = median_strip;
-    // }
-    // else if (digis.size() > 0) {
-    //   // track[st].strip_gemdg_even = median_strip;
-    // }
 
     for (int layer=1; layer<=2; layer++){
       GEMDetId id_tmp(id.region(), id.ring(), id.station(), layer, id.chamber(), 0);
@@ -123,9 +122,11 @@ void GEMDigiAnalyzer::analyze(gem::MyTrack track[NumOfTrees], std::set<int> stat
 
     const auto& copads = match_.coPadsInSuperChamber(d);
     if (copads.size() == 0) continue;
-    // if (odd) track[st].Copad_odd = digi_channel(copads.at(0));
-    // else track[st].Copad_even = digi_channel(copads.at(0));
-    // if (verbose_) std::cout <<"Matching GEMCopad detid "<< id <<" size "<< copads.size() << std::endl;
+
+    if (odd) track[st].Copad_odd = copads.at(0).pad(0);
+    else     track[st].Copad_even = copads.at(0).pad(0);
+
+      // if (verbose_) std::cout <<"Matching GEMCopad detid "<< id <<" size "<< copads.size() << std::endl;
 
     if (st==2 or st==3) {
       if (odd) track[1].has_gem_copad |= 1;
@@ -133,8 +134,25 @@ void GEMDigiAnalyzer::analyze(gem::MyTrack track[NumOfTrees], std::set<int> stat
 
       const auto& copads = match_.coPadsInSuperChamber(d);
       if (copads.size() == 0) continue;
-      // if (odd) track[1].Copad_odd = digi_channel(copads.at(0));
-      // else track[1].Copad_even = digi_channel(copads.at(0));
+
+      if (odd) track[1].Copad_odd = copads.at(0).pad(0);
+      else     track[1].Copad_even = copads.at(0).pad(0);
     }
   }
+}
+
+int GEMDigiAnalyzer::median(const GEMDigiContainer& digis) const
+{
+  size_t sz = digis.size();
+  vector<int> strips(sz);
+  std::transform(digis.begin(), digis.end(), strips.begin(), [](const GEMDigi& d) {return d.strip();} );
+  std::sort(strips.begin(), strips.end());
+  if ( sz % 2 == 0 ) // even
+    {
+      return (strips[sz/2 - 1] + strips[sz/2])/2;
+    }
+  else
+    {
+      return strips[sz/2];
+    }
 }

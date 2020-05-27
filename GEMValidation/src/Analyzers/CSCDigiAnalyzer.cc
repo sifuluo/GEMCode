@@ -23,6 +23,7 @@ void CSCDigiAnalyzer::analyze(gem::MyTrack track[NumOfTrees], std::set<int> stat
     if (nlayers < minNHitsChamber_) continue;
 
     const bool odd(id.chamber()%2==1);
+
     if (odd) track[st].has_csc_strips |= 1;
     else track[st].has_csc_strips |= 2;
 
@@ -49,6 +50,7 @@ void CSCDigiAnalyzer::analyze(gem::MyTrack track[NumOfTrees], std::set<int> stat
     if (nlayers < minNHitsChamber_) continue;
 
     const bool odd(id.chamber()%2==1);
+
     if (odd) track[st].has_csc_wires |= 1;
     else track[st].has_csc_wires |= 2;
 

@@ -22,6 +22,8 @@ public:
 
  private:
 
+  int median(const GEMDigiContainer& digis) const;
+
   GEMDigiMatcher match_;
   int minNHitsChamber_;
 };
