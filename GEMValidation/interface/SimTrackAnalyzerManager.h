@@ -16,12 +16,9 @@ public:
   ~SimTrackAnalyzerManager() {}
 
   /// do the matching
-  void analyze(MyTrack etrk_[NumOfTrees]);
+  void analyze(MyTrack track[NumOfTrees]);
 
  private:
-
-  // accessors
-  std::shared_ptr<SimTrackMatchManager> manager_;
 
   // analyzers
   std::shared_ptr<CSCSimHitAnalyzer> cscsh_;
