@@ -41,6 +41,8 @@ namespace gem {
     int chamber_sh_odd, chamber_sh_even;
 
     void init() {
+      bending_sh = -10;
+
       chamber_ME1_csc_sh = 0;
       chamber_ME2_csc_sh = 0;
       chamber_sh_odd = -1;
@@ -82,8 +84,9 @@ namespace gem {
     };
 
     TTree* book(TTree* t, const std::string& name = "track") {
-      edm::Service<TFileService> fs;
-      t = fs->make<TTree>(name.c_str(), name.c_str());
+
+      t->Branch("bending_sh", &bending_sh);
+      t->Branch("has_csc_sh", &has_csc_sh);
 
       t->Branch("chamber_ME1_csc_sh", &chamber_ME1_csc_sh);
       t->Branch("chamber_ME2_csc_sh", &chamber_ME2_csc_sh);

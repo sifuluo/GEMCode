@@ -50,8 +50,6 @@ namespace gem {
     };
 
     TTree* book(TTree* t, const std::string& name = "track") {
-      edm::Service<TFileService> fs;
-      t = fs->make<TTree>(name.c_str(), name.c_str());
 
       t->Branch("has_recoTrackExtra", &has_recoTrackExtra);
       t->Branch("recoTrackExtra_pt_inner", &recoTrackExtra_pt_inner);

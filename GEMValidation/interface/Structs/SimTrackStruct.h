@@ -23,8 +23,6 @@ namespace gem {
     };
 
     TTree* book(TTree* t, const std::string& name = "track") {
-      edm::Service<TFileService> fs;
-      t = fs->make<TTree>(name.c_str(), name.c_str());
 
       t->Branch("pt", &pt);
       t->Branch("pz", &pz);
