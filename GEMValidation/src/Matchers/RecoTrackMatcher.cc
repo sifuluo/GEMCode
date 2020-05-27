@@ -96,7 +96,7 @@ RecoTrackMatcher::matchRecoTrackExtraToSimTrack(const reco::TrackExtraCollection
       if (!(**rh).isValid()) continue;
       ++nValidSegments;
       const auto& id((**rh).rawId());
-      if (gemvalidation::is_dt(id)) {
+      if (gem::is_dt(id)) {
         const DTRecSegment4D *seg = dynamic_cast<const DTRecSegment4D*>(*rh);
         if (verboseRecoTrackExtra_) {
           std::cout << "\t\tDT  :: id :: " << DTChamberId(id) << std::endl;
@@ -108,7 +108,7 @@ RecoTrackMatcher::matchRecoTrackExtraToSimTrack(const reco::TrackExtraCollection
           ++matchingSegments;
         }
       }
-      if (gemvalidation::is_rpc(id)) {
+      if (gem::is_rpc(id)) {
         const RPCRecHit* rpcrh = dynamic_cast<const RPCRecHit*>(*rh);
         if (verboseRecoTrackExtra_) {
           std::cout << "\t\tRPC :: id :: " << RPCDetId(id) << std::endl;
@@ -120,7 +120,7 @@ RecoTrackMatcher::matchRecoTrackExtraToSimTrack(const reco::TrackExtraCollection
           // ++matchingSegments;
         }
       }
-      if (gemvalidation::is_gem(id)) {
+      if (gem::is_gem(id)) {
         const GEMRecHit* gemrh = dynamic_cast<const GEMRecHit*>(*rh);
         if (verboseRecoTrackExtra_) {
           std::cout << "\t\tGEM :: id :: " << GEMDetId(id) << std::endl;
@@ -132,7 +132,7 @@ RecoTrackMatcher::matchRecoTrackExtraToSimTrack(const reco::TrackExtraCollection
           // ++matchingSegments;
         }
       }
-      if (gemvalidation::is_csc(id)) {
+      if (gem::is_csc(id)) {
         const CSCSegment *seg = dynamic_cast<const CSCSegment*>(*rh);
         if (verboseRecoTrackExtra_) {
           std::cout << "\t\tCSC :: id :: " << CSCDetId(id) << std::endl;

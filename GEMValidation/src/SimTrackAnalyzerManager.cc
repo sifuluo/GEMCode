@@ -9,12 +9,21 @@ SimTrackAnalyzerManager::SimTrackAnalyzerManager(const SimTrackMatchManager& man
   cscstub_.reset(new CSCStubAnalyzer(*manager.cscStubs()));
 }
 
-void
-SimTrackAnalyzerManager::analyze(gem::MyTrack track[NumOfTrees])
+void SimTrackAnalyzerManager::init(const edm::ParameterSet& conf)
 {
-  cscsh_->analyze(track);
-  gemsh_->analyze(track);
-  cscdg_->analyze(track);
-  gemdg_->analyze(track);
-  cscstub_->analyze(track);
+  cscsh_->init(conf);
+  gemsh_->init(conf);
+  cscdg_->init(conf);
+  gemdg_->init(conf);
+  cscstub_->init(conf);
+}
+
+void
+SimTrackAnalyzerManager::analyze(gem::MyTrack track[NumOfTrees], std::set<int> stations)
+{
+  cscsh_->analyze(track, stations);
+  gemsh_->analyze(track, stations);
+  cscdg_->analyze(track, stations);
+  gemdg_->analyze(track, stations);
+  cscstub_->analyze(track, stations);
 }

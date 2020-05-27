@@ -15,12 +15,15 @@ public:
   // destructor
   ~CSCStubAnalyzer() {}
 
+  void init(const edm::ParameterSet& conf);
+
   // initialize the event
-  void analyze(gem::MyTrack track[NumOfTrees]);
+  void analyze(gem::MyTrack track[NumOfTrees], std::set<int> stations);
 
  private:
 
   CSCStubMatcher match_;
+  int minNHitsChamber_;
 };
 
 #endif

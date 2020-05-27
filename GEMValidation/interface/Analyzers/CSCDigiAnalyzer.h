@@ -15,12 +15,15 @@ public:
   // destructor
   ~CSCDigiAnalyzer() {}
 
+  void init(const edm::ParameterSet& conf);
+
   // initialize the event
-  void analyze(gem::MyTrack track[NumOfTrees]);
+  void analyze(gem::MyTrack track[NumOfTrees], std::set<int> stations);
 
  private:
 
   CSCDigiMatcher match_;
+  int minNHitsChamber_;
 };
 
 #endif

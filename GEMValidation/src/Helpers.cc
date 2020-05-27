@@ -1,6 +1,6 @@
 #include "GEMCode/GEMValidation/interface/Helpers.h"
 
-int gemvalidation::chamber(const DetId& id) {
+int gem::chamber(const DetId& id) {
   if (id.det() != DetId::Detector::Muon)
     return -99;
   int chamberN = 0;
@@ -25,18 +25,18 @@ int gemvalidation::chamber(const DetId& id) {
   return chamberN;
 }
 
-unsigned int gemvalidation::gemDetFromCSCDet(unsigned int id, int layer) {
+unsigned int gem::gemDetFromCSCDet(unsigned int id, int layer) {
   CSCDetId cscId(id);
   // returns the gem superr chamber for a given ME1/1 chamber(ME1/1a + ME1/1b)
   GEMDetId gemId(cscId.zendcap(), 1, cscId.station(), layer, cscId.chamber(), 0);
   return gemId.rawId();
 }
 
-std::pair<unsigned int, unsigned int> gemvalidation::gemDetsFromCSCDet(unsigned int id) {
+std::pair<unsigned int, unsigned int> gem::gemDetsFromCSCDet(unsigned int id) {
   return std::make_pair(gemDetFromCSCDet(id, 1), gemDetFromCSCDet(id, 2));
 }
 
-float gemvalidation::cscHalfStripWidth(CSCDetId id) {
+float gem::cscHalfStripWidth(CSCDetId id) {
   // ME1a ME1b ME12 ME13 ME21 ME22 ME31 ME32 ME41 ME42
   int strips[10] = {48, 64, 80, 64, 80, 80, 80, 80, 80, 80};
   int degrees[10] = {10, 10, 10, 10, 20, 10, 20, 10, 20, 10};
@@ -46,7 +46,7 @@ float gemvalidation::cscHalfStripWidth(CSCDetId id) {
 }
 
 // return MuonType for a particular DetId
-int gemvalidation::toGEMType(int st, int ri) {
+int gem::toGEMType(int st, int ri) {
   if (st == 1) {
     if (ri == 1)
       return GEM_ME11;
@@ -57,7 +57,7 @@ int gemvalidation::toGEMType(int st, int ri) {
   return GEM_ALL;
 }
 
-int gemvalidation::toRPCType(int re, int st, int ri) {
+int gem::toRPCType(int re, int st, int ri) {
   // endcap
   if (std::abs(re) == 1) {
     if (st == 1) {
@@ -138,7 +138,7 @@ int gemvalidation::toRPCType(int re, int st, int ri) {
   return RPC_ALL;
 }
 
-int gemvalidation::toDTType(int wh, int st) {
+int gem::toDTType(int wh, int st) {
   if (wh == -2) {
     if (st == 1)
       return DT_MB21n;
@@ -192,7 +192,7 @@ int gemvalidation::toDTType(int wh, int st) {
   return DT_ALL;
 }
 
-int gemvalidation::toCSCType(int st, int ri) {
+int gem::toCSCType(int st, int ri) {
   if (st == 1) {
     if (ri == 0)
       return CSC_ME11;
@@ -224,7 +224,7 @@ int gemvalidation::toCSCType(int st, int ri) {
 }
 
 // return MuonTypeString for a particular DetId
-std::string gemvalidation::toGEMTypeString(int st, int ri) {
+std::string gem::toGEMTypeString(int st, int ri) {
   if (st == 1) {
     if (ri == 1)
       return "GEM_ME11";
@@ -235,7 +235,7 @@ std::string gemvalidation::toGEMTypeString(int st, int ri) {
   return "GEM_ALL";
 }
 
-std::string gemvalidation::toRPCTypeString(int re, int st, int ri) {
+std::string gem::toRPCTypeString(int re, int st, int ri) {
   // endcap
   if (std::abs(re) == 1) {
     if (st == 1) {
@@ -316,7 +316,7 @@ std::string gemvalidation::toRPCTypeString(int re, int st, int ri) {
   return "RPC_ALL";
 }
 
-std::string gemvalidation::toDTTypeString(int wh, int st) {
+std::string gem::toDTTypeString(int wh, int st) {
   if (wh == -2) {
     if (st == 1)
       return "DT_MB21n";
@@ -370,7 +370,7 @@ std::string gemvalidation::toDTTypeString(int wh, int st) {
   return "DT_ALL";
 }
 
-std::string gemvalidation::toCSCTypeString(int st, int ri) {
+std::string gem::toCSCTypeString(int st, int ri) {
   if (st == 1) {
     if (ri == 0)
       return "CSC_ME11";
@@ -401,4 +401,10 @@ std::string gemvalidation::toCSCTypeString(int st, int ri) {
   return "CSC_ALL";
 }
 
-bool gemvalidation::PtOrder(const reco::GenParticle* p1, const reco::GenParticle* p2) { return (p1->pt() > p2->pt()); }
+bool gem::PtOrder(const reco::GenParticle* p1, const reco::GenParticle* p2) { return (p1->pt() > p2->pt()); }
+
+int gem::detIdToMEStation(int st, int ri)
+{
+  const auto& p(std::make_pair(st, ri));
+  return std::find(cscStationsCo_.begin(), cscStationsCo_.end(), p) - cscStationsCo_.begin();
+}

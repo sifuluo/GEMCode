@@ -5,7 +5,12 @@ GEMDigiAnalyzer::GEMDigiAnalyzer(const GEMDigiMatcher& match_sh)
 {
 }
 
-void GEMDigiAnalyzer::analyze(gem::MyTrack track[NumOfTrees])
+void GEMDigiAnalyzer::init(const edm::ParameterSet& conf)
+{
+  minNHitsChamber_ = conf.getParameter<int>("minNHitsChamberGEMDigi");
+}
+
+void GEMDigiAnalyzer::analyze(gem::MyTrack track[NumOfTrees], std::set<int> stations_to_use_)
 {
   /*
   // placeholders for best mtching pads

@@ -5,7 +5,12 @@ CSCDigiAnalyzer::CSCDigiAnalyzer(const CSCDigiMatcher& match_sh)
 {
 }
 
-void CSCDigiAnalyzer::analyze(gem::MyTrack track[NumOfTrees])
+void CSCDigiAnalyzer::init(const edm::ParameterSet& conf)
+{
+  minNHitsChamber_ = conf.getParameter<int>("minNHitsChamberCSCDigi");
+}
+
+void CSCDigiAnalyzer::analyze(gem::MyTrack track[NumOfTrees], std::set<int> stations_to_use_)
 {
   /*
   // CSC strip digis

@@ -5,7 +5,12 @@ GEMSimHitAnalyzer::GEMSimHitAnalyzer(const GEMSimHitMatcher& match_sh)
 {
 }
 
-void GEMSimHitAnalyzer::analyze(gem::MyTrack track[NumOfTrees])
+void GEMSimHitAnalyzer::init(const edm::ParameterSet& conf)
+{
+  minNHitsChamber_ = conf.getParameter<int>("minNHitsChamberGEMSimHit");
+}
+
+void GEMSimHitAnalyzer::analyze(gem::MyTrack track[NumOfTrees], std::set<int> stations_to_use_)
 {
   /*
   //for GEMs in station1, it will be also filled in ME11

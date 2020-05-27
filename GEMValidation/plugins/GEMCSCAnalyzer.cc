@@ -47,7 +47,6 @@ private:
   double simTrackMaxEta_;
   int verbose_;
   std::vector<string> cscStations_;
-  std::vector<std::pair<int, int> > cscStationsCo_;
   std::set<int> stations_to_use_;
 
   TTree* tree_eff_[NumOfTrees];
@@ -60,6 +59,8 @@ private:
 GEMCSCAnalyzer::GEMCSCAnalyzer(const edm::ParameterSet& ps) :
   verbose_(ps.getUntrackedParameter<int>("verbose", 0))
 {
+  cfg_ = ps;
+
   cscStations_ = ps.getParameter<std::vector<string> >("cscStations");
 
   const auto& simVertex = ps.getParameter<edm::ParameterSet>("simVertex");
@@ -82,25 +83,7 @@ GEMCSCAnalyzer::GEMCSCAnalyzer(const edm::ParameterSet& ps) :
     tree_eff_[s] = track_[s].book(tree_eff_[s], ss.str());
   }
 
-  cscStationsCo_.push_back(std::make_pair(-99, -99));
-  cscStationsCo_.push_back(std::make_pair(1, -99));
-  cscStationsCo_.push_back(std::make_pair(1, 4));
-  cscStationsCo_.push_back(std::make_pair(1, 1));
-  cscStationsCo_.push_back(std::make_pair(1, 2));
-  cscStationsCo_.push_back(std::make_pair(1, 3));
-  cscStationsCo_.push_back(std::make_pair(2, 1));
-  cscStationsCo_.push_back(std::make_pair(2, 2));
-  cscStationsCo_.push_back(std::make_pair(3, 1));
-  cscStationsCo_.push_back(std::make_pair(3, 2));
-  cscStationsCo_.push_back(std::make_pair(4, 1));
-  cscStationsCo_.push_back(std::make_pair(4, 2));
-
   matcher_.reset(new SimTrackMatchManager(ps, consumesCollector()));
-}
-
-int GEMCSCAnalyzer::detIdToMEStation(int st, int ri) {
-  const auto& p(std::make_pair(st, ri));
-  return std::find(cscStationsCo_.begin(), cscStationsCo_.end(), p) - cscStationsCo_.begin();
 }
 
 void GEMCSCAnalyzer::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetup) {}
@@ -178,7 +161,8 @@ void GEMCSCAnalyzer::analyze(const SimTrack& t, const SimVertex& v) {
 
   // analyze the track
   analyzer_.reset(new SimTrackAnalyzerManager(*matcher_));
-  analyzer_->analyze(track_);
+  analyzer_->init(cfg_);
+  analyzer_->analyze(track_, stations_to_use_);
 
   // fill all trees
   for (const auto& s : stations_to_use_) {

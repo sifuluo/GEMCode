@@ -5,16 +5,22 @@ CSCSimHitAnalyzer::CSCSimHitAnalyzer(const CSCSimHitMatcher& match_sh)
 {
 }
 
-void CSCSimHitAnalyzer::analyze(gem::MyTrack track[NumOfTrees])
+void CSCSimHitAnalyzer::init(const edm::ParameterSet& conf)
 {
-  /*
-  const auto& csc_simhits(match_csc_sh.chamberIds(0));
-  for(const auto& d: match_csc_sh.chamberIds(0)) {
+  minNHitsChamber_ = conf.getParameter<int>("minNHitsChamberCSCSimHit");
+}
+
+void CSCSimHitAnalyzer::analyze(gem::MyTrack track[NumOfTrees], std::set<int> stations_to_use_)
+{
+  const auto& csc_simhits(match_.chamberIds(0));
+  for(const auto& d: match_.chamberIds(0)) {
 
     CSCDetId id(d);
-    const int st(detIdToMEStation(id.station(),id.ring()));
+
+    const int st(gem::detIdToMEStation(id.station(),id.ring()));
     if (stations_to_use_.count(st) == 0) continue;
-    int nlayers(match_csc_sh.nLayersWithHitsInChamber(d));
+
+    int nlayers(match_.nLayersWithHitsInChamber(d));
     // case ME11
     if (id.station()==1 and (id.ring()==4 or id.ring()==1)){
       // get the detId of the pairing subchamber
@@ -25,54 +31,53 @@ void CSCSimHitAnalyzer::analyze(gem::MyTrack track[NumOfTrees])
 
       const auto& rawId(co_id.rawId());
       if (csc_simhits.find(rawId) != csc_simhits.end()) {
-        nlayers = nlayers+match_csc_sh.nLayersWithHitsInChamber(rawId);
+        nlayers = nlayers+match_.nLayersWithHitsInChamber(rawId);
       }
     }
 
-    if (nlayers < minNHitsChamberCSCSimHit_) continue;
+    if (nlayers < minNHitsChamber_) continue;
 
-    match_csc_sh.LocalBendingInChamber(d);
+    match_.LocalBendingInChamber(d);
 
     const bool odd(id.chamber()%2==1);
-    const auto& simhits = match_csc_sh.hitsInDetId(id);
-    const GlobalPoint& keygp(match_csc_sh.simHitsMeanPosition(simhits));
+    const auto& simhits = match_.hitsInDetId(id);
+    const GlobalPoint& keygp(match_.simHitsMeanPosition(simhits));
 
     if (odd) {
-      etrk_[st].chamber_sh_odd = id.chamber();
-      etrk_[st].nlayers_csc_sh_odd = nlayers;
-      etrk_[st].has_csc_sh |= 1;
-      etrk_[st].eta_cscsh_odd = keygp.eta();
-      etrk_[st].phi_cscsh_odd = keygp.phi();
-      etrk_[st].perp_cscsh_odd = keygp.perp();
+      track[st].chamber_sh_odd = id.chamber();
+      track[st].nlayers_csc_sh_odd = nlayers;
+      track[st].has_csc_sh |= 1;
+      track[st].eta_cscsh_odd = keygp.eta();
+      track[st].phi_cscsh_odd = keygp.phi();
+      track[st].perp_cscsh_odd = keygp.perp();
     }
     else {
-      etrk_[st].chamber_sh_even = id.chamber();
-      etrk_[st].nlayers_csc_sh_even = nlayers;
-      etrk_[st].has_csc_sh |= 2;
-      etrk_[st].eta_cscsh_even = keygp.eta();
-      etrk_[st].phi_cscsh_even = keygp.phi();
-      etrk_[st].perp_cscsh_even = keygp.perp();
+      track[st].chamber_sh_even = id.chamber();
+      track[st].nlayers_csc_sh_even = nlayers;
+      track[st].has_csc_sh |= 2;
+      track[st].eta_cscsh_even = keygp.eta();
+      track[st].phi_cscsh_even = keygp.phi();
+      track[st].perp_cscsh_even = keygp.perp();
     }
 
     // case ME11
     if (st==2 or st==3){
       if (odd) {
-        etrk_[1].chamber_sh_odd = id.chamber();
-        etrk_[1].nlayers_csc_sh_odd = nlayers;
-        etrk_[1].has_csc_sh |= 1;
-        etrk_[1].eta_cscsh_odd = keygp.eta();
-        etrk_[1].phi_cscsh_odd = keygp.phi();
-        etrk_[1].perp_cscsh_odd = keygp.perp();
+        track[1].chamber_sh_odd = id.chamber();
+        track[1].nlayers_csc_sh_odd = nlayers;
+        track[1].has_csc_sh |= 1;
+        track[1].eta_cscsh_odd = keygp.eta();
+        track[1].phi_cscsh_odd = keygp.phi();
+        track[1].perp_cscsh_odd = keygp.perp();
       }
       else {
-        etrk_[1].chamber_sh_even = id.chamber();
-        etrk_[1].nlayers_csc_sh_even = nlayers;
-        etrk_[1].has_csc_sh |= 2;
-        etrk_[1].eta_cscsh_even = keygp.eta();
-        etrk_[1].phi_cscsh_even = keygp.phi();
-        etrk_[1].perp_cscsh_even = keygp.perp();
+        track[1].chamber_sh_even = id.chamber();
+        track[1].nlayers_csc_sh_even = nlayers;
+        track[1].has_csc_sh |= 2;
+        track[1].eta_cscsh_even = keygp.eta();
+        track[1].phi_cscsh_even = keygp.phi();
+        track[1].perp_cscsh_even = keygp.perp();
       }
     }
   }
-  */
 }

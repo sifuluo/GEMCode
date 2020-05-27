@@ -152,7 +152,7 @@ const double ME21GEMdPhi[8][3] = {
     {40.0, 0.00369842, 0.00358023},
 };
 
-namespace gemvalidation {
+namespace gem {
   inline bool is_dt(unsigned int detId) { return (DetId(detId)).subdetId() == MuonSubdetId::DT; }
 
   inline bool is_gem(unsigned int detId) { return (DetId(detId)).subdetId() == MuonSubdetId::GEM; }
@@ -169,6 +169,8 @@ namespace gemvalidation {
 
   float cscHalfStripWidth(CSCDetId id);
 
+  int detIdToMEStation(int st, int ri);
+
   std::pair<unsigned int, unsigned int> gemDetsFromCSCDet(unsigned int id);
 
   // return MuonType for a particular DetId
@@ -181,6 +183,21 @@ namespace gemvalidation {
   std::string toRPCTypeString(int re, int st, int ri);
   std::string toDTTypeString(int wh, int st);
   std::string toCSCTypeString(int st, int ri);
+
+  static const std::vector<std::pair<int, int> > cscStationsCo_ = {
+    {-99,-99},
+    {1, -99},
+    {1, 4},
+    {1, 1},
+    {1, 2},
+    {1, 3},
+    {2, 1},
+    {2, 2},
+    {3, 1},
+    {3, 2},
+    {4, 1},
+    {4, 2},
+  };
 
   bool PtOrder(const reco::GenParticle* p1, const reco::GenParticle* p2);
 
