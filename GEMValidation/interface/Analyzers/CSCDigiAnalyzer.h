@@ -22,7 +22,7 @@ public:
 
  private:
 
-  CSCDigiMatcher match_;
+  std::unique_ptr<CSCDigiMatcher> match_;
   int minNHitsChamber_;
 };
 

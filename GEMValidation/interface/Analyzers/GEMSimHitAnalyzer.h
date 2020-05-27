@@ -22,7 +22,7 @@ public:
 
  private:
 
-  GEMSimHitMatcher match_;
+  std::unique_ptr<GEMSimHitMatcher> match_;
   int minNHitsChamber_;
 };
 

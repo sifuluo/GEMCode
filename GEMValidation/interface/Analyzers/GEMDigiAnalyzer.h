@@ -24,7 +24,7 @@ public:
 
   int median(const GEMDigiContainer& digis) const;
 
-  GEMDigiMatcher match_;
+  std::unique_ptr<GEMDigiMatcher> match_;
   int minNHitsChamber_;
 };
 

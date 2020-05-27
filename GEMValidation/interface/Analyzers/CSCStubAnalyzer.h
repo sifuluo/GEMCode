@@ -22,7 +22,7 @@ public:
 
  private:
 
-  CSCStubMatcher match_;
+  std::unique_ptr<CSCStubMatcher> match_;
   int minNHitsChamber_;
 };
 

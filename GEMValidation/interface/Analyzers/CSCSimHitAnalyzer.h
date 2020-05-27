@@ -22,7 +22,7 @@ public:
 
  private:
 
-  CSCSimHitMatcher match_;
+  std::unique_ptr<CSCSimHitMatcher> match_;
   int minNHitsChamber_;
 };
 

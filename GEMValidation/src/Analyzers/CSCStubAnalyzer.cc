@@ -1,8 +1,8 @@
 #include "GEMCode/GEMValidation/interface/Analyzers/CSCStubAnalyzer.h"
 
 CSCStubAnalyzer::CSCStubAnalyzer(const CSCStubMatcher& match_sh)
-  :  match_(match_sh)
 {
+  match_.reset(new CSCStubMatcher(match_sh));
 }
 
 void CSCStubAnalyzer::init(const edm::ParameterSet& conf)
@@ -13,14 +13,14 @@ void CSCStubAnalyzer::init(const edm::ParameterSet& conf)
 void CSCStubAnalyzer::analyze(gem::MyTrack track[NumOfTrees], std::set<int> stations_to_use_)
 {
   // CSC CLCTs
-  for(const auto& d: match_.chamberIdsCLCT(0)) {
+  for(const auto& d: match_->chamberIdsCLCT(0)) {
     CSCDetId id(d);
 
     const int st(gem::detIdToMEStation(id.station(),id.ring()));
     if (stations_to_use_.count(st) == 0) continue;
 
     const bool odd(id.chamber()%2==1);
-    const auto& clct = match_.bestClctInChamber(d);
+    const auto& clct = match_->bestClctInChamber(d);
 
     if (odd) {
       track[st].has_clct |= 1;
@@ -57,13 +57,13 @@ void CSCStubAnalyzer::analyze(gem::MyTrack track[NumOfTrees], std::set<int> stat
   }
 
   // CSC ALCTs
-  for(const auto& d: match_.chamberIdsALCT(0)) {
+  for(const auto& d: match_->chamberIdsALCT(0)) {
     CSCDetId id(d);
     const int st(gem::detIdToMEStation(id.station(),id.ring()));
     if (stations_to_use_.count(st) == 0) continue;
 
     const bool odd(id.chamber()%2==1);
-    const auto& alct = match_.bestAlctInChamber(d);
+    const auto& alct = match_->bestAlctInChamber(d);
 
     if (odd) {
       track[st].has_alct |= 1;
@@ -99,13 +99,13 @@ void CSCStubAnalyzer::analyze(gem::MyTrack track[NumOfTrees], std::set<int> stat
     }
 
     // CSC LCTs
-    for(const auto& d: match_.chamberIdsLCT(0)) {
+    for(const auto& d: match_->chamberIdsLCT(0)) {
       CSCDetId id(d);
       const int st(gem::detIdToMEStation(id.station(),id.ring()));
       if (stations_to_use_.count(st) == 0) continue;
 
-      const auto& lct = match_.bestLctInChamber(d);
-      const GlobalPoint& gp = match_.getGlobalPosition(d, lct);
+      const auto& lct = match_->bestLctInChamber(d);
+      const GlobalPoint& gp = match_->getGlobalPosition(d, lct);
 
       const bool odd(id.chamber()%2==1);
       if (odd) {

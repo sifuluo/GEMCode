@@ -1,8 +1,8 @@
 #include "GEMCode/GEMValidation/interface/Analyzers/CSCSimHitAnalyzer.h"
 
 CSCSimHitAnalyzer::CSCSimHitAnalyzer(const CSCSimHitMatcher& match_sh)
-  :  match_(match_sh)
 {
+  match_.reset(new CSCSimHitMatcher(match_sh));
 }
 
 void CSCSimHitAnalyzer::init(const edm::ParameterSet& conf)
@@ -12,15 +12,15 @@ void CSCSimHitAnalyzer::init(const edm::ParameterSet& conf)
 
 void CSCSimHitAnalyzer::analyze(gem::MyTrack track[NumOfTrees], std::set<int> stations_to_use_)
 {
-  const auto& csc_simhits(match_.chamberIds(0));
-  for(const auto& d: match_.chamberIds(0)) {
+  const auto& csc_simhits(match_->chamberIds(0));
+  for(const auto& d: match_->chamberIds(0)) {
 
     CSCDetId id(d);
 
     const int st(gem::detIdToMEStation(id.station(),id.ring()));
     if (stations_to_use_.count(st) == 0) continue;
 
-    int nlayers(match_.nLayersWithHitsInChamber(d));
+    int nlayers(match_->nLayersWithHitsInChamber(d));
     // case ME11
     if (id.station()==1 and (id.ring()==4 or id.ring()==1)){
       // get the detId of the pairing subchamber
@@ -31,17 +31,17 @@ void CSCSimHitAnalyzer::analyze(gem::MyTrack track[NumOfTrees], std::set<int> st
 
       const auto& rawId(co_id.rawId());
       if (csc_simhits.find(rawId) != csc_simhits.end()) {
-        nlayers = nlayers+match_.nLayersWithHitsInChamber(rawId);
+        nlayers = nlayers+match_->nLayersWithHitsInChamber(rawId);
       }
     }
 
     if (nlayers < minNHitsChamber_) continue;
 
-    match_.LocalBendingInChamber(d);
+    match_->LocalBendingInChamber(d);
 
     const bool odd(id.chamber()%2==1);
-    const auto& simhits = match_.hitsInDetId(id);
-    const GlobalPoint& keygp(match_.simHitsMeanPosition(simhits));
+    const auto& simhits = match_->hitsInDetId(id);
+    const GlobalPoint& keygp(match_->simHitsMeanPosition(simhits));
 
     if (odd) {
       track[st].chamber_sh_odd = id.chamber();

@@ -1,8 +1,8 @@
 #include "GEMCode/GEMValidation/interface/Analyzers/CSCDigiAnalyzer.h"
 
 CSCDigiAnalyzer::CSCDigiAnalyzer(const CSCDigiMatcher& match_sh)
-  :  match_(match_sh)
 {
+  match_.reset(new CSCDigiMatcher(match_sh));
 }
 
 void CSCDigiAnalyzer::init(const edm::ParameterSet& conf)
@@ -13,13 +13,13 @@ void CSCDigiAnalyzer::init(const edm::ParameterSet& conf)
 void CSCDigiAnalyzer::analyze(gem::MyTrack track[NumOfTrees], std::set<int> stations_to_use_)
 {
   // CSC strip digis
-  for(const auto& d: match_.chamberIdsStrip(0)) {
+  for(const auto& d: match_->chamberIdsStrip(0)) {
     CSCDetId id(d);
 
     const int st(gem::detIdToMEStation(id.station(),id.ring()));
     if (stations_to_use_.count(st) == 0) continue;
 
-    const int nlayers(match_.nLayersWithStripInChamber(d));
+    const int nlayers(match_->nLayersWithStripInChamber(d));
     if (nlayers < minNHitsChamber_) continue;
 
     const bool odd(id.chamber()%2==1);
@@ -41,12 +41,12 @@ void CSCDigiAnalyzer::analyze(gem::MyTrack track[NumOfTrees], std::set<int> stat
   }
 
   // CSC wire digis
-  for(const auto& d: match_.chamberIdsWire(0)) {
+  for(const auto& d: match_->chamberIdsWire(0)) {
     CSCDetId id(d);
     const int st(gem::detIdToMEStation(id.station(),id.ring()));
     if (stations_to_use_.count(st) == 0) continue;
 
-    const int nlayers(match_.nLayersWithWireInChamber(d));
+    const int nlayers(match_->nLayersWithWireInChamber(d));
     if (nlayers < minNHitsChamber_) continue;
 
     const bool odd(id.chamber()%2==1);
