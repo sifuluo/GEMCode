@@ -4,10 +4,7 @@
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/ESHandle.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
-
 #include "DataFormats/Math/interface/deltaPhi.h"
-#include "DataFormats/MuonDetId/interface/CSCTriggerNumbering.h"
-
 #include "GEMCode/GEMValidation/interface/Helpers.h"
 #include "GEMCode/GEMValidation/interface/SimTrackMatchManager.h"
 #include "GEMCode/GEMValidation/interface/SimTrackAnalyzerManager.h"
@@ -40,7 +37,6 @@ private:
 
   edm::ParameterSet cfg_;
 
-  edm::EDGetTokenT<reco::GenParticleCollection> genParticleInput_;
   edm::EDGetTokenT<edm::SimVertexContainer> simVertexInput_;
   edm::EDGetTokenT<edm::SimTrackContainer> simTrackInput_;
 
@@ -57,16 +53,6 @@ private:
   TTree* tree_eff_[NumOfTrees];
   MyTrack etrk_[NumOfTrees];
 
-  int minNHitsChamberCSCSimHit_;
-  int minNHitsChamberME0SimHit_;
-  int minNHitsChamberCSCWireDigi_;
-  int minNHitsChamberCSCStripDigi_;
-  int minNHitsChamberME0Digi_;
-  int minNHitsChamberME0RecHit_;
-  int minNHitsChamberCLCT_;
-  int minNHitsChamberALCT_;
-  int minNHitsChamberLCT_;
-  int minNHitsChamberMPLCT_;
   std::unique_ptr<SimTrackMatchManager> matcher_;
 };
 
@@ -84,10 +70,6 @@ GEMCSCAnalyzer::GEMCSCAnalyzer(const edm::ParameterSet& ps) :
   simTrackMinPt_ = simTrack.getParameter<double>("minPt");
   simTrackMinEta_ = simTrack.getParameter<double>("minEta");
   simTrackMaxEta_ = simTrack.getParameter<double>("maxEta");
-
-  minNHitsChamberCSCSimHit_ = 4;
-  minNHitsChamberCSCStripDigi_ = 4;
-  minNHitsChamberCSCWireDigi_ = 4;
 
   // always use all stations
   stations_to_use_ = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};

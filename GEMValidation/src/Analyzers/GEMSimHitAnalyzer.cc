@@ -10,8 +10,6 @@ void GEMSimHitAnalyzer::analyze(MyTrack track[NumOfTrees])
   /*
   //for GEMs in station1, it will be also filled in ME11
   // GEM simhits in superchamber
-  GlobalPoint gp_gemsh_odd[12];
-  GlobalPoint gp_gemsh_even[12];
   for(const auto& d: match_gem_sh.superChamberIds()) {
     GEMDetId id(d);
     int MEStation = id.station();
