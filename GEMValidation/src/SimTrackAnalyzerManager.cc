@@ -10,11 +10,12 @@ SimTrackAnalyzerManager::SimTrackAnalyzerManager(const SimTrackMatchManager& man
 }
 
 void
-SimTrackAnalyzerManager::analyze(MyTrack track[NumOfTrees])
+SimTrackAnalyzerManager::analyze()
 {
-  cscsh_->analyze(track);
-  gemsh_->analyze(track);
-  cscdg_->analyze(track);
-  gemdg_->analyze(track);
-  cscstub_->analyze(track);
+  //MyTrack track[NumOfTrees]
+  // cscsh_->analyze(track);
+  // gemsh_->analyze(track);
+  // cscdg_->analyze(track);
+  // gemdg_->analyze(track);
+  // cscstub_->analyze(track);
 }

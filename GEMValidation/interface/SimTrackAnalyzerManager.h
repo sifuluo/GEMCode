@@ -16,7 +16,8 @@ class SimTrackAnalyzerManager
   ~SimTrackAnalyzerManager() {}
 
   /// do the matching
-  void analyze(MyTrack track[NumOfTrees]);
+  //  void analyze(MyTrack track[NumOfTrees]);
+  void analyze(/*MyTrack track[NumOfTrees]*/);
 
  private:
 

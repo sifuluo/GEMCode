@@ -178,7 +178,7 @@ void GEMCSCAnalyzer::analyze(const SimTrack& t, const SimVertex& v) {
 
   // analyze the track
   analyzer_.reset(new SimTrackAnalyzerManager(*matcher_));
-  analyzer_->analyze(etrk_);
+  analyzer_->analyze(/*etrk_*/);
 
   // fill all trees
   for (const auto& s : stations_to_use_) {
