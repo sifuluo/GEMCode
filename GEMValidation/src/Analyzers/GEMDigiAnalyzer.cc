@@ -5,7 +5,7 @@ GEMDigiAnalyzer::GEMDigiAnalyzer(const GEMDigiMatcher& match_sh)
 {
 }
 
-void GEMDigiAnalyzer::analyze(MyTrack track[NumOfTrees])
+void GEMDigiAnalyzer::analyze(gem::MyTrack track[NumOfTrees])
 {
   /*
   // placeholders for best mtching pads

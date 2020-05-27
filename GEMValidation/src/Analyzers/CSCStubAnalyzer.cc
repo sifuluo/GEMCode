@@ -5,7 +5,7 @@ CSCStubAnalyzer::CSCStubAnalyzer(const CSCStubMatcher& match_sh)
 {
 }
 
-void CSCStubAnalyzer::analyze(MyTrack track[NumOfTrees])
+void CSCStubAnalyzer::analyze(gem::MyTrack track[NumOfTrees])
 {
   /*
   // CSC CLCTs

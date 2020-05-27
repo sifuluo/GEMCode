@@ -5,7 +5,7 @@ GEMSimHitAnalyzer::GEMSimHitAnalyzer(const GEMSimHitMatcher& match_sh)
 {
 }
 
-void GEMSimHitAnalyzer::analyze(MyTrack track[NumOfTrees])
+void GEMSimHitAnalyzer::analyze(gem::MyTrack track[NumOfTrees])
 {
   /*
   //for GEMs in station1, it will be also filled in ME11

@@ -5,7 +5,7 @@ CSCSimHitAnalyzer::CSCSimHitAnalyzer(const CSCSimHitMatcher& match_sh)
 {
 }
 
-void CSCSimHitAnalyzer::analyze(MyTrack track[NumOfTrees])
+void CSCSimHitAnalyzer::analyze(gem::MyTrack track[NumOfTrees])
 {
   /*
   const auto& csc_simhits(match_csc_sh.chamberIds(0));

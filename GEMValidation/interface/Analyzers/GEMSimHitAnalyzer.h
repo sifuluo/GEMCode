@@ -16,7 +16,7 @@ public:
   ~GEMSimHitAnalyzer() {}
 
   // initialize the event
-  void analyze(MyTrack track[NumOfTrees]);
+  void analyze(gem::MyTrack track[NumOfTrees]);
 
  private:
 

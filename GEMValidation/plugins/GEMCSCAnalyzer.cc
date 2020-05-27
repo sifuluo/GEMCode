@@ -51,7 +51,7 @@ private:
   std::set<int> stations_to_use_;
 
   TTree* tree_eff_[NumOfTrees];
-  MyTrack etrk_[NumOfTrees];
+  gem::MyTrack track_[NumOfTrees];
 
   std::unique_ptr<SimTrackMatchManager> matcher_;
   std::unique_ptr<SimTrackAnalyzerManager> analyzer_;
@@ -79,7 +79,7 @@ GEMCSCAnalyzer::GEMCSCAnalyzer(const edm::ParameterSet& ps) :
     stringstream ss;
     ss << "trk_eff_" << cscStations_[s];
     std::cout << "station to use " << cscStations_[s] << std::endl;
-    tree_eff_[s] = etrk_[s].book(tree_eff_[s], ss.str());
+    tree_eff_[s] = track_[s].book(tree_eff_[s], ss.str());
   }
 
   cscStationsCo_.push_back(std::make_pair(-99, -99));
@@ -162,15 +162,15 @@ void GEMCSCAnalyzer::analyze(const SimTrack& t, const SimVertex& v) {
 
   // track properties
   for (const auto& s : stations_to_use_) {
-    etrk_[s].init();
-    etrk_[s].pt = t.momentum().pt();
-    etrk_[s].pz = t.momentum().pz();
-    etrk_[s].phi = t.momentum().phi();
-    etrk_[s].eta = t.momentum().eta();
-    // etrk_[s].dxy = match.simhits().dxy();
-    etrk_[s].charge = t.charge();
-    etrk_[s].endcap = (etrk_[s].eta > 0.) ? 1 : -1;
-    etrk_[s].pdgid = t.type();
+    track_[s].init();
+    track_[s].pt = t.momentum().pt();
+    track_[s].pz = t.momentum().pz();
+    track_[s].phi = t.momentum().phi();
+    track_[s].eta = t.momentum().eta();
+    // track_[s].dxy = match.simhits().dxy();
+    track_[s].charge = t.charge();
+    track_[s].endcap = (track_[s].eta > 0.) ? 1 : -1;
+    track_[s].pdgid = t.type();
   }
 
   // match the track
@@ -178,7 +178,7 @@ void GEMCSCAnalyzer::analyze(const SimTrack& t, const SimVertex& v) {
 
   // analyze the track
   analyzer_.reset(new SimTrackAnalyzerManager(*matcher_));
-  analyzer_->analyze(/*etrk_*/);
+  analyzer_->analyze(track_);
 
   // fill all trees
   for (const auto& s : stations_to_use_) {

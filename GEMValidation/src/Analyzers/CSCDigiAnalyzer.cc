@@ -5,7 +5,7 @@ CSCDigiAnalyzer::CSCDigiAnalyzer(const CSCDigiMatcher& match_sh)
 {
 }
 
-void CSCDigiAnalyzer::analyze(MyTrack track[NumOfTrees])
+void CSCDigiAnalyzer::analyze(gem::MyTrack track[NumOfTrees])
 {
   /*
   // CSC strip digis
