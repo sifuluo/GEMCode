@@ -1,4 +1,4 @@
-#include "GEMCode/GEMValidation/interface/DTDigiMatcher.h"
+#include "GEMCode/GEMValidation/interface/Matchers/DTDigiMatcher.h"
 #include "DataFormats/MuonDetId/interface/DTWireId.h"
 
 using namespace std;

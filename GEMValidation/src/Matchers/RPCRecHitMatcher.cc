@@ -1,4 +1,4 @@
-#include "GEMCode/GEMValidation/interface/RPCRecHitMatcher.h"
+#include "GEMCode/GEMValidation/interface/Matchers/RPCRecHitMatcher.h"
 #include "Geometry/Records/interface/MuonGeometryRecord.h"
 #include "Geometry/RPCGeometry/interface/RPCGeometry.h"
 

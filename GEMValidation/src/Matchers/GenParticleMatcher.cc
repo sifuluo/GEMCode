@@ -1,4 +1,4 @@
-#include "GEMCode/GEMValidation/interface/GenParticleMatcher.h"
+#include "GEMCode/GEMValidation/interface/Matchers/GenParticleMatcher.h"
 
 GenParticleMatcher::GenParticleMatcher(edm::ParameterSet const& iPS,
                                        edm::ConsumesCollector && iC)

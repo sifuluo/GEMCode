@@ -8,7 +8,7 @@
  Original Author:  Sven Dildick
 */
 
-#include "GEMCode/GEMValidation/interface/ME0DigiMatcher.h"
+#include "GEMCode/GEMValidation/interface/Matchers/ME0DigiMatcher.h"
 
 #include "DataFormats/GEMRecHit/interface/ME0RecHitCollection.h"
 #include "DataFormats/GEMRecHit/interface/ME0SegmentCollection.h"

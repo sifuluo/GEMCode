@@ -1,9 +1,14 @@
 #ifndef GEMCode_GEMValidation_MyTrack
 #define GEMCode_GEMValidation_MyTrack
 
+#include "FWCore/ServiceRegistry/interface/Service.h"
+#include "CommonTools/UtilAlgos/interface/TFileService.h"
+
 #include "TTree.h"
 #include <vector>
 #include <string>
+
+static const int NumOfTrees = 13;
 
 namespace {
 

@@ -4,8 +4,6 @@
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/ESHandle.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
-#include "FWCore/ServiceRegistry/interface/Service.h"
-#include "CommonTools/UtilAlgos/interface/TFileService.h"
 
 #include "DataFormats/Math/interface/deltaPhi.h"
 #include "DataFormats/MuonDetId/interface/CSCTriggerNumbering.h"
@@ -21,8 +19,6 @@
 #include <bitset>
 
 using namespace std;
-
-static const int NumOfTrees = 13;
 
 class GEMCSCAnalyzer : public edm::EDAnalyzer {
 public:
@@ -467,15 +463,11 @@ void GEMCSCAnalyzer::analyze(const SimTrack& t, const SimVertex& v) {
     }
   }
 
-  /*
-
-    if (verbose_) std::cout <<"GEMCSCAnalyzer step4 "<< std::endl;
-    //for GEMs in station1, it will be also filled in ME11
-    // GEM simhits in superchamber
-    GlobalPoint gp_gemsh_odd[12];
-    GlobalPoint gp_gemsh_even[12];
-    for(const auto& d: match_sh.superChamberIdsGEM())
-    {
+  //for GEMs in station1, it will be also filled in ME11
+  // GEM simhits in superchamber
+  GlobalPoint gp_gemsh_odd[12];
+  GlobalPoint gp_gemsh_even[12];
+  for(const auto& d: match_gem_sh.superChamberIds()) {
     GEMDetId id(d);
     int MEStation = id.station();
 
@@ -483,105 +475,55 @@ void GEMCSCAnalyzer::analyze(const SimTrack& t, const SimVertex& v) {
     if (stations_to_use_.count(st) == 0) continue;
 
     const bool odd(id.chamber()%2==1);
-    if (match_sh.hitsInSuperChamber(d).size() > 0)
-    {
-    if (odd) etrk_[st].has_gem_sh |= 1;
-    else     etrk_[st].has_gem_sh |= 2;
+    if (match_gem_sh.hitsInSuperChamber(d).size() > 0) {
 
-    for (int layer=1; layer<3; layer++){
-    GEMDetId id_tmp(id.region(), id.ring(), id.station(), layer, id.chamber(), 0);
-    const GlobalPoint& keygp = match_sh.simHitsMeanPosition(match_sh.hitsInChamber(id_tmp.rawId()));
-    const GlobalVector& keygv = match_sh.simHitsMeanMomentum(match_sh.hitsInChamber(id_tmp.rawId()));
-    float centralperp_gemsh = match_sh.simHitsGEMCentralPosition(match_sh.hitsInChamber(id_tmp.rawId()));match_sh.simHitsMeanPosition(match_sh.hitsInChamber(id_tmp.rawId()));
-    if(match_sh.hitsInChamber(id_tmp).size()==0) continue;
-    if (odd) gp_gemsh_odd[st] = keygp;
-    else gp_gemsh_even[st] = keygp;
-    if (odd) etrk_[st].eta_gemsh_odd = keygp.eta();
-    else     etrk_[st].eta_gemsh_even = keygp.eta();
-    if (odd) etrk_[st].phi_gemsh_odd = keygp.phi();
-    else     etrk_[st].phi_gemsh_even = keygp.phi();
-    if (odd) etrk_[st].ptphi_gemsh_odd = keygv.phi();
-    else     etrk_[st].ptphi_gemsh_even = keygv.phi();
-    if (odd) etrk_[st].perp_gemsh_odd = keygp.perp();
-    else     etrk_[st].perp_gemsh_even = keygp.perp();
-    if (odd) etrk_[st].centralperp_gemsh_odd = centralperp_gemsh;
-    else     etrk_[st].centralperp_gemsh_even = centralperp_gemsh;
-    float phi_m = -9;
-    int st_csc = (st==3 and (etrk_[st].has_csc_sh&3)==0)? 1:st;
-    if (st==2 or st==3){
-    if (odd) gp_gemsh_odd[1] = keygp;
-    else gp_gemsh_even[1] = keygp;
-    if (odd) etrk_[1].eta_gemsh_odd = keygp.eta();
-    else     etrk_[1].eta_gemsh_even = keygp.eta();
-    if (odd) etrk_[1].phi_gemsh_odd = keygp.phi();
-    else     etrk_[1].phi_gemsh_even = keygp.phi();
-    if (odd) etrk_[1].ptphi_gemsh_odd = keygv.phi();
-    else     etrk_[1].ptphi_gemsh_even = keygv.phi();
-    if (odd) etrk_[1].perp_gemsh_odd = keygp.perp();
-    else     etrk_[1].perp_gemsh_even = keygp.perp();
-    if (odd) etrk_[1].centralperp_gemsh_odd = centralperp_gemsh;
-    else     etrk_[1].centralperp_gemsh_even = centralperp_gemsh;
-    if (odd and etrk_[1].phi_cscsh_odd>-9) etrk_[1].dphi_sh_odd = deltaPhi(etrk_[1].phi_cscsh_odd,float(keygp.phi()));
-    else if (etrk_[1].phi_cscsh_even>-9)     etrk_[1].dphi_sh_even = deltaPhi(etrk_[1].phi_cscsh_even,float(keygp.phi()));
-    if (odd) etrk_[1].phiM_gemcsc_odd = phi_m;
-    else etrk_[1].phiM_gemcsc_even = phi_m;
-    if (odd) etrk_[1].dphipositionpt_gemsh_odd = deltaPhi(float(keygp.phi()),etrk_[1].ptphi_sh_odd);
-    else etrk_[1].dphipositionpt_gemsh_even = deltaPhi(float(keygp.phi()),etrk_[1].ptphi_sh_even);
-    }
-    //std::cout <<"dphi(GEM, CSC) at sim "<<(odd? etrk_[st].dphi_sh_odd:etrk_[st].dphi_sh_even) <<" phi_csc "<< (odd? etrk_[st_csc].phi_cscsh_odd:etrk_[st_csc].phi_cscsh_even) <<" phi_gp "<< keygp.phi()<< std::endl;
-    if (id_tmp.layer()==1) break;
+      if (odd) etrk_[st].has_gem_sh |= 1;
+      else     etrk_[st].has_gem_sh |= 2;
 
+      const float mean_strip(match_gem_sh.simHitsMeanStrip(match_gem_sh.hitsInSuperChamber(d)));
+      if (odd) etrk_[st].strip_gemsh_odd = mean_strip;
+      else     etrk_[st].strip_gemsh_even = mean_strip;
     }
 
-    const float mean_strip(match_sh.simHitsMeanStrip(match_sh.hitsInSuperChamber(d)));
-    if (odd) etrk_[st].strip_gemsh_odd = mean_strip;
-    else     etrk_[st].strip_gemsh_even = mean_strip;
+    if (match_gem_sh.nLayersWithHitsInSuperChamber(d) > 1) {
+      //std::cout <<"GEM detid "<< id <<" has at 2 layer hits "<< std::endl;
+      if (odd) etrk_[st].has_gem_sh2 |= 1;
+      else     etrk_[st].has_gem_sh2 |= 2;
     }
-
-    if (match_sh.nLayersWithHitsInSuperChamber(d) > 1)
-    {
-    //std::cout <<"GEM detid "<< id <<" has at 2 layer hits "<< std::endl;
-    if (odd) etrk_[st].has_gem_sh2 |= 1;
-    else     etrk_[st].has_gem_sh2 |= 2;
-    }
-    const auto& copad_superids (match_sh.superChamberIdsGEMCoincidences());
-    if (copad_superids.find(d) != copad_superids.end()){
-    //std::cout <<"GEM detid "<< id <<" has copad hits "<< std::endl;
-    if (odd) etrk_[st].has_gemcopad_sh |= 1;
-    else     etrk_[st].has_gemcopad_sh |= 2;
+    const auto& copad_superids (match_gem_sh.superChamberIdsCoincidences());
+    if (copad_superids.find(d) != copad_superids.end()) {
+      //std::cout <<"GEM detid "<< id <<" has copad hits "<< std::endl;
+      if (odd) etrk_[st].has_gemcopad_sh |= 1;
+      else     etrk_[st].has_gemcopad_sh |= 2;
     }
     //ME11 Case
-    if (st==2 or st==3)
-    {
-    if (odd) etrk_[1].has_gem_sh |= 1;
-    else     etrk_[1].has_gem_sh |= 2;
+    if (st==2 or st==3) {
+      if (odd) etrk_[1].has_gem_sh |= 1;
+      else     etrk_[1].has_gem_sh |= 2;
 
-    const float mean_strip(match_sh.simHitsMeanStrip(match_sh.hitsInSuperChamber(d)));
-    if (odd) etrk_[1].strip_gemsh_odd = mean_strip;
-    else     etrk_[1].strip_gemsh_even = mean_strip;
+      const float mean_strip(match_gem_sh.simHitsMeanStrip(match_gem_sh.hitsInSuperChamber(d)));
+      if (odd) etrk_[1].strip_gemsh_odd = mean_strip;
+      else     etrk_[1].strip_gemsh_even = mean_strip;
 
-    if (match_sh.nLayersWithHitsInSuperChamber(d) > 1)
-    {
-    if (odd) etrk_[1].has_gem_sh2 |= 1;
-    else etrk_[1].has_gem_sh2 |= 2;
+      if (match_gem_sh.nLayersWithHitsInSuperChamber(d) > 1) {
+        if (odd) etrk_[1].has_gem_sh2 |= 1;
+        else     etrk_[1].has_gem_sh2 |= 2;
 
-    }
-    if (copad_superids.find(d) != copad_superids.end()){
-    if (odd) etrk_[1].has_gemcopad_sh |= 1;
-    else     etrk_[1].has_gemcopad_sh |= 2;
-    }
+      }
+      if (copad_superids.find(d) != copad_superids.end()){
+        if (odd) etrk_[1].has_gemcopad_sh |= 1;
+        else     etrk_[1].has_gemcopad_sh |= 2;
+      }
     }//end of ME11 case
+  }
 
-    }
 
-    if (verbose_) std::cout <<"GEMCSCAnalyzer step5 "<< std::endl;
-    // placeholders for best mtching pads
-    GlobalPoint best_pad_odd[12];
-    GlobalPoint best_pad_even[12];
+  // placeholders for best mtching pads
+  GlobalPoint best_pad_odd[12];
+  GlobalPoint best_pad_even[12];
 
-    // GEM digis and pads in superchambers
-    for(const auto& d: match_gd.superChamberIdsDigi())
-    {
+  // GEM digis and pads in superchambers
+  for(const auto& d: match_gd.superChamberIdsDigi()) {
     GEMDetId id(d);
     int MEStation = id.station();
 
@@ -589,171 +531,82 @@ void GEMCSCAnalyzer::analyze(const SimTrack& t, const SimVertex& v) {
     if (stations_to_use_.count(st) == 0) continue;
 
     const bool odd(id.chamber()%2==1);
-    if (match_gd.nLayersWithDigisInSuperChamber(d) > 1)
-    {
-    if (odd) etrk_[st].has_gem_dg2 |= 1;
-    else     etrk_[st].has_gem_dg2 |= 2;
+    if (match_gd.nLayersWithDigisInSuperChamber(d) > 1) {
+      if (odd) etrk_[st].has_gem_dg2 |= 1;
+      else     etrk_[st].has_gem_dg2 |= 2;
     }
 
     const auto& digis = match_gd.digisInSuperChamber(d);
-    const int median_strip(match_gd.median(digis));
-    if (odd && digis.size() > 0)
-    {
-    etrk_[st].has_gem_dg |= 1;
-    etrk_[st].strip_gemdg_odd = median_strip;
+    // const int median_strip(match_gd.median(digis));
+    if (odd && digis.size() > 0) {
+      etrk_[st].has_gem_dg |= 1;
+      // etrk_[st].strip_gemdg_odd = median_strip;
     }
-    else if (digis.size() > 0)
-    {
-    etrk_[st].has_gem_dg |= 2;
-    etrk_[st].strip_gemdg_even = median_strip;
+    else if (digis.size() > 0) {
+      etrk_[st].has_gem_dg |= 2;
+      // etrk_[st].strip_gemdg_even = median_strip;
     }
 
-    if (match_gd.nLayersWithPadsInSuperChamber(d) > 1)
-    {
-    if (odd) etrk_[st].has_gem_pad2 |= 1;
-    else     etrk_[st].has_gem_pad2 |= 2;
+    if (match_gd.nLayersWithPadsInSuperChamber(d) > 1) {
+      if (odd) etrk_[st].has_gem_pad2 |= 1;
+      else     etrk_[st].has_gem_pad2 |= 2;
     }
     for (int layer=1; layer<3; layer++){
-    GEMDetId id_tmp(id.region(), id.ring(), id.station(), layer, id.chamber(), 0);
-    const auto& pads = match_gd.padsInChamber(id_tmp.rawId());
-    if(pads.size() == 0) continue;
+      GEMDetId id_tmp(id.region(), id.ring(), id.station(), layer, id.chamber(), 0);
+      const auto& pads = match_gd.padsInChamber(id_tmp.rawId());
+      if(pads.size() == 0) continue;
 
-    const GlobalPoint& keygp = match_sh.simHitsMeanPosition(match_sh.hitsInChamber(id_tmp.rawId()));
-    const auto& bestgem_dg_and_gp = match_gd.digiInGEMClosestToCSC(pads, keygp);
-    if (odd)
-    {
-    best_pad_odd[st] = bestgem_dg_and_gp.second;
-    etrk_[st].has_gem_pad |= 1;
-    etrk_[st].chamber_lct_odd = id.chamber();
-    // etrk_[st].pad_odd = digi_channel(bestgem_dg_and_gp.first);
-    etrk_[st].hsfromgem_odd = match_gd.extrapolateHsfromGEMPad( d, digi_channel(bestgem_dg_and_gp.first));
-    etrk_[st].z_pad_odd = best_pad_odd[st].z();
-    etrk_[st].phi_pad_odd = best_pad_odd[st].phi();
-    etrk_[st].eta_pad_odd = best_pad_odd[st].eta();
-    //question: ME1a is not included here
-    if (is_valid(lct_odd[st]))
-    {
-    const auto& gem_dg_and_gp = match_gd.digiInGEMClosestToCSC(pads, gp_lct_odd[st]);
-    best_pad_odd[st] = gem_dg_and_gp.second;
-    // etrk_[st].bx_pad_odd = digi_bx(gem_dg_and_gp.first);
-    etrk_[st].dphi_pad_odd = deltaPhi(etrk_[st].phi_lct_odd, etrk_[st].phi_pad_odd);
-    etrk_[st].dphi_pad_fit_odd = deltaPhi(etrk_[st].phi_layer3_fit_odd, etrk_[st].phi_pad_odd);
-    //std::cout <<"GEMid "<< id << std::endl;
-    //std::cout <<"GEM sim phi "<< keygp.phi() <<" pad phi "<< etrk_[st].phi_pad_odd <<" phi_lct "<< etrk_[st].phi_lct_odd <<" phi_fit_lct "<< etrk_[st].phi_layer3_fit_odd <<" dist(GEM, CSC) " << fabs(etrk_[st].z_layer3_fit_odd - etrk_[st].z_pad_odd)<< std::endl;
-    etrk_[st].deta_pad_odd = etrk_[st].eta_lct_odd - etrk_[st].eta_pad_odd;
+      const GlobalPoint& keygp = match_gem_sh.simHitsMeanPosition(match_gem_sh.hitsInChamber(id_tmp.rawId()));
+      // const auto& bestgem_dg_and_gp = match_gd.digiInGEMClosestToCSC(pads, keygp);
+      if (odd)
+        {
+          // best_pad_odd[st] = bestgem_dg_and_gp.second;
+          etrk_[st].has_gem_pad |= 1;
+          etrk_[st].chamber_lct_odd = id.chamber();
+          // etrk_[st].pad_odd = digi_channel(bestgem_dg_and_gp.first);
+          // etrk_[st].hsfromgem_odd = match_gd.extrapolateHsfromGEMPad( d, digi_channel(bestgem_dg_and_gp.first));
+          etrk_[st].z_pad_odd = best_pad_odd[st].z();
+          etrk_[st].phi_pad_odd = best_pad_odd[st].phi();
+          etrk_[st].eta_pad_odd = best_pad_odd[st].eta();
+          //question: ME1a is not included here
+          // if (is_valid(lct_odd[st]))
+          //   {
+          //     // const auto& gem_dg_and_gp = match_gd.digiInGEMClosestToCSC(pads, gp_lct_odd[st]);
+          //     // best_pad_odd[st] = gem_dg_and_gp.second;
+          //     // etrk_[st].bx_pad_odd = digi_bx(gem_dg_and_gp.first);
+          //     etrk_[st].dphi_pad_odd = deltaPhi(etrk_[st].phi_lct_odd, etrk_[st].phi_pad_odd);
+          //     etrk_[st].dphi_pad_fit_odd = deltaPhi(etrk_[st].phi_layer3_fit_odd, etrk_[st].phi_pad_odd);
+          //     //std::cout <<"GEMid "<< id << std::endl;
+          //     //std::cout <<"GEM sim phi "<< keygp.phi() <<" pad phi "<< etrk_[st].phi_pad_odd <<" phi_lct "<< etrk_[st].phi_lct_odd <<" phi_fit_lct "<< etrk_[st].phi_layer3_fit_odd <<" dist(GEM, CSC) " << fabs(etrk_[st].z_layer3_fit_odd - etrk_[st].z_pad_odd)<< std::endl;
+          //     etrk_[st].deta_pad_odd = etrk_[st].eta_lct_odd - etrk_[st].eta_pad_odd;
+          //   }
+        }
+      else
+        {
+          // best_pad_even[st] = bestgem_dg_and_gp.second;
+          etrk_[st].has_gem_pad |= 2;
+          // etrk_[st].pad_even = digi_channel(bestgem_dg_and_gp.first);
+          // etrk_[st].hsfromgem_even = match_gd.extrapolateHsfromGEMPad( d, digi_channel(bestgem_dg_and_gp.first));
+          etrk_[st].z_pad_even = best_pad_even[st].z();
+          etrk_[st].phi_pad_even = best_pad_even[st].phi();
+          etrk_[st].eta_pad_even = best_pad_even[st].eta();
+          // if (is_valid(lct_even[st]))
+          //   {
+          //     // const auto& gem_dg_and_gp = match_gd.digiInGEMClosestToCSC(pads, gp_lct_even[st]);
+          //     // best_pad_even[st] = gem_dg_and_gp.second;
+          //     // etrk_[st].bx_pad_even = digi_bx(gem_dg_and_gp.first);
+          //     etrk_[st].dphi_pad_even = deltaPhi(etrk_[st].phi_lct_even, etrk_[st].phi_pad_even);
+          //     etrk_[st].dphi_pad_fit_even = deltaPhi(etrk_[st].phi_layer3_fit_even, etrk_[st].phi_pad_even);
+          //     //std::cout <<"GEMid "<< id << std::endl;
+          //     //std::cout <<"GEM sim phi "<< keygp.phi() <<" pad phi "<< etrk_[st].phi_pad_even <<" phi_lct "<< etrk_[st].phi_lct_even <<" phi_fit_lct "<< etrk_[st].phi_layer3_fit_even <<" dist(GEM, CSC) " <<  fabs(etrk_[st].z_layer3_fit_even - etrk_[st].z_pad_even)<< std::endl;
+          //     etrk_[st].deta_pad_even = etrk_[st].eta_lct_even - etrk_[st].eta_pad_even;
+          //   }
+        }
+      if (id_tmp.layer()==1) break;
     }
-    }
-    else
-    {
-    best_pad_even[st] = bestgem_dg_and_gp.second;
-    etrk_[st].has_gem_pad |= 2;
-    // etrk_[st].pad_even = digi_channel(bestgem_dg_and_gp.first);
-    // etrk_[st].hsfromgem_even = match_gd.extrapolateHsfromGEMPad( d, digi_channel(bestgem_dg_and_gp.first));
-    etrk_[st].z_pad_even = best_pad_even[st].z();
-    etrk_[st].phi_pad_even = best_pad_even[st].phi();
-    etrk_[st].eta_pad_even = best_pad_even[st].eta();
-    if (is_valid(lct_even[st]))
-    {
-    const auto& gem_dg_and_gp = match_gd.digiInGEMClosestToCSC(pads, gp_lct_even[st]);
-    best_pad_even[st] = gem_dg_and_gp.second;
-    // etrk_[st].bx_pad_even = digi_bx(gem_dg_and_gp.first);
-    etrk_[st].dphi_pad_even = deltaPhi(etrk_[st].phi_lct_even, etrk_[st].phi_pad_even);
-    etrk_[st].dphi_pad_fit_even = deltaPhi(etrk_[st].phi_layer3_fit_even, etrk_[st].phi_pad_even);
-    //std::cout <<"GEMid "<< id << std::endl;
-    //std::cout <<"GEM sim phi "<< keygp.phi() <<" pad phi "<< etrk_[st].phi_pad_even <<" phi_lct "<< etrk_[st].phi_lct_even <<" phi_fit_lct "<< etrk_[st].phi_layer3_fit_even <<" dist(GEM, CSC) " <<  fabs(etrk_[st].z_layer3_fit_even - etrk_[st].z_pad_even)<< std::endl;
-    etrk_[st].deta_pad_even = etrk_[st].eta_lct_even - etrk_[st].eta_pad_even;
-    }
-    }
-    if (id_tmp.layer()==1) break;
-    }
-    }
+  }
 
-    //ME11Case
-    for(const auto& d: match_gd.superChamberIdsDigi())
-    {
-    GEMDetId id(d);
-    int MEStation = id.station();
-
-    const int stations(detIdToMEStation(MEStation,id.ring()));
-    int st;
-    if (stations==2 or stations==3) st=1;//ME1a,ME1b->ME11
-    else continue;
-
-    if (stations_to_use_.count(st) == 0) continue;
-
-    const bool odd(id.chamber()%2==1);
-    if (match_gd.nLayersWithDigisInSuperChamber(d) > 1)
-    {
-    if (odd) etrk_[st].has_gem_dg2 |= 1;
-    else     etrk_[st].has_gem_dg2 |= 2;
-    }
-
-    const auto& digis = match_gd.digisInSuperChamber(d);
-    const int median_strip(match_gd.median(digis));
-    if (odd && digis.size() > 0)
-    {
-    etrk_[st].has_gem_dg |= 1;
-    etrk_[st].strip_gemdg_odd = median_strip;
-    }
-    else if (digis.size() > 0)
-    {
-    etrk_[st].has_gem_dg |= 2;
-    etrk_[st].strip_gemdg_even = median_strip;
-    }
-
-    if (match_gd.nLayersWithPadsInSuperChamber(d) > 1)
-    {
-    if (odd) etrk_[st].has_gem_pad2 |= 1;
-    else     etrk_[st].has_gem_pad2 |= 2;
-    }
-
-    for (int layer=1; layer<3; layer++){
-    GEMDetId id_tmp(id.region(), id.ring(), id.station(), layer, id.chamber(), 0);
-    const auto& pads = match_gd.padsInChamber(id_tmp.rawId());
-    if(pads.size() == 0) continue;
-    const GlobalPoint& keygp = match_sh.simHitsMeanPosition(match_sh.hitsInChamber(id_tmp.rawId()));
-    const auto& bestgem_dg_and_gp = match_gd.digiInGEMClosestToCSC(pads, keygp);
-
-    if (odd)
-    {
-    best_pad_odd[st] = bestgem_dg_and_gp.second;
-    etrk_[st].has_gem_pad |= 1;
-    // etrk_[st].pad_odd = digi_channel(bestgem_dg_and_gp.first);
-    // etrk_[st].hsfromgem_odd = match_gd.extrapolateHsfromGEMPad( d, digi_channel(bestgem_dg_and_gp.first));
-    etrk_[st].phi_pad_odd = best_pad_odd[st].phi();
-    etrk_[st].eta_pad_odd = best_pad_odd[st].eta();
-    if (is_valid(lct_odd[st]))
-    {
-    const auto& gem_dg_and_gp = match_gd.digiInGEMClosestToCSC(pads, gp_lct_odd[st]);
-    best_pad_odd[st] = gem_dg_and_gp.second;
-    // etrk_[st].bx_pad_odd = digi_bx(gem_dg_and_gp.first);
-    etrk_[st].dphi_pad_odd = deltaPhi(etrk_[st].phi_lct_odd, etrk_[st].phi_pad_odd);
-    etrk_[st].dphi_pad_fit_odd = deltaPhi(etrk_[st].phi_layer3_fit_odd, etrk_[st].phi_pad_odd);
-    etrk_[st].deta_pad_odd = etrk_[st].eta_lct_odd - etrk_[st].eta_pad_odd;
-    }
-    }
-    else
-    {
-    best_pad_even[st] = bestgem_dg_and_gp.second;
-    etrk_[st].has_gem_pad |= 2;
-    // etrk_[st].pad_even = digi_channel(bestgem_dg_and_gp.first);
-    // etrk_[st].hsfromgem_even = match_gd.extrapolateHsfromGEMPad( d, digi_channel(bestgem_dg_and_gp.first));
-    etrk_[st].phi_pad_even = best_pad_even[st].phi();
-    etrk_[st].eta_pad_even = best_pad_even[st].eta();
-    if (is_valid(lct_even[st]))
-    {
-    const auto& gem_dg_and_gp = match_gd.digiInGEMClosestToCSC(pads, gp_lct_even[st]);
-    best_pad_even[st] = gem_dg_and_gp.second;
-    // etrk_[st].bx_pad_even = digi_bx(gem_dg_and_gp.first);
-    etrk_[st].dphi_pad_even = deltaPhi(etrk_[st].phi_lct_even, etrk_[st].phi_pad_even);
-    etrk_[st].dphi_pad_fit_even = deltaPhi(etrk_[st].phi_layer3_fit_even, etrk_[st].phi_pad_even);
-    etrk_[st].deta_pad_even = etrk_[st].eta_lct_even - etrk_[st].eta_pad_even;
-    }
-    }
-    if (id_tmp.layer()==1) break;
-    }
-    }
-
+  /*
     if (verbose_) std::cout <<"GEMCSCAnalyzer step6 "<< std::endl;
     for(const auto& d: match_gd.superChamberIdsCoPad())
     {

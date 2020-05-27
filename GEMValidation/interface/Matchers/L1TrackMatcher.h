@@ -8,7 +8,7 @@
  Original Author:  "Sven Dildick"
 */
 
-#include "GEMCode/GEMValidation/interface/L1MuMatcher.h"
+#include "GEMCode/GEMValidation/interface/Matchers/L1MuMatcher.h"
 #include "DataFormats/L1TrackTrigger/interface/TTTypes.h"
 #include "DataFormats/L1TCorrelator/interface/TkMuon.h"
 #include "DataFormats/L1TCorrelator/interface/TkMuonFwd.h"

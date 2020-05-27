@@ -8,9 +8,9 @@
  Original Author:  "Sven Dildick"
 */
 
-#include "GEMCode/GEMValidation/interface/CSCRecHitMatcher.h"
-#include "GEMCode/GEMValidation/interface/DTRecHitMatcher.h"
-#include "GEMCode/GEMValidation/interface/RPCRecHitMatcher.h"
+#include "GEMCode/GEMValidation/interface/Matchers/CSCRecHitMatcher.h"
+#include "GEMCode/GEMValidation/interface/Matchers/DTRecHitMatcher.h"
+#include "GEMCode/GEMValidation/interface/Matchers/RPCRecHitMatcher.h"
 #include "GEMCode/GEMValidation/interface/Helpers.h"
 #include "Validation/MuonGEMRecHits/interface/GEMRecHitMatcher.h"
 

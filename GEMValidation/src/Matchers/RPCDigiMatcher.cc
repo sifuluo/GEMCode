@@ -1,4 +1,4 @@
-#include "GEMCode/GEMValidation/interface/RPCDigiMatcher.h"
+#include "GEMCode/GEMValidation/interface/Matchers/RPCDigiMatcher.h"
 
 using namespace std;
 

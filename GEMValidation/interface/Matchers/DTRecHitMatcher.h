@@ -16,7 +16,7 @@
 #include "FWCore/Framework/interface/ConsumesCollector.h"
 #include "SimDataFormats/Track/interface/SimTrackContainer.h"
 #include "SimDataFormats/Vertex/interface/SimVertexContainer.h"
-#include "GEMCode/GEMValidation/interface/DTDigiMatcher.h"
+#include "GEMCode/GEMValidation/interface/Matchers/DTDigiMatcher.h"
 #include "DataFormats/DTRecHit/interface/DTRecHitCollection.h"
 #include "DataFormats/DTRecHit/interface/DTRecSegment2DCollection.h"
 #include "DataFormats/DTRecHit/interface/DTRecSegment4DCollection.h"

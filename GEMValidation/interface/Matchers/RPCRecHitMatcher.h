@@ -17,7 +17,7 @@
 #include "DataFormats/RPCRecHit/interface/RPCRecHitCollection.h"
 #include "SimDataFormats/Track/interface/SimTrackContainer.h"
 #include "SimDataFormats/Vertex/interface/SimVertexContainer.h"
-#include "GEMCode/GEMValidation/interface/RPCDigiMatcher.h"
+#include "GEMCode/GEMValidation/interface/Matchers/RPCDigiMatcher.h"
 
 #include <vector>
 #include <map>

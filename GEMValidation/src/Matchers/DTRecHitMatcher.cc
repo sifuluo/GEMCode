@@ -1,4 +1,4 @@
-#include "GEMCode/GEMValidation/interface/DTRecHitMatcher.h"
+#include "GEMCode/GEMValidation/interface/Matchers/DTRecHitMatcher.h"
 
 using namespace std;
 
