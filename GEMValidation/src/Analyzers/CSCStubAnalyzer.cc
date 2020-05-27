@@ -10,7 +10,7 @@ void CSCStubAnalyzer::init(const edm::ParameterSet& conf)
   minNHitsChamber_ = conf.getParameter<int>("minNHitsChamberCSCStub");
 }
 
-void CSCStubAnalyzer::analyze(gem::MyTrack track[NumOfTrees], std::set<int> stations_to_use_)
+void CSCStubAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::set<int> stations_to_use_)
 {
   // CSC CLCTs
   for(const auto& d: match_->chamberIdsCLCT(0)) {

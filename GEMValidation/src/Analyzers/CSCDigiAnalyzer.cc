@@ -10,7 +10,7 @@ void CSCDigiAnalyzer::init(const edm::ParameterSet& conf)
   minNHitsChamber_ = conf.getParameter<int>("minNHitsChamberCSCDigi");
 }
 
-void CSCDigiAnalyzer::analyze(gem::MyTrack track[NumOfTrees], std::set<int> stations_to_use_)
+void CSCDigiAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::set<int> stations_to_use_)
 {
   // CSC strip digis
   for(const auto& d: match_->chamberIdsStrip(0)) {

@@ -18,7 +18,7 @@ public:
   void init(const edm::ParameterSet& conf);
 
   // initialize the event
-  void analyze(gem::MyTrack track[NumOfTrees], std::set<int> stations);
+  void analyze(std::vector<gem::MyTrack>& track, std::set<int> stations);
 
  private:
 

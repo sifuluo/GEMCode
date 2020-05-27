@@ -50,7 +50,7 @@ private:
   std::set<int> stations_to_use_;
 
   TTree* tree_eff_[NumOfTrees];
-  gem::MyTrack track_[NumOfTrees];
+  std::vector<gem::MyTrack> track_;
 
   std::unique_ptr<SimTrackMatchManager> matcher_;
   std::unique_ptr<SimTrackAnalyzerManager> analyzer_;
@@ -67,7 +67,6 @@ GEMCSCAnalyzer::GEMCSCAnalyzer(const edm::ParameterSet& ps) :
   simVertexInput_ = consumes<edm::SimVertexContainer>(simVertex.getParameter<edm::InputTag>("inputTag"));
 
   const auto& simTrack = ps.getParameter<edm::ParameterSet>("simTrack");
-  verboseSimTrack_ = simTrack.getParameter<int>("verbose");
   simTrackInput_ = consumes<edm::SimTrackContainer>(simTrack.getParameter<edm::InputTag>("inputTag"));
   simTrackMinPt_ = simTrack.getParameter<double>("minPt");
   simTrackMinEta_ = simTrack.getParameter<double>("minEta");
@@ -75,6 +74,8 @@ GEMCSCAnalyzer::GEMCSCAnalyzer(const edm::ParameterSet& ps) :
 
   // always use all stations
   stations_to_use_ = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+
+  track_.reserve(13);
 
   for (const auto& s : stations_to_use_) {
     stringstream ss;
@@ -118,7 +119,7 @@ void GEMCSCAnalyzer::analyze(const edm::Event& ev, const edm::EventSetup& es) {
   ev.getByToken(simVertexInput_, sim_vertices);
   const edm::SimVertexContainer& sim_vert = *sim_vertices.product();
 
-  if (verboseSimTrack_) {
+  if (verbose_) {
     std::cout << "Total number of SimTrack in this event: " << sim_track.size() << std::endl;
   }
 
@@ -132,7 +133,8 @@ void GEMCSCAnalyzer::analyze(const edm::Event& ev, const edm::EventSetup& es) {
   int trk_no = 0;
 
   for (const auto& t : sim_track_selected) {
-    if (verboseSimTrack_) {
+    trk_no++;
+    if (verbose_) {
       std::cout << "Processing selected SimTrack " << trk_no + 1 << std::endl;
       std::cout << "pt(GeV/c) = " << t.momentum().pt() << ", eta = " << t.momentum().eta()
                 << ", phi = " << t.momentum().phi() << ", Q = " << t.charge() << ", PDGiD =  " << t.type() << std::endl;
@@ -163,6 +165,8 @@ void GEMCSCAnalyzer::analyze(const SimTrack& t, const SimVertex& v) {
   analyzer_.reset(new SimTrackAnalyzerManager(*matcher_));
   analyzer_->init(cfg_);
   analyzer_->analyze(track_, stations_to_use_);
+
+  std::cout << "Check has CSC Simhit " << track_[0].has_csc_sh << std::endl;
 
   // fill all trees
   for (const auto& s : stations_to_use_) {

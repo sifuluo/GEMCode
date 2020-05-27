@@ -10,7 +10,7 @@ void GEMSimHitAnalyzer::init(const edm::ParameterSet& conf)
   minNHitsChamber_ = conf.getParameter<int>("minNHitsChamberGEMSimHit");
 }
 
-void GEMSimHitAnalyzer::analyze(gem::MyTrack track[NumOfTrees], std::set<int> stations_to_use_)
+void GEMSimHitAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::set<int> stations_to_use_)
 {
   // for GEMs in station1, it will be also filled in ME11
   // GEM simhits in superchamber

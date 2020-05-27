@@ -14,6 +14,7 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 process.load('TrackPropagation.SteppingHelixPropagator.SteppingHelixPropagatorOpposite_cfi')
 process.load('TrackPropagation.SteppingHelixPropagator.SteppingHelixPropagatorAlong_cfi')
 
+"""
 process.MessageLogger = cms.Service("MessageLogger",
     destinations = cms.untracked.vstring("debug"),
     debug = cms.untracked.PSet(
@@ -25,14 +26,14 @@ process.MessageLogger = cms.Service("MessageLogger",
     ),
     debugModules = cms.untracked.vstring("GEMCSCAnalyzer")
 )
-
+"""
 process.source = cms.Source(
   "PoolSource",
   fileNames = cms.untracked.vstring('file:step2bis.root'),
 #  fileNames = cms.untracked.vstring('/store/user/awarden/MiniBias/SingleMu_May2020_MC_step2/200512_202254/0000/step2_1.root')
 )
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10) )
 
 process.TFileService = cms.Service("TFileService",
     fileName = cms.string("out_ana.root")

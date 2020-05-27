@@ -10,7 +10,7 @@ void GEMDigiAnalyzer::init(const edm::ParameterSet& conf)
   minNHitsChamber_ = conf.getParameter<int>("minNHitsChamberGEMDigi");
 }
 
-void GEMDigiAnalyzer::analyze(gem::MyTrack track[NumOfTrees], std::set<int> stations_to_use_)
+void GEMDigiAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::set<int> stations_to_use_)
 {
   // placeholders for best mtching pads
   GlobalPoint best_pad_odd[12];
