@@ -10,7 +10,7 @@
 
 class SimTrackAnalyzerManager
 {
-public:
+ public:
   SimTrackAnalyzerManager(const SimTrackMatchManager&);
 
   ~SimTrackAnalyzerManager() {}
@@ -21,11 +21,11 @@ public:
  private:
 
   // analyzers
-  std::shared_ptr<CSCSimHitAnalyzer> cscsh_;
-  std::shared_ptr<GEMSimHitAnalyzer> gemsh_;
-  std::shared_ptr<CSCDigiAnalyzer> cscdg_;
-  std::shared_ptr<GEMDigiAnalyzer> gemdg_;
-  std::shared_ptr<CSCStubAnalyzer> cscstub_;
+  std::unique_ptr<CSCSimHitAnalyzer> cscsh_;
+  std::unique_ptr<GEMSimHitAnalyzer> gemsh_;
+  std::unique_ptr<CSCDigiAnalyzer> cscdg_;
+  std::unique_ptr<GEMDigiAnalyzer> gemdg_;
+  std::unique_ptr<CSCStubAnalyzer> cscstub_;
 };
 
 #endif

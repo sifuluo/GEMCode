@@ -54,6 +54,7 @@ private:
   MyTrack etrk_[NumOfTrees];
 
   std::unique_ptr<SimTrackMatchManager> matcher_;
+  std::unique_ptr<SimTrackAnalyzerManager> analyzer_;
 };
 
 GEMCSCAnalyzer::GEMCSCAnalyzer(const edm::ParameterSet& ps) :
@@ -176,8 +177,8 @@ void GEMCSCAnalyzer::analyze(const SimTrack& t, const SimVertex& v) {
   matcher_->match(t, v);
 
   // analyze the track
-  SimTrackAnalyzerManager analyzer(*matcher_);
-  analyzer.analyze(etrk_);
+  analyzer_.reset(new SimTrackAnalyzerManager(*matcher_));
+  analyzer_->analyze(etrk_);
 
   // fill all trees
   for (const auto& s : stations_to_use_) {
