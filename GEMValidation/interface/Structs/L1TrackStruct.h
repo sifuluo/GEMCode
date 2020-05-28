@@ -1,39 +1,30 @@
-#ifndef GEMCode_GEMValidation_SimTrackStruct
-#define GEMCode_GEMValidation_SimTrackStruct
+#ifndef GEMCode_GEMValidation_L1TrackStruct
+#define GEMCode_GEMValidation_L1TrackStruct
 
 #include "TTree.h"
 #include <string>
 
 namespace gem {
 
-  struct SimTrackStruct {
-    float pt, eta, phi, pz, dxy;
-    int charge;
-    int endcap;
-    int pdgid;
+  struct L1TrackStruct {
+    float L1Track_pt, L1Track_eta, L1Track_phi;
+    int L1Track_charge;
+    int L1Track_endcap;
 
     void init() {
-      pt = 0.;
-      phi = 0.;
-      eta = -9.;
-      dxy = -999.;
-      charge = -9;
-      endcap = -9;
-      pdgid = -9999;
+      L1Track_pt = 0.;
+      L1Track_phi = 0.;
+      L1Track_eta = -9.;
+      L1Track_charge = -9;
+      L1Track_endcap = -9;
     };
 
-    TTree* book(TTree* t, const std::string& name = "track") {
-      edm::Service<TFileService> fs;
-      t = fs->make<TTree>(name.c_str(), name.c_str());
-
-      t->Branch("pt", &pt);
-      t->Branch("pz", &pz);
-      t->Branch("eta", &eta);
-      t->Branch("dxy", &dxy);
-      t->Branch("phi", &phi);
-      t->Branch("charge", &charge);
-      t->Branch("endcap", &endcap);
-      t->Branch("pdgid", &pdgid);
+    TTree* book(TTree* t) {
+      t->Branch("L1Track_pt", &L1Track_pt);
+      t->Branch("L1Track_eta", &L1Track_eta);
+      t->Branch("L1Track_phi", &L1Track_phi);
+      t->Branch("L1Track_charge", &L1Track_charge);
+      t->Branch("L1Track_endcap", &L1Track_endcap);
 
       return t;
     }

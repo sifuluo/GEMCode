@@ -120,7 +120,7 @@ namespace gem {
 
     };
 
-    TTree* book(TTree* t, const std::string& name = "track") {
+    TTree* book(TTree* t) {
 
       t->Branch("chamber_dg_odd", &chamber_dg_odd);
       t->Branch("chamber_dg_even", &chamber_dg_even);

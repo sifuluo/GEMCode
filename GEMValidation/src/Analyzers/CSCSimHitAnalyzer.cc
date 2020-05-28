@@ -14,31 +14,20 @@ void CSCSimHitAnalyzer::init(const edm::ParameterSet& conf)
 
 void CSCSimHitAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::vector<int> stations_to_use_)
 {
-  int i = 0;
-  for (auto& p : track){
-    cout << gem::toCSCTypeString(gem::cscStationsCo_[stations_to_use_[i]].first,
-                                 gem::cscStationsCo_[stations_to_use_[i]].second)
-         << " before odd " << p.has_csc_sh_odd
-         << " even " << p.has_csc_sh_even << endl;
-    i++;
-  }
-
-  std::cout << "in function CSCSimHitAnalyzer::analyze " << std::endl;
   const auto& csc_simhits(match_->chamberIds(0));
-  cout << "number of csc simhits " << csc_simhits.size() << endl;
+
   for(const auto& d: match_->chamberIds(0)) {
 
     CSCDetId id(d);
 
     const int st(gem::detIdToMEStation(id.station(),id.ring()));
-    cout << st << endl;
 
+    // ignore station if need be
     if (std::find(stations_to_use_.begin(), stations_to_use_.end(), st) == stations_to_use_.end()) continue;
-    cout << "use this station " << endl;
 
     const int stt( std::find(stations_to_use_.begin(), stations_to_use_.end(), st) - stations_to_use_.begin());
-    cout << " id " << id << " " << stt << endl;
 
+    // calculate hit layers
     int nlayers(match_->nLayersWithHitsInChamber(d));
 
     // case ME11
@@ -54,8 +43,8 @@ void CSCSimHitAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::vector<in
         nlayers = nlayers+match_->nLayersWithHitsInChamber(rawId);
       }
     }
-    cout << "nlayers " << nlayers << " " << minNHitsChamber_ << endl;
 
+    // layer requirement (typically 4)
     if (nlayers < minNHitsChamber_) continue;
 
     match_->LocalBendingInChamber(d);
@@ -64,10 +53,7 @@ void CSCSimHitAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::vector<in
     const auto& simhits = match_->hitsInDetId(id);
     const GlobalPoint& keygp(match_->simHitsMeanPosition(simhits));
 
-    cout << "fill rest of the branches " << endl;
-
     if (odd) {
-      cout << "odd" << endl;
       track[stt].chamber_sh_odd = id.chamber();
       track[stt].nlayers_csc_sh_odd = nlayers;
       track[stt].has_csc_sh_odd = true;
@@ -76,7 +62,6 @@ void CSCSimHitAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::vector<in
       track[stt].perp_cscsh_odd = keygp.perp();
     }
     else {
-      cout << "even" << endl;
       track[stt].chamber_sh_even = id.chamber();
       track[stt].nlayers_csc_sh_even = nlayers;
       track[stt].has_csc_sh_even = true;
@@ -86,9 +71,8 @@ void CSCSimHitAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::vector<in
     }
 
     // case ME11
-    if (false /*st==2 or st==3*/){
+    if (st==2 or st==3){
       if (odd) {
-        cout << "odd" << endl;
         track[1].chamber_sh_odd = id.chamber();
         track[1].nlayers_csc_sh_odd = nlayers;
         track[1].has_csc_sh_odd = true;
@@ -97,7 +81,6 @@ void CSCSimHitAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::vector<in
         track[1].perp_cscsh_odd = keygp.perp();
       }
       else {
-        cout << "even" << endl;
         track[1].chamber_sh_even = id.chamber();
         track[1].nlayers_csc_sh_even = nlayers;
         track[1].has_csc_sh_even = true;
@@ -106,13 +89,5 @@ void CSCSimHitAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::vector<in
         track[1].perp_cscsh_even = keygp.perp();
       }
     }
-  }
-  i = 0;
-  for (auto& p : track){
-    cout << gem::toCSCTypeString(gem::cscStationsCo_[stations_to_use_[i]].first,
-                                 gem::cscStationsCo_[stations_to_use_[i]].second)
-         << " after odd " << p.has_csc_sh_odd
-         << " even " << p.has_csc_sh_even << endl;
-    i++;
   }
 }

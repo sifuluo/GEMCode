@@ -49,7 +49,7 @@ namespace gem {
       recoChargedCandidate_nValidDTHits = 0;
     };
 
-    TTree* book(TTree* t, const std::string& name = "track") {
+    TTree* book(TTree* t) {
 
       t->Branch("has_recoTrackExtra", &has_recoTrackExtra);
       t->Branch("recoTrackExtra_pt_inner", &recoTrackExtra_pt_inner);

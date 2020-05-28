@@ -113,7 +113,7 @@ namespace gem {
       dphi_sh_even = -9;
     };
 
-    TTree* book(TTree* t, const std::string& name = "track") {
+    TTree* book(TTree* t) {
 
       t->Branch("bending_sh", &bending_sh);
 

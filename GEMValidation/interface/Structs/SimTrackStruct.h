@@ -22,7 +22,7 @@ namespace gem {
       pdgid = -9999;
     };
 
-    TTree* book(TTree* t, const std::string& name = "track") {
+    TTree* book(TTree* t) {
 
       t->Branch("pt", &pt);
       t->Branch("pz", &pz);

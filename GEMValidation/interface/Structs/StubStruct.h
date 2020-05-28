@@ -119,7 +119,7 @@ namespace gem {
       lct_type = -1;
     };
 
-    TTree* book(TTree* t, const std::string& name = "track") {
+    TTree* book(TTree* t) {
 
       t->Branch("quality_odd", &quality_odd);
       t->Branch("quality_even", &quality_even);

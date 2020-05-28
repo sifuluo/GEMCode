@@ -106,7 +106,7 @@ namespace gem {
       L1Mu_charge = -99;
     };
 
-    TTree* book(TTree* t, const std::string& name = "track") {
+    TTree* book(TTree* t) {
 
       //t->Branch("", &);
       t->Branch("has_tfTrack", &has_tfTrack);

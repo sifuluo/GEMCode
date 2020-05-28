@@ -37,17 +37,13 @@ namespace gem {
       gem::RecoTrackStruct::init();
     };
 
-    TTree* book(TTree* t, const std::string& name = "track") {
-
-      edm::Service<TFileService> fs;
-      t = fs->make<TTree>(name.c_str(), name.c_str());
-
-      t = gem::SimTrackStruct::book(t, name);
-      t = gem::SimHitStruct::book(t, name);
-      t = gem::DigiStruct::book(t, name);
-      t = gem::StubStruct::book(t, name);
-      t = gem::L1MuStruct::book(t, name);
-      t = gem::RecoTrackStruct::book(t, name);
+    TTree* book(TTree* t) {
+      t = gem::SimTrackStruct::book(t);
+      t = gem::SimHitStruct::book(t);
+      t = gem::DigiStruct::book(t);
+      t = gem::StubStruct::book(t);
+      t = gem::L1MuStruct::book(t);
+      t = gem::RecoTrackStruct::book(t);
 
       return t;
     }

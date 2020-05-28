@@ -62,7 +62,7 @@ process.GEMCSCAnalyzer = cms.EDAnalyzer(
 
 ana = process.GEMCSCAnalyzer
 ana.simTrack.minEta = 1.2
-ana.simTrack.maxEta = 1.5
+ana.simTrack.maxEta = 2.4
 ana.gemStripDigi.inputTag = "muonGEMDigis"
 ana.gemStripDigi.verbose = 0
 ana.cscALCT.verbose = 0
