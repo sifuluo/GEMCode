@@ -10,7 +10,7 @@ void GEMDigiAnalyzer::init(const edm::ParameterSet& conf)
   minNHitsChamber_ = conf.getParameter<int>("minNHitsChamberGEMDigi");
 }
 
-void GEMDigiAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::set<int> stations_to_use_)
+void GEMDigiAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::vector<int> stations_to_use_)
 {
   // placeholders for best mtching pads
   GlobalPoint best_pad_odd[12];
@@ -22,7 +22,7 @@ void GEMDigiAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::set<int> st
     int MEStation = id.station();
 
     const int st(gem::detIdToMEStation(MEStation,id.ring()));
-    if (stations_to_use_.count(st) == 0) continue;
+    if (std::find(stations_to_use_.begin(), stations_to_use_.end(), st) != stations_to_use_.end()) continue;
 
     const bool odd(id.chamber()%2==1);
 
@@ -114,7 +114,7 @@ void GEMDigiAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::set<int> st
     int MEStation = id.station();
 
     const int st(gem::detIdToMEStation(MEStation,id.ring()));
-    if (stations_to_use_.count(st) == 0) continue;
+    if (std::find(stations_to_use_.begin(), stations_to_use_.end(), st) != stations_to_use_.end()) continue;
 
     const bool odd(id.chamber()%2==1);
     if (odd) track[st].has_gem_copad |= 1;

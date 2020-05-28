@@ -10,14 +10,14 @@ void CSCStubAnalyzer::init(const edm::ParameterSet& conf)
   minNHitsChamber_ = conf.getParameter<int>("minNHitsChamberCSCStub");
 }
 
-void CSCStubAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::set<int> stations_to_use_)
+void CSCStubAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::vector<int> stations_to_use_)
 {
   // CSC CLCTs
   for(const auto& d: match_->chamberIdsCLCT(0)) {
     CSCDetId id(d);
 
     const int st(gem::detIdToMEStation(id.station(),id.ring()));
-    if (stations_to_use_.count(st) == 0) continue;
+    if (std::find(stations_to_use_.begin(), stations_to_use_.end(), st) != stations_to_use_.end()) continue;
 
     const bool odd(id.chamber()%2==1);
     const auto& clct = match_->bestClctInChamber(d);
@@ -60,7 +60,7 @@ void CSCStubAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::set<int> st
   for(const auto& d: match_->chamberIdsALCT(0)) {
     CSCDetId id(d);
     const int st(gem::detIdToMEStation(id.station(),id.ring()));
-    if (stations_to_use_.count(st) == 0) continue;
+    if (std::find(stations_to_use_.begin(), stations_to_use_.end(), st) != stations_to_use_.end()) continue;
 
     const bool odd(id.chamber()%2==1);
     const auto& alct = match_->bestAlctInChamber(d);
@@ -102,7 +102,7 @@ void CSCStubAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::set<int> st
     for(const auto& d: match_->chamberIdsLCT(0)) {
       CSCDetId id(d);
       const int st(gem::detIdToMEStation(id.station(),id.ring()));
-      if (stations_to_use_.count(st) == 0) continue;
+      if (std::find(stations_to_use_.begin(), stations_to_use_.end(), st) != stations_to_use_.end()) continue;
 
       const auto& lct = match_->bestLctInChamber(d);
       const GlobalPoint& gp = match_->getGlobalPosition(d, lct);

@@ -18,11 +18,11 @@ public:
   void init(const edm::ParameterSet& conf);
 
   // initialize the event
-  void analyze(std::vector<gem::MyTrack>& track, std::set<int> stations);
+  void analyze(std::vector<gem::MyTrack>& track, std::vector<int> stations);
 
  private:
 
-  std::unique_ptr<CSCSimHitMatcher> match_;
+  std::shared_ptr<CSCSimHitMatcher> match_;
   int minNHitsChamber_;
 };
 

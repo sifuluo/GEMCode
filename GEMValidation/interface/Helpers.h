@@ -186,7 +186,7 @@ namespace gem {
 
   static const std::vector<std::pair<int, int> > cscStationsCo_ = {
     {-99,-99},
-    {1, -99},
+    {1, 0},
     {1, 4},
     {1, 1},
     {1, 2},

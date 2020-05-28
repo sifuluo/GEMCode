@@ -12,9 +12,18 @@ void CSCSimHitAnalyzer::init(const edm::ParameterSet& conf)
   minNHitsChamber_ = conf.getParameter<int>("minNHitsChamberCSCSimHit");
 }
 
-void CSCSimHitAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::set<int> stations_to_use_)
+void CSCSimHitAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::vector<int> stations_to_use_)
 {
-  std::cout << "in function CSCSimHitAnalyzer::analyze " << NumOfTrees << std::endl;
+  int i = 0;
+  for (auto& p : track){
+    cout << gem::toCSCTypeString(gem::cscStationsCo_[stations_to_use_[i]].first,
+                                 gem::cscStationsCo_[stations_to_use_[i]].second)
+         << " before odd " << p.has_csc_sh_odd
+         << " even " << p.has_csc_sh_even << endl;
+    i++;
+  }
+
+  std::cout << "in function CSCSimHitAnalyzer::analyze " << std::endl;
   const auto& csc_simhits(match_->chamberIds(0));
   cout << "number of csc simhits " << csc_simhits.size() << endl;
   for(const auto& d: match_->chamberIds(0)) {
@@ -22,11 +31,13 @@ void CSCSimHitAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::set<int> 
     CSCDetId id(d);
 
     const int st(gem::detIdToMEStation(id.station(),id.ring()));
-    cout << " id " << id << " " << st << endl;
+    cout << st << endl;
 
-
-    if (stations_to_use_.count(st) == 0) continue;
+    if (std::find(stations_to_use_.begin(), stations_to_use_.end(), st) == stations_to_use_.end()) continue;
     cout << "use this station " << endl;
+
+    const int stt( std::find(stations_to_use_.begin(), stations_to_use_.end(), st) - stations_to_use_.begin());
+    cout << " id " << id << " " << stt << endl;
 
     int nlayers(match_->nLayersWithHitsInChamber(d));
 
@@ -57,33 +68,30 @@ void CSCSimHitAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::set<int> 
 
     if (odd) {
       cout << "odd" << endl;
-      track[st].chamber_sh_odd = id.chamber();
-      track[st].nlayers_csc_sh_odd = nlayers;
-      track[st].has_csc_sh |= 1;
-      std::cout << " check track[st].has_csc_sh " << track[st].has_csc_sh << " " << track[st].nlayers_csc_sh_odd << std::endl;
-      track[st].eta_cscsh_odd = keygp.eta();
-      track[st].phi_cscsh_odd = keygp.phi();
-      track[st].perp_cscsh_odd = keygp.perp();
+      track[stt].chamber_sh_odd = id.chamber();
+      track[stt].nlayers_csc_sh_odd = nlayers;
+      track[stt].has_csc_sh_odd = true;
+      track[stt].eta_cscsh_odd = keygp.eta();
+      track[stt].phi_cscsh_odd = keygp.phi();
+      track[stt].perp_cscsh_odd = keygp.perp();
     }
     else {
       cout << "even" << endl;
-      track[st].chamber_sh_even = id.chamber();
-      track[st].nlayers_csc_sh_even = nlayers;
-      track[st].has_csc_sh |= 2;
-      std::cout << " check track[st].has_csc_sh " << track[st].has_csc_sh << " " << track[st].nlayers_csc_sh_even << std::endl;
-      track[st].eta_cscsh_even = keygp.eta();
-      track[st].phi_cscsh_even = keygp.phi();
-      track[st].perp_cscsh_even = keygp.perp();
+      track[stt].chamber_sh_even = id.chamber();
+      track[stt].nlayers_csc_sh_even = nlayers;
+      track[stt].has_csc_sh_even = true;
+      track[stt].eta_cscsh_even = keygp.eta();
+      track[stt].phi_cscsh_even = keygp.phi();
+      track[stt].perp_cscsh_even = keygp.perp();
     }
 
     // case ME11
-    if (st==2 or st==3){
+    if (false /*st==2 or st==3*/){
       if (odd) {
         cout << "odd" << endl;
         track[1].chamber_sh_odd = id.chamber();
         track[1].nlayers_csc_sh_odd = nlayers;
-        track[1].has_csc_sh |= 1;
-        std::cout << " check track[1].has_csc_sh " << track[1].has_csc_sh << " " << track[st].nlayers_csc_sh_odd << std::endl;
+        track[1].has_csc_sh_odd = true;
         track[1].eta_cscsh_odd = keygp.eta();
         track[1].phi_cscsh_odd = keygp.phi();
         track[1].perp_cscsh_odd = keygp.perp();
@@ -92,12 +100,19 @@ void CSCSimHitAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::set<int> 
         cout << "even" << endl;
         track[1].chamber_sh_even = id.chamber();
         track[1].nlayers_csc_sh_even = nlayers;
-        track[1].has_csc_sh |= 2;
-        std::cout << " check track[1].has_csc_sh " << track[1].has_csc_sh << " " << track[st].nlayers_csc_sh_even << std::endl;
+        track[1].has_csc_sh_even = true;
         track[1].eta_cscsh_even = keygp.eta();
         track[1].phi_cscsh_even = keygp.phi();
         track[1].perp_cscsh_even = keygp.perp();
       }
     }
+  }
+  i = 0;
+  for (auto& p : track){
+    cout << gem::toCSCTypeString(gem::cscStationsCo_[stations_to_use_[i]].first,
+                                 gem::cscStationsCo_[stations_to_use_[i]].second)
+         << " after odd " << p.has_csc_sh_odd
+         << " even " << p.has_csc_sh_even << endl;
+    i++;
   }
 }

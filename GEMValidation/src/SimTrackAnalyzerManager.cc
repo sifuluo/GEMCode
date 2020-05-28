@@ -19,7 +19,7 @@ void SimTrackAnalyzerManager::init(const edm::ParameterSet& conf)
 }
 
 void
-SimTrackAnalyzerManager::analyze(std::vector<gem::MyTrack>& track, std::set<int> stations)
+SimTrackAnalyzerManager::analyze(std::vector<gem::MyTrack>& track, std::vector<int> stations)
 {
   cscsh_->analyze(track, stations);
   gemsh_->analyze(track, stations);

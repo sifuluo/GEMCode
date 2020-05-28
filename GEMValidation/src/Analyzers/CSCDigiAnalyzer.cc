@@ -10,14 +10,14 @@ void CSCDigiAnalyzer::init(const edm::ParameterSet& conf)
   minNHitsChamber_ = conf.getParameter<int>("minNHitsChamberCSCDigi");
 }
 
-void CSCDigiAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::set<int> stations_to_use_)
+void CSCDigiAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::vector<int> stations_to_use_)
 {
   // CSC strip digis
   for(const auto& d: match_->chamberIdsStrip(0)) {
     CSCDetId id(d);
 
     const int st(gem::detIdToMEStation(id.station(),id.ring()));
-    if (stations_to_use_.count(st) == 0) continue;
+    if (std::find(stations_to_use_.begin(), stations_to_use_.end(), st) != stations_to_use_.end()) continue;
 
     const int nlayers(match_->nLayersWithStripInChamber(d));
     if (nlayers < minNHitsChamber_) continue;
@@ -44,7 +44,7 @@ void CSCDigiAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::set<int> st
   for(const auto& d: match_->chamberIdsWire(0)) {
     CSCDetId id(d);
     const int st(gem::detIdToMEStation(id.station(),id.ring()));
-    if (stations_to_use_.count(st) == 0) continue;
+    if (std::find(stations_to_use_.begin(), stations_to_use_.end(), st) != stations_to_use_.end()) continue;
 
     const int nlayers(match_->nLayersWithWireInChamber(d));
     if (nlayers < minNHitsChamber_) continue;
