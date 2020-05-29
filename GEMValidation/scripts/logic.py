@@ -1,4 +1,4 @@
-from ROOT import *
+from ROOT import TCut
 
 def ANDtwo(cut1,cut2):
     """AND of two TCuts in PyROOT"""

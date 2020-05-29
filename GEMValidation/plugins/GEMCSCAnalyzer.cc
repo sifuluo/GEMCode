@@ -160,6 +160,15 @@ void GEMCSCAnalyzer::analyze(const SimTrack& t, const SimVertex& v)
   // reset all structs
   for (auto& p : track_) {
     p.init();
+
+    // track properties
+    p.pt = t.momentum().pt();
+    p.pz = t.momentum().pz();
+    p.phi = t.momentum().phi();
+    p.eta = t.momentum().eta();
+    p.charge = t.charge();
+    p.endcap = (p.eta > 0.) ? 1 : -1;
+    p.pdgid = t.type();
   }
 
   // match the track
@@ -169,14 +178,6 @@ void GEMCSCAnalyzer::analyze(const SimTrack& t, const SimVertex& v)
   analyzer_.reset(new SimTrackAnalyzerManager(*matcher_));
   analyzer_->init(cfg_);
 
-  // track properties
-  track_[0].pt = t.momentum().pt();
-  track_[0].pz = t.momentum().pz();
-  track_[0].phi = t.momentum().phi();
-  track_[0].eta = t.momentum().eta();
-  track_[0].charge = t.charge();
-  track_[0].endcap = (track_[0].eta > 0.) ? 1 : -1;
-  track_[0].pdgid = t.type();
 
   // analyze the track
   analyzer_->analyze(track_, stations_to_use_);
