@@ -7,6 +7,7 @@
 #include "GEMCode/GEMValidation/interface/Analyzers/GEMDigiAnalyzer.h"
 #include "GEMCode/GEMValidation/interface/Analyzers/CSCDigiAnalyzer.h"
 #include "GEMCode/GEMValidation/interface/Analyzers/CSCStubAnalyzer.h"
+#include "GEMCode/GEMValidation/interface/Analyzers/L1MuAnalyzer.h"
 
 class SimTrackAnalyzerManager
 {
@@ -29,6 +30,7 @@ class SimTrackAnalyzerManager
   std::unique_ptr<CSCDigiAnalyzer> cscdg_;
   std::unique_ptr<GEMDigiAnalyzer> gemdg_;
   std::unique_ptr<CSCStubAnalyzer> cscstub_;
+  std::unique_ptr<L1MuAnalyzer> l1mu_;
 };
 
 #endif

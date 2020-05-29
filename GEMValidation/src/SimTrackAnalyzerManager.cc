@@ -7,6 +7,7 @@ SimTrackAnalyzerManager::SimTrackAnalyzerManager(const SimTrackMatchManager& man
   gemdg_.reset(new GEMDigiAnalyzer(*manager.gemDigis()));
   cscdg_.reset(new CSCDigiAnalyzer(*manager.cscDigis()));
   cscstub_.reset(new CSCStubAnalyzer(*manager.cscStubs()));
+  l1mu_.reset(new L1MuAnalyzer(*manager.l1Muons()));
 }
 
 void SimTrackAnalyzerManager::init(const edm::ParameterSet& conf)
@@ -16,6 +17,7 @@ void SimTrackAnalyzerManager::init(const edm::ParameterSet& conf)
   cscdg_->init(conf);
   gemdg_->init(conf);
   cscstub_->init(conf);
+  l1mu_->init(conf);
 }
 
 void
@@ -26,4 +28,5 @@ SimTrackAnalyzerManager::analyze(std::vector<gem::MyTrack>& track, std::vector<i
   cscdg_->analyze(track, stations);
   gemdg_->analyze(track, stations);
   cscstub_->analyze(track, stations);
+  l1mu_->analyze(track);
 }
