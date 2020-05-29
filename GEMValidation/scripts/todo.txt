@@ -1,0 +1,19 @@
+efficiency sim, digi, stub, l1mu
+resolution digi, stub
+occupancy sim, digi, stub
+timing digi, stub
+patterns stub
+
+foreach PDF, C
+
+subdirectories
+
+main executable
+
+list of input files
+
+output directory
+
+CMS style (CMS Simulation, CMS Simulation Preliminary), ready for public viewing!
+
+clear titles, x, y axes

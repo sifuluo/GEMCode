@@ -32,6 +32,7 @@ class L1MuMatcher
   std::shared_ptr<gem::EMTFCand> muon() const { return muon_; }
 
   std::shared_ptr<CSCStubMatcher> cscStubMatcher() { return cscStubMatcher_; }
+  void setCSCStubMatcher(std::shared_ptr<CSCStubMatcher> s) {cscStubMatcher_ = s;}
 
  private:
 
