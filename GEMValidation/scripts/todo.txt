@@ -17,3 +17,5 @@ output directory
 CMS style (CMS Simulation, CMS Simulation Preliminary), ready for public viewing!
 
 clear titles, x, y axes
+
+first pyroot, then change to something faster
