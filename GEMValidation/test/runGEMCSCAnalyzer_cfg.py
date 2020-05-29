@@ -48,6 +48,11 @@ from GEMCode.GEMValidation.simTrackMatching_cfi import simTrackPSet
 process.GEMCSCAnalyzer = cms.EDAnalyzer(
     "GEMCSCAnalyzer",
     simTrackPSet,
+    runSim = cms.bool(True),
+    runDigi = cms.bool(True),
+    runStub = cms.bool(True),
+    runL1 = cms.bool(True),
+    runReco = cms.bool(False),
     verbose = cms.untracked.int32(1),
     minNHitsChamberGEMSimHit = cms.int32(1),
     minNHitsChamberCSCSimHit = cms.int32(4),
