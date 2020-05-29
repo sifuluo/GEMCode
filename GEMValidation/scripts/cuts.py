@@ -1,90 +1,29 @@
 from ROOT import *
-
-#_______________________________________________________________________________
-def ANDtwo(cut1,cut2):
-    """AND of two TCuts in PyROOT"""
-    if cut1.GetTitle() == "":
-        return cut2
-    if cut2.GetTitle() == "":
-        return cut1
-    return TCut("(%s) && (%s)"%(cut1.GetTitle(),cut2.GetTitle()))
+from logic import *
 
 
-#_______________________________________________________________________________
-def ORtwo(cut1,cut2):
-    """OR of two TCuts in PyROOT"""
-    if cut1.GetTitle() == "":
-        return cut2
-    if cut2.GetTitle() == "":
-        return cut1
-    return TCut("(%s) || (%s)"%(cut1.GetTitle(),cut2.GetTitle()))
-
-
-#_______________________________________________________________________________
-def AND(*arg):
-    """AND of any number of TCuts in PyROOT"""
-    length = len(arg)
-    if length == 0:
-        print "ERROR: invalid number of arguments"
-        return
-    if length == 1:
-        return arg[0] 
-    if length==2:
-        return ANDtwo(arg[0],arg[1])
-    if length>2:
-        result = arg[0]
-        for i in range(1,len(arg)):
-            result = ANDtwo(result,arg[i])
-        return result
-
-
-#_______________________________________________________________________________
-def OR(*arg): 
-    """OR of any number of TCuts in PyROOT"""
-    length = len(arg)
-    if length == 0:
-        print "ERROR: invalid number of arguments"
-        return
-    if length == 1:
-        return arg[0] 
-    if length==2:
-        return ORtwo(arg[0],arg[1])
-    if length>2:
-        result = arg[0]
-        for i in range(1,len(arg)):
-            result = ORtwo(result,arg[i])
-        return result
-
-
-#_______________________________________________________________________________
 def re(i):
     if i==1:
         return TCut("region==1")
     else:
         return TCut("region==-1")
-    
 
-#_______________________________________________________________________________
 def la(i):
     return TCut("layer==%d"%(i))
 
 
-#_______________________________________________________________________________
 def st(i):
     return TCut("station==%d"%(i))
 
 
-#_______________________________________________________________________________
 def ri(i):
     return TCut("ring==%d"%(i))
 
 
-#_______________________________________________________________________________
 def ch(i):
     return TCut("chamber==%d"%(i))
 
 
-#_______________________________________________________________________________
 nocut = TCut("")
 
 muon = TCut("TMath::Abs(particleType)==13")
@@ -97,12 +36,6 @@ rp1 = TCut("region==1")
 even = TCut("chamber%2==0")
 odd  = TCut("chamber%2==1")
 evenodd = [even, odd, TCut("")]
-
-rpc_sector_even = TCut("sector%2==0")
-rpc_sector_odd  = TCut("sector%2==1")
-
-rpc_subsector_even = TCut("subsector%2==0")
-rpc_subsector_odd  = TCut("subsector%2==1")
 
 eta_min = 1.64
 eta_max = 2.12
