@@ -19,24 +19,26 @@ void CSCDigiAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::vector<int>
     const int st(gem::detIdToMEStation(id.station(),id.ring()));
     if (std::find(stations_to_use_.begin(), stations_to_use_.end(), st) != stations_to_use_.end()) continue;
 
+    const int stt( std::find(stations_to_use_.begin(), stations_to_use_.end(), st) - stations_to_use_.begin());
+
     const int nlayers(match_->nLayersWithStripInChamber(d));
     if (nlayers < minNHitsChamber_) continue;
 
     const bool odd(id.chamber()%2==1);
 
-    if (odd) track[st].has_csc_strips |= 1;
-    else track[st].has_csc_strips |= 2;
+    if (odd) track[stt].has_csc_strips_odd = true;
+    else     track[stt].has_csc_strips_even = true;
 
-    if (odd) track[st].nlayers_st_dg_odd = nlayers;
-    else track[st].nlayers_st_dg_even = nlayers;
+    if (odd) track[stt].nlayers_st_dg_odd = nlayers;
+    else     track[stt].nlayers_st_dg_even = nlayers;
 
     // case ME11
     if (st==2 or st==3){
-      if (odd) track[1].has_csc_strips |= 1;
-      else track[1].has_csc_strips |= 2;
+      if (odd) track[1].has_csc_strips_odd = true;
+      else     track[1].has_csc_strips_even = true;
 
       if (odd) track[1].nlayers_st_dg_odd = nlayers;
-      else track[1].nlayers_st_dg_even = nlayers;
+      else     track[1].nlayers_st_dg_even = nlayers;
     }
   }
 
@@ -46,21 +48,23 @@ void CSCDigiAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::vector<int>
     const int st(gem::detIdToMEStation(id.station(),id.ring()));
     if (std::find(stations_to_use_.begin(), stations_to_use_.end(), st) != stations_to_use_.end()) continue;
 
+    const int stt( std::find(stations_to_use_.begin(), stations_to_use_.end(), st) - stations_to_use_.begin());
+
     const int nlayers(match_->nLayersWithWireInChamber(d));
     if (nlayers < minNHitsChamber_) continue;
 
     const bool odd(id.chamber()%2==1);
 
-    if (odd) track[st].has_csc_wires |= 1;
-    else track[st].has_csc_wires |= 2;
+    if (odd) track[stt].has_csc_wires_odd = true;
+    else track[stt].has_csc_wires_even = true;
 
-    if (odd) track[st].nlayers_wg_dg_odd = nlayers;
-    else track[st].nlayers_wg_dg_even = nlayers;
+    if (odd) track[stt].nlayers_wg_dg_odd = nlayers;
+    else track[stt].nlayers_wg_dg_even = nlayers;
 
     // case ME11
     if (st==2 or st==3){
-      if (odd) track[1].has_csc_wires |= 1;
-      else track[1].has_csc_wires |= 2;
+      if (odd) track[1].has_csc_wires_odd = true;
+      else track[1].has_csc_wires_even = true;
 
       if (odd) track[1].nlayers_wg_dg_odd = nlayers;
       else track[1].nlayers_wg_dg_even = nlayers;

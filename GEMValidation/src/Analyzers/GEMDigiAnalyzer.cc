@@ -29,28 +29,28 @@ void GEMDigiAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::vector<int>
     const int median_strip(median(match_->digisInSuperChamber(d)));
     if (match_->digisInSuperChamber(d).size() > 0) {
       if (odd) {
-        track[st].has_gem_dg |= 1;
+        track[st].has_gem_dg_odd = true;
         track[st].strip_gemdg_odd = median_strip;
       }
       else {
-        track[st].has_gem_dg |= 2;
+        track[st].has_gem_dg_even= true;
         track[st].strip_gemdg_even = median_strip;
       }
     }
 
     if (match_->nLayersWithDigisInSuperChamber(d) >= 2) {
-      if (odd) track[st].has_gem_dg2 |= 1;
-      else     track[st].has_gem_dg2 |= 2;
+      if (odd) track[st].has_gem_dg2_odd = true;
+      else     track[st].has_gem_dg2_even = true;
     }
 
     if (match_->padsInSuperChamber(d).size() > 0) {
-      if (odd) track[st].has_gem_pad |= 1;
-      else     track[st].has_gem_pad |= 2;
+      if (odd) track[st].has_gem_pad_odd = true;
+      else     track[st].has_gem_pad_even = true;
     }
 
     if (match_->nLayersWithPadsInSuperChamber(d) >= 2) {
-      if (odd) track[st].has_gem_pad2 |= 1;
-      else     track[st].has_gem_pad2 |= 2;
+      if (odd) track[st].has_gem_pad2_odd = true;
+      else     track[st].has_gem_pad2_even = true;
     }
 
     for (int layer=1; layer<=2; layer++){
@@ -65,7 +65,7 @@ void GEMDigiAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::vector<int>
       // const auto& bestgem_dg_and_gp = match_->digiInGEMClosestToCSC(pads, keygp);
       if (odd) {
         // best_pad_odd[st] = bestgem_dg_and_gp.second;
-        track[st].has_gem_pad |= 1;
+        track[st].has_gem_pad_odd = true;
         track[st].chamber_lct_odd = id.chamber();
         // track[st].pad_odd = digi_channel(bestgem_dg_and_gp.first);
         // track[st].hsfromgem_odd = match_->extrapolateHsfromGEMPad( d, digi_channel(bestgem_dg_and_gp.first));
@@ -87,7 +87,7 @@ void GEMDigiAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::vector<int>
       }
       else {
         // best_pad_even[st] = bestgem_dg_and_gp.second;
-        track[st].has_gem_pad |= 2;
+        track[st].has_gem_pad_even = true;
         // track[st].pad_even = digi_channel(bestgem_dg_and_gp.first);
         // track[st].hsfromgem_even = match_->extrapolateHsfromGEMPad( d, digi_channel(bestgem_dg_and_gp.first));
         track[st].z_pad_even = best_pad_even[st].z();
@@ -117,8 +117,8 @@ void GEMDigiAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::vector<int>
     if (std::find(stations_to_use_.begin(), stations_to_use_.end(), st) != stations_to_use_.end()) continue;
 
     const bool odd(id.chamber()%2==1);
-    if (odd) track[st].has_gem_copad |= 1;
-    else     track[st].has_gem_copad |= 2;
+    if (odd) track[st].has_gem_copad_odd = true;
+    else     track[st].has_gem_copad_even = true;
 
     const auto& copads = match_->coPadsInSuperChamber(d);
     if (copads.size() == 0) continue;
@@ -129,8 +129,8 @@ void GEMDigiAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::vector<int>
       // if (verbose_) std::cout <<"Matching GEMCopad detid "<< id <<" size "<< copads.size() << std::endl;
 
     if (st==2 or st==3) {
-      if (odd) track[1].has_gem_copad |= 1;
-      else     track[1].has_gem_copad |= 2;
+      if (odd) track[1].has_gem_copad_odd = true;
+      else     track[1].has_gem_copad_even = true;
 
       const auto& copads = match_->coPadsInSuperChamber(d);
       if (copads.size() == 0) continue;

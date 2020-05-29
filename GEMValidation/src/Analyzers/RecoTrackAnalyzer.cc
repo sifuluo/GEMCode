@@ -9,7 +9,7 @@ void RecoTrackAnalyzer::init(const edm::ParameterSet& conf)
 {
 }
 
-void RecoTrackAnalyzer::analyze(gem::MyTrack track[NumOfTrees])
+void RecoTrackAnalyzer::analyze(std::vector<gem::MyTrack>& track)
 {
   // RecoTrackExtra
   const auto& recoTrackExtra(match_->getMatchedRecoTrackExtra());

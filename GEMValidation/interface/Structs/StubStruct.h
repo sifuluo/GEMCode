@@ -8,25 +8,32 @@ namespace gem {
 
   struct StubStruct {
 
-    Int_t chamber_lct_odd;     //
-    Int_t chamber_lct_even;  //
+    Int_t chamber_lct_odd;
+    Int_t chamber_lct_even;
 
-    Char_t has_clct;  // bit1: in odd, bit2: even
-    Char_t has_alct;  // bit1: in odd, bit2: even
-    Char_t has_lct;   // bit1: in odd, bit2: even
+    bool has_clct_odd;
+    bool has_alct_odd;
+    bool has_lct_odd;
 
-    Float_t phi_layer1_fit_even, phi_layer3_fit_even, phi_layer6_fit_even, phi_layer1_fit_odd, phi_layer3_fit_odd,
-      phi_layer6_fit_odd;
+    bool has_clct_even;
+    bool has_alct_even;
+    bool has_lct_even;
+
+    Float_t phi_layer1_fit_even, phi_layer3_fit_even;
+    float phi_layer6_fit_even, phi_layer1_fit_odd;
+    float phi_layer3_fit_odd, phi_layer6_fit_odd;
     Float_t z_layer3_fit_even, z_layer3_fit_odd;
-    Char_t bend_lct_odd;
-    Char_t bend_lct_even;
-    Char_t bx_lct_odd, bx_alct_odd, bx_clct_odd;
-    Char_t bx_lct_even, bx_alct_even, bx_clct_even;
 
-    UChar_t hs_lct_odd;
-    UChar_t wg_lct_odd;
-    UChar_t hs_lct_even;
-    UChar_t wg_lct_even;
+    bool bend_lct_odd;
+    bool bend_lct_even;
+
+    bool bx_lct_odd, bx_alct_odd, bx_clct_odd;
+    bool bx_lct_even, bx_alct_even, bx_clct_even;
+
+    bool hs_lct_odd;
+    bool wg_lct_odd;
+    bool hs_lct_even;
+    bool wg_lct_even;
 
     Float_t phi_lct_odd;
     Float_t phi_lct_even;
@@ -63,23 +70,33 @@ namespace gem {
     void init() {
       quality_odd = 0;
       quality_even = 0;
+
       phi_layer1_fit_even = -9.0;
       phi_layer1_fit_odd = -9.0;
+
       z_layer3_fit_even = -9.0;
       z_layer3_fit_odd = -9.0;
+
       phi_layer3_fit_even = -9.0;
       phi_layer3_fit_odd = -9.0;
       phi_layer6_fit_even = -9.0;
       phi_layer6_fit_odd = -9.0;
-      has_alct = 0;
-      has_clct = 0;
-      has_lct = 0;
+
+      has_alct_even = 0;
+      has_clct_even = 0;
+      has_lct_even = 0;
+      has_alct_odd = 0;
+      has_clct_odd = 0;
+      has_lct_odd = 0;
+
       chamber_lct_odd = -1;
       chamber_lct_even = -1;
+
       bend_lct_odd = -9;
       bend_lct_even = -9;
       dphi_lct_odd = -9;
       dphi_lct_even = -9;
+
       bx_lct_odd = -9;
       bx_lct_even = -9;
       hs_lct_odd = 0;
@@ -90,10 +107,13 @@ namespace gem {
       phi_lct_even = -9.;
       eta_lct_odd = -9.;
       eta_lct_even = -9.;
+
       chi2_lct_odd = -99999;
       chi2_lct_even = -99999;
+
       timeErr_lct_odd = -9999;
       timeErr_lct_even = -9999;
+
       nHits_lct_odd = 0;
       nHits_lct_even = 0;
       dR_sim_lct_odd = 10;
@@ -109,12 +129,11 @@ namespace gem {
       quality_clct_even = -1;
       quality_alct_odd = -1;
       quality_alct_even = -1;
+
       bx_clct_odd = -9;
       bx_clct_even = -9;
       bx_alct_odd = -9;
       bx_alct_even = -9;
-
-
 
       lct_type = -1;
     };
@@ -124,31 +143,42 @@ namespace gem {
       t->Branch("quality_odd", &quality_odd);
       t->Branch("quality_even", &quality_even);
 
-      t->Branch("has_clct", &has_clct);
-      t->Branch("has_alct", &has_alct);
-      t->Branch("has_lct", &has_lct);
+      t->Branch("has_clct_odd", &has_clct_odd);
+      t->Branch("has_alct_odd", &has_alct_odd);
+      t->Branch("has_lct_odd", &has_lct_odd);
+
+      t->Branch("has_clct_even", &has_clct_even);
+      t->Branch("has_alct_even", &has_alct_even);
+      t->Branch("has_lct_even", &has_lct_even);
 
       t->Branch("quality_clct_odd", &quality_clct_odd);
       t->Branch("quality_clct_even", &quality_clct_even);
+
       t->Branch("bx_clct_odd", &bx_clct_odd);
       t->Branch("bx_clct_even", &bx_clct_even);
+
       t->Branch("quality_alct_odd", &quality_alct_odd);
       t->Branch("quality_alct_even", &quality_alct_even);
+
       t->Branch("bx_alct_odd", &bx_alct_odd);
       t->Branch("bx_alct_even", &bx_alct_even);
 
       t->Branch("chamber_lct_odd", &chamber_lct_odd);
       t->Branch("chamber_lct_even", &chamber_lct_even);
+
       t->Branch("z_layer3_fit_even", &z_layer3_fit_even);
       t->Branch("z_layer3_fit_odd", &z_layer3_fit_odd);
+
       t->Branch("phi_layer1_fit_even", &phi_layer1_fit_even);
       t->Branch("phi_layer1_fit_odd", &phi_layer1_fit_odd);
       t->Branch("phi_layer3_fit_even", &phi_layer3_fit_even);
       t->Branch("phi_layer3_fit_odd", &phi_layer3_fit_odd);
       t->Branch("phi_layer6_fit_even", &phi_layer6_fit_even);
       t->Branch("phi_layer6_fit_odd", &phi_layer6_fit_odd);
+
       t->Branch("bend_lct_odd", &bend_lct_odd);
       t->Branch("bend_lct_even", &bend_lct_even);
+
       t->Branch("bx_lct_odd", &bx_lct_odd);
       t->Branch("bx_lct_even", &bx_lct_even);
       t->Branch("hs_lct_odd", &hs_lct_odd);

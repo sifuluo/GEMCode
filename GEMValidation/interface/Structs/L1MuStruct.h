@@ -9,48 +9,45 @@ namespace gem {
   struct L1MuStruct {
 
     // Track properties
-    Int_t has_tfTrack;
-    Int_t has_tfCand;
+    Int_t has_emtfTrack;
     Int_t has_gmtRegCand;
     Int_t has_gmtCand;
 
     //csctf
-    Float_t trackpt, tracketa, trackphi;
+    float emtf_pt, emtf_eta, emtf_phi;
     UInt_t quality_packed, pt_packed, eta_packed, phi_packed;
     UInt_t chargesign;
     UInt_t rank;
     UInt_t nstubs;
     UInt_t deltaphi12, deltaphi23;
-    Bool_t hasME1, hasME2, hasME3, hasME4;
+    bool hasME1, hasME2, hasME3, hasME4;
     Char_t chamberME1, chamberME2;  //bit1: odd, bit2: even
     Int_t ME1_ring, ME2_ring;
     Int_t ME1_hs, ME2_hs, ME1_wg, ME2_wg;
-    Float_t dphiGE11, dphiGE21;
-    Bool_t passGE11, passGE21;
-    Bool_t passGE11_pt5, passGE11_pt7, passGE11_pt10, passGE11_pt15, passGE11_pt20, passGE11_pt30, passGE11_pt40;
-    Bool_t passGE21_pt5, passGE21_pt7, passGE21_pt10, passGE21_pt15, passGE21_pt20, passGE21_pt30, passGE21_pt40;
-    Bool_t passGE11_simpt, passGE21_simpt;
-    Float_t deltaR;
-    Float_t lctdphi12;
+    float dphiGE11, dphiGE21;
+    bool passGE11, passGE21;
+    bool passGE11_pt5, passGE11_pt7, passGE11_pt10, passGE11_pt15, passGE11_pt20, passGE11_pt30, passGE11_pt40;
+    bool passGE21_pt5, passGE21_pt7, passGE21_pt10, passGE21_pt15, passGE21_pt20, passGE21_pt30, passGE21_pt40;
+    bool passGE11_simpt, passGE21_simpt;
+    float deltaR;
+    float lctdphi12;
 
-
-    Bool_t allstubs_matched_TF;
+    bool allstubs_matched_TF;
     //L1Mu
-    Float_t bestdRGmtCand;
-    Float_t L1Mu_pt, L1Mu_eta, L1Mu_phi, L1Mu_quality, L1Mu_bx;
+    float bestdRGmtCand;
+    float L1Mu_pt, L1Mu_eta, L1Mu_phi, L1Mu_quality, L1Mu_bx;
     Int_t L1Mu_charge;
 
     void init() {
       // Track properties
-      has_tfTrack = -99;
-      has_tfCand = -99;
+      has_emtfTrack = -99;
       has_gmtRegCand = -99;
       has_gmtCand = -99;
 
       //csctf
-      trackpt = -1;
-      tracketa = -9;
-      trackphi = -9;
+      emtf_pt = -1;
+      emtf_eta = -9;
+      emtf_phi = -9;
       quality_packed = 0;
       pt_packed = 0;
       eta_packed = 0;
@@ -109,15 +106,14 @@ namespace gem {
     TTree* book(TTree* t) {
 
       //t->Branch("", &);
-      t->Branch("has_tfTrack", &has_tfTrack);
-      t->Branch("has_tfCand", &has_tfCand);
+      t->Branch("has_emtfTrack", &has_emtfTrack);
       t->Branch("has_gmtRegCand", &has_gmtRegCand);
       t->Branch("has_gmtCand", &has_gmtCand);
 
       //csctftrack
-      t->Branch("trackpt", &trackpt);
-      t->Branch("tracketa", &tracketa);
-      t->Branch("trackphi", &trackphi);
+      t->Branch("emtf_pt", &emtf_pt);
+      t->Branch("emtf_eta", &emtf_eta);
+      t->Branch("emtf_phi", &emtf_phi);
       t->Branch("quality_packed",&quality_packed);
       t->Branch("rank",&rank);
       t->Branch("pt_packed",&pt_packed);

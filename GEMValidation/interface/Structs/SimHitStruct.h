@@ -24,16 +24,22 @@ namespace gem {
     Float_t dphi_sh_odd;
 
     Float_t dphipositionpt_cscsh_even, dphipositionpt_cscsh_odd, dphipositionpt_gemsh_even, dphipositionpt_gemsh_odd;
+
     Float_t bending_sh;
-    Float_t phi_cscsh_even, phi_cscsh_odd, eta_cscsh_even, eta_cscsh_odd;
-    Float_t phi_layer1_sh_even, eta_layer1_sh_even, phi_layer1_sh_odd, eta_layer1_sh_odd, perp_layer1_sh_odd,
-      perp_layer1_sh_even;
+    Float_t phi_cscsh_even, phi_cscsh_odd;
+    float eta_cscsh_even, eta_cscsh_odd;
+
+    Float_t phi_layer1_sh_even, eta_layer1_sh_even;
+    float phi_layer1_sh_odd, eta_layer1_sh_odd;
+    float perp_layer1_sh_odd, perp_layer1_sh_even;
     Float_t z_layer1_sh_odd, z_layer1_sh_even;
-    Float_t phi_layer6_sh_even, eta_layer6_sh_even, phi_layer6_sh_odd, eta_layer6_sh_odd, perp_layer6_sh_odd,
-      perp_layer6_sh_even;
+    Float_t phi_layer6_sh_even, eta_layer6_sh_even;
+    float phi_layer6_sh_odd, eta_layer6_sh_odd;
+    float perp_layer6_sh_odd, perp_layer6_sh_even;
     Float_t z_layer6_sh_odd, z_layer6_sh_even;
-    Float_t perp_gemsh_even, perp_gemsh_odd, perp_cscsh_even, perp_cscsh_odd, centralperp_gemsh_even,
-      centralperp_gemsh_odd;
+    Float_t perp_gemsh_even, perp_gemsh_odd;
+    float perp_cscsh_even, perp_cscsh_odd;
+    float centralperp_gemsh_even, centralperp_gemsh_odd;
 
     bool has_gem_sh_even;
     bool has_gem_sh_odd;
