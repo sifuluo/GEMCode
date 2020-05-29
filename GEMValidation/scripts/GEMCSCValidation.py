@@ -33,7 +33,7 @@ def simTrackToCscSimHitMatching(plotter,st=1):
     yTitle = "Efficiency"
     title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
     toPlot = "TMath::Abs(eta)"
-    h_bins = "(100,%f,%f)"%(plotter.etaMin,plotter.etaMax)
+    h_bins = "(50,%f,%f)"%(plotter.etaMin,plotter.etaMax)
     nBins = int(h_bins[1:-1].split(',')[0])
     minBin = float(h_bins[1:-1].split(',')[1])
     maxBin = float(h_bins[1:-1].split(',')[2])
@@ -93,7 +93,7 @@ def simTrackToCscStripsWiresMatching(plotter,st=1):
     yTitle = "Efficiency"
     title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
     toPlot = "TMath::Abs(eta)"
-    h_bins = "(100,%f,%f)"%(plotter.etaMin,plotter.etaMax)
+    h_bins = "(50,%f,%f)"%(plotter.etaMin,plotter.etaMax)
     nBins = int(h_bins[1:-1].split(',')[0])
     minBin = float(h_bins[1:-1].split(',')[1])
     maxBin = float(h_bins[1:-1].split(',')[2])
@@ -111,8 +111,8 @@ def simTrackToCscStripsWiresMatching(plotter,st=1):
 
     index = plotter.stationsToUse.index(st)
 
-    h1 = draw_geff(plotter.treeEffSt[index], title, h_bins, toPlot, ok_sh1, ok_w1, "same", kRed)
-    h2 = draw_geff(plotter.treeEffSt[index], title, h_bins, toPlot, ok_sh1, ok_st1, "same")
+    h1 = draw_geff(plotter.treeEffSt[index], title, h_bins, toPlot, ok_csc_sh, ok_csc_wire, "same", kRed)
+    h2 = draw_geff(plotter.treeEffSt[index], title, h_bins, toPlot, ok_csc_sh, ok_csc_strip, "same")
 
     leg = TLegend(0.45,0.2,.75,0.35, "", "brNDC")
     leg.SetBorderSize(0)

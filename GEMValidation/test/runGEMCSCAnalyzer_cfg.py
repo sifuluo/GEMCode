@@ -33,7 +33,7 @@ process.source = cms.Source(
 #  fileNames = cms.untracked.vstring('/store/user/awarden/MiniBias/SingleMu_May2020_MC_step2/200512_202254/0000/step2_1.root')
 )
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(30) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
 process.TFileService = cms.Service("TFileService",
     fileName = cms.string("out_ana.root")

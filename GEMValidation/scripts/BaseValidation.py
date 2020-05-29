@@ -17,16 +17,26 @@ class GEMCSCStubPlotter():
     self.effSt = "trk_eff_"
     self.stations = enum('CSC_ALL','CSC_ME11','CSC_ME1a','CSC_ME1b','CSC_ME12','CSC_ME13',
                          'CSC_ME21','CSC_ME22','CSC_ME31','CSC_ME32','CSC_ME41','CSC_ME42')
-    self.stationsToUse = [self.stations.CSC_ME11,self.stations.CSC_ME1a,self.stations.CSC_ME1b,
-                          self.stations.CSC_ME21,self.stations.CSC_ME31,self.stations.CSC_ME41]
+    self.stationsToUse = [self.stations.CSC_ME11,
+                          self.stations.CSC_ME1a,
+                          self.stations.CSC_ME1b,
+                          self.stations.CSC_ME12,
+                          self.stations.CSC_ME13,
+                          self.stations.CSC_ME21,
+                          self.stations.CSC_ME22,
+                          self.stations.CSC_ME31,
+                          self.stations.CSC_ME32,
+                          self.stations.CSC_ME41,
+                          self.stations.CSC_ME42
+    ]
     self.file = TFile.Open(self.inputDir + self.inputFile)
     self.dirAna = (self.file).Get(self.analyzer)
     self.treeEffSt = []
     for x in self.stationsToUse:
       self.treeEffSt.append(self.dirAna.Get(self.effSt + self.stations.reverse_mapping[x]))
-    self.yMin = 0.8
-    self.yMax = 1.02
-    self.etaMin = 1.5
+    self.yMin = 0.5
+    self.yMax = 1.1
+    self.etaMin = 0.9
     self.etaMax = 2.4
     self.pu = 140
     self.matchAlctGem = True

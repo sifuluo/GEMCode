@@ -70,7 +70,7 @@ def draw_geff(t, title, h_bins, to_draw, den_cut, extra_num_cut,
     ## total numerator selection cut
     ## the extra brackets around the extra_num_cut are necessary !!
     num_cut = AND(den_cut,extra_num_cut)
-    debug = True
+    debug = False
     if debug:
         print "Denominator cut", den_cut
         print "Numerator cut", num_cut
@@ -86,8 +86,6 @@ def draw_geff(t, title, h_bins, to_draw, den_cut, extra_num_cut,
 
     t.Draw(to_draw + ">>num", num_cut, "goff")
     t.Draw(to_draw + ">>den", den_cut, "goff")
-
-    print num.GetEntries(), den.GetEntries()
 
     ## check if the number of passed entries larger than total entries
     doConsistencyCheck = False

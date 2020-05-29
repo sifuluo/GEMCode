@@ -27,7 +27,7 @@ if __name__ == "__main__":
     st = plotter.stationsToUse[i]
     print "Processing station ", plotter.stations.reverse_mapping[st]
     simTrackToCscSimHitMatching(plotter,st)
-    #simTrackToCscStripsWiresMatching(plotter,st)
+    simTrackToCscStripsWiresMatching(plotter,st)
     #simTrackToCscStripsWiresMatching_2(plotter,st)
     #simTrackToCscAlctClctMatching(plotter,st)
     #simTrackToCscAlctClctMatching_2(plotter,st)
