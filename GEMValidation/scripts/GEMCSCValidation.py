@@ -1,10 +1,10 @@
-import sys
+import sys, os
 
 from ROOT import gStyle, TH1F, TCanvas, TLegend, kRed, kBlue
 
 from helpers.cuts import *
 from helpers.Helpers import *
-
+from helpers.stations import *
 
 def CSCSimHit(plotter):
 
@@ -23,46 +23,46 @@ def CSCSimHit(plotter):
     gStyle.SetOptStat(0);
     gStyle.SetMarkerStyle(1);
 
-    ok_eta = TCut("TMath::Abs(eta)>%f && TMath::Abs(eta)<%f"%(plotter.etaMin,plotter.etaMax))
-
     ## variables for the plot
     topTitle = " " * 11 + "CSC SimHit matching" + " " * 35 + "CMS Simulation Preliminary"
     xTitle = "True muon #eta"
     yTitle = "Efficiency"
     title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
     toPlot = "TMath::Abs(eta)"
-    h_bins = "(50,%f,%f)"%(plotter.etaMin,plotter.etaMax)
-    nBins = int(h_bins[1:-1].split(',')[0])
-    minBin = float(h_bins[1:-1].split(',')[1])
-    maxBin = float(h_bins[1:-1].split(',')[2])
 
-    c = TCanvas("c","c",700,450)
-    c.Clear()
-    base = TH1F("base",title,nBins,minBin,maxBin)
-    base.SetMinimum(plotter.yMin)
-    base.SetMaximum(plotter.yMax)
-    base.Draw("")
-    base.GetXaxis().SetLabelSize(0.05)
-    base.GetYaxis().SetLabelSize(0.05)
-    base.GetXaxis().SetTitleSize(0.05)
-    base.GetYaxis().SetTitleSize(0.05)
+    subdirectory = "/CSCSimHit/"
 
-#    index = plotter.stationsToUse.index(st)
+    for st in range(0,len(cscStations)):
+        c = TCanvas("c","c",700,450)
+        c.Clear()
 
-    h1 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_eta, ok_csc_sh(0), "same")
+        h_bins = "(50,%f,%f)"%(cscStations[st].eta_min,cscStations[st].eta_max)
+        nBins = int(h_bins[1:-1].split(',')[0])
+        minBin = float(h_bins[1:-1].split(',')[1])
+        maxBin = float(h_bins[1:-1].split(',')[2])
+        base = TH1F("base",title,nBins,minBin,maxBin)
+        base.SetMinimum(plotter.yMin)
+        base.SetMaximum(plotter.yMax)
+        base.Draw("")
+        base.GetXaxis().SetLabelSize(0.05)
+        base.GetYaxis().SetLabelSize(0.05)
+        base.GetXaxis().SetTitleSize(0.05)
+        base.GetYaxis().SetTitleSize(0.05)
 
-    leg = TLegend(0.45,0.2,.75,0.35, "", "brNDC")
-    leg.SetBorderSize(0)
-    leg.SetFillStyle(0)
-    leg.SetTextSize(0.06)
-    leg.AddEntry(h1, "SimHits","l")
-    leg.Draw("same")
+        h1 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_eta, ok_csc_sh(st), "same")
 
-    csc = drawCSCLabel("ME1/1", 0.87,0.87,0.05)
-#    pul = drawPuLabel(plotter.pu,0.17,0.17,0.05)
-#    tex = drawEtaLabel(plotter.etaMin,plotter.etaMax,0.2,0.8,0.05)
+        leg = TLegend(0.45,0.2,.75,0.35, "", "brNDC")
+        leg.SetBorderSize(0)
+        leg.SetFillStyle(0)
+        leg.SetTextSize(0.06)
+        leg.AddEntry(h1, "SimHit","l")
+        leg.Draw("same")
 
-    c.Print("%scsc_simhit_efficiency_ME11%s"%(plotter.targetDir, plotter.ext))
+        csc = drawCSCLabel(cscStations[st].label, 0.87,0.87,0.05)
+        #    pul = drawPuLabel(plotter.pu,0.17,0.17,0.05)
+        #    tex = drawEtaLabel(plotter.etaMin,plotter.etaMax,0.2,0.8,0.05)
+
+        c.Print("%sEff_CSCSimHit_%s%s"%(plotter.targetDir + subdirectory, cscStations[st].labelc,  plotter.ext))
 
 
 def CSCStripsWires(plotter):

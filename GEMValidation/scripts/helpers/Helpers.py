@@ -68,12 +68,7 @@ def draw_geff(t, title, h_bins, to_draw, den_cut, extra_num_cut,
     """Make an efficiency plot"""
 
     ## total numerator selection cut
-    ## the extra brackets around the extra_num_cut are necessary !!
     num_cut = AND(den_cut,extra_num_cut)
-    debug = True
-    if debug:
-        print "Denominator cut", den_cut
-        print "Numerator cut", num_cut
 
     ## PyROOT works a little different than ROOT when you are plotting
     ## histograms directly from tree. Hence, this work-around
@@ -87,7 +82,10 @@ def draw_geff(t, title, h_bins, to_draw, den_cut, extra_num_cut,
     t.Draw(to_draw + ">>num", num_cut, "goff")
     t.Draw(to_draw + ">>den", den_cut, "goff")
 
-    print den.GetEntries(), num.GetEntries()
+    debug = False
+    if debug:
+        print "Denominator cut", den_cut, den.GetEntries()
+        print "Numerator cut", num_cut, num.GetEntries()
 
     ## check if the number of passed entries larger than total entries
     doConsistencyCheck = False
