@@ -2,23 +2,23 @@
 #define GEMCode_GEMValidation_RecoTrackAnalyzer_h
 
 #include "GEMCode/GEMValidation/interface/Helpers.h"
-#include "GEMCode/GEMValidation/interface/MyTrack.h"
-#include "GEMCode/GEMValidation/interface/SimTrackMatchManager.h"
+#include "GEMCode/GEMValidation/interface/MatchManager.h"
+#include "GEMCode/GEMValidation/interface/TreeManager.h"
 
 class RecoTrackAnalyzer
 {
 public:
 
   // constructor
-  RecoTrackAnalyzer(const RecoTrackMatcher& match_sh);
+  RecoTrackAnalyzer(const edm::ParameterSet& conf);
 
   // destructor
   ~RecoTrackAnalyzer() {}
 
-  void init(const edm::ParameterSet& conf);
+  void init(const RecoTrackMatcher& match_sh);
 
   // initialize the event
-  void analyze(std::vector<gem::MyTrack>& track);
+  void analyze(TreeManager& tree);
 
  private:
 

@@ -1,14 +1,15 @@
+// CMSSW
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 #include "FWCore/Framework/interface/EDAnalyzer.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/ESHandle.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
-#include "DataFormats/Math/interface/deltaPhi.h"
-#include "GEMCode/GEMValidation/interface/Helpers.h"
-#include "GEMCode/GEMValidation/interface/SimTrackMatchManager.h"
-#include "GEMCode/GEMValidation/interface/SimTrackAnalyzerManager.h"
-#include "GEMCode/GEMValidation/interface/MyTrack.h"
+
+// Private code
+#include "GEMCode/GEMValidation/interface/MatchManager.h"
+#include "GEMCode/GEMValidation/interface/AnalyzerManager.h"
+#include "GEMCode/GEMValidation/interface/TreeManager.h"
 
 #include <iomanip>
 #include <sstream>
@@ -16,55 +17,35 @@
 #include <math.h>
 #include <bitset>
 
-using namespace std;
-
 class GEMCSCAnalyzer : public edm::EDAnalyzer {
 public:
   explicit GEMCSCAnalyzer(const edm::ParameterSet&);
 
   ~GEMCSCAnalyzer() {}
 
-  virtual void beginRun(const edm::Run&, const edm::EventSetup&);
-
   virtual void analyze(const edm::Event&, const edm::EventSetup&);
-
-  static void fillDescriptions(edm::ConfigurationDescriptions& descriptions);
 
 private:
   void analyze(const SimTrack& t, const SimVertex& v);
   bool isSimTrackGood(const SimTrack& t);
-  int detIdToMEStation(int st, int ri);
-
-  edm::ParameterSet cfg_;
 
   edm::EDGetTokenT<edm::SimVertexContainer> simVertexInput_;
   edm::EDGetTokenT<edm::SimTrackContainer> simTrackInput_;
 
   int verboseSimTrack_;
-  int verboseL1Track_;
   double simTrackMinPt_;
   double simTrackMinEta_;
   double simTrackMaxEta_;
   int verbose_;
-  std::vector<string> cscStations_;
-  std::vector<int> stations_to_use_;
 
-  TTree* tree_eff_[NumOfTrees];
-  std::vector<gem::MyTrack> track_;
-
-  std::unique_ptr<SimTrackMatchManager> matcher_;
-  std::unique_ptr<SimTrackAnalyzerManager> analyzer_;
+  std::unique_ptr<TreeManager> tree_;
+  std::unique_ptr<MatchManager> matcher_;
+  std::unique_ptr<AnalyzerManager> analyzer_;
 };
 
 GEMCSCAnalyzer::GEMCSCAnalyzer(const edm::ParameterSet& ps) :
   verbose_(ps.getUntrackedParameter<int>("verbose", 0))
 {
-  edm::Service<TFileService> fs;
-
-  cfg_ = ps;
-
-  cscStations_ = ps.getParameter<std::vector<string> >("cscStations");
-
   const auto& simVertex = ps.getParameter<edm::ParameterSet>("simVertex");
   simVertexInput_ = consumes<edm::SimVertexContainer>(simVertex.getParameter<edm::InputTag>("inputTag"));
 
@@ -74,47 +55,15 @@ GEMCSCAnalyzer::GEMCSCAnalyzer(const edm::ParameterSet& ps) :
   simTrackMinEta_ = simTrack.getParameter<double>("minEta");
   simTrackMaxEta_ = simTrack.getParameter<double>("maxEta");
 
-  // stations to use
-  stations_to_use_ = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
-  track_.clear();
-
-  // add empty structs and tree
-  for (const auto& p: stations_to_use_){
-    track_.push_back(gem::MyTrack());
-  }
-
   // book the trees
-  for (unsigned int i = 0; i < stations_to_use_.size(); ++i) {
-    int s = stations_to_use_[i];
-    std::string ss =  "trk_eff_" + cscStations_[s];
-    std::cout << "station to use " << i <<  " " << s << "  " << cscStations_[s] << std::endl;
+  tree_.reset(new TreeManager());
+  tree_->book();
 
-    tree_eff_[i] = fs->make<TTree>(ss.c_str(), ss.c_str());
-    tree_eff_[i] = track_[i].book(tree_eff_[i]);
-  }
+  // define new matchers
+  matcher_.reset(new MatchManager(ps, consumesCollector()));
 
-  matcher_.reset(new SimTrackMatchManager(ps, consumesCollector()));
-}
-
-void GEMCSCAnalyzer::beginRun(const edm::Run& iRun, const edm::EventSetup& iSetup) {}
-
-bool GEMCSCAnalyzer::isSimTrackGood(const SimTrack& t) {
-  // SimTrack selection
-  if (t.noVertex())
-    return false;
-  if (t.noGenpart())
-    return false;
-  // only muons
-  if (std::abs(t.type()) != 13)
-    return false;
-  // pt selection
-  if (t.momentum().pt() < simTrackMinPt_)
-    return false;
-  // eta selection
-  const float eta(std::abs(t.momentum().eta()));
-  if (eta > simTrackMaxEta_ || eta < simTrackMinEta_)
-    return false;
-  return true;
+  // define new analyzers
+  analyzer_.reset(new AnalyzerManager(ps));
 }
 
 void GEMCSCAnalyzer::analyze(const edm::Event& ev, const edm::EventSetup& es) {
@@ -155,46 +104,42 @@ void GEMCSCAnalyzer::analyze(const edm::Event& ev, const edm::EventSetup& es) {
   }
 }
 
-void GEMCSCAnalyzer::analyze(const SimTrack& t, const SimVertex& v)
+void GEMCSCAnalyzer::analyze(const SimTrack& track, const SimVertex& v)
 {
   // reset all structs
-  for (auto& p : track_) {
-    p.init();
-
-    // track properties
-    p.pt = t.momentum().pt();
-    p.pz = t.momentum().pz();
-    p.phi = t.momentum().phi();
-    p.eta = t.momentum().eta();
-    p.charge = t.charge();
-    p.endcap = (p.eta > 0.) ? 1 : -1;
-    p.pdgid = t.type();
-  }
+  tree_->init();
 
   // match the track
-  matcher_->match(t, v);
+  matcher_->match(track, v);
 
   // initialize the track analyzers
-  analyzer_.reset(new SimTrackAnalyzerManager(*matcher_));
-  analyzer_->init(cfg_);
-
+  analyzer_->init(*matcher_);
 
   // analyze the track
-  analyzer_->analyze(track_, stations_to_use_);
+  analyzer_->analyze(*tree_, track);
 
   // fill all trees
-  for (const auto& s: stations_to_use_) {
-    tree_eff_[s]->Fill();
-  }
+  tree_->fill();
 }
 
-// ------------ method fills 'descriptions' with the allowed parameters for the module  ------------
-void GEMCSCAnalyzer::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
-  // The following says we do not know what parameters are allowed so do no validation
-  // Please change this to state exactly what you do use, even if it is no parameters
-  edm::ParameterSetDescription desc;
-  desc.setUnknown();
-  descriptions.addDefault(desc);
+bool GEMCSCAnalyzer::isSimTrackGood(const SimTrack& t) {
+  // SimTrack selection
+  if (t.noVertex())
+    return false;
+  if (t.noGenpart())
+    return false;
+  // only muons
+  if (std::abs(t.type()) != 13)
+    return false;
+  // pt selection
+  if (t.momentum().pt() < simTrackMinPt_)
+    return false;
+  // eta selection
+  const float eta(std::abs(t.momentum().eta()));
+  if (eta > simTrackMaxEta_ || eta < simTrackMinEta_)
+    return false;
+  return true;
 }
+
 
 DEFINE_FWK_MODULE(GEMCSCAnalyzer);

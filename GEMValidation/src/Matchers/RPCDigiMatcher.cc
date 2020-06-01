@@ -80,14 +80,14 @@ RPCDigiMatcher::matchDigisToSimTrack(const RPCDigiCollection& digis)
 
 
 std::set<unsigned int>
-RPCDigiMatcher::detIdsDigi(int rpc_type) const
+RPCDigiMatcher::detIds(int rpc_type) const
 {
   return selectDetIds(detid_to_digis_, rpc_type);
 }
 
 
 std::set<unsigned int>
-RPCDigiMatcher::chamberIdsDigi(int rpc_type) const
+RPCDigiMatcher::chamberIds(int rpc_type) const
 {
   return selectDetIds(chamber_to_digis_, rpc_type);
 }
@@ -112,7 +112,7 @@ int
 RPCDigiMatcher::nDigis() const
 {
   int n = 0;
-  for (const auto& id: detIdsDigi())
+  for (const auto& id: detIds())
   {
     n += digisInDetId(id).size();
   }
@@ -138,7 +138,7 @@ RPCDigiMatcher::partitionNumbers() const
 {
   std::set<int> result;
 
-  const auto& detids = detIdsDigi();
+  const auto& detids = detIds();
   for (const auto& id: detids)
   {
     const RPCDetId& idd(id);

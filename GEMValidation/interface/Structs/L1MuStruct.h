@@ -1,8 +1,7 @@
-#ifndef GEMCode_GEMValidation_L1TrackStruct
-#define GEMCode_GEMValidation_L1TrackStruct
+#ifndef GEMCode_GEMValidation_L1MuStruct
+#define GEMCode_GEMValidation_L1MuStruct
 
 #include "TTree.h"
-#include <string>
 
 namespace gem {
 
@@ -15,7 +14,6 @@ namespace gem {
 
     //csctf
     float emtf_pt, emtf_eta, emtf_phi;
-    UInt_t quality_packed, pt_packed, eta_packed, phi_packed;
     UInt_t chargesign;
     UInt_t rank;
     UInt_t nstubs;
@@ -48,10 +46,6 @@ namespace gem {
       emtf_pt = -1;
       emtf_eta = -9;
       emtf_phi = -9;
-      quality_packed = 0;
-      pt_packed = 0;
-      eta_packed = 0;
-      phi_packed = 0;
       ME1_hs = -1;
       ME1_wg = -1;
       ME2_hs = -1;
@@ -103,7 +97,7 @@ namespace gem {
       L1Mu_charge = -99;
     };
 
-    TTree* book(TTree* t) {
+    void book(TTree* t) {
 
       //t->Branch("", &);
       t->Branch("has_emtfTrack", &has_emtfTrack);
@@ -114,11 +108,7 @@ namespace gem {
       t->Branch("emtf_pt", &emtf_pt);
       t->Branch("emtf_eta", &emtf_eta);
       t->Branch("emtf_phi", &emtf_phi);
-      t->Branch("quality_packed",&quality_packed);
       t->Branch("rank",&rank);
-      t->Branch("pt_packed",&pt_packed);
-      t->Branch("eta_packed",&eta_packed);
-      t->Branch("phi_packed",&phi_packed);
       t->Branch("chargesign",&chargesign);
       t->Branch("deltaphi12",&deltaphi12);
       t->Branch("deltaphi23",&deltaphi23);
@@ -168,7 +158,6 @@ namespace gem {
       t->Branch("L1Mu_quality", &L1Mu_quality);
       t->Branch("L1Mu_bx", &L1Mu_bx);
       t->Branch("L1Mu_charge", &L1Mu_charge);
-      return t;
     }
   };
 }  // namespace

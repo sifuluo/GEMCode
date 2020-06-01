@@ -2,7 +2,6 @@
 #define GEMCode_GEMValidation_RecoTrackStruct
 
 #include "TTree.h"
-#include <string>
 
 namespace gem {
 
@@ -49,7 +48,7 @@ namespace gem {
       recoChargedCandidate_nValidDTHits = 0;
     };
 
-    TTree* book(TTree* t) {
+    void book(TTree* t) {
 
       t->Branch("has_recoTrackExtra", &has_recoTrackExtra);
       t->Branch("recoTrackExtra_pt_inner", &recoTrackExtra_pt_inner);
@@ -70,8 +69,6 @@ namespace gem {
       t->Branch("recoChargedCandidate_nValidDTHits", &recoChargedCandidate_nValidDTHits);
       t->Branch("recoChargedCandidate_nValidCSCHits", &recoChargedCandidate_nValidCSCHits);
       t->Branch("recoChargedCandidate_nValidRPCHits", &recoChargedCandidate_nValidRPCHits);
-
-      return t;
     }
   };
 }  // namespace

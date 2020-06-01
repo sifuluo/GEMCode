@@ -2,23 +2,23 @@
 #define GEMCode_GEMValidation_L1MuAnalyzer_h
 
 #include "GEMCode/GEMValidation/interface/Helpers.h"
-#include "GEMCode/GEMValidation/interface/MyTrack.h"
-#include "GEMCode/GEMValidation/interface/SimTrackMatchManager.h"
+#include "GEMCode/GEMValidation/interface/MatchManager.h"
+#include "GEMCode/GEMValidation/interface/TreeManager.h"
 
 class L1MuAnalyzer
 {
 public:
 
   // constructor
-  L1MuAnalyzer(const L1MuMatcher& match_sh);
+  L1MuAnalyzer(const edm::ParameterSet& conf);
 
   // destructor
   ~L1MuAnalyzer() {}
 
-  void init(const edm::ParameterSet& conf);
+  void init(const L1MuMatcher& match_sh);
 
   // initialize the event
-  void analyze(std::vector<gem::MyTrack>& track);
+  void analyze(TreeManager& tree);
 
  private:
 

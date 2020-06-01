@@ -8,3 +8,6 @@
 *.py~
 *__init__.py
 *txt~
+#*
+*#*
+plots

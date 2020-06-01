@@ -48,7 +48,7 @@ void
 RPCRecHitMatcher::matchRecHitsToSimTrack(const RPCRecHitCollection& rechits)
 {
   // get the matched ids with digis
-  const auto& det_ids = rpcDigiMatcher_->detIdsDigi();
+  const auto& det_ids = rpcDigiMatcher_->detIds();
 
   // loop on those ids
   for (auto id: det_ids)

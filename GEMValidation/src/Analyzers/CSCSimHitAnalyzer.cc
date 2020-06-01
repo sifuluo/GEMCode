@@ -2,17 +2,17 @@
 
 using namespace std;
 
-CSCSimHitAnalyzer::CSCSimHitAnalyzer(const CSCSimHitMatcher& match_sh)
-{
-  match_.reset(new CSCSimHitMatcher(match_sh));
-}
-
-void CSCSimHitAnalyzer::init(const edm::ParameterSet& conf)
+CSCSimHitAnalyzer::CSCSimHitAnalyzer(const edm::ParameterSet& conf)
 {
   minNHitsChamber_ = conf.getParameter<int>("minNHitsChamberCSCSimHit");
 }
 
-void CSCSimHitAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::vector<int> stations_to_use_)
+void CSCSimHitAnalyzer::init(const CSCSimHitMatcher& match_sh)
+{
+  match_.reset(new CSCSimHitMatcher(match_sh));
+}
+
+void CSCSimHitAnalyzer::analyze(TreeManager& tree)
 {
   const auto& csc_simhits(match_->chamberIds(0));
 
@@ -21,11 +21,6 @@ void CSCSimHitAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::vector<in
     CSCDetId id(d);
 
     const int st(gem::detIdToMEStation(id.station(),id.ring()));
-
-    // ignore station if need be
-    if (std::find(stations_to_use_.begin(), stations_to_use_.end(), st) == stations_to_use_.end()) continue;
-
-    const int stt( std::find(stations_to_use_.begin(), stations_to_use_.end(), st) - stations_to_use_.begin());
 
     // calculate hit layers
     int nlayers(match_->nLayersWithHitsInChamber(d));
@@ -54,39 +49,39 @@ void CSCSimHitAnalyzer::analyze(std::vector<gem::MyTrack>& track, std::vector<in
     const GlobalPoint& keygp(match_->simHitsMeanPosition(simhits));
 
     if (odd) {
-      track[stt].chamber_sh_odd = id.chamber();
-      track[stt].nlayers_csc_sh_odd = nlayers;
-      track[stt].has_csc_sh_odd = true;
-      track[stt].eta_cscsh_odd = keygp.eta();
-      track[stt].phi_cscsh_odd = keygp.phi();
-      track[stt].perp_cscsh_odd = keygp.perp();
+      tree.cscSimHit().chamber_sh_odd[st] = id.chamber();
+      tree.cscSimHit().nlayers_csc_sh_odd[st] = nlayers;
+      tree.cscSimHit().has_csc_sh_odd[st] = true;
+      tree.cscSimHit().eta_cscsh_odd[st] = keygp.eta();
+      tree.cscSimHit().phi_cscsh_odd[st] = keygp.phi();
+      tree.cscSimHit().perp_cscsh_odd[st] = keygp.perp();
     }
     else {
-      track[stt].chamber_sh_even = id.chamber();
-      track[stt].nlayers_csc_sh_even = nlayers;
-      track[stt].has_csc_sh_even = true;
-      track[stt].eta_cscsh_even = keygp.eta();
-      track[stt].phi_cscsh_even = keygp.phi();
-      track[stt].perp_cscsh_even = keygp.perp();
+      tree.cscSimHit().chamber_sh_even[st] = id.chamber();
+      tree.cscSimHit().nlayers_csc_sh_even[st] = nlayers;
+      tree.cscSimHit().has_csc_sh_even[st] = true;
+      tree.cscSimHit().eta_cscsh_even[st] = keygp.eta();
+      tree.cscSimHit().phi_cscsh_even[st] = keygp.phi();
+      tree.cscSimHit().perp_cscsh_even[st] = keygp.perp();
     }
 
     // case ME11
-    if (st==2 or st==3){
+    if (st==1 or st==2){
       if (odd) {
-        track[1].chamber_sh_odd = id.chamber();
-        track[1].nlayers_csc_sh_odd = nlayers;
-        track[1].has_csc_sh_odd = true;
-        track[1].eta_cscsh_odd = keygp.eta();
-        track[1].phi_cscsh_odd = keygp.phi();
-        track[1].perp_cscsh_odd = keygp.perp();
+        tree.cscSimHit().chamber_sh_odd[0] = id.chamber();
+        tree.cscSimHit().nlayers_csc_sh_odd[0] = nlayers;
+        tree.cscSimHit().has_csc_sh_odd[0] = true;
+        tree.cscSimHit().eta_cscsh_odd[0] = keygp.eta();
+        tree.cscSimHit().phi_cscsh_odd[0] = keygp.phi();
+        tree.cscSimHit().perp_cscsh_odd[0] = keygp.perp();
       }
       else {
-        track[1].chamber_sh_even = id.chamber();
-        track[1].nlayers_csc_sh_even = nlayers;
-        track[1].has_csc_sh_even = true;
-        track[1].eta_cscsh_even = keygp.eta();
-        track[1].phi_cscsh_even = keygp.phi();
-        track[1].perp_cscsh_even = keygp.perp();
+        tree.cscSimHit().chamber_sh_even[0] = id.chamber();
+        tree.cscSimHit().nlayers_csc_sh_even[0] = nlayers;
+        tree.cscSimHit().has_csc_sh_even[0] = true;
+        tree.cscSimHit().eta_cscsh_even[0] = keygp.eta();
+        tree.cscSimHit().phi_cscsh_even[0] = keygp.phi();
+        tree.cscSimHit().perp_cscsh_even[0] = keygp.perp();
       }
     }
   }

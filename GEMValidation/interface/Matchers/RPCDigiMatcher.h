@@ -36,10 +36,10 @@ public:
   void match(const SimTrack& t, const SimVertex& v);
 
   // partition RPC detIds with digis
-  std::set<unsigned int> detIdsDigi(int rpc_type = MuonHitHelper::RPC_ALL) const;
+  std::set<unsigned int> detIds(int rpc_type = MuonHitHelper::RPC_ALL) const;
 
   // chamber detIds with digis
-  std::set<unsigned int> chamberIdsDigi(int rpc_type = MuonHitHelper::RPC_ALL) const;
+  std::set<unsigned int> chamberIds(int rpc_type = MuonHitHelper::RPC_ALL) const;
 
   // RPC digis from a particular partition, chamber or superchamber
   const RPCDigiContainer& digisInDetId(unsigned int) const;
