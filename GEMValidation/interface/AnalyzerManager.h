@@ -1,7 +1,7 @@
 #ifndef GEMCode_GEMValidation_AnalyzerManager_h
 #define GEMCode_GEMValidation_AnalyzerManager_h
 
-#include "GEMCode/GEMValidation/interface/MatchManager.h"
+#include "GEMCode/GEMValidation/interface/MatcherManager.h"
 #include "GEMCode/GEMValidation/interface/TreeManager.h"
 #include "GEMCode/GEMValidation/interface/Analyzers/SimTrackAnalyzer.h"
 #include "GEMCode/GEMValidation/interface/Analyzers/GEMSimHitAnalyzer.h"
@@ -25,7 +25,7 @@ class AnalyzerManager
   ~AnalyzerManager() {}
 
   /// initialize
-  void init(const MatchManager&);
+  void init(const MatcherManager&);
 
   /// do the matching
   void analyze(TreeManager& tree, const SimTrack& t);

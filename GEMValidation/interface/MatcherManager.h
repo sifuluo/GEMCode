@@ -1,5 +1,5 @@
-#ifndef GEMCode_GEMValidation_MatchManager_h
-#define GEMCode_GEMValidation_MatchManager_h
+#ifndef GEMCode_GEMValidation_MatcherManager_h
+#define GEMCode_GEMValidation_MatcherManager_h
 
 #include "GEMCode/GEMValidation/interface/Matchers/GenParticleMatcher.h"
 #include "GEMCode/GEMValidation/interface/Matchers/ME0RecHitMatcher.h"
@@ -7,12 +7,12 @@
 #include "GEMCode/GEMValidation/interface/Matchers/L1TrackMatcher.h"
 #include "GEMCode/GEMValidation/interface/Matchers/RecoTrackMatcher.h"
 
-class MatchManager
+class MatcherManager
 {
 public:
-  MatchManager(edm::ParameterSet const& iPS, edm::ConsumesCollector&& iC);
+  MatcherManager(edm::ParameterSet const& iPS, edm::ConsumesCollector&& iC);
 
-  ~MatchManager() {}
+  ~MatcherManager() {}
 
   void init(const edm::Event& e, const edm::EventSetup& eventSetup);
 

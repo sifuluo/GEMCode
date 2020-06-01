@@ -7,7 +7,7 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 
 // Private code
-#include "GEMCode/GEMValidation/interface/MatchManager.h"
+#include "GEMCode/GEMValidation/interface/MatcherManager.h"
 #include "GEMCode/GEMValidation/interface/AnalyzerManager.h"
 #include "GEMCode/GEMValidation/interface/TreeManager.h"
 
@@ -39,7 +39,7 @@ private:
   int verbose_;
 
   std::unique_ptr<TreeManager> tree_;
-  std::unique_ptr<MatchManager> matcher_;
+  std::unique_ptr<MatcherManager> matcher_;
   std::unique_ptr<AnalyzerManager> analyzer_;
 };
 
@@ -60,7 +60,7 @@ GEMCSCAnalyzer::GEMCSCAnalyzer(const edm::ParameterSet& ps) :
   tree_->book();
 
   // define new matchers
-  matcher_.reset(new MatchManager(ps, consumesCollector()));
+  matcher_.reset(new MatcherManager(ps, consumesCollector()));
 
   // define new analyzers
   analyzer_.reset(new AnalyzerManager(ps));

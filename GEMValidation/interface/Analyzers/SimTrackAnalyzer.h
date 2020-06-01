@@ -2,7 +2,7 @@
 #define GEMCode_GEMValidation_SimTrackAnalyzer_h
 
 #include "GEMCode/GEMValidation/interface/Helpers.h"
-#include "GEMCode/GEMValidation/interface/MatchManager.h"
+#include "GEMCode/GEMValidation/interface/MatcherManager.h"
 #include "GEMCode/GEMValidation/interface/TreeManager.h"
 
 class SimTrackAnalyzer
