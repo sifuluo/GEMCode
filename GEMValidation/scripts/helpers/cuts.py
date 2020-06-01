@@ -20,9 +20,14 @@ En = TCut("endcap < 0")
 def ok_csc_sh(st):
     return TCut("CSCSimHit.has_csc_sh_even[%d] || CSCSimHit.has_csc_sh_odd[%d]"%(st,st))
 
-ok_csc_strip = TCut("has_csc_strips_even || has_csc_strips_odd")
-ok_csc_wire = TCut("has_csc_wires_even || has_csc_wires_odd")
-ok_csc_digi = AND(ok_csc_strip, ok_csc_wire)
+def ok_csc_strip(st):
+    return TCut("CSCDigi.has_csc_strips_even[%d] || CSCDigi.has_csc_strips_odd[%d]"%(st,st))
+
+def ok_csc_wire(st):
+    return TCut("CSCDigi.has_csc_wires_even[%d] || CSCDigi.has_csc_wires_odd[%d]"%(st,st))
+
+def ok_csc_digi(st):
+    return AND(ok_csc_strip(st), ok_csc_wire(st))
 
 ## CSC stub
 ok_csc_lct = TCut("has_lct_even || has_lct_odd")

@@ -18,22 +18,14 @@ class GEMCSCStubPlotter():
   def __init__(self):
     self.inputDir = os.getenv("CMSSW_BASE") + "/src/"
     self.inputFile = self.inputDir + "out_ana.root"
-    print self.inputFile
-
     self.targetDir = "plots/"
     self.ext = ".png"
     self.analyzer = "GEMCSCAnalyzer"
     self.file = TFile.Open(self.inputFile)
-    print self.file
-
     self.dirAna = (self.file).Get(self.analyzer)
-    print self.dirAna
-
     self.tree = self.dirAna.Get("SimTrack")
-    print self.tree
     self.yMin = 0.5
     self.yMax = 1.1
-
     self.tree.AddFriend(self.dirAna.Get("CSCSimHit"))
     self.tree.AddFriend(self.dirAna.Get("CSCDigi"))
     self.tree.AddFriend(self.dirAna.Get("CSCStub"))
@@ -45,8 +37,8 @@ class GEMCSCStubPlotter():
 plotter = GEMCSCStubPlotter()
 
 CSCSimHit(plotter)
-#CSCStripsWires(plotter,st)
-#CSCStripsWires2(plotter,st)
-#CSCAlctClct(plotter,st)
-#CSCAlctClct2(plotter,st)
-#CSCLct(plotter,st)
+CSCStripsWires(plotter)
+#CSCStripsWires2(plotter)
+#CSCAlctClct(plotter)
+#CSCAlctClct2(plotter)
+#CSCLct(plotter)

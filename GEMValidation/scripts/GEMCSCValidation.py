@@ -6,22 +6,22 @@ from helpers.cuts import *
 from helpers.Helpers import *
 from helpers.stations import *
 
+gStyle.SetTitleStyle(0)
+gStyle.SetTitleAlign(13) ##coord in top left
+gStyle.SetTitleX(0.)
+gStyle.SetTitleY(1.)
+gStyle.SetTitleW(1)
+gStyle.SetTitleH(0.058)
+gStyle.SetTitleBorderSize(0)
+
+gStyle.SetPadLeftMargin(0.126)
+gStyle.SetPadRightMargin(0.04)
+gStyle.SetPadTopMargin(0.06)
+gStyle.SetPadBottomMargin(0.13)
+gStyle.SetOptStat(0)
+gStyle.SetMarkerStyle(1)
+
 def CSCSimHit(plotter):
-
-    gStyle.SetTitleStyle(0);
-    gStyle.SetTitleAlign(13); ##coord in top left
-    gStyle.SetTitleX(0.);
-    gStyle.SetTitleY(1.);
-    gStyle.SetTitleW(1);
-    gStyle.SetTitleH(0.058);
-    gStyle.SetTitleBorderSize(0);
-
-    gStyle.SetPadLeftMargin(0.126);
-    gStyle.SetPadRightMargin(0.04);
-    gStyle.SetPadTopMargin(0.06);
-    gStyle.SetPadBottomMargin(0.13);
-    gStyle.SetOptStat(0);
-    gStyle.SetMarkerStyle(1);
 
     ## variables for the plot
     topTitle = " " * 11 + "CSC SimHit matching" + " " * 35 + "CMS Simulation Preliminary"
@@ -30,7 +30,7 @@ def CSCSimHit(plotter):
     title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
     toPlot = "TMath::Abs(eta)"
 
-    subdirectory = "/CSCSimHit/"
+    subdirectory = "CSCSimHit/"
 
     for st in range(0,len(cscStations)):
         c = TCanvas("c","c",700,450)
@@ -40,6 +40,7 @@ def CSCSimHit(plotter):
         nBins = int(h_bins[1:-1].split(',')[0])
         minBin = float(h_bins[1:-1].split(',')[1])
         maxBin = float(h_bins[1:-1].split(',')[2])
+
         base = TH1F("base",title,nBins,minBin,maxBin)
         base.SetMinimum(plotter.yMin)
         base.SetMaximum(plotter.yMax)
@@ -59,30 +60,11 @@ def CSCSimHit(plotter):
         leg.Draw("same")
 
         csc = drawCSCLabel(cscStations[st].label, 0.87,0.87,0.05)
-        #    pul = drawPuLabel(plotter.pu,0.17,0.17,0.05)
-        #    tex = drawEtaLabel(plotter.etaMin,plotter.etaMax,0.2,0.8,0.05)
 
         c.Print("%sEff_CSCSimHit_%s%s"%(plotter.targetDir + subdirectory, cscStations[st].labelc,  plotter.ext))
 
 
 def CSCStripsWires(plotter):
-
-    gStyle.SetTitleStyle(0);
-    gStyle.SetTitleAlign(13); ##coord in top left
-    gStyle.SetTitleX(0.);
-    gStyle.SetTitleY(1.);
-    gStyle.SetTitleW(1);
-    gStyle.SetTitleH(0.058);
-    gStyle.SetTitleBorderSize(0);
-
-    gStyle.SetPadLeftMargin(0.126);
-    gStyle.SetPadRightMargin(0.04);
-    gStyle.SetPadTopMargin(0.06);
-    gStyle.SetPadBottomMargin(0.13);
-    gStyle.SetOptStat(0);
-    gStyle.SetMarkerStyle(1);
-
-    ok_eta = TCut("TMath::Abs(eta)>%f && TMath::Abs(eta)<%f"%(plotter.etaMin,plotter.etaMax))
 
     ## variables for the plot
     topTitle = " " * 11 + "CSC Digi matching" + " " * 35 + "CMS Simulation Preliminary"
@@ -90,58 +72,43 @@ def CSCStripsWires(plotter):
     yTitle = "Efficiency"
     title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
     toPlot = "TMath::Abs(eta)"
-    h_bins = "(50,%f,%f)"%(plotter.etaMin,plotter.etaMax)
-    nBins = int(h_bins[1:-1].split(',')[0])
-    minBin = float(h_bins[1:-1].split(',')[1])
-    maxBin = float(h_bins[1:-1].split(',')[2])
+    subdirectory = "CSCDigi/"
 
-    c = TCanvas("c","c",700,450)
-    c.Clear()
-    base  = TH1F("base",title,nBins,minBin,maxBin)
-    base.SetMinimum(plotter.yMin)
-    base.SetMaximum(plotter.yMax)
-    base.Draw("")
-    base.GetXaxis().SetLabelSize(0.05)
-    base.GetYaxis().SetLabelSize(0.05)
-    base.GetXaxis().SetTitleSize(0.05)
-    base.GetYaxis().SetTitleSize(0.05)
+    for st in range(0,len(cscStations)):
 
-    index = plotter.stationsToUse.index(st)
+        h_bins = "(50,%f,%f)"%(cscStations[st].eta_min,cscStations[st].eta_max)
+        nBins = int(h_bins[1:-1].split(',')[0])
+        minBin = float(h_bins[1:-1].split(',')[1])
+        maxBin = float(h_bins[1:-1].split(',')[2])
 
-    h1 = draw_geff(plotter.treeEffSt[index], title, h_bins, toPlot, ok_csc_sh, ok_csc_wire, "same", kRed)
-    h2 = draw_geff(plotter.treeEffSt[index], title, h_bins, toPlot, ok_csc_sh, ok_csc_strip, "same")
+        c = TCanvas("c","c",700,450)
+        c.Clear()
+        base  = TH1F("base",title,nBins,minBin,maxBin)
+        base.SetMinimum(plotter.yMin)
+        base.SetMaximum(plotter.yMax)
+        base.Draw("")
+        base.GetXaxis().SetLabelSize(0.05)
+        base.GetYaxis().SetLabelSize(0.05)
+        base.GetXaxis().SetTitleSize(0.05)
+        base.GetYaxis().SetTitleSize(0.05)
 
-    leg = TLegend(0.45,0.2,.75,0.35, "", "brNDC")
-    leg.SetBorderSize(0)
-    leg.SetFillStyle(0)
-    leg.SetTextSize(0.06)
-    leg.AddEntry(h1, "Wires","l")
-    leg.AddEntry(h2, "Strips","l")
-    leg.Draw("same")
+        h1 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_csc_sh(st), ok_csc_wire(st), "same", kRed)
+        h2 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_csc_sh(st), ok_csc_strip(st), "same")
 
-    csc = drawCSCLabel(plotter.stations.reverse_mapping[st], 0.87,0.87,0.05)
-    #pul = drawPuLabel(plotter.pu,0.17,0.17,0.05)
-    #tex = drawEtaLabel(plotter.etaMin,plotter.etaMax,0.2,0.8,0.05)
+        leg = TLegend(0.45,0.2,.75,0.35, "", "brNDC")
+        leg.SetBorderSize(0)
+        leg.SetFillStyle(0)
+        leg.SetTextSize(0.06)
+        leg.AddEntry(h1, "Wires","l")
+        leg.AddEntry(h2, "Strips","l")
+        leg.Draw("same")
 
-    c.Print("%scsc_digi_efficiency_%s%s"%(plotter.targetDir,plotter.stations.reverse_mapping[st],plotter.ext))
+        csc = drawCSCLabel(cscStations[st].label, 0.87,0.87,0.05)
+
+        c.Print("%sEff_CSCDigi_%s%s"%(plotter.targetDir + subdirectory, cscStations[st].labelc,  plotter.ext))
 
 
 def CSCStripsWires2(plotter):
-
-    gStyle.SetTitleStyle(0)
-    gStyle.SetTitleAlign(13) ##coord in top left
-    gStyle.SetTitleX(0.)
-    gStyle.SetTitleY(1.)
-    gStyle.SetTitleW(1)
-    gStyle.SetTitleH(0.058)
-    gStyle.SetTitleBorderSize(0)
-
-    gStyle.SetPadLeftMargin(0.126)
-    gStyle.SetPadRightMargin(0.04)
-    gStyle.SetPadTopMargin(0.06)
-    gStyle.SetPadBottomMargin(0.13)
-    gStyle.SetOptStat(0)
-    gStyle.SetMarkerStyle(1)
 
     ok_eta = TCut("TMath::Abs(eta)>%f && TMath::Abs(eta)<%f"%(plotter.etaMin,plotter.etaMax))
 
@@ -188,21 +155,6 @@ def CSCStripsWires2(plotter):
 
 
 def CSCAlctClct(plotter):
-
-    gStyle.SetTitleStyle(0);
-    gStyle.SetTitleAlign(13); ##coord in top left
-    gStyle.SetTitleX(0.);
-    gStyle.SetTitleY(1.);
-    gStyle.SetTitleW(1);
-    gStyle.SetTitleH(0.058);
-    gStyle.SetTitleBorderSize(0);
-
-    gStyle.SetPadLeftMargin(0.126);
-    gStyle.SetPadRightMargin(0.04);
-    gStyle.SetPadTopMargin(0.06);
-    gStyle.SetPadBottomMargin(0.13);
-    gStyle.SetOptStat(0);
-    gStyle.SetMarkerStyle(1);
 
     ok_eta = TCut("TMath::Abs(eta)>%f && TMath::Abs(eta)<%f"%(plotter.etaMin,plotter.etaMax))
 
@@ -254,21 +206,6 @@ def CSCAlctClct(plotter):
 
 def CSCAlctClct2(plotter):
 
-    gStyle.SetTitleStyle(0);
-    gStyle.SetTitleAlign(13); ##coord in top left
-    gStyle.SetTitleX(0.);
-    gStyle.SetTitleY(1.);
-    gStyle.SetTitleW(1);
-    gStyle.SetTitleH(0.058);
-    gStyle.SetTitleBorderSize(0);
-
-    gStyle.SetPadLeftMargin(0.126);
-    gStyle.SetPadRightMargin(0.04);
-    gStyle.SetPadTopMargin(0.06);
-    gStyle.SetPadBottomMargin(0.13);
-    gStyle.SetOptStat(0);
-    gStyle.SetMarkerStyle(1);
-
     ok_eta = TCut("TMath::Abs(eta)>%f && TMath::Abs(eta)<%f"%(plotter.etaMin,plotter.etaMax))
 
     ## variables for the plot
@@ -318,21 +255,6 @@ def CSCAlctClct2(plotter):
 
 
 def CSCLct(plotter):
-
-    gStyle.SetTitleStyle(0);
-    gStyle.SetTitleAlign(13); ##coord in top left
-    gStyle.SetTitleX(0.);
-    gStyle.SetTitleY(1.);
-    gStyle.SetTitleW(1);
-    gStyle.SetTitleH(0.058);
-    gStyle.SetTitleBorderSize(0);
-
-    gStyle.SetPadLeftMargin(0.126);
-    gStyle.SetPadRightMargin(0.04);
-    gStyle.SetPadTopMargin(0.06);
-    gStyle.SetPadBottomMargin(0.13);
-    gStyle.SetOptStat(0);
-    gStyle.SetMarkerStyle(1);
 
     ok_eta = TCut("TMath::Abs(eta)>%f && TMath::Abs(eta)<%f"%(plotter.etaMin,plotter.etaMax))
 
