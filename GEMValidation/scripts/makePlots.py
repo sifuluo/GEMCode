@@ -2,26 +2,13 @@ import sys
 import os
 
 from ROOT import TFile, TDirectory, TTree
-
-## helpers
-from style.CMS_lumi import *
-from helpers.cuts import *
-from helpers.drawPlots import *
-
-## plots -  not work yet
-#from efficiency.plots import *
-#from timing.plots import *
-#from occupancy.plots import *
-#from resolution.plots import *
-#from datavsemulator.plots import *
+from plots import *
 
 ## run quiet mode
 sys.argv.append( '-b' )
 
 import ROOT
 ROOT.gROOT.SetBatch(1)
-
-from GEMCSCValidation import *
 
 class GEMCSCStubPlotter():
   def __init__(self):
@@ -33,15 +20,12 @@ class GEMCSCStubPlotter():
     self.file = TFile.Open(self.inputFile)
     self.dirAna = (self.file).Get(self.analyzer)
     self.tree = self.dirAna.Get("SimTrack")
+    self.treeFriends = ["CSCSimHit", "CSCDigi", "CSCStub",
+                        "GEMSimHit", "GEMDigi", "GEMStub", "L1Mu"]
+    for p in self.treeFriends:
+      self.tree.AddFriend((self.dirAna.Get(p))
     self.yMin = 0.5
     self.yMax = 1.1
-    self.tree.AddFriend(self.dirAna.Get("CSCSimHit"))
-    self.tree.AddFriend(self.dirAna.Get("CSCDigi"))
-    self.tree.AddFriend(self.dirAna.Get("CSCStub"))
-    self.tree.AddFriend(self.dirAna.Get("GEMSimHit"))
-    self.tree.AddFriend(self.dirAna.Get("GEMDigi"))
-    self.tree.AddFriend(self.dirAna.Get("GEMStub"))
-    self.tree.AddFriend(self.dirAna.Get("L1Mu"))
 
 ## needs to be cleaned up
 plotter = GEMCSCStubPlotter()
