@@ -15,12 +15,21 @@ public:
   // destructor
   ~CSCStubAnalyzer() {}
 
-  void init(const CSCStubMatcher& match_sh);
+  void setMatcher(const CSCStubMatcher& match_sh);
 
   // initialize the event
   void analyze(TreeManager& tree);
 
  private:
+  std::pair<GEMDigi, GlobalPoint>
+    digiInGEMClosestToCSC(const GEMDigiContainer& gem_digis,
+                          const GlobalPoint& csc_gp) const;
+
+  edm::ESHandle<CSCGeometry> csc_geom_;
+  edm::ESHandle<GEMGeometry> gem_geom_;
+
+  const CSCGeometry* cscGeometry_;
+  const GEMGeometry* gemGeometry_;
 
   std::unique_ptr<CSCStubMatcher> match_;
   int minNHitsChamber_;

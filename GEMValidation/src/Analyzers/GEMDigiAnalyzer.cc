@@ -5,7 +5,7 @@ GEMDigiAnalyzer::GEMDigiAnalyzer(const edm::ParameterSet& conf)
   minNHitsChamber_ = conf.getParameter<int>("minNHitsChamberGEMDigi");
 }
 
-void GEMDigiAnalyzer::init(const GEMDigiMatcher& match_sh)
+void GEMDigiAnalyzer::setMatcher(const GEMDigiMatcher& match_sh)
 {
   match_.reset(new GEMDigiMatcher(match_sh));
 }

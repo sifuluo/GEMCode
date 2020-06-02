@@ -15,7 +15,7 @@ public:
   // destructor
   ~RecoTrackAnalyzer() {}
 
-  void init(const RecoTrackMatcher& match_sh);
+  void setMatcher(const RecoTrackMatcher& match_sh);
 
   // initialize the event
   void analyze(TreeManager& tree);

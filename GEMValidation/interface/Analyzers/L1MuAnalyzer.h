@@ -15,7 +15,7 @@ public:
   // destructor
   ~L1MuAnalyzer() {}
 
-  void init(const L1MuMatcher& match_sh);
+  void setMatcher(const L1MuMatcher& match_sh);
 
   // initialize the event
   void analyze(TreeManager& tree);

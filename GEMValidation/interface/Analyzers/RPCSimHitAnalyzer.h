@@ -15,7 +15,7 @@ public:
   // destructor
   ~RPCSimHitAnalyzer() {}
 
-  void init(const RPCSimHitMatcher& match_sh);
+  void setMatcher(const RPCSimHitMatcher& match_sh);
 
   // initialize the event
   void analyze(TreeManager& tree);

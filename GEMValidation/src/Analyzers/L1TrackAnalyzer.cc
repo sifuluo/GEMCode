@@ -4,7 +4,7 @@ L1TrackAnalyzer::L1TrackAnalyzer(const edm::ParameterSet& conf)
 {
 }
 
-void L1TrackAnalyzer::init(const L1TrackMatcher& match_sh)
+void L1TrackAnalyzer::setMatcher(const L1TrackMatcher& match_sh)
 {
   match_.reset(new L1TrackMatcher(match_sh));
 }

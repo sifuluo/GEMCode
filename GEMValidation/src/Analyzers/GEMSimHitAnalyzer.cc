@@ -5,7 +5,7 @@ GEMSimHitAnalyzer::GEMSimHitAnalyzer(const edm::ParameterSet& conf)
   minNHitsChamber_ = conf.getParameter<int>("minNHitsChamberGEMSimHit");
 }
 
-void GEMSimHitAnalyzer::init(const GEMSimHitMatcher& match_sh)
+void GEMSimHitAnalyzer::setMatcher(const GEMSimHitMatcher& match_sh)
 {
   match_.reset(new GEMSimHitMatcher(match_sh));
 }

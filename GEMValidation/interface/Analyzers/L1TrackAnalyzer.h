@@ -15,7 +15,7 @@ public:
   // destructor
   ~L1TrackAnalyzer() {}
 
-  void init(const L1TrackMatcher& match_sh);
+  void setMatcher(const L1TrackMatcher& match_sh);
 
   // initialize the event
   void analyze(TreeManager& tree);

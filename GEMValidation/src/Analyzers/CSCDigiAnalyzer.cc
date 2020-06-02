@@ -5,7 +5,7 @@ CSCDigiAnalyzer::CSCDigiAnalyzer(const edm::ParameterSet& conf)
   minNHitsChamber_ = conf.getParameter<int>("minNHitsChamberCSCDigi");
 }
 
-void CSCDigiAnalyzer::init(const CSCDigiMatcher& match_sh)
+void CSCDigiAnalyzer::setMatcher(const CSCDigiMatcher& match_sh)
 {
   match_.reset(new CSCDigiMatcher(match_sh));
 }

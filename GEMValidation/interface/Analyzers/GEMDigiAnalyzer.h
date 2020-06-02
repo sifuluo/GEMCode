@@ -15,7 +15,7 @@ public:
   // destructor
   ~GEMDigiAnalyzer() {}
 
-  void init(const GEMDigiMatcher& match_sh);
+  void setMatcher(const GEMDigiMatcher& match_sh);
 
   // initialize the event
   void analyze(TreeManager& tree);

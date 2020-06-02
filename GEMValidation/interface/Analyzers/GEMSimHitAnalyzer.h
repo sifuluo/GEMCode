@@ -15,7 +15,7 @@ public:
   // destructor
   ~GEMSimHitAnalyzer() {}
 
-  void init(const GEMSimHitMatcher& match_sh);
+  void setMatcher(const GEMSimHitMatcher& match_sh);
 
   // initialize the event
   void analyze(TreeManager& tree);

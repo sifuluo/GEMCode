@@ -14,17 +14,17 @@ AnalyzerManager::AnalyzerManager(const edm::ParameterSet& conf)
   // recotrack_.reset(new RecoTrackAnalyzer(conf));
 }
 
-void AnalyzerManager::init(const MatcherManager& manager)
+void AnalyzerManager::setManager(const MatcherManager& manager)
 {
-  gemsh_->init(*manager.gemSimHits());
-  gemdg_->init(*manager.gemDigis());
-  gemstub_->init(*manager.gemDigis());
-  cscsh_->init(*manager.cscSimHits());
-  cscdg_->init(*manager.cscDigis());
-  cscstub_->init(*manager.cscStubs());
-  l1mu_->init(*manager.l1Muons());;
-  // l1track_->init(*manager.l1Tracks());;
-  // recotrack_->init(*manager.recoTracks());;
+  gemsh_->setMatcher(*manager.gemSimHits());
+  gemdg_->setMatcher(*manager.gemDigis());
+  gemstub_->setMatcher(*manager.gemDigis());
+  cscsh_->setMatcher(*manager.cscSimHits());
+  cscdg_->setMatcher(*manager.cscDigis());
+  cscstub_->setMatcher(*manager.cscStubs());
+  l1mu_->setMatcher(*manager.l1Muons());;
+  // l1track_->setMatcher(*manager.l1Tracks());;
+  // recotrack_->setMatcher(*manager.recoTracks());;
 }
 
 void

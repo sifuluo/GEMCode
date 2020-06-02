@@ -4,7 +4,7 @@ L1MuAnalyzer::L1MuAnalyzer(const edm::ParameterSet& conf)
 {
 }
 
-void L1MuAnalyzer::init(const L1MuMatcher& match_sh)
+void L1MuAnalyzer::setMatcher(const L1MuMatcher& match_sh)
 {
   match_.reset(new L1MuMatcher(match_sh));
 }

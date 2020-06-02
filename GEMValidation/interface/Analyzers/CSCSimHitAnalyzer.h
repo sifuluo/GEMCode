@@ -15,7 +15,7 @@ public:
   // destructor
   ~CSCSimHitAnalyzer() {}
 
-  void init(const CSCSimHitMatcher& match_sh);
+  void setMatcher(const CSCSimHitMatcher& match_sh);
 
   // initialize the event
   void analyze(TreeManager& tree);

@@ -5,7 +5,7 @@ RPCSimHitAnalyzer::RPCSimHitAnalyzer(const edm::ParameterSet& conf)
 {
 }
 
-void RPCSimHitAnalyzer::init(const RPCSimHitMatcher& match_sh)
+void RPCSimHitAnalyzer::setMatcher(const RPCSimHitMatcher& match_sh)
 {
   match_.reset(new RPCSimHitMatcher(match_sh));
 }

@@ -15,7 +15,7 @@ public:
   // destructor
   ~RPCRecHitAnalyzer() {}
 
-  void init(const RPCRecHitMatcher& match_sh);
+  void setMatcher(const RPCRecHitMatcher& match_sh);
 
   // initialize the event
   void analyze(TreeManager& tree);

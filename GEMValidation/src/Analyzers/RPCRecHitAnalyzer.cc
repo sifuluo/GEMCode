@@ -4,7 +4,7 @@ RPCRecHitAnalyzer::RPCRecHitAnalyzer(const edm::ParameterSet& conf)
 {
 }
 
-void RPCRecHitAnalyzer::init(const RPCRecHitMatcher& match_sh)
+void RPCRecHitAnalyzer::setMatcher(const RPCRecHitMatcher& match_sh)
 {
   match_.reset(new RPCRecHitMatcher(match_sh));
 }

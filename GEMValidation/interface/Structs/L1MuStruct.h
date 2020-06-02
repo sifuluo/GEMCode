@@ -8,9 +8,9 @@ namespace gem {
   struct L1MuStruct {
 
     // Track properties
-    Int_t has_emtfTrack;
-    Int_t has_gmtRegCand;
-    Int_t has_gmtCand;
+    bool has_emtfTrack;
+    bool has_gmtRegCand;
+    bool has_gmtCand;
 
     //csctf
     float emtf_pt, emtf_eta, emtf_phi;
@@ -38,9 +38,9 @@ namespace gem {
 
     void init() {
       // Track properties
-      has_emtfTrack = -99;
-      has_gmtRegCand = -99;
-      has_gmtCand = -99;
+      has_emtfTrack = 0;
+      has_gmtRegCand = 0;
+      has_gmtCand = 0;
 
       //csctf
       emtf_pt = -1;
@@ -99,12 +99,10 @@ namespace gem {
 
     void book(TTree* t) {
 
-      //t->Branch("", &);
       t->Branch("has_emtfTrack", &has_emtfTrack);
       t->Branch("has_gmtRegCand", &has_gmtRegCand);
       t->Branch("has_gmtCand", &has_gmtCand);
 
-      //csctftrack
       t->Branch("emtf_pt", &emtf_pt);
       t->Branch("emtf_eta", &emtf_eta);
       t->Branch("emtf_phi", &emtf_phi);

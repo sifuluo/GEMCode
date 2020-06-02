@@ -25,7 +25,7 @@ class AnalyzerManager
   ~AnalyzerManager() {}
 
   /// initialize
-  void init(const MatcherManager&);
+  void setManager(const MatcherManager&);
 
   /// do the matching
   void analyze(TreeManager& tree, const SimTrack& t);

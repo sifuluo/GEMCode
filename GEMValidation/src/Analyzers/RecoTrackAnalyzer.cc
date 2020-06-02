@@ -4,7 +4,7 @@ RecoTrackAnalyzer::RecoTrackAnalyzer(const edm::ParameterSet& conf)
 {
 }
 
-void RecoTrackAnalyzer::init(const RecoTrackMatcher& match_sh)
+void RecoTrackAnalyzer::setMatcher(const RecoTrackMatcher& match_sh)
 {
   match_.reset(new RecoTrackMatcher(match_sh));
 }

@@ -27,9 +27,25 @@ namespace gem {
     int bx_alct_even[nStations];
     int bx_clct_even[nStations];
 
+    int hs_clct_odd[nStations];
+    int hs_clct_even[nStations];
+
+    int qs_clct_odd[nStations];
+    int qs_clct_even[nStations];
+
+    int es_clct_odd[nStations];
+    int es_clct_even[nStations];
+
     int hs_lct_odd[nStations];
-    int wg_lct_odd[nStations];
     int hs_lct_even[nStations];
+
+    int qs_lct_odd[nStations];
+    int qs_lct_even[nStations];
+
+    int es_lct_odd[nStations];
+    int es_lct_even[nStations];
+
+    int wg_lct_odd[nStations];
     int wg_lct_even[nStations];
 
     int chamber_lct_odd[nStations];
@@ -90,14 +106,33 @@ namespace gem {
 
         bx_lct_odd[i] = -9;
         bx_lct_even[i] = -9;
+
         hs_lct_odd[i] = 0;
         hs_lct_even[i] = 0;
+
+        qs_lct_odd[i] = 0;
+        qs_lct_even[i] = 0;
+
+        es_lct_odd[i] = 0;
+        es_lct_even[i] = 0;
+
+        hs_clct_odd[i] = 0;
+        hs_clct_even[i] = 0;
+
+        qs_clct_odd[i] = 0;
+        qs_clct_even[i] = 0;
+
+        es_clct_odd[i] = 0;
+        es_clct_even[i] = 0;
+
         wg_lct_odd[i] = 0;
         wg_lct_even[i] = 0;
-        phi_lct_odd[i] = -9.;
-        phi_lct_even[i] = -9.;
+
         eta_lct_odd[i] = -9.;
         eta_lct_even[i] = -9.;
+
+        phi_lct_odd[i] = -9.;
+        phi_lct_even[i] = -9.;
 
         chi2_lct_odd[i] = -99999;
         chi2_lct_even[i] = -99999;
@@ -164,17 +199,32 @@ namespace gem {
       t->Branch("hs_lct_odd", hs_lct_odd, "hs_lct_odd[11]/I");
       t->Branch("hs_lct_even", hs_lct_even, "hs_lct_even[11]/I");
 
+      t->Branch("qs_lct_odd", qs_lct_odd, "qs_lct_odd[11]/I");
+      t->Branch("qs_lct_even", qs_lct_even, "qs_lct_even[11]/I");
+
+      t->Branch("es_lct_odd", es_lct_odd, "es_lct_odd[11]/I");
+      t->Branch("es_lct_even", es_lct_even, "es_lct_even[11]/I");
+
+      t->Branch("hs_clct_odd", hs_clct_odd, "hs_clct_odd[11]/I");
+      t->Branch("hs_clct_even", hs_clct_even, "hs_clct_even[11]/I");
+
+      t->Branch("qs_clct_odd", qs_clct_odd, "qs_clct_odd[11]/I");
+      t->Branch("qs_clct_even", qs_clct_even, "qs_clct_even[11]/I");
+
+      t->Branch("es_clct_odd", es_clct_odd, "es_clct_odd[11]/I");
+      t->Branch("es_clct_even", es_clct_even, "es_clct_even[11]/I");
+
       t->Branch("wg_lct_odd", wg_lct_odd, "wg_lct_odd[11]/I");
       t->Branch("wg_lct_even", wg_lct_even, "wg_lct_even[11]/I");
 
-      t->Branch("phi_lct_odd", phi_lct_odd, "phi_lct_odd[11]/F");
-      t->Branch("phi_lct_even", phi_lct_even, "phi_lct_even[11]/F");
+      t->Branch("perp_lct_odd", perp_lct_odd, "perp_lct_odd[11]/F");
+      t->Branch("perp_lct_even", perp_lct_even, "perp_lct_even[11]/F");
 
       t->Branch("eta_lct_odd", eta_lct_odd, "eta_lct_odd[11]/F");
       t->Branch("eta_lct_even", eta_lct_even, "eta_lct_even[11]/F");
 
-      t->Branch("perp_lct_odd", perp_lct_odd, "perp_lct_odd[11]/F");
-      t->Branch("perp_lct_even", perp_lct_even, "perp_lct_even[11]/F");
+      t->Branch("phi_lct_odd", phi_lct_odd, "phi_lct_odd[11]/F");
+      t->Branch("phi_lct_even", phi_lct_even, "phi_lct_even[11]/F");
 
       t->Branch("dphi_lct_odd", dphi_lct_odd, "dphi_lct_odd[11]/F");
       t->Branch("dphi_lct_even", dphi_lct_even, "dphi_lct_even[11]/F");

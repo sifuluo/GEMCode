@@ -4,7 +4,7 @@ RPCDigiAnalyzer::RPCDigiAnalyzer(const edm::ParameterSet& conf)
 {
 }
 
-void RPCDigiAnalyzer::init(const RPCDigiMatcher& match_sh)
+void RPCDigiAnalyzer::setMatcher(const RPCDigiMatcher& match_sh)
 {
   match_.reset(new RPCDigiMatcher(match_sh));
 }

@@ -113,7 +113,7 @@ void GEMCSCAnalyzer::analyze(const SimTrack& track, const SimVertex& v)
   matcher_->match(track, v);
 
   // initialize the track analyzers
-  analyzer_->init(*matcher_);
+  analyzer_->setManager(*matcher_);
 
   // analyze the track
   analyzer_->analyze(*tree_, track);

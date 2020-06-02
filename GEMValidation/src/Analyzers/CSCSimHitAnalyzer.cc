@@ -7,7 +7,7 @@ CSCSimHitAnalyzer::CSCSimHitAnalyzer(const edm::ParameterSet& conf)
   minNHitsChamber_ = conf.getParameter<int>("minNHitsChamberCSCSimHit");
 }
 
-void CSCSimHitAnalyzer::init(const CSCSimHitMatcher& match_sh)
+void CSCSimHitAnalyzer::setMatcher(const CSCSimHitMatcher& match_sh)
 {
   match_.reset(new CSCSimHitMatcher(match_sh));
 }

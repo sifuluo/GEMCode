@@ -15,7 +15,7 @@ public:
   // destructor
   ~RPCDigiAnalyzer() {}
 
-  void init(const RPCDigiMatcher& match_sh);
+  void setMatcher(const RPCDigiMatcher& match_sh);
 
   // initialize the event
   void analyze(TreeManager& tree);

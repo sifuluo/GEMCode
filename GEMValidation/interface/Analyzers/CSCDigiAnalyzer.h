@@ -15,7 +15,7 @@ public:
   // destructor
   ~CSCDigiAnalyzer() {}
 
-  void init(const CSCDigiMatcher& match_sh);
+  void setMatcher(const CSCDigiMatcher& match_sh);
 
   // initialize the event
   void analyze(TreeManager& tree);
