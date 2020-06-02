@@ -7,7 +7,7 @@ class Station:
         self.label = label
         self.labelc = labelc
 
-## eta-ranges for plots
+## csc
 ME11 = Station(1.5, 2.5, 'ME1/1', 'ME11')
 ME1a = Station(2.1, 2.5, 'ME1/a', 'ME1a')
 ME1b = Station(1.5, 2.2, 'ME1/b', 'ME1b')
@@ -25,7 +25,7 @@ cscStations = [
     ME21, ME22, ME31, ME32, ME41, ME42
 ]
 
-## eta-ranges for plots
+## gem
 ME0 = Station(1.9, 2.9, 'ME0', 'ME0')
 GE11 = Station(1.5, 2.2, 'GE1/1', 'GE11')
 GE21 = Station(1.5, 2.5, 'GE2/1', 'GE21')
@@ -34,4 +34,23 @@ gemStations = [
     ME0,
     GE11,
     GE21
+]
+
+## rpc
+RE12 = Station(1.2, 1.6, 'RE1/2', 'RE12')
+RE13 = Station(0.9, 1.2, 'RE1/3', 'RE13')
+RE22 = Station(1.2, 2.5, 'RE2/2', 'RE22')
+RE23 = Station(1.5, 2.5, 'RE2/3', 'RE23')
+RE31 = Station(1.5, 2.5, 'RE3/1', 'RE31')
+RE32 = Station(1.2, 2.5, 'RE3/2', 'RE32')
+RE33 = Station(1.2, 2.5, 'RE3/3', 'RE33')
+RE41 = Station(1.5, 2.5, 'RE4/1', 'RE41')
+RE42 = Station(1.2, 2.5, 'RE4/2', 'RE42')
+RE43 = Station(1.2, 2.5, 'RE4/3', 'RE43')
+
+rpcStations = [
+    RE12, RE13,
+    RE22, RE23,
+    RE31, RE32, RE33,
+    RE41, RE42, RE43
 ]

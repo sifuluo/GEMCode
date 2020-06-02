@@ -1,19 +1,3 @@
-## run quiet mode
-import sys
-sys.argv.append( '-b' )
-
-import ROOT
-ROOT.gROOT.SetBatch(1)
-
-from cuts import *
-from Plotter import RPCTimingPlotter
-from RPCValidation import makePlot
-from RPCValidation import makePlotTDR
-
-plotter = RPCTimingPlotter()
-
-print plotter.stationsToUse
-
 for i in range(len(plotter.stationsToUse)):
   continue
   st = plotter.stationsToUse[i]
