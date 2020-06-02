@@ -5,6 +5,23 @@ CSCStubAnalyzer::CSCStubAnalyzer(const edm::ParameterSet& conf)
   minNHitsChamber_ = conf.getParameter<int>("minNHitsChamberCSCStub");
 }
 
+void CSCStubAnalyzer::init(const edm::Event& iEvent, const edm::EventSetup& iSetup)
+{
+  iSetup.get<MuonGeometryRecord>().get(csc_geom_);
+  if (csc_geom_.isValid()) {
+  cscGeometry_ = &*csc_geom_;
+  } else {
+    std::cout << "+++ Info: CSC geometry is unavailable. +++\n";
+  }
+
+  iSetup.get<MuonGeometryRecord>().get(gem_geom_);
+  if (gem_geom_.isValid()) {
+  gemGeometry_ = &*gem_geom_;
+  } else {
+    std::cout << "+++ Info: GEM geometry is unavailable. +++\n";
+  }
+}
+
 void CSCStubAnalyzer::setMatcher(const CSCStubMatcher& match_sh)
 {
   match_.reset(new CSCStubMatcher(match_sh));
@@ -165,11 +182,28 @@ void CSCStubAnalyzer::analyze(TreeManager& tree)
           tree.cscStub().quality_even[0] = lct.getQuality();
         }
       }
+
+      // only for ME1/1 and ME2/1
+      if (st==1 or st==2 or st==5) continue;
+
+      // // construct the GEM DetId
+      // GEMDetId gemId(id.zendcap(), 1, id.station(), id.chamber(), 1,
+
+      // // GEM-CSC matching
+      // const auto& bestDigi(const GEMDetId& gemId,
+      //                      const GEMDigiContainer& gem_digis,
+      //                      const GlobalPoint& csc_gp) const
+
     }
   }
 
+  // best GEM digis
+  for(const auto& d: match_->gemDigiMatcher()->detIdsDigi()) {
+  }
+
+
   // best GEM pads
-  for(const auto& d: match_->gemDigiMatcher()->superChamberIdsPad()) {
+  for(const auto& d: match_->gemDigiMatcher()->chamberIdsPad()) {
   }
 
 
@@ -208,8 +242,9 @@ void CSCStubAnalyzer::analyze(TreeManager& tree)
 
 
 std::pair<GEMDigi, GlobalPoint>
-CSCStubAnalyzer::digiInGEMClosestToCSC(const GEMDigiContainer& gem_digis,
-                                       const GlobalPoint& csc_gp) const
+CSCStubAnalyzer::bestGEMDigi(const GEMDetId& gemId,
+                             const GEMDigiContainer& gem_digis,
+                             const GlobalPoint& csc_gp) const
 {
   GlobalPoint gp;
   GEMDigi best_digi;
@@ -221,27 +256,94 @@ CSCStubAnalyzer::digiInGEMClosestToCSC(const GEMDigiContainer& gem_digis,
   // invalid CSC stub
   if (std::abs(csc_gp.z()) < 0.001) return emptyValue;
 
-  float bestDr= 9.;
-  /*
-  for (const auto& d: gem_digis)
-    {
-      const GEMDigi& t = d;
-      const GlobalPoint& curr_gp = digiPosition(d);
-      if (std::abs(curr_gp.z()) < 0.001) continue; // invalid position
+  float bestDR2 = 999.;
+  for (const auto& d: gem_digis) {
+    const LocalPoint& lp = gemGeometry_->etaPartition(gemId)->centreOfStrip(d.strip());
+    const GlobalPoint& gem_gp = gemGeometry_->idToDet(gemId)->surface().toGlobal(lp);
 
-      // in deltaR calculation, give x20 larger weight to deltaPhi to make them comparable
-      // but with slight bias towards dphi:
-      float dphi = 20.*deltaPhi(float(csc_gp.phi()), float(curr_gp.phi()));
-      float deta = csc_gp.eta() - curr_gp.eta();
-      float curr_dr2 = dphi*dphi + deta*deta;
-      if (std::abs(gp.z()) < 000.1 || // gp was not assigned yet
-          curr_dr2 < prev_dr2 ) // current gp is closer in phi then the previous
-        {
-          gp = curr_gp;
-          best_digi = d;
-          prev_dr2 = curr_dr2;
-        }
-        }
-  */
+    // in deltaR calculation, give x20 larger weight to deltaPhi to make them comparable
+    // but with slight bias towards dphi:
+    float dphi = 20. * reco::deltaPhi(float(csc_gp.phi()), float(gem_gp.phi()));
+    float deta = csc_gp.eta() - gem_gp.eta();
+    float dR2 = dphi*dphi + deta*deta;
+    // current gp is closer in phi then the previous
+    if (dR2 < bestDR2) {
+      gp = gem_gp;
+      best_digi = d;
+      bestDR2 = dR2;
+    }
+  }
+  return emptyValue;
+}
+
+
+std::pair<GEMPadDigi, GlobalPoint>
+CSCStubAnalyzer::bestGEMPadDigi(const GEMDetId& gemId,
+                                const GEMPadDigiContainer& gem_digis,
+                                const GlobalPoint& csc_gp) const
+{
+  GlobalPoint gp;
+  GEMPadDigi best_digi;
+  auto emptyValue = make_pair(best_digi, gp);
+
+  // no valid GEM digis
+  if (gem_digis.empty()) return emptyValue;
+
+  // invalid CSC stub
+  if (std::abs(csc_gp.z()) < 0.001) return emptyValue;
+
+  float bestDR2 = 999.;
+  for (const auto& d: gem_digis) {
+    const LocalPoint& lp = gemGeometry_->etaPartition(gemId)->centreOfPad(d.pad());
+    const GlobalPoint& gem_gp = gemGeometry_->idToDet(gemId)->surface().toGlobal(lp);
+
+    // in deltaR calculation, give x20 larger weight to deltaPhi to make them comparable
+    // but with slight bias towards dphi:
+    float dphi = 20. * reco::deltaPhi(float(csc_gp.phi()), float(gem_gp.phi()));
+    float deta = csc_gp.eta() - gem_gp.eta();
+    float dR2 = dphi*dphi + deta*deta;
+    // current gp is closer in phi then the previous
+    if (dR2 < bestDR2) {
+      gp = gem_gp;
+      best_digi = d;
+      bestDR2 = dR2;
+    }
+  }
+  return emptyValue;
+}
+
+
+std::pair<GEMCoPadDigi, GlobalPoint>
+CSCStubAnalyzer::bestGEMCoPadDigi(const GEMDetId& gemId,
+                                  const GEMCoPadDigiContainer& gem_digis,
+                                  const GlobalPoint& csc_gp) const
+{
+  GlobalPoint gp;
+  GEMCoPadDigi best_digi;
+  auto emptyValue = make_pair(best_digi, gp);
+
+  // no valid GEM digis
+  if (gem_digis.empty()) return emptyValue;
+
+  // invalid CSC stub
+  if (std::abs(csc_gp.z()) < 0.001) return emptyValue;
+
+  float bestDR2 = 999.;
+  for (const auto& d: gem_digis) {
+    const LocalPoint& lp = gemGeometry_->etaPartition(gemId)->centreOfPad(d.pad(1));
+    const GlobalPoint& gem_gp = gemGeometry_->idToDet(gemId)->surface().toGlobal(lp);
+
+    // in deltaR calculation, give x20 larger weight to deltaPhi to make them comparable
+    // but with slight bias towards dphi:
+    float dphi = 20. * reco::deltaPhi(float(csc_gp.phi()), float(gem_gp.phi()));
+    float deta = csc_gp.eta() - gem_gp.eta();
+    float dR2 = dphi*dphi + deta*deta;
+    // current gp is closer in phi then the previous
+    if (dR2 < bestDR2) {
+      gp = gem_gp;
+      best_digi = d;
+      bestDR2 = dR2;
+    }
+  }
   return emptyValue;
 }

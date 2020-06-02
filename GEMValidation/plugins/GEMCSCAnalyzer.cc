@@ -67,7 +67,10 @@ GEMCSCAnalyzer::GEMCSCAnalyzer(const edm::ParameterSet& ps) :
 }
 
 void GEMCSCAnalyzer::analyze(const edm::Event& ev, const edm::EventSetup& es) {
+
+  // set event and setup
   matcher_->init(ev, es);
+  analyzer_->init(ev, es);
 
   edm::Handle<edm::SimTrackContainer> sim_tracks;
   ev.getByToken(simTrackInput_, sim_tracks);

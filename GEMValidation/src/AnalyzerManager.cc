@@ -14,6 +14,11 @@ AnalyzerManager::AnalyzerManager(const edm::ParameterSet& conf)
   // recotrack_.reset(new RecoTrackAnalyzer(conf));
 }
 
+void AnalyzerManager::init(const edm::Event& iEvent, const edm::EventSetup& iSetup)
+{
+  cscstub_->init(iEvent, iSetup);
+}
+
 void AnalyzerManager::setManager(const MatcherManager& manager)
 {
   gemsh_->setMatcher(*manager.gemSimHits());

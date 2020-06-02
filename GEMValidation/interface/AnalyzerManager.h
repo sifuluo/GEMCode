@@ -24,6 +24,8 @@ class AnalyzerManager
 
   ~AnalyzerManager() {}
 
+  void init(const edm::Event& ev, const edm::EventSetup& es);
+
   /// initialize
   void setManager(const MatcherManager&);
 
