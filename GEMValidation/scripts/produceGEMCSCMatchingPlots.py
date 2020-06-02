@@ -5,6 +5,7 @@ from ROOT import TFile, TDirectory, TTree
 from style.CMS_lumi import *
 from helpers.cuts import *
 from helpers.drawPlots import *
+from efficiency.GEMSimHit import *
 
 ## run quiet mode
 sys.argv.append( '-b' )
