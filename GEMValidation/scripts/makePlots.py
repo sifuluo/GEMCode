@@ -30,14 +30,15 @@ plotter = GEMCSCStubPlotter()
 
 ## plots - most do not work yet
 from efficiency.plots import *
-#from timing.plots import *
-#from occupancy.plots import *
-#from resolution.plots import *
-#from datavsemulator.plots import *
+makeEfficiencyPlots(plotter)
 
-CSCSimHit(plotter)
-CSCStripsWires(plotter)
-CSCStripsWires2(plotter)
-CSCAlctClct(plotter)
-CSCAlctClct2(plotter)
-CSCLct(plotter)
+#from timing.plots import *
+#makeTimingPlots()
+
+#from occupancy.plots import *
+#makeOccupancyPlots()
+
+#from resolution.plots import *
+#makeResolutionPlots()
+
+#from datavsemulator.plots import *
