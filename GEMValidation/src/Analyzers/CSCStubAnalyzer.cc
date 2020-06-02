@@ -192,17 +192,17 @@ void CSCStubAnalyzer::analyze(TreeManager& tree)
              tree.gemStub().has_gem_pad_odd[gemstation] ) ) continue;
 
       if (odd) {
-        tree.gemStub().dphi_pad1_odd[gemstation]
+        tree.gemStub().dphi_lct_pad1_odd[gemstation]
           = reco::deltaPhi(float(tree.gemStub().phi_pad1_odd[st]),
                            float(tree.cscStub().phi_lct_odd[gemstation]));
-        tree.gemStub().dphi_pad2_odd[gemstation]
+        tree.gemStub().dphi_lct_pad2_odd[gemstation]
           = reco::deltaPhi(float(tree.gemStub().phi_pad2_odd[st]),
                            float(tree.cscStub().phi_lct_odd[gemstation]));
       } else {
-        tree.gemStub().dphi_pad1_even[gemstation]
+        tree.gemStub().dphi_lct_pad1_even[gemstation]
           = reco::deltaPhi(float(tree.gemStub().phi_pad1_even[st]),
                            float(tree.cscStub().phi_lct_even[gemstation]));
-        tree.gemStub().dphi_pad2_even[gemstation]
+        tree.gemStub().dphi_lct_pad2_even[gemstation]
           = reco::deltaPhi(float(tree.gemStub().phi_pad2_even[st]),
                            float(tree.cscStub().phi_lct_even[gemstation]));
       }
@@ -212,11 +212,11 @@ void CSCStubAnalyzer::analyze(TreeManager& tree)
              tree.gemStub().has_gem_copad_odd[gemstation] ) ) continue;
 
       if (odd) {
-        tree.gemStub().dphi_copad_odd[gemstation]
+        tree.gemStub().dphi_lct_copad_odd[gemstation]
           = reco::deltaPhi(float(tree.gemStub().phi_copad_odd[st]),
                            float(tree.cscStub().phi_lct_odd[gemstation]));
       } else {
-        tree.gemStub().dphi_copad_even[gemstation]
+        tree.gemStub().dphi_lct_copad_even[gemstation]
           = reco::deltaPhi(float(tree.gemStub().phi_copad_even[st]),
                            float(tree.cscStub().phi_lct_even[gemstation]));
       }

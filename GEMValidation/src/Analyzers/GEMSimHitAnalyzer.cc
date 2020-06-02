@@ -18,16 +18,21 @@ void GEMSimHitAnalyzer::analyze(TreeManager& tree)
 
     const bool odd(id.chamber()%2==1);
 
-    if (match_->hitsInSuperChamber(d).size() > 0) {
+    const auto& gem_simhits = match_->hitsInDetId(d);
+    const auto& gem_simhits_gp = match_->simHitsMeanPosition(gem_simhits);
+
+    if (match_->hitsInChamber(d).size() > 0) {
+      const float mean_strip(match_->simHitsMeanStrip(match_->hitsInChamber(d)));
       if (odd) {
         tree.gemSimHit().has_gem_sh_odd[st] = true;
+        tree.gemSimHit().strip_gem_sh_odd[st] = mean_strip;
+        tree.gemSimHit().phi_gem_sh_odd[st] = float(gem_simhits_gp.phi());
       }
       else {
         tree.gemSimHit().has_gem_sh_even[st] = true;
+        tree.gemSimHit().strip_gem_sh_even[st] = mean_strip;
+        tree.gemSimHit().phi_gem_sh_even[st] = float(gem_simhits_gp.phi());
       }
-      const float mean_strip(match_->simHitsMeanStrip(match_->hitsInSuperChamber(d)));
-      if (odd) tree.gemSimHit().strip_gemsh_odd[st] = mean_strip;
-      else     tree.gemSimHit().strip_gemsh_even[st] = mean_strip;
     }
 
     if (match_->nLayersWithHitsInSuperChamber(d) >= 2) {
@@ -35,7 +40,7 @@ void GEMSimHitAnalyzer::analyze(TreeManager& tree)
       else     tree.gemSimHit().has_gem_sh2_even[st] = true;
     }
 
-    const auto& copad_superids (match_->superChamberIdsCoincidences());
+    const auto& copad_superids(match_->superChamberIdsCoincidences());
     if (copad_superids.find(d) != copad_superids.end()) {
       if (odd) tree.gemSimHit().has_gemcopad_sh_odd[st] = true;
       else     tree.gemSimHit().has_gemcopad_sh_even[st] = true;

@@ -41,6 +41,9 @@ void GEMStubAnalyzer::analyze(TreeManager& tree)
         tree.gemStub().z_pad1_odd[st] = bestGP.z();
         tree.gemStub().eta_pad1_odd[st] = bestGP.eta();
         tree.gemStub().phi_pad1_odd[st] = bestGP.phi();
+        tree.gemStub().dphi_pad1_odd[st] =
+          reco::deltaPhi(float(tree.gemStub().phi_pad1_odd[st]),
+                         float(tree.gemSimHit().phi_gem_sh_odd[st]));
       }
       else {
         tree.gemStub().pad1_even[st] = bestP.pad();
@@ -48,6 +51,9 @@ void GEMStubAnalyzer::analyze(TreeManager& tree)
         tree.gemStub().z_pad1_even[st] = bestGP.z();
         tree.gemStub().eta_pad1_even[st] = bestGP.eta();
         tree.gemStub().phi_pad1_even[st] = bestGP.phi();
+        tree.gemStub().dphi_pad1_even[st] =
+          reco::deltaPhi(float(tree.gemStub().phi_pad1_even[st]),
+                         float(tree.gemSimHit().phi_gem_sh_even[st]));
       }
     }
     else {
@@ -57,7 +63,9 @@ void GEMStubAnalyzer::analyze(TreeManager& tree)
         tree.gemStub().z_pad2_odd[st] = bestGP.z();
         tree.gemStub().eta_pad2_odd[st] = bestGP.eta();
         tree.gemStub().phi_pad2_odd[st] = bestGP.phi();
-
+        tree.gemStub().dphi_pad2_odd[st] =
+          reco::deltaPhi(float(tree.gemStub().phi_pad2_odd[st]),
+                         float(tree.gemSimHit().phi_gem_sh_odd[st]));
       }
       else {
         tree.gemStub().pad2_even[st] = bestP.pad();
@@ -65,6 +73,9 @@ void GEMStubAnalyzer::analyze(TreeManager& tree)
         tree.gemStub().z_pad2_even[st] = bestGP.z();
         tree.gemStub().eta_pad2_even[st] = bestGP.eta();
         tree.gemStub().phi_pad2_even[st] = bestGP.phi();
+        tree.gemStub().dphi_pad2_even[st] =
+          reco::deltaPhi(float(tree.gemStub().phi_pad2_even[st]),
+                         float(tree.gemSimHit().phi_gem_sh_even[st]));
       }
     }
   }

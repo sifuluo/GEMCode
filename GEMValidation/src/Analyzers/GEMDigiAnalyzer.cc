@@ -23,11 +23,11 @@ void GEMDigiAnalyzer::analyze(TreeManager& tree)
     if (match_->digisInChamber(d).size() >= 1) {
       if (odd) {
         tree.gemDigi().has_gem_dg_odd[st] = true;
-        tree.gemDigi().strip_gemdg_odd[st] = median_strip;
+        tree.gemDigi().strip_gem_dg_odd[st] = median_strip;
       }
       else {
         tree.gemDigi().has_gem_dg_even[st] = true;
-        tree.gemDigi().strip_gemdg_even[st] = median_strip;
+        tree.gemDigi().strip_gem_dg_even[st] = median_strip;
       }
     }
 
