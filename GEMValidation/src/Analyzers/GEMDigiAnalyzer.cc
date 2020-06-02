@@ -35,9 +35,6 @@ void GEMDigiAnalyzer::analyze(TreeManager& tree)
       if (odd) tree.gemDigi().has_gem_dg2_odd[st] = true;
       else     tree.gemDigi().has_gem_dg2_even[st] = true;
     }
-
-    // find the best matching GEM pad
-
   }
 }
 
@@ -68,29 +65,6 @@ GEMDigiAnalyzer::meanPosition(const GEMDetId& id,
   size_t n = 0;
   for (auto& d: digis){
     const GlobalPoint& gp = match_->getGlobalPointDigi(id, d);
-    if (gp == point_zero) continue;
-
-    sumx += gp.x();
-    sumy += gp.y();
-    sumz += gp.z();
-    ++n;
-  }
-  if (n == 0) return GlobalPoint();
-  return GlobalPoint(sumx/n, sumy/n, sumz/n);
-}
-
-GlobalPoint
-GEMDigiAnalyzer::meanPosition(const GEMDetId& id,
-                              const GEMPadDigiContainer& digis) const
-{
-  GlobalPoint point_zero;
-  if (digis.empty()) return point_zero; // point "zero"
-
-  float sumx, sumy, sumz;
-  sumx = sumy = sumz = 0.f;
-  size_t n = 0;
-  for (auto& d: digis){
-    const GlobalPoint& gp = match_->getGlobalPointPad(id, d);
     if (gp == point_zero) continue;
 
     sumx += gp.x();

@@ -24,7 +24,6 @@ public:
 
   int median(const GEMDigiContainer& digis) const;
   GlobalPoint meanPosition(const GEMDetId& id, const GEMDigiContainer& digis) const;
-  GlobalPoint meanPosition(const GEMDetId& id, const GEMPadDigiContainer& digis) const;
 
   std::unique_ptr<GEMDigiMatcher> match_;
   int minNHitsChamber_;

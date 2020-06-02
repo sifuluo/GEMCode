@@ -35,7 +35,7 @@ namespace gem {
     int bx_copad_odd[nStations];
     int bx_copad_even[nStations];
 
-    // floats - this is based on the best matching CSC stub
+    // floats - this is based on mean GEM position
     float z_pad1_odd[nStations];
     float z_pad1_even[nStations];
     float eta_pad1_odd[nStations];
@@ -57,6 +57,7 @@ namespace gem {
     float phi_copad_odd[nStations];
     float phi_copad_even[nStations];
 
+    // floats - between GEM and CSC
     float dphi_pad1_odd[nStations];
     float dphi_pad1_even[nStations];
     float deta_pad1_odd[nStations];

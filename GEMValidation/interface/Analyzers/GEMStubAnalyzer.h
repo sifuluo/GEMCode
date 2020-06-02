@@ -22,6 +22,22 @@ public:
 
  private:
 
+  std::pair<GEMPadDigi, GlobalPoint>
+  bestPad(const GEMDetId& id,
+          const GEMPadDigiContainer& digis) const;
+
+  std::pair<GEMCoPadDigi, GlobalPoint>
+  bestCoPad(const GEMDetId& id,
+            const GEMCoPadDigiContainer& digis) const;
+
+  GlobalPoint
+  meanPosition(const GEMDetId& id,
+               const GEMPadDigiContainer& digis) const;
+
+  GlobalPoint
+  meanPosition(const GEMDetId& id,
+               const GEMCoPadDigiContainer& digis) const;
+
   std::unique_ptr<GEMDigiMatcher> match_;
   int minNHitsChamber_;
 };

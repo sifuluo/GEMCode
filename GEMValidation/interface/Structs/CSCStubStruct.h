@@ -61,11 +61,10 @@ namespace gem {
     int quality_clct_even[nStations];
     int quality_alct_odd[nStations];
     int quality_alct_even[nStations];
+    int quality_lct_odd[nStations];
+    int quality_lct_even[nStations];
 
     int lct_type[nStations];
-
-    int quality_odd[nStations];
-    int quality_even[nStations];
 
     // floats
     float phi_lct_odd[nStations];
@@ -85,9 +84,6 @@ namespace gem {
 
     void init() {
       for (unsigned i = 0 ; i < nStations; i++) {
-
-        quality_odd[i] = 0;
-        quality_even[i] = 0;
 
         has_alct_even[i] = 0;
         has_clct_even[i] = 0;
@@ -150,6 +146,8 @@ namespace gem {
         quality_clct_even[i] = -1;
         quality_alct_odd[i] = -1;
         quality_alct_even[i] = -1;
+        quality_lct_odd[i] = -1;
+        quality_lct_even[i] = -1;
 
         bx_clct_odd[i] = -9;
         bx_clct_even[i] = -9;
@@ -172,17 +170,16 @@ namespace gem {
       t->Branch("has_alct_even", has_alct_even, "has_alct_even[11]/O");
       t->Branch("has_lct_even", has_lct_even, "has_lct_even[11]/O");
 
-      t->Branch("quality_odd", quality_odd, "quality_odd[11]/I");
-      t->Branch("quality_even", quality_even, "quality_even[11]/I");
-
-      t->Branch("quality_clct_odd", quality_clct_odd, "quality_clct_odd[11]/I");
-      t->Branch("quality_clct_even", quality_clct_even, "quality_clct_even[11]/I");
 
       t->Branch("bx_clct_odd", bx_clct_odd, "bx_clct_odd[11]/I");
       t->Branch("bx_clct_even", bx_clct_even, "bx_clct_even[11]/I");
 
+      t->Branch("quality_clct_odd", quality_clct_odd, "quality_clct_odd[11]/I");
+      t->Branch("quality_clct_even", quality_clct_even, "quality_clct_even[11]/I");
       t->Branch("quality_alct_odd", quality_alct_odd, "quality_alct_odd[11]/I");
       t->Branch("quality_alct_even", quality_alct_even, "quality_alct_even[11]/I");
+      t->Branch("quality_lct_odd", quality_lct_odd, "quality_lct_odd[11]/I");
+      t->Branch("quality_lct_even", quality_lct_even, "quality_lct_even[11]/I");
 
       t->Branch("bx_alct_odd", bx_alct_odd, "bx_alct_odd[11]/I");
       t->Branch("bx_alct_even", bx_alct_even, "bx_alct_even[11]/I");
