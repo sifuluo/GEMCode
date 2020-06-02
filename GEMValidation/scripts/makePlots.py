@@ -1,14 +1,11 @@
 import sys
 import os
 
-from ROOT import TFile, TDirectory, TTree
-from plots import *
+from ROOT import TFile, TDirectory, TTree, gROOT
 
 ## run quiet mode
 sys.argv.append( '-b' )
-
-import ROOT
-ROOT.gROOT.SetBatch(1)
+gROOT.SetBatch(1)
 
 class GEMCSCStubPlotter():
   def __init__(self):

@@ -27,7 +27,8 @@ def CSCStripsWires(plotter):
     yTitle = "Efficiency"
     title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
     toPlot = "TMath::Abs(eta)"
-    subdirectory = "CSCDigi/"
+    subdirectory = "efficiency/CSCDigi/"
+
 
     for st in range(0,len(cscStations)):
 
@@ -62,6 +63,7 @@ def CSCStripsWires(plotter):
 
         c.Print("%sEff_CSCDigi_%s%s"%(plotter.targetDir + subdirectory, cscStations[st].labelc,  plotter.ext))
 
+        del c, base, leg, csc, h1, h2
 
 def CSCStripsWires2(plotter):
 
@@ -71,7 +73,8 @@ def CSCStripsWires2(plotter):
     yTitle = "Efficiency"
     title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
     toPlot = "TMath::Abs(eta)"
-    subdirectory = "CSCDigi/"
+    subdirectory = "efficiency/CSCDigi/"
+
 
     for st in range(0,len(cscStations)):
 
@@ -105,3 +108,5 @@ def CSCStripsWires2(plotter):
         csc = drawCSCLabel(cscStations[st].label, 0.87,0.87,0.05)
 
         c.Print("%sEff_CSCDigi2_%s%s"%(plotter.targetDir + subdirectory, cscStations[st].labelc,  plotter.ext))
+
+        del c, base, leg, csc, h1, h2

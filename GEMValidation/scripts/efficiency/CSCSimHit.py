@@ -27,8 +27,7 @@ def CSCSimHit(plotter):
     yTitle = "Efficiency"
     title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
     toPlot = "TMath::Abs(eta)"
-
-    subdirectory = "CSCSimHit/"
+    subdirectory = "efficiency/CSCSimHit/"
 
     for st in range(0,len(cscStations)):
         c = TCanvas("c","c",700,450)
@@ -60,3 +59,5 @@ def CSCSimHit(plotter):
         csc = drawCSCLabel(cscStations[st].label, 0.87,0.87,0.05)
 
         c.Print("%sEff_CSCSimHit_%s%s"%(plotter.targetDir + subdirectory, cscStations[st].labelc,  plotter.ext))
+
+        del c, base, h1, leg, csc

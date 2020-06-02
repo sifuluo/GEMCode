@@ -27,7 +27,7 @@ def CSCAlctClct(plotter):
     yTitle = "Efficiency"
     title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
     toPlot = "TMath::Abs(eta)"
-    subdirectory = "CSCStub/"
+    subdirectory = "efficiency/CSCStub/"
 
     for st in range(0,len(cscStations)):
 
@@ -66,6 +66,8 @@ def CSCAlctClct(plotter):
 
         c.Print("%sEff_CSCStub_%s%s"%(plotter.targetDir + subdirectory, cscStations[st].labelc,  plotter.ext))
 
+        del c, base, h1, leg, csc, h2, h11, h21
+
 
 def CSCAlctClct2(plotter):
 
@@ -75,7 +77,7 @@ def CSCAlctClct2(plotter):
     yTitle = "Efficiency"
     title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
     toPlot = "TMath::Abs(eta)"
-    subdirectory = "CSCStub/"
+    subdirectory = "efficiency/CSCStub/"
 
     for st in range(0,len(cscStations)):
 
@@ -116,6 +118,8 @@ def CSCAlctClct2(plotter):
 
         c.Print("%sEff_CSCStub2_%s%s"%(plotter.targetDir + subdirectory, cscStations[st].labelc,  plotter.ext))
 
+        del c, base, h1, leg, csc, h2, h11, h21
+
 
 def CSCLct(plotter):
 
@@ -125,7 +129,7 @@ def CSCLct(plotter):
     yTitle = "Efficiency"
     title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
     toPlot = "TMath::Abs(eta)"
-    subdirectory = "CSCStub/"
+    subdirectory = "efficiency/CSCStub/"
 
     for st in range(0,len(cscStations)):
 
@@ -169,3 +173,5 @@ def CSCLct(plotter):
         csc = drawCSCLabel(cscStations[st].label, 0.87,0.87,0.05)
 
         c.Print("%sEff_CSCStub3_%s%s"%(plotter.targetDir + subdirectory, cscStations[st].labelc,  plotter.ext))
+
+        del c, base, h1, leg, csc, h2
