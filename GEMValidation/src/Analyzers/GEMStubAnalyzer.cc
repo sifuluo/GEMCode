@@ -13,7 +13,7 @@ void GEMStubAnalyzer::setMatcher(const GEMDigiMatcher& match_sh)
 void GEMStubAnalyzer::analyze(TreeManager& tree)
 {
   // GEM digis and pads in superchambers
-  for(const auto& d: match_->superChamberIdsPad()) {
+  for(const auto& d: match_->chamberIdsPad()) {
     GEMDetId id(d);
     const int st = id.station();
     const bool odd(id.chamber()%2==1);
