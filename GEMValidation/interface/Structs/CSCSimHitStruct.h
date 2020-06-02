@@ -21,13 +21,16 @@ namespace gem {
     int chamber_sh_even[nStations];
 
     // floats
+
     float dphi_sh_even[nStations];
     float dphi_sh_odd[nStations];
 
     float dphipositionpt_csc_sh_even[nStations];
     float dphipositionpt_csc_sh_odd[nStations];
 
-    float bending_sh[nStations];
+    float bend_csc_sh_even[nStations];
+    float bend_csc_sh_odd[nStations];
+
     float phi_csc_sh_even[nStations];
     float phi_csc_sh_odd[nStations];
     float eta_csc_sh_even[nStations];
@@ -77,7 +80,8 @@ namespace gem {
         dphi_sh_odd[i] = -9;
         dphi_sh_even[i] = -9;
 
-        bending_sh[i] = -10;
+        bend_csc_sh_even[i] = -10;
+        bend_csc_sh_odd[i] = -10;
       }
     };
 
@@ -92,7 +96,8 @@ namespace gem {
       t->Branch("nlayers_csc_sh_odd", nlayers_csc_sh_odd, "nlayers_csc_sh_odd[11]/I");
       t->Branch("nlayers_csc_sh_even", nlayers_csc_sh_even, "nlayers_csc_sh_even[11]/I");
 
-      t->Branch("bending_sh", bending_sh, "bending_sh[11]/I");
+      t->Branch("bend_csc_sh_even", bend_csc_sh_even, "bend_csc_sh_even[11]/I");
+      t->Branch("bend_csc_sh_odd", bend_csc_sh_odd, "bend_csc_sh_odd[11]/I");
 
       t->Branch("perp_csc_sh_odd", perp_csc_sh_odd, "perp_csc_sh_odd[11]/F");
       t->Branch("perp_csc_sh_even", perp_csc_sh_even, "perp_csc_sh_even[11]/F");

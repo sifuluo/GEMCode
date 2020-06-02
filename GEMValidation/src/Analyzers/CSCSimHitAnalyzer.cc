@@ -46,7 +46,8 @@ void CSCSimHitAnalyzer::analyze(TreeManager& tree)
 
     const bool odd(id.chamber()%2==1);
     const auto& simhits = match_->hitsInDetId(id);
-    const GlobalPoint& keygp(match_->simHitsMeanPosition(simhits));
+    const auto& keygp(match_->simHitsMeanPosition(simhits));
+    const auto& csc_simhits_gv = match_->simHitsMeanMomentum(simhits);
 
     if (odd) {
       tree.cscSimHit().chamber_sh_odd[st] = id.chamber();
@@ -55,6 +56,7 @@ void CSCSimHitAnalyzer::analyze(TreeManager& tree)
       tree.cscSimHit().eta_csc_sh_odd[st] = keygp.eta();
       tree.cscSimHit().phi_csc_sh_odd[st] = keygp.phi();
       tree.cscSimHit().perp_csc_sh_odd[st] = keygp.perp();
+      tree.cscSimHit().bend_csc_sh_odd[st] = csc_simhits_gv.phi();
     }
     else {
       tree.cscSimHit().chamber_sh_even[st] = id.chamber();
@@ -63,6 +65,7 @@ void CSCSimHitAnalyzer::analyze(TreeManager& tree)
       tree.cscSimHit().eta_csc_sh_even[st] = keygp.eta();
       tree.cscSimHit().phi_csc_sh_even[st] = keygp.phi();
       tree.cscSimHit().perp_csc_sh_even[st] = keygp.perp();
+      tree.cscSimHit().bend_csc_sh_even[st] = csc_simhits_gv.phi();
     }
 
     // case ME11
@@ -74,6 +77,7 @@ void CSCSimHitAnalyzer::analyze(TreeManager& tree)
         tree.cscSimHit().eta_csc_sh_odd[0] = keygp.eta();
         tree.cscSimHit().phi_csc_sh_odd[0] = keygp.phi();
         tree.cscSimHit().perp_csc_sh_odd[0] = keygp.perp();
+        tree.cscSimHit().bend_csc_sh_odd[0] = csc_simhits_gv.phi();
       }
       else {
         tree.cscSimHit().chamber_sh_even[0] = id.chamber();
@@ -82,6 +86,7 @@ void CSCSimHitAnalyzer::analyze(TreeManager& tree)
         tree.cscSimHit().eta_csc_sh_even[0] = keygp.eta();
         tree.cscSimHit().phi_csc_sh_even[0] = keygp.phi();
         tree.cscSimHit().perp_csc_sh_even[0] = keygp.perp();
+        tree.cscSimHit().bend_csc_sh_odd[0] = csc_simhits_gv.phi();
       }
     }
   }

@@ -82,6 +82,10 @@ namespace gem {
     float perp_lct_odd[nStations];
     float perp_lct_even[nStations];
 
+    // bending resolution
+    float dbend_lct_odd[nStations];
+    float dbend_lct_even[nStations];
+
     void init() {
       for (unsigned i = 0 ; i < nStations; i++) {
 
@@ -155,6 +159,9 @@ namespace gem {
         bx_alct_even[i] = -9;
 
         lct_type[i] = -1;
+
+        dbend_lct_odd[i] = -9;
+        dbend_lct_even[i] = -9;
       }
     };
 
@@ -236,6 +243,9 @@ namespace gem {
       t->Branch("passdphi_even", passdphi_even, "passdphi_even[11]/F");
 
       t->Branch("lct_type", lct_type, "lct_type[11]/I");
+
+      t->Branch("dbend_lct_odd", dbend_lct_odd, "dbend_lct_odd[11]/I");
+      t->Branch("dbend_lct_even", dbend_lct_even, "dbend_lct_even[11]/I");
     }
   };
 }  // namespace
