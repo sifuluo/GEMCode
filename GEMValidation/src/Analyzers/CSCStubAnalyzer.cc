@@ -140,6 +140,9 @@ void CSCStubAnalyzer::analyze(TreeManager& tree)
         tree.cscStub().es_lct_odd[st] = lct.getStrip(8);
         tree.cscStub().wg_lct_odd[st] = lct.getKeyWG();
         tree.cscStub().quality_lct_odd[st] = lct.getQuality();
+        tree.cscStub().dphi_lct_odd[st] =
+          reco::deltaPhi(float(tree.cscStub().phi_lct_odd[st]),
+                         float(tree.cscSimHit().phi_csc_sh_odd[st]));
       }
       else {
         tree.cscStub().has_lct_even[st] = true;
@@ -153,6 +156,9 @@ void CSCStubAnalyzer::analyze(TreeManager& tree)
         tree.cscStub().es_lct_odd[st] = lct.getStrip(8);
         tree.cscStub().wg_lct_even[st] = lct.getKeyWG();
         tree.cscStub().quality_lct_even[st] = lct.getQuality();
+        tree.cscStub().dphi_lct_even[st] =
+          reco::deltaPhi(float(tree.cscStub().phi_lct_even[st]),
+                         float(tree.cscSimHit().phi_csc_sh_even[st]));
       }
       // case ME11
       if (st==1 or st==2){
@@ -168,6 +174,9 @@ void CSCStubAnalyzer::analyze(TreeManager& tree)
           tree.cscStub().es_lct_odd[0] = lct.getStrip(8);
           tree.cscStub().wg_lct_odd[0] = lct.getKeyWG();
           tree.cscStub().quality_lct_odd[0] = lct.getQuality();
+          tree.cscStub().dphi_lct_odd[0] =
+            reco::deltaPhi(float(tree.cscStub().phi_lct_odd[0]),
+                           float(tree.cscSimHit().phi_csc_sh_odd[0]));
         }
         else {
           tree.cscStub().has_lct_even[0] = true;
@@ -181,6 +190,9 @@ void CSCStubAnalyzer::analyze(TreeManager& tree)
           tree.cscStub().es_lct_even[0] = lct.getStrip(8);
           tree.cscStub().wg_lct_even[0] = lct.getKeyWG();
           tree.cscStub().quality_lct_even[0] = lct.getQuality();
+          tree.cscStub().dphi_lct_even[0] =
+            reco::deltaPhi(float(tree.cscStub().phi_lct_even[0]),
+                           float(tree.cscSimHit().phi_csc_sh_even[0]));
         }
       }
 

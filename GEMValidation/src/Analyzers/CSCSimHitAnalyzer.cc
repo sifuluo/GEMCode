@@ -52,17 +52,17 @@ void CSCSimHitAnalyzer::analyze(TreeManager& tree)
       tree.cscSimHit().chamber_sh_odd[st] = id.chamber();
       tree.cscSimHit().nlayers_csc_sh_odd[st] = nlayers;
       tree.cscSimHit().has_csc_sh_odd[st] = true;
-      tree.cscSimHit().eta_cscsh_odd[st] = keygp.eta();
-      tree.cscSimHit().phi_cscsh_odd[st] = keygp.phi();
-      tree.cscSimHit().perp_cscsh_odd[st] = keygp.perp();
+      tree.cscSimHit().eta_csc_sh_odd[st] = keygp.eta();
+      tree.cscSimHit().phi_csc_sh_odd[st] = keygp.phi();
+      tree.cscSimHit().perp_csc_sh_odd[st] = keygp.perp();
     }
     else {
       tree.cscSimHit().chamber_sh_even[st] = id.chamber();
       tree.cscSimHit().nlayers_csc_sh_even[st] = nlayers;
       tree.cscSimHit().has_csc_sh_even[st] = true;
-      tree.cscSimHit().eta_cscsh_even[st] = keygp.eta();
-      tree.cscSimHit().phi_cscsh_even[st] = keygp.phi();
-      tree.cscSimHit().perp_cscsh_even[st] = keygp.perp();
+      tree.cscSimHit().eta_csc_sh_even[st] = keygp.eta();
+      tree.cscSimHit().phi_csc_sh_even[st] = keygp.phi();
+      tree.cscSimHit().perp_csc_sh_even[st] = keygp.perp();
     }
 
     // case ME11
@@ -71,17 +71,17 @@ void CSCSimHitAnalyzer::analyze(TreeManager& tree)
         tree.cscSimHit().chamber_sh_odd[0] = id.chamber();
         tree.cscSimHit().nlayers_csc_sh_odd[0] = nlayers;
         tree.cscSimHit().has_csc_sh_odd[0] = true;
-        tree.cscSimHit().eta_cscsh_odd[0] = keygp.eta();
-        tree.cscSimHit().phi_cscsh_odd[0] = keygp.phi();
-        tree.cscSimHit().perp_cscsh_odd[0] = keygp.perp();
+        tree.cscSimHit().eta_csc_sh_odd[0] = keygp.eta();
+        tree.cscSimHit().phi_csc_sh_odd[0] = keygp.phi();
+        tree.cscSimHit().perp_csc_sh_odd[0] = keygp.perp();
       }
       else {
         tree.cscSimHit().chamber_sh_even[0] = id.chamber();
         tree.cscSimHit().nlayers_csc_sh_even[0] = nlayers;
         tree.cscSimHit().has_csc_sh_even[0] = true;
-        tree.cscSimHit().eta_cscsh_even[0] = keygp.eta();
-        tree.cscSimHit().phi_cscsh_even[0] = keygp.phi();
-        tree.cscSimHit().perp_cscsh_even[0] = keygp.perp();
+        tree.cscSimHit().eta_csc_sh_even[0] = keygp.eta();
+        tree.cscSimHit().phi_csc_sh_even[0] = keygp.phi();
+        tree.cscSimHit().perp_csc_sh_even[0] = keygp.perp();
       }
     }
   }
