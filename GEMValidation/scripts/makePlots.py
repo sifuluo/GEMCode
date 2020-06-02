@@ -23,9 +23,10 @@ class GEMCSCStubPlotter():
     self.treeFriends = ["CSCSimHit", "CSCDigi", "CSCStub",
                         "GEMSimHit", "GEMDigi", "GEMStub", "L1Mu"]
     for p in self.treeFriends:
-      self.tree.AddFriend((self.dirAna.Get(p))
+      self.tree.AddFriend(self.dirAna.Get(p))
     self.yMin = 0.5
     self.yMax = 1.1
+
 
 ## needs to be cleaned up
 plotter = GEMCSCStubPlotter()
