@@ -9,64 +9,6 @@ namespace gem {
   struct CSCStubStruct {
 
     static const int nStations = 11;
-    /*
-    class Stub : public TObject {
-    public:
-      bool hasStub;
-      int quality;
-      bool isEven;
-      int bx;
-      int chamber;
-
-      void init() {
-        hasStub = isEven = false;
-        quality = bx = chamber = 0;
-      }
-      ClassDef(Stub,1);
-    };
-
-    class ALCT : public Stub {
-    public:
-      int wg;
-      void init() {
-        Stub::init();
-        wg = -1;
-      }
-      ClassDef(ALCT,1);
-    };
-
-    class CLCT : public Stub {
-    public:
-      int hs;
-      int bend;
-      void init() {
-        Stub::init();
-        hs = -1;
-        bend = -99;
-      }
-      ClassDef(CLCT,1);
-    };
-
-    class LCT : public Stub {
-    public:
-      int wg;
-      int hs;
-      int bend;
-      int type;
-      void init() {
-        Stub::init();
-        wg = -1;
-        hs = -1;
-        bend = -99;
-        type = -1;
-      }
-      ClassDef(LCT,1);
-    };
-
-    ALCT alct[nStations];
-    CLCT clct[nStations];
-    LCT lct[nStations];
-    */
 
     // bools
     bool has_clct_odd[nStations];
