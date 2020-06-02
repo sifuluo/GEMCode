@@ -7,12 +7,12 @@ from drawPlots import *
 import sys
 sys.argv.append( '-b' )
 
-import ROOT 
+import ROOT
 ROOT.gROOT.SetBatch(1)
 
 #_______________________________________________________________________________
 def cscSimHitOccupancyXY(plotter,i):
-  
+
   ## per station
   draw_occ(plotter.targetDir, "sh_csc_xy_st1" + plotter.suff[i], plotter.ext, plotter.treeCSCSimHits,
            plotter.pre[i] + " SimHit occupancy: station1;globalX [cm];globalY [cm]",
@@ -168,12 +168,3 @@ def cscSimHitOccupancyXY(plotter,i):
   draw_occ(plotter.targetDir, "sh_csc_xy_ec2_st4_ri1_even" + plotter.suff[i], plotter.ext, plotter.treeCSCSimHits,
            plotter.pre[i] + " SimHit occupancy: region-1, station4, ring1, even;globalX [cm];globalY [cm]",
            "h_", "(200,-400,400,200,-400,400)", "globalX:globalY", AND(re(2),st(4),ri(1),plotter.sel[i],even), "COLZ")
-
-
-#_______________________________________________________________________________
-def cscSimHitOccupancyRZ():
-  pass
-
-#_______________________________________________________________________________
-def cscSimHitTOF():
-  pass
