@@ -28,6 +28,14 @@ class GEMCSCStubPlotter():
 ## needs to be cleaned up
 plotter = GEMCSCStubPlotter()
 
+## need to create directory structure - assume it does not exist yet
+os.mkdir("plots")
+os.mkdir("plots/efficiency")
+os.mkdir("plots/efficiency/GEMSimHit")
+os.mkdir("plots/efficiency/CSCSimHit")
+os.mkdir("plots/efficiency/CSCDigi")
+os.mkdir("plots/efficiency/CSCStub")
+
 ## plots - most do not work yet
 from efficiency.plots import *
 makeEfficiencyPlots(plotter)
