@@ -2,10 +2,17 @@ import sys
 import os
 
 from ROOT import TFile, TDirectory, TTree
+
+## helpers
 from style.CMS_lumi import *
 from helpers.cuts import *
 from helpers.drawPlots import *
-from efficiency.GEMSimHit import *
+
+## plots -  not work yet
+#from efficiency.plots import *
+#from timing.plots import *
+#from occupancy.plots import *
+#from datavsemulator.plots import *
 
 ## run quiet mode
 sys.argv.append( '-b' )
@@ -35,6 +42,7 @@ class GEMCSCStubPlotter():
     self.tree.AddFriend(self.dirAna.Get("GEMStub"))
     self.tree.AddFriend(self.dirAna.Get("L1Mu"))
 
+## needs to be cleaned up
 plotter = GEMCSCStubPlotter()
 
 CSCSimHit(plotter)

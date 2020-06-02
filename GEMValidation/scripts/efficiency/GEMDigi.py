@@ -1,15 +1,7 @@
-from ROOT import *
-
-from cuts import *
-from drawPlots import *
-
-## run quiet mode
-import sys
-sys.argv.append( '-b' )
-
-import ROOT
-ROOT.gROOT.SetBatch(1)
-
+from helpers.cuts import *
+from helpers.drawPlots import *
+from helpers.Helpers import *
+from helpers.stations import *
 
 def simTrackDigiMatchingEta(plotter):
   ## digis
