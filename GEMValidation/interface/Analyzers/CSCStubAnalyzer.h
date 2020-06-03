@@ -23,6 +23,18 @@ public:
   void analyze(TreeManager& tree);
 
  private:
+
+  float getPositionOffset(int pattern, int compCode = -1) const;
+  float getSlopeRun3(int pattern, int compCode) const;
+  float getPositionOffsetRun3(int pattern, int compCode) const;
+
+  float getSlope(int pattern, int compCode = -1) const;
+  float getMaxSlopeLegacy(int pattern) const;
+  float getMinSlopeLegacy(int pattern) const;
+  float getAverageSlopeLegacy(int pattern) const;
+  float getPositionOffsetLegacy(int pattern) const;
+
+
   // best here means "closest in phi"
   std::pair<GEMDigi, GlobalPoint>
   bestGEMDigi(const GEMDetId& gemId,

@@ -1,4 +1,5 @@
 #include "GEMCode/GEMValidation/interface/Analyzers/CSCStubAnalyzer.h"
+#include "L1Trigger/CSCCommonTrigger/interface/CSCPatternLUT.h"
 
 CSCStubAnalyzer::CSCStubAnalyzer(const edm::ParameterSet& conf)
 {
@@ -234,6 +235,64 @@ void CSCStubAnalyzer::analyze(TreeManager& tree)
       }
     }
   }
+}
+
+float CSCStubAnalyzer::getPositionOffset(int pattern, int compCode) const
+{
+  if (compCode == -1) return getPositionOffsetLegacy(pattern);
+  else return getPositionOffsetRun3(pattern, compCode);
+}
+
+float CSCStubAnalyzer::getPositionOffsetLegacy(int pattern) const
+{
+  return CSCPatternLUT::get2007Position(pattern);
+}
+
+float CSCStubAnalyzer::getPositionOffsetRun3(int pattern, int compCode) const
+{
+  // need to access the LUTs in CMSSW!
+  std::string lutstring("L1Trigger/CSCTriggerPrimitives/data/CSCComparatorCodePosOffsetLUT_pat" + std::to_string(pattern) + "_ideal_v1.txt");
+  std::unique_ptr<CSCComparatorCodeLUT> lut = new CSCComparatorCodeLUT(lutstring);
+  return lut.lookup(compCode);
+}
+
+float CSCStubAnalyzer::getSlope(int pattern, int compCode) const
+{
+  if (compCode == -1) return getAverageSlopeLegacy(pattern);
+  else return getSlopeRun3(pattern, compCode);
+}
+
+float CSCStubAnalyzer::getMaxSlopeLegacy(int pattern) const
+{
+  // slope in number of strips/layer
+  int slope[CSCConstants::NUM_CLCT_PATTERNS] = {
+    0, 0, 5, -5, 4, -4, 3, -3, 2, -2, 1};
+  return float(slope[pattern]/5.);
+}
+
+float CSCStubAnalyzer::getMinSlopeLegacy(int pattern) const
+{
+  // slope in number of strips/layer
+  int slope[CSCConstants::NUM_CLCT_PATTERNS] = {
+    0, 0, 3, -3, 2, -2, 1, -1, 0, 0, -1};
+  return float(slope[pattern]/5.);
+}
+
+float CSCStubAnalyzer::getAverageSlopeLegacy(int pattern) const
+{
+  // slope in number of strips/layer
+  int slope[CSCConstants::NUM_CLCT_PATTERNS] = {
+    0, 0, 4, -4, 3, -3, 2, -2, 1, -1, 0};
+  return float(slope[pattern]/5.);
+
+}
+
+float CSCStubAnalyzer::getSlopeRun3(int pattern, int compCode) const
+{
+  // need to access the LUTs in CMSSW!
+  std::string lutstring("L1Trigger/CSCTriggerPrimitives/data/CSCComparatorCodeSlopeLUT_pat" + std::to_string(pattern) + "_v1.txt");
+  std::unique_ptr<CSCComparatorCodeLUT> lut = new CSCComparatorCodeLUT(lutstring);
+  return lut.lookup(compCode);
 }
 
 
