@@ -1,4 +1,7 @@
 #include "GEMCode/GEMValidation/interface/Analyzers/CSCSimHitAnalyzer.h"
+#include "TF1.h"
+#include "TGraph.h"
+#include "TFitResult.h"
 
 using namespace std;
 
@@ -89,5 +92,83 @@ void CSCSimHitAnalyzer::analyze(TreeManager& tree)
         tree.cscSimHit().bend_csc_sh_odd[0] = csc_simhits_gv.phi();
       }
     }
+  cout << "Print global z positions for bending angle calculation: " << id << endl;
+
+  const auto& cscid(id);
+  const CSCDetId cscid1(cscid.endcap(), cscid.station(), cscid.ring(), cscid.chamber(), 1);
+  const CSCDetId cscid6(cscid.endcap(), cscid.station(), cscid.ring(), cscid.chamber(), 6);
+
+  const edm::PSimHitContainer& hits1 =  match_->hitsInDetId(cscid1.rawId());
+  const edm::PSimHitContainer& hits6 =  match_->hitsInDetId(cscid6.rawId());
+
+  const GlobalPoint& gp1 =  match_->simHitsMeanPosition( match_->hitsInDetId(cscid1.rawId()));
+  const GlobalPoint& gp6 =  match_->simHitsMeanPosition( match_->hitsInDetId(cscid6.rawId()));
+
+  cout << gp1 << endl;
+  cout << gp6 << endl;
   }
+}
+
+
+float //std::pair<float,float>
+CSCSimHitAnalyzer::fitBendingPositionInChamber(unsigned int detid) const
+{
+
+  const CSCDetId cscid(detid);
+
+  if (match_->nLayersWithHitsInChamber(detid) < 6) return -100;
+
+  float phi_layer1=-10;
+  float phi_layer6=10;
+
+  if (cscid.station()==1 and (cscid.ring()==1 or cscid.ring()==4)){
+    const CSCDetId cscid1a(cscid.endcap(), cscid.station(), 4, cscid.chamber(), 1);
+    const CSCDetId cscid1b(cscid.endcap(), cscid.station(), 1, cscid.chamber(), 1);
+
+    const edm::PSimHitContainer& hits1a = match_->hitsInDetId(cscid1a.rawId());
+    const edm::PSimHitContainer& hits1b = match_->hitsInDetId(cscid1b.rawId());
+
+    const GlobalPoint& gp1a = match_->simHitsMeanPosition( match_->hitsInDetId(cscid1a.rawId()));
+    const GlobalPoint& gp1b = match_->simHitsMeanPosition( match_->hitsInDetId(cscid1b.rawId()));
+    if (hits1a.size()>0 and hits1b.size()>0)
+      //phi_layer1 = (gp1a.phi()*hits1a.size()+gp1b.phi()*hits1b.size())/(hits1a.size()+hits1b.size());
+      phi_layer1 = (gp1a.phi()+gp1b.phi())/2.0;
+    else if (hits1a.size()>0) phi_layer1 = gp1a.phi();
+    else if (hits1b.size()>0) phi_layer1 = gp1b.phi();
+    else std::cerr <<" no hits in layer1, cant not find global phi of hits " << std::endl;
+
+    const CSCDetId cscid6a(cscid.endcap(), cscid.station(), 4, cscid.chamber(), 6);
+    const CSCDetId cscid6b(cscid.endcap(), cscid.station(), 1, cscid.chamber(), 6);
+
+    const edm::PSimHitContainer& hits6a = match_->hitsInDetId(cscid6a.rawId());
+    const edm::PSimHitContainer& hits6b = match_->hitsInDetId(cscid6b.rawId());
+
+    const GlobalPoint& gp6a = match_->simHitsMeanPosition(match_->hitsInDetId(cscid6a.rawId()));
+    const GlobalPoint& gp6b = match_->simHitsMeanPosition(match_->hitsInDetId(cscid6b.rawId()));
+    if (hits6a.size()>0 and hits6b.size()>0)
+      //phi_layer6 = (gp6a.phi()*hits6a.size()+gp6b.phi()*hits6b.size())/(hits6a.size()+hits6b.size());
+      phi_layer6 = (gp6a.phi()+gp6b.phi())/2.0;
+    else if (hits6a.size()>0) phi_layer6 = gp6a.phi();
+    else if (hits6b.size()>0) phi_layer6 = gp6b.phi();
+    else std::cerr <<" no hits in layer6, cant not find global phi of hits " << std::endl;
+
+
+  }
+  else {
+    const CSCDetId cscid1(cscid.endcap(), cscid.station(), cscid.ring(), cscid.chamber(), 1);
+    const CSCDetId cscid6(cscid.endcap(), cscid.station(), cscid.ring(), cscid.chamber(), 6);
+
+    const edm::PSimHitContainer& hits1 =  match_->hitsInDetId(cscid1.rawId());
+    const edm::PSimHitContainer& hits6 =  match_->hitsInDetId(cscid6.rawId());
+
+    if (hits1.size()==0) std::cerr <<" no hits in layer1, cant not find global phi of hits " << std::endl;
+    const GlobalPoint& gp1 =  match_->simHitsMeanPosition( match_->hitsInDetId(cscid1.rawId()));
+    phi_layer1 = gp1.phi();
+
+    if (hits6.size()==0) std::cerr <<" no hits in layer6, cant not find global phi of hits " << std::endl;
+    const GlobalPoint& gp6 =  match_->simHitsMeanPosition( match_->hitsInDetId(cscid6.rawId()));
+    phi_layer6 = gp6.phi();
+  }
+  //std::cout <<" phi1 "<< phi_layer1 <<" phi6 " << phi_layer6 << std::endl;
+  return deltaPhi(phi_layer6,phi_layer1);
 }

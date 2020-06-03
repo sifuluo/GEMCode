@@ -12,8 +12,8 @@ void GEMStubAnalyzer::setMatcher(const GEMDigiMatcher& match_sh)
 
 void GEMStubAnalyzer::analyze(TreeManager& tree)
 {
-  // GEM pads in superchambers
-  for(const auto& d: match_->chamberIdsPad()) {
+  // GEM pads in single chambers or super chambers
+  for(const auto& d: match_->superChamberIdsPad()) {
     GEMDetId id(d);
     const int st = id.station();
     const bool odd(id.chamber()%2==1);
@@ -29,6 +29,15 @@ void GEMStubAnalyzer::analyze(TreeManager& tree)
       if (odd) tree.gemStub().has_gem_pad2_odd[st] = true;
       else     tree.gemStub().has_gem_pad2_even[st] = true;
     }
+  }
+
+  /*
+  // best matching pad in a chamber
+  for(const auto& d: match_->chamberIdsPad()) {
+    GEMDetId id(d);
+    const int st = id.station();
+    const bool odd(id.chamber()%2==1);
+    const int ilayer(id.layer());
 
     // best matching pad
     const auto& bestP(bestPad(id, match_->padsInChamber(id)).first);
@@ -80,6 +89,7 @@ void GEMStubAnalyzer::analyze(TreeManager& tree)
     }
   }
 
+  // best matching coincidence pads
   for(const auto& d: match_->superChamberIdsCoPad()) {
     GEMDetId id(d);
     const int st = id.station();
@@ -106,6 +116,7 @@ void GEMStubAnalyzer::analyze(TreeManager& tree)
       tree.gemStub().phi_copad_even[st] = bestGP.phi();
     }
   }
+  */
 }
 
 std::pair<GEMPadDigi, GlobalPoint>
@@ -157,6 +168,8 @@ GEMStubAnalyzer::meanPosition(const GEMDetId& id,
   GlobalPoint point_zero;
   if (digis.empty()) return point_zero; // point "zero"
 
+  return point_zero;
+
   float sumx, sumy, sumz;
   sumx = sumy = sumz = 0.f;
   size_t n = 0;
@@ -180,6 +193,8 @@ GEMStubAnalyzer::meanPosition(const GEMDetId& id,
 {
   GlobalPoint point_zero;
   if (digis.empty()) return point_zero; // point "zero"
+
+  return point_zero;
 
   float sumx, sumy, sumz;
   sumx = sumy = sumz = 0.f;

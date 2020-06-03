@@ -21,6 +21,9 @@ public:
   void analyze(TreeManager& tree);
 
  private:
+  float
+  //  std::pair<float,float>
+    fitBendingPositionInChamber(unsigned int detid) const;
 
   std::shared_ptr<CSCSimHitMatcher> match_;
   int minNHitsChamber_;

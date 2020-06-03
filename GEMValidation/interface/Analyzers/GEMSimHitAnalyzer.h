@@ -21,7 +21,6 @@ public:
   void analyze(TreeManager& tree);
 
  private:
-
   std::shared_ptr<GEMSimHitMatcher> match_;
   int minNHitsChamber_;
 };
