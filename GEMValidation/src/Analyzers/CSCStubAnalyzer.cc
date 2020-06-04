@@ -48,6 +48,7 @@ void CSCStubAnalyzer::analyze(TreeManager& tree)
       tree.cscStub().hs_clct_odd[st] = clct.getKeyStrip();
       tree.cscStub().qs_clct_odd[st] = clct.getKeyStrip(4);
       tree.cscStub().es_clct_odd[st] = clct.getKeyStrip(8);
+      tree.cscStub().slope_clct_odd[st] = getSlope(clct);
     }
     else {
       tree.cscStub().has_clct_even[st] = true;
@@ -57,6 +58,7 @@ void CSCStubAnalyzer::analyze(TreeManager& tree)
       tree.cscStub().hs_clct_even[st] = clct.getKeyStrip();
       tree.cscStub().qs_clct_even[st] = clct.getKeyStrip(4);
       tree.cscStub().es_clct_even[st] = clct.getKeyStrip(8);
+      tree.cscStub().slope_clct_even[st] = getSlope(clct);
     }
 
     // case ME11
@@ -68,6 +70,7 @@ void CSCStubAnalyzer::analyze(TreeManager& tree)
         tree.cscStub().hs_clct_odd[0] = clct.getKeyStrip();
         tree.cscStub().qs_clct_odd[0] = clct.getKeyStrip(4);
         tree.cscStub().es_clct_odd[0] = clct.getKeyStrip(8);
+        tree.cscStub().slope_clct_odd[st] = getSlope(clct);
       }
       else {
         tree.cscStub().has_clct_even[0] = true;
@@ -76,6 +79,7 @@ void CSCStubAnalyzer::analyze(TreeManager& tree)
         tree.cscStub().hs_clct_even[0] = clct.getKeyStrip();
         tree.cscStub().qs_clct_even[0] = clct.getKeyStrip(4);
         tree.cscStub().es_clct_even[0] = clct.getKeyStrip(8);
+        tree.cscStub().slope_clct_even[st] = getSlope(clct);
       }
     }
   }
@@ -236,6 +240,16 @@ void CSCStubAnalyzer::analyze(TreeManager& tree)
       }
     }
   }
+}
+
+float CSCStubAnalyzer::getPositionOffset(const CSCCLCTDigi& lct) const
+{
+  return getPositionOffset(lct.getPattern(), lct.getCompCode());
+}
+
+float CSCStubAnalyzer::getSlope(const CSCCLCTDigi& lct) const
+{
+  return getSlope(lct.getPattern(), lct.getCompCode());
 }
 
 float CSCStubAnalyzer::getPositionOffset(int pattern, int compCode) const
