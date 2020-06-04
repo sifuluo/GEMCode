@@ -1,5 +1,6 @@
 #include "GEMCode/GEMValidation/interface/Analyzers/CSCStubAnalyzer.h"
 #include "L1Trigger/CSCCommonTrigger/interface/CSCPatternLUT.h"
+#include "L1Trigger/CSCTriggerPrimitives/interface/CSCComparatorCodeLUT.h"
 
 CSCStubAnalyzer::CSCStubAnalyzer(const edm::ParameterSet& conf)
 {
@@ -252,8 +253,8 @@ float CSCStubAnalyzer::getPositionOffsetRun3(int pattern, int compCode) const
 {
   // need to access the LUTs in CMSSW!
   std::string lutstring("L1Trigger/CSCTriggerPrimitives/data/CSCComparatorCodePosOffsetLUT_pat" + std::to_string(pattern) + "_ideal_v1.txt");
-  std::unique_ptr<CSCComparatorCodeLUT> lut = new CSCComparatorCodeLUT(lutstring);
-  return lut.lookup(compCode);
+  std::unique_ptr<CSCComparatorCodeLUT> lut(new CSCComparatorCodeLUT(lutstring));
+  return lut->lookup(compCode);
 }
 
 float CSCStubAnalyzer::getSlope(int pattern, int compCode) const
@@ -291,8 +292,8 @@ float CSCStubAnalyzer::getSlopeRun3(int pattern, int compCode) const
 {
   // need to access the LUTs in CMSSW!
   std::string lutstring("L1Trigger/CSCTriggerPrimitives/data/CSCComparatorCodeSlopeLUT_pat" + std::to_string(pattern) + "_v1.txt");
-  std::unique_ptr<CSCComparatorCodeLUT> lut = new CSCComparatorCodeLUT(lutstring);
-  return lut.lookup(compCode);
+  std::unique_ptr<CSCComparatorCodeLUT> lut(new CSCComparatorCodeLUT(lutstring));
+  return lut->lookup(compCode);
 }
 
 
