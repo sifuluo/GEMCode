@@ -31,7 +31,6 @@ void GEMStubAnalyzer::analyze(TreeManager& tree)
     }
   }
 
-  /*
   // best matching pad in a chamber
   for(const auto& d: match_->chamberIdsPad()) {
     GEMDetId id(d);
@@ -39,6 +38,7 @@ void GEMStubAnalyzer::analyze(TreeManager& tree)
     const bool odd(id.chamber()%2==1);
     const int ilayer(id.layer());
 
+    /*
     // best matching pad
     const auto& bestP(bestPad(id, match_->padsInChamber(id)).first);
     const auto& bestGP(bestPad(id, match_->padsInChamber(id)).second);
@@ -87,6 +87,7 @@ void GEMStubAnalyzer::analyze(TreeManager& tree)
                          float(tree.gemSimHit().phi_gem_sh_even[st]));
       }
     }
+  */
   }
 
   // best matching coincidence pads
@@ -96,7 +97,7 @@ void GEMStubAnalyzer::analyze(TreeManager& tree)
     const bool odd(id.chamber()%2==1);
     if (odd) tree.gemStub().has_gem_copad_odd[st] = true;
     else     tree.gemStub().has_gem_copad_even[st] = true;
-
+    /*
     // best matching coincidence pad
     const auto& bestP(bestCoPad(id, match_->coPadsInSuperChamber(id)).first);
     const auto& bestGP(bestCoPad(id, match_->coPadsInSuperChamber(id)).second);
@@ -115,8 +116,29 @@ void GEMStubAnalyzer::analyze(TreeManager& tree)
       tree.gemStub().eta_copad_even[st] = bestGP.eta();
       tree.gemStub().phi_copad_even[st] = bestGP.phi();
     }
-  }
   */
+  }
+
+
+  // GEM clusters in single chambers or super chambers
+  for(const auto& d: match_->superChamberIdsCluster()) {
+    GEMDetId id(d);
+    const int st = id.station();
+    const bool odd(id.chamber()%2==1);
+    const int nlayers(match_->nLayersWithClustersInSuperChamber(d));
+    const int ilayer(id.layer());
+
+    if (nlayers >= 1) {
+      if (odd) tree.gemStub().has_gem_cluster_odd[st] = true;
+      else     tree.gemStub().has_gem_cluster_even[st] = true;
+    }
+
+    if (nlayers >= 2) {
+      if (odd) tree.gemStub().has_gem_cluster2_odd[st] = true;
+      else     tree.gemStub().has_gem_cluster2_even[st] = true;
+    }
+  }
+
 }
 
 std::pair<GEMPadDigi, GlobalPoint>

@@ -22,7 +22,7 @@ public:
 
  private:
   float
-  //  std::pair<float,float>
+    //  std::pair<float,float>
     fitBendingPositionInChamber(unsigned int detid) const;
 
   std::shared_ptr<CSCSimHitMatcher> match_;

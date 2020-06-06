@@ -14,10 +14,14 @@ namespace gem {
     bool has_gem_pad_even[nStations];
     bool has_gem_pad2_even[nStations];
     bool has_gem_copad_even[nStations];
+    bool has_gem_cluster_even[nStations];
+    bool has_gem_cluster2_even[nStations];
 
     bool has_gem_pad_odd[nStations];
     bool has_gem_pad2_odd[nStations];
     bool has_gem_copad_odd[nStations];
+    bool has_gem_cluster_odd[nStations];
+    bool has_gem_cluster2_odd[nStations];
 
     // ints
     int pad1_odd[nStations];
@@ -34,6 +38,11 @@ namespace gem {
     int copad_even[nStations];
     int bx_copad_odd[nStations];
     int bx_copad_even[nStations];
+
+    int bx_cluster1_odd[nStations];
+    int bx_cluster1_even[nStations];
+    int bx_cluster2_odd[nStations];
+    int bx_cluster2_even[nStations];
 
     // floats - this is based on mean GEM position
     float z_pad1_odd[nStations];
@@ -95,20 +104,22 @@ namespace gem {
         has_gem_pad_even[i] = 0;
         has_gem_pad2_even[i] = 0;
         has_gem_copad_even[i] = 0;
+        has_gem_cluster_even[i] = 0;
+        has_gem_cluster2_even[i] = 0;
 
         has_gem_pad_odd[i] = 0;
         has_gem_pad2_odd[i] = 0;
         has_gem_copad_odd[i] = 0;
+        has_gem_cluster_odd[i] = 0;
+        has_gem_cluster2_odd[i] = 0;
 
         pad1_odd[i] = -1;
         pad1_even[i] = -1;
-
-        bx_pad1_odd[i] = -1;
-        bx_pad1_even[i] = -1;
-
         pad2_odd[i] = -1;
         pad2_even[i] = -1;
 
+        bx_pad1_odd[i] = -1;
+        bx_pad1_even[i] = -1;
         bx_pad2_odd[i] = -1;
         bx_pad2_even[i] = -1;
 
@@ -117,6 +128,11 @@ namespace gem {
 
         bx_copad_odd[i] = -1;
         bx_copad_even[i] = -1;
+
+        bx_cluster1_odd[i] = -1;
+        bx_cluster1_even[i] = -1;
+        bx_cluster2_odd[i] = -1;
+        bx_cluster2_even[i] = -1;
 
         z_pad1_odd[i] = -0.;
         z_pad1_even[i] = -0.;
@@ -178,10 +194,14 @@ namespace gem {
       t->Branch("has_gem_pad_odd", has_gem_pad_odd, "has_gem_pad_odd[3]/I");
       t->Branch("has_gem_pad2_odd", has_gem_pad2_odd, "has_gem_pad2_odd[3]/I");
       t->Branch("has_gem_copad_odd", has_gem_copad_odd, "has_gem_copad_odd[3]/I");
+      t->Branch("has_gem_cluster_odd", has_gem_cluster_odd, "has_gem_cluster_odd[3]/I");
+      t->Branch("has_gem_cluster2_odd", has_gem_cluster2_odd, "has_gem_cluster2_odd[3]/I");
 
       t->Branch("has_gem_pad_even", has_gem_pad_even, "has_gem_pad_even[3]/I");
       t->Branch("has_gem_pad2_even", has_gem_pad2_even, "has_gem_pad2_even[3]/I");
       t->Branch("has_gem_copad_even", has_gem_copad_even, "has_gem_copad_even[3]/I");
+      t->Branch("has_gem_cluster_even", has_gem_cluster_even, "has_gem_cluster_even[3]/I");
+      t->Branch("has_gem_cluster2_even", has_gem_cluster2_even, "has_gem_cluster2_even[3]/I");
 
       t->Branch("pad1_odd", pad1_odd, "pad1_odd[3]/I");
       t->Branch("pad1_even", pad1_even, "pad1_even[3]/I");
@@ -198,7 +218,10 @@ namespace gem {
       t->Branch("bx_copad_odd", bx_copad_odd, "bx_copad_odd[3]/I");
       t->Branch("bx_copad_even", bx_copad_even, "bx_copad_odd[3]/I");
 
-
+      t->Branch("bx_cluster1_odd", bx_cluster1_odd, "bx_cluster1_odd[3]/I");
+      t->Branch("bx_cluster1_even", bx_cluster1_even, "bx_cluster1_even[3]/I");
+      t->Branch("bx_cluster2_odd", bx_cluster2_odd, "bx_cluster2_odd[3]/I");
+      t->Branch("bx_cluster2_even", bx_cluster2_even, "bx_cluster2_even[3]/I");
 
       t->Branch("z_pad1_odd", z_pad1_odd, "z_pad1_odd[3]/F");
       t->Branch("z_pad1_even", z_pad1_even, "z_pad1_even[3]/F");

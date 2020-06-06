@@ -134,72 +134,47 @@ void CSCStubAnalyzer::analyze(TreeManager& tree)
 
       const bool odd(id.chamber()%2==1);
 
-      if (odd) {
-        tree.cscStub().has_lct_odd[st] = true;
-        tree.cscStub().bend_lct_odd[st] = lct.getPattern();
-        tree.cscStub().phi_lct_odd[st] = gp.phi();
-        tree.cscStub().eta_lct_odd[st] = gp.eta();
-        tree.cscStub().perp_lct_odd[st] = gp.perp();
-        tree.cscStub().bx_lct_odd[st] = lct.getBX();
-        tree.cscStub().hs_lct_odd[st] = lct.getStrip();
-        tree.cscStub().qs_lct_odd[st] = lct.getStrip(4);
-        tree.cscStub().es_lct_odd[st] = lct.getStrip(8);
-        tree.cscStub().wg_lct_odd[st] = lct.getKeyWG();
-        tree.cscStub().quality_lct_odd[st] = lct.getQuality();
-        tree.cscStub().dphi_lct_odd[st] =
-          reco::deltaPhi(float(tree.cscStub().phi_lct_odd[st]),
-                         float(tree.cscSimHit().phi_csc_sh_odd[st]));
-      }
-      else {
-        tree.cscStub().has_lct_even[st] = true;
-        tree.cscStub().bend_lct_even[st] = lct.getPattern();
-        tree.cscStub().phi_lct_even[st] = gp.phi();
-        tree.cscStub().eta_lct_even[st] = gp.eta();
-        tree.cscStub().perp_lct_even[st] = gp.perp();
-        tree.cscStub().bx_lct_even[st] = lct.getBX();
-        tree.cscStub().hs_lct_even[st] = lct.getStrip();
-        tree.cscStub().qs_lct_odd[st] = lct.getStrip(4);
-        tree.cscStub().es_lct_odd[st] = lct.getStrip(8);
-        tree.cscStub().wg_lct_even[st] = lct.getKeyWG();
-        tree.cscStub().quality_lct_even[st] = lct.getQuality();
-        tree.cscStub().dphi_lct_even[st] =
-          reco::deltaPhi(float(tree.cscStub().phi_lct_even[st]),
-                         float(tree.cscSimHit().phi_csc_sh_even[st]));
-      }
-      // case ME11
-      if (st==1 or st==2){
+      auto& cscStubTree = tree.cscStub();
+
+      auto fill = [lct, gp, cscStubTree, odd](int st) mutable {
         if (odd) {
-          tree.cscStub().has_lct_odd[0] = true;
-          tree.cscStub().bend_lct_odd[0] = lct.getPattern();
-          tree.cscStub().phi_lct_odd[0] = gp.phi();
-          tree.cscStub().eta_lct_odd[0] = gp.eta();
-          tree.cscStub().perp_lct_odd[0] = gp.perp();
-          tree.cscStub().bx_lct_odd[0] = lct.getBX();
-          tree.cscStub().hs_lct_odd[0] = lct.getStrip();
-          tree.cscStub().qs_lct_odd[0] = lct.getStrip(4);
-          tree.cscStub().es_lct_odd[0] = lct.getStrip(8);
-          tree.cscStub().wg_lct_odd[0] = lct.getKeyWG();
-          tree.cscStub().quality_lct_odd[0] = lct.getQuality();
-          tree.cscStub().dphi_lct_odd[0] =
-            reco::deltaPhi(float(tree.cscStub().phi_lct_odd[0]),
-                           float(tree.cscSimHit().phi_csc_sh_odd[0]));
+          cscStubTree.has_lct_odd[st] = true;
+          cscStubTree.bend_lct_odd[st] = lct.getPattern();
+          cscStubTree.phi_lct_odd[st] = gp.phi();
+          cscStubTree.eta_lct_odd[st] = gp.eta();
+          cscStubTree.perp_lct_odd[st] = gp.perp();
+          cscStubTree.bx_lct_odd[st] = lct.getBX();
+          cscStubTree.hs_lct_odd[st] = lct.getStrip();
+          cscStubTree.qs_lct_odd[st] = lct.getStrip(4);
+          cscStubTree.es_lct_odd[st] = lct.getStrip(8);
+          cscStubTree.wg_lct_odd[st] = lct.getKeyWG();
+          cscStubTree.quality_lct_odd[st] = lct.getQuality();
+          // cscStubTree.dphi_lct_odd[st] =
+          // reco::deltaPhi(float(cscStubTree.phi_lct_odd[st]),
+          //                float(tree.cscSimHit().phi_csc_sh_odd[st]));
         }
         else {
-          tree.cscStub().has_lct_even[0] = true;
-          tree.cscStub().bend_lct_even[0] = lct.getPattern();
-          tree.cscStub().phi_lct_even[0] = gp.phi();
-          tree.cscStub().eta_lct_even[0] = gp.eta();
-          tree.cscStub().perp_lct_even[0] = gp.perp();
-          tree.cscStub().bx_lct_even[0] = lct.getBX();
-          tree.cscStub().hs_lct_even[0] = lct.getStrip();
-          tree.cscStub().qs_lct_even[0] = lct.getStrip(4);
-          tree.cscStub().es_lct_even[0] = lct.getStrip(8);
-          tree.cscStub().wg_lct_even[0] = lct.getKeyWG();
-          tree.cscStub().quality_lct_even[0] = lct.getQuality();
-          tree.cscStub().dphi_lct_even[0] =
-            reco::deltaPhi(float(tree.cscStub().phi_lct_even[0]),
-                           float(tree.cscSimHit().phi_csc_sh_even[0]));
+          cscStubTree.has_lct_even[st] = true;
+          cscStubTree.bend_lct_even[st] = lct.getPattern();
+          cscStubTree.phi_lct_even[st] = gp.phi();
+          cscStubTree.eta_lct_even[st] = gp.eta();
+          cscStubTree.perp_lct_even[st] = gp.perp();
+          cscStubTree.bx_lct_even[st] = lct.getBX();
+          cscStubTree.hs_lct_even[st] = lct.getStrip();
+          cscStubTree.qs_lct_odd[st] = lct.getStrip(4);
+          cscStubTree.es_lct_odd[st] = lct.getStrip(8);
+          cscStubTree.wg_lct_even[st] = lct.getKeyWG();
+          cscStubTree.quality_lct_even[st] = lct.getQuality();
+          // cscStubTree.dphi_lct_even[st] =
+          // reco::deltaPhi(float(cscStubTree.phi_lct_even[st]),
+          //                float(tree.cscSimHit().phi_csc_sh_even[st]));
         }
+      };
+
+      fill(st);
+      // case ME11
+      if (st==1 or st==2){
+        fill(0);
       }
 
       // only for ME1/1 and ME2/1
@@ -242,33 +217,9 @@ void CSCStubAnalyzer::analyze(TreeManager& tree)
   }
 }
 
-float CSCStubAnalyzer::getPositionOffset(const CSCCLCTDigi& lct) const
-{
-  return getPositionOffset(lct.getPattern(), lct.getCompCode());
-}
-
 float CSCStubAnalyzer::getSlope(const CSCCLCTDigi& lct) const
 {
   return getSlope(lct.getPattern(), lct.getCompCode());
-}
-
-float CSCStubAnalyzer::getPositionOffset(int pattern, int compCode) const
-{
-  if (compCode == -1) return getPositionOffsetLegacy(pattern);
-  else return getPositionOffsetRun3(pattern, compCode);
-}
-
-float CSCStubAnalyzer::getPositionOffsetLegacy(int pattern) const
-{
-  return CSCPatternLUT::get2007Position(pattern);
-}
-
-float CSCStubAnalyzer::getPositionOffsetRun3(int pattern, int compCode) const
-{
-  // need to access the LUTs in CMSSW!
-  std::string lutstring("L1Trigger/CSCTriggerPrimitives/data/CSCComparatorCodePosOffsetLUT_pat" + std::to_string(pattern) + "_ideal_v1.txt");
-  std::unique_ptr<CSCComparatorCodeLUT> lut(new CSCComparatorCodeLUT(lutstring));
-  return lut->lookup(compCode);
 }
 
 float CSCStubAnalyzer::getSlope(int pattern, int compCode) const

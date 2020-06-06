@@ -24,18 +24,13 @@ public:
 
  private:
 
-  float getPositionOffset(const CSCCLCTDigi& lct) const;
-  float getPositionOffset(int pattern, int compCode = -1) const;
-  float getPositionOffsetRun3(int pattern, int compCode) const;
-  float getPositionOffsetLegacy(int pattern) const;
-
+  // all in strips / layer
   float getSlope(const CSCCLCTDigi& lct) const;
   float getSlope(int pattern, int compCode = -1) const;
   float getMaxSlopeLegacy(int pattern) const;
   float getMinSlopeLegacy(int pattern) const;
   float getAverageSlopeLegacy(int pattern) const;
   float getSlopeRun3(int pattern, int compCode) const;
-
 
   // best here means "closest in phi"
   std::pair<GEMDigi, GlobalPoint>

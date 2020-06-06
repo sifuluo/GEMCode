@@ -89,6 +89,16 @@ namespace gem {
     float dslope_clct_odd[nStations];
     float dslope_clct_even[nStations];
 
+    // floating point strip in hs, qs or es precision
+    float fhs_clct_odd[nStations];
+    float fhs_clct_even[nStations];
+
+    float fqs_clct_odd[nStations];
+    float fqs_clct_even[nStations];
+
+    float fes_clct_odd[nStations];
+    float fes_clct_even[nStations];
+
     void init() {
       for (unsigned i = 0 ; i < nStations; i++) {
 
@@ -127,6 +137,15 @@ namespace gem {
 
         es_clct_odd[i] = 0;
         es_clct_even[i] = 0;
+
+        fhs_clct_odd[i] = -1;
+        fhs_clct_even[i] = -1;
+
+        fqs_clct_odd[i] = -1;
+        fqs_clct_even[i] = -1;
+
+        fes_clct_odd[i] = -1;
+        fes_clct_even[i] = -1;
 
         wg_lct_odd[i] = 0;
         wg_lct_even[i] = 0;
@@ -223,6 +242,15 @@ namespace gem {
 
       t->Branch("es_clct_odd", es_clct_odd, "es_clct_odd[11]/I");
       t->Branch("es_clct_even", es_clct_even, "es_clct_even[11]/I");
+
+      t->Branch("fhs_clct_odd", fhs_clct_odd, "fhs_clct_odd[11]/F");
+      t->Branch("fhs_clct_even", fhs_clct_even, "fhs_clct_even[11]/F");
+
+      t->Branch("fqs_clct_odd", fqs_clct_odd, "fqs_clct_odd[11]/F");
+      t->Branch("fqs_clct_even", fqs_clct_even, "fqs_clct_even[11]/F");
+
+      t->Branch("fes_clct_odd", fes_clct_odd, "fes_clct_odd[11]/F");
+      t->Branch("fes_clct_even", fes_clct_even, "fes_clct_even[11]/F");
 
       t->Branch("wg_lct_odd", wg_lct_odd, "wg_lct_odd[11]/I");
       t->Branch("wg_lct_even", wg_lct_even, "wg_lct_even[11]/I");
