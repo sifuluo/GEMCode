@@ -20,6 +20,9 @@
 #include "CondFormats/CSCObjects/interface/CSCBadChambers.h"
 #include "CondFormats/DataRecord/interface/CSCBadChambersRcd.h"
 
+#include <iostream>
+using namespace std;
+
 class DataEmulatorFilter : public edm::EDFilter {
 public:
   /// Constructor
@@ -31,6 +34,9 @@ public:
   /// Does the job
   bool filter(edm::Event &event, const edm::EventSetup &setup) override;
 
+  void beginJob() override;
+  void endJob() override;
+
 private:
 
   template <class T>
@@ -38,6 +44,9 @@ private:
 
   template <class T>
   bool areSame(const T& X, const T& Y) const;
+
+  bool areSameCLCTs(const CSCCLCTDigiCollection& X, const CSCCLCTDigiCollection& Y) const;
+  bool areSameLCTs(const CSCCorrelatedLCTDigiCollection& X, const CSCCorrelatedLCTDigiCollection& Y) const;
 
   // whether to perform check against known "bad chambers" list
   bool checkBadChambers_;
@@ -58,6 +67,15 @@ private:
   edm::EDGetTokenT<CSCALCTDigiCollection> alcts_e_token_;
   edm::EDGetTokenT<CSCCLCTDigiCollection> clcts_e_token_;
   edm::EDGetTokenT<CSCCorrelatedLCTDigiCollection> lcts_e_token_;
+
+  // counters
+  int nEvents;
+  int validALCTsCounter;
+  int validCLCTsCounter;
+  int validLCTsCounter;
+  int comparisonALCTCounter;
+  int comparisonCLCTCounter;
+  int comparisonLCTCounter;
 };
 
 template <class T>
@@ -85,6 +103,7 @@ bool DataEmulatorFilter::areSame(const T& lcts, const T& lcts2) const
 {
   for (auto detUnitIt = lcts.begin(); detUnitIt != lcts.end(); detUnitIt++) {
     const CSCDetId& id = (*detUnitIt).first;
+    // cout << "detid" << id << endl;
     // ignore bad chambers
     if (checkBadChambers_ && badChambers_->isInBadChamber(id)) {
       continue;
@@ -94,8 +113,10 @@ bool DataEmulatorFilter::areSame(const T& lcts, const T& lcts2) const
     // now compare each
     for (auto digiIt = range.first; digiIt != range.second; digiIt++) {
       if ((*digiIt).isValid()) {
+        // cout << "\ttest stub" << (*digiIt) << endl;
         bool isMatched = false;
         for (auto digiIt2 = lcts2_range.first; digiIt2 != lcts2_range.second; digiIt2++) {
+          // cout << "\tcheck stub" << (*digiIt2) << endl;
           if (*digiIt == *digiIt2 and !isMatched) isMatched = true;
         }
         if (not isMatched) return false;
@@ -162,19 +183,141 @@ bool DataEmulatorFilter::filter(edm::Event& ev, const edm::EventSetup& setup)
   int nValidCLCTsEmul = countStubs(*clcts_emul.product());
   int nValidLCTsEmul = countStubs(*lcts_emul.product());
 
+  nEvents++;
+
   // check 1: same number of LCTs
-  if (nValidALCTsData != nValidALCTsEmul) return true;
-  if (nValidCLCTsData != nValidCLCTsEmul) return true;
-  if (nValidLCTsData != nValidLCTsEmul) return true;
+  if (nValidALCTsData != nValidALCTsEmul) {
+    cout << "nValidALCTsData != nValidALCTsEmul" << endl;
+    validALCTsCounter++;
+    return true;
+  }
+
+  if (nValidCLCTsData != nValidCLCTsEmul)  {
+    cout << "nValidCLCTsData != nValidCLCTsEmul" << endl;
+    validCLCTsCounter++;
+    return true;
+  }
+
+  if (nValidLCTsData != nValidLCTsEmul)  {
+    cout << "nValidLCTsData != nValidLCTsEmul" << endl;
+    validLCTsCounter++;
+    return true;
+  }
 
   // check 2: check each LCT
-  if (!areSame(*alcts_data.product(), *alcts_emul.product())) return true;
-  if (!areSame(*clcts_data.product(), *clcts_emul.product())) return true;
-  if (!areSame(*lcts_data.product(), *lcts_emul.product())) return true;
+  if (!areSame(*alcts_data.product(), *alcts_emul.product())) {
+    cout << "ALCT comparison fails" << endl;
+    comparisonALCTCounter++;
+    return true;
+  }
+
+  if (!areSameCLCTs(*clcts_data.product(), *clcts_emul.product())) {
+    cout << "CLCT comparison fails" << endl;
+    comparisonCLCTCounter++;
+    return true;
+  }
+
+  if (!areSameLCTs(*lcts_data.product(), *lcts_emul.product())) {
+    cout << "LCT comparison fails" << endl;
+    comparisonLCTCounter++;
+    return true;
+  }
 
   // do not filter all other events
   return false;
 }
 
+bool DataEmulatorFilter::areSameCLCTs(const CSCCLCTDigiCollection& lcts, const CSCCLCTDigiCollection& lcts2) const
+{
+  for (auto detUnitIt = lcts.begin(); detUnitIt != lcts.end(); detUnitIt++) {
+    const CSCDetId& id = (*detUnitIt).first;
+    // cout << "detid" << id << endl;
+    // ignore bad chambers
+    if (checkBadChambers_ && badChambers_->isInBadChamber(id)) {
+      continue;
+    }
+    const auto& range = (*detUnitIt).second;
+    const auto& lcts2_range = lcts2.get(id);
+    // now compare each
+    for (auto digiIt = range.first; digiIt != range.second; digiIt++) {
+      if ((*digiIt).isValid()) {
+        // cout << "\ttest stub" << (*digiIt) << endl;
+        bool isMatched = false;
+        for (auto digiIt2 = lcts2_range.first; digiIt2 != lcts2_range.second; digiIt2++) {
+          // cout << "\tcheck stub" << (*digiIt2) << endl;
+          if ((*digiIt).isValid() == (*digiIt2).isValid() &&
+              (*digiIt).getQuality() == (*digiIt2).getQuality() &&
+              (*digiIt).getPattern() == (*digiIt2).getPattern() &&
+              (*digiIt).getKeyStrip() == (*digiIt2).getKeyStrip() &&
+              (*digiIt).getStripType() == (*digiIt2).getStripType() &&
+              (*digiIt).getBend() == (*digiIt2).getBend() &&
+              (*digiIt).getCompCode() == (*digiIt2).getCompCode() and !isMatched) {
+            isMatched = true;
+          }
+        }
+        if (not isMatched) return false;
+      }
+    }
+  }
+  return true;
+}
+
+bool DataEmulatorFilter::areSameLCTs(const CSCCorrelatedLCTDigiCollection& lcts, const CSCCorrelatedLCTDigiCollection& lcts2) const
+{
+  for (auto detUnitIt = lcts.begin(); detUnitIt != lcts.end(); detUnitIt++) {
+    const CSCDetId& id = (*detUnitIt).first;
+    // cout << "detid" << id << endl;
+    // ignore bad chambers
+    if (checkBadChambers_ && badChambers_->isInBadChamber(id)) {
+      continue;
+    }
+    const auto& range = (*detUnitIt).second;
+    const auto& lcts2_range = lcts2.get(id);
+    // now compare each
+    for (auto digiIt = range.first; digiIt != range.second; digiIt++) {
+      if ((*digiIt).isValid()) {
+        // cout << "\ttest stub" << (*digiIt) << endl;
+        bool isMatched = false;
+        for (auto digiIt2 = lcts2_range.first; digiIt2 != lcts2_range.second; digiIt2++) {
+          // cout << "\tcheck stub" << (*digiIt2) << endl;
+          if ((*digiIt).isValid() == (*digiIt2).isValid() &&
+              (*digiIt).getQuality() == (*digiIt2).getQuality() &&
+              (*digiIt).getPattern() == (*digiIt2).getPattern() &&
+              (*digiIt).getStrip() == (*digiIt2).getStrip() &&
+              (*digiIt).getBend() == (*digiIt2).getBend() &&
+              (*digiIt).getKeyWG() == (*digiIt2).getKeyWG() &&
+              !isMatched) {
+            isMatched = true;
+          }
+        }
+        if (not isMatched) return false;
+      }
+    }
+  }
+  return true;
+}
+
+void DataEmulatorFilter::beginJob()
+{
+  nEvents = 0;
+  validALCTsCounter = 0;
+  validCLCTsCounter = 0;
+  validLCTsCounter = 0;
+  comparisonALCTCounter = 0;
+  comparisonCLCTCounter = 0;
+  comparisonLCTCounter = 0;
+}
+
+void DataEmulatorFilter::endJob()
+{
+  cout << "Counters: " << endl;
+  cout << "Number of events: " << nEvents << endl;
+  cout << "Number of valid ALCT mismatch: " << validALCTsCounter << endl;
+  cout << "Number of valid CLCT mismatch: " << validCLCTsCounter << endl;
+  cout << "Number of valid LCT mismatch: " << validLCTsCounter << endl;
+  cout << "ALCT comparison failures: " << comparisonALCTCounter << endl;
+  cout << "CLCT comparison failures: " << comparisonCLCTCounter << endl;
+  cout << "LCT comparison failures: " << comparisonLCTCounter << endl;
+}
 
 DEFINE_FWK_MODULE(DataEmulatorFilter);
