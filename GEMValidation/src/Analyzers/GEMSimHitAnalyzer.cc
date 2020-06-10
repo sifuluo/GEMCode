@@ -18,11 +18,11 @@ void GEMSimHitAnalyzer::analyze(TreeManager& tree)
 
     const bool odd(id.chamber()%2==1);
 
-    const auto& gem_simhits = match_->hitsInDetId(d);
+    const auto& gem_simhits = match_->hitsInSuperChamber(d);
     const auto& gem_simhits_gp = match_->simHitsMeanPosition(gem_simhits);
     const auto& gem_simhits_gv = match_->simHitsMeanMomentum(gem_simhits);
 
-    if (match_->hitsInChamber(d).size() > 0) {
+    if (gem_simhits.size() > 0) {
       const float mean_strip(match_->simHitsMeanStrip(match_->hitsInChamber(d)));
       if (odd) {
         tree.gemSimHit().has_gem_sh_odd[st] = true;
