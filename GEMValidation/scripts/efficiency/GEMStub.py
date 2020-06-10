@@ -1,69 +1,286 @@
-def simTrackPadMatchingEta(plotter):
-  draw_geff(plotter.targetDir, "eff_eta_track_pad_gem_l1", plotter.ext, plotter.treeTracks,
-	    "Eff. for a SimTrack to have an associated GEM Pad in l1;SimTrack |#eta|;Eff.",
-	    "h_", "(140,1.5,2.2)", "TMath::Abs(eta)", nocut, ok_gL1pad, "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_eta_track_pad_gem_l2", plotter.ext, plotter.treeTracks,
-	    "Eff. for a SimTrack to have an associated GEM Pad in l2;SimTrack |#eta|;Eff.",
-	    "h_", "(140,1.5,2.2)", "TMath::Abs(eta)", nocut, ok_gL2pad, "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_eta_track_pad_gem_l1or2", plotter.ext, plotter.treeTracks,
-	    "Eff. for a SimTrack to have an associated GEM Pad in l1 or l2;SimTrack |#eta|;Eff.",
-	    "h_", "(140,1.5,2.2)", "TMath::Abs(eta)", nocut, OR(ok_gL2pad,ok_gL1pad), "P", kBlue)
+from ROOT import gStyle, TH1F, TCanvas, TLegend, kRed, kBlue, kOrange, kGreen
 
-  draw_geff(plotter.targetDir, "eff_eta_track_pad_sh_gem_l1", plotter.ext, plotter.treeTracks,
-	    "Eff. for a SimTrack to have an associated GEM Pad in l1 with a matched SimHit;SimTrack |#eta|;Eff.",
-	    "h_", "(140,1.5,2.2)", "TMath::Abs(eta)", ok_gL1sh, ok_gL1pad, "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_eta_track_pad_sh_gem_l2", plotter.ext, plotter.treeTracks,
-	    "Eff. for a SimTrack to have an associated GEM Pad in l2 with a matched SimHit;SimTrack |#eta|;Eff.",
-	    "h_", "(140,1.5,2.2)", "TMath::Abs(eta)", ok_gL2sh, ok_gL2pad, "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_eta_track_pad_sh_gem_l1or2", plotter.ext, plotter.treeTracks,
-	    "Eff. for a SimTrack to have an associated GEM Pad in l1 or l2 with a matched SimHit;SimTrack |#eta|;Eff.",
-	    "h_", "(140,1.5,2.2)", "TMath::Abs(eta)", OR(ok_gL1sh,ok_gL2sh),
-            OR(ok_gL2pad,ok_gL1pad), "P", kBlue)
+from helpers.cuts import *
+from helpers.Helpers import *
+from helpers.stations import *
+
+gStyle.SetTitleStyle(0)
+gStyle.SetTitleAlign(13) ##coord in top left
+gStyle.SetTitleX(0.)
+gStyle.SetTitleY(1.)
+gStyle.SetTitleW(1)
+gStyle.SetTitleH(0.058)
+gStyle.SetTitleBorderSize(0)
+
+gStyle.SetPadLeftMargin(0.126)
+gStyle.SetPadRightMargin(0.04)
+gStyle.SetPadTopMargin(0.06)
+gStyle.SetPadBottomMargin(0.13)
+gStyle.SetOptStat(0)
+gStyle.SetMarkerStyle(1)
+
+def GEMPadEta(plotter):
+
+    ## variables for the plot
+    topTitle = " " * 11 + "GEM Pad matching" + " " * 35 + "CMS Simulation Preliminary"
+    xTitle = "True muon #eta"
+    yTitle = "Efficiency"
+    title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
+    toPlot = "TMath::Abs(eta)"
+    subdirectory = "efficiency/GEMStub/"
+
+    for st in range(1,len(gemStations)):
+        c = TCanvas("c","c",700,450)
+        c.Clear()
+
+        h_bins = "(50,%f,%f)"%(gemStations[st].eta_min,gemStations[st].eta_max)
+        nBins = int(h_bins[1:-1].split(',')[0])
+        minBin = float(h_bins[1:-1].split(',')[1])
+        maxBin = float(h_bins[1:-1].split(',')[2])
+
+        base = TH1F("base",title,nBins,minBin,maxBin)
+        base.SetMinimum(plotter.yMin)
+        base.SetMaximum(plotter.yMax)
+        base.Draw("")
+        base.GetXaxis().SetLabelSize(0.05)
+        base.GetYaxis().SetLabelSize(0.05)
+        base.GetXaxis().SetTitleSize(0.05)
+        base.GetYaxis().SetTitleSize(0.05)
+
+        h1 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_gem_sh(st), ok_gem_pad(st), "same")
+
+        leg = TLegend(0.45,0.2,.75,0.35, "", "brNDC")
+        leg.SetBorderSize(0)
+        leg.SetFillStyle(0)
+        leg.SetTextSize(0.06)
+        leg.AddEntry(h1, "Pad","l")
+        leg.Draw("same")
+
+        label = drawCSCLabel(gemStations[st].label, 0.87,0.87,0.05)
+
+        c.Print("%sEff_GEMPad_eta_%s%s"%(plotter.targetDir + subdirectory, gemStations[st].labelc,  plotter.ext))
+
+        del c, base, h1, leg, label
 
 
 
 
-def simTrackPadMatchingPhi(plotter):
-  draw_geff(plotter.targetDir, "eff_phi_track_pad_gem_l1", plotter.ext, plotter.treeTracks,
-	    "Eff. for a SimTrack to have an associated GEM Pad in l1;SimTrack #phi [rad];Eff.",
-	    "h_", "(100,-3.141592654,3.141592654)", "phi", ok_eta, ok_gL1pad, "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_phi_track_pad_gem_l2", plotter.ext, plotter.treeTracks,
-	    "Eff. for a SimTrack to have an associated GEM Pad in l2;SimTrack #phi [rad];Eff.",
-	    "h_", "(100,-3.141592654,3.141592654)", "phi", ok_eta, ok_gL2pad, "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_phi_track_pad_gem_l1or2", plotter.ext, plotter.treeTracks,
-	    "Eff. for a SimTrack to have an associated GEM Pad in l1 or l2;SimTrack #phi [rad];Eff.",
-	    "h_", "(100,-3.141592654,3.141592654)", "phi", ok_eta,
-            OR(ok_gL2pad,ok_gL1pad), "P", kBlue)
+def GEMPadPhi(plotter):
 
-  draw_geff(plotter.targetDir, "eff_phi_track_pad_sh_gem_l1", plotter.ext, plotter.treeTracks,
-	    "Eff. for a SimTrack to have an associated GEM Pad in l1 with a matched SimHit;SimTrack #phi [rad];Eff.",
-	    "h_", "(100,-3.141592654,3.141592654)", "phi", AND(ok_eta,ok_gL1sh), ok_gL1pad, "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_phi_track_pad_sh_gem_l2", plotter.ext, plotter.treeTracks,
-	    "Eff. for a SimTrack to have an associated GEM Pad in l2 with a matched SimHit;SimTrack #phi [rad];Eff.",
-	    "h_", "(100,-3.141592654,3.141592654)", "phi", AND(ok_eta,ok_gL2sh), ok_gL2pad, "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_phi_track_pad_sh_gem_l1or2", plotter.ext, plotter.treeTracks,
-	    "Eff. for a SimTrack to have an associated GEM Pad in l1 or l2 with a matched SimHit;SimTrack #phi [rad];Eff.",
-	    "h_", "(100,-3.141592654,3.141592654)", "phi", AND(ok_eta,OR(ok_gL1sh,ok_gL2sh)),
-            OR(ok_gL2pad,ok_gL1pad), "P", kBlue)
+    ## variables for the plot
+    topTitle = " " * 11 + "GEM Pad matching" + " " * 35 + "CMS Simulation Preliminary"
+    xTitle = "True muon #phi"
+    yTitle = "Efficiency"
+    title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
+    toPlot = "TMath::Abs(phi)"
+    subdirectory = "efficiency/GEMStub/"
+
+    for st in range(1,len(gemStations)):
+        c = TCanvas("c","c",700,450)
+        c.Clear()
+
+        h_bins = "(50,-3.14159265358979312,3.14159265358979312)"
+        nBins = int(h_bins[1:-1].split(',')[0])
+        minBin = float(h_bins[1:-1].split(',')[1])
+        maxBin = float(h_bins[1:-1].split(',')[2])
+
+        base = TH1F("base",title,nBins,minBin,maxBin)
+        base.SetMinimum(plotter.yMin)
+        base.SetMaximum(plotter.yMax)
+        base.Draw("")
+        base.GetXaxis().SetLabelSize(0.05)
+        base.GetYaxis().SetLabelSize(0.05)
+        base.GetXaxis().SetTitleSize(0.05)
+        base.GetYaxis().SetTitleSize(0.05)
+
+        h1 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_gem_sh(st), ok_gem_pad(st), "same")
+
+        leg = TLegend(0.45,0.2,.75,0.35, "", "brNDC")
+        leg.SetBorderSize(0)
+        leg.SetFillStyle(0)
+        leg.SetTextSize(0.06)
+        leg.AddEntry(h1, "Pad","l")
+        leg.Draw("same")
+
+        label = drawCSCLabel(gemStations[st].label, 0.87,0.87,0.05)
+        c.Print("%sEff_GEMPad_phi_%s%s"%(plotter.targetDir + subdirectory, gemStations[st].labelc,  plotter.ext))
+
+        del c, base, h1, leg, label
+
+
+def GEMPadEta2(plotter):
+
+    ## variables for the plot
+    topTitle = " " * 11 + "GEM Pad matching" + " " * 35 + "CMS Simulation Preliminary"
+    xTitle = "True muon #eta"
+    yTitle = "Efficiency"
+    title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
+    toPlot = "TMath::Abs(eta)"
+    subdirectory = "efficiency/GEMStub/"
+
+    for st in range(1,len(gemStations)):
+        c = TCanvas("c","c",700,450)
+        c.Clear()
+
+        h_bins = "(50,%f,%f)"%(gemStations[st].eta_min,gemStations[st].eta_max)
+        nBins = int(h_bins[1:-1].split(',')[0])
+        minBin = float(h_bins[1:-1].split(',')[1])
+        maxBin = float(h_bins[1:-1].split(',')[2])
+
+        base = TH1F("base",title,nBins,minBin,maxBin)
+        base.SetMinimum(plotter.yMin)
+        base.SetMaximum(plotter.yMax)
+        base.Draw("")
+        base.GetXaxis().SetLabelSize(0.05)
+        base.GetYaxis().SetLabelSize(0.05)
+        base.GetXaxis().SetTitleSize(0.05)
+        base.GetYaxis().SetTitleSize(0.05)
+
+        h1 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_gem_sh2(st), ok_gem_pad2(st), "same")
+
+        leg = TLegend(0.45,0.2,.75,0.35, "", "brNDC")
+        leg.SetBorderSize(0)
+        leg.SetFillStyle(0)
+        leg.SetTextSize(0.06)
+        leg.AddEntry(h1, "Two pads","l")
+        leg.Draw("same")
+
+        label = drawCSCLabel(gemStations[st].label, 0.87,0.87,0.05)
+
+        c.Print("%sEff_GEMPad2_eta_%s%s"%(plotter.targetDir + subdirectory, gemStations[st].labelc,  plotter.ext))
+
+        del c, base, h1, leg, label
 
 
 
-def simTrackCoPadMatchingEta(plotter):
-  draw_geff(plotter.targetDir, "eff_eta_track_copad_gem", plotter.ext, plotter.treeTracks,
-	    "Eff. for a SimTrack to have an associated GEM CoPad;SimTrack |#eta|;Eff.",
-	    "h_", "(140,1.5,2.2)", "TMath::Abs(eta)", nocut, AND(ok_gL1pad,ok_gL2pad), "P", kBlue)
 
-  draw_geff(plotter.targetDir, "eff_eta_track_copad_sh_gem", plotter.ext, plotter.treeTracks,
-	    "Eff. for a SimTrack to have an associated GEM CoPad with a matched SimHit;SimTrack |#eta|;Eff.",
-	    "h_", "(140,1.5,2.2)", "TMath::Abs(eta)", AND(ok_gL1sh,ok_gL2sh),
-            AND(ok_gL1pad,ok_gL2pad), "P", kBlue)
+def GEMPadPhi2(plotter):
 
-def simTrackCoPadMatchingPhi(plotter):
-  draw_geff(plotter.targetDir, "eff_phi_track_copad_gem", plotter.ext, plotter.treeTracks,
-	    "Eff. for a SimTrack to have an associated GEM CoPad;SimTrack #phi [rad];Eff.",
-	    "h_", "(100,-3.141592654,3.141592654)", "phi", ok_eta,AND(ok_gL1pad,ok_gL2pad), "P", kBlue)
+    ## variables for the plot
+    topTitle = " " * 11 + "GEM Pad matching" + " " * 35 + "CMS Simulation Preliminary"
+    xTitle = "True muon #phi"
+    yTitle = "Efficiency"
+    title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
+    toPlot = "TMath::Abs(phi)"
+    subdirectory = "efficiency/GEMStub/"
 
-  draw_geff(plotter.targetDir, "eff_phi_track_copad_sh_gem", plotter.ext, plotter.treeTracks,
-	    "Eff. for a SimTrack to have an associated GEM CoPad with a matched SimHit;SimTrack #phi [rad];Eff.",
-	    "h_", "(100,-3.141592654,3.141592654)", "phi", AND(ok_eta,ok_gL1sh,ok_gL2sh),
-            AND(ok_gL2pad,ok_gL1pad), "P", kBlue)
+    for st in range(1,len(gemStations)):
+        c = TCanvas("c","c",700,450)
+        c.Clear()
+
+        h_bins = "(50,-3.14159265358979312,3.14159265358979312)"
+        nBins = int(h_bins[1:-1].split(',')[0])
+        minBin = float(h_bins[1:-1].split(',')[1])
+        maxBin = float(h_bins[1:-1].split(',')[2])
+
+        base = TH1F("base",title,nBins,minBin,maxBin)
+        base.SetMinimum(plotter.yMin)
+        base.SetMaximum(plotter.yMax)
+        base.Draw("")
+        base.GetXaxis().SetLabelSize(0.05)
+        base.GetYaxis().SetLabelSize(0.05)
+        base.GetXaxis().SetTitleSize(0.05)
+        base.GetYaxis().SetTitleSize(0.05)
+
+        h1 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_gem_sh2(st), ok_gem_pad2(st), "same")
+
+        leg = TLegend(0.45,0.2,.75,0.35, "", "brNDC")
+        leg.SetBorderSize(0)
+        leg.SetFillStyle(0)
+        leg.SetTextSize(0.06)
+        leg.AddEntry(h1, "Two pads","l")
+        leg.Draw("same")
+
+        label = drawCSCLabel(gemStations[st].label, 0.87,0.87,0.05)
+        c.Print("%sEff_GEMPad2_phi_%s%s"%(plotter.targetDir + subdirectory, gemStations[st].labelc,  plotter.ext))
+
+        del c, base, h1, leg, label
+
+
+def GEMCoPadEta(plotter):
+
+    ## variables for the plot
+    topTitle = " " * 11 + "GEM CoPad matching" + " " * 35 + "CMS Simulation Preliminary"
+    xTitle = "True muon #eta"
+    yTitle = "Efficiency"
+    title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
+    toPlot = "TMath::Abs(eta)"
+    subdirectory = "efficiency/GEMStub/"
+
+    for st in range(1,len(gemStations)):
+        c = TCanvas("c","c",700,450)
+        c.Clear()
+
+        h_bins = "(50,%f,%f)"%(gemStations[st].eta_min,gemStations[st].eta_max)
+        nBins = int(h_bins[1:-1].split(',')[0])
+        minBin = float(h_bins[1:-1].split(',')[1])
+        maxBin = float(h_bins[1:-1].split(',')[2])
+
+        base = TH1F("base",title,nBins,minBin,maxBin)
+        base.SetMinimum(plotter.yMin)
+        base.SetMaximum(plotter.yMax)
+        base.Draw("")
+        base.GetXaxis().SetLabelSize(0.05)
+        base.GetYaxis().SetLabelSize(0.05)
+        base.GetXaxis().SetTitleSize(0.05)
+        base.GetYaxis().SetTitleSize(0.05)
+
+        h1 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_gem_sh2(st), ok_gem_copad(st), "same")
+
+        leg = TLegend(0.45,0.2,.75,0.35, "", "brNDC")
+        leg.SetBorderSize(0)
+        leg.SetFillStyle(0)
+        leg.SetTextSize(0.06)
+        leg.AddEntry(h1, "CoPad","l")
+        leg.Draw("same")
+
+        label = drawCSCLabel(gemStations[st].label, 0.87,0.87,0.05)
+
+        c.Print("%sEff_GEMCoPad_eta_%s%s"%(plotter.targetDir + subdirectory, gemStations[st].labelc,  plotter.ext))
+
+        del c, base, h1, leg, label
+
+
+
+
+def GEMCoPadPhi(plotter):
+
+    ## variables for the plot
+    topTitle = " " * 11 + "GEM CoPad matching" + " " * 35 + "CMS Simulation Preliminary"
+    xTitle = "True muon #phi"
+    yTitle = "Efficiency"
+    title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
+    toPlot = "TMath::Abs(phi)"
+    subdirectory = "efficiency/GEMStub/"
+
+    for st in range(1,len(gemStations)):
+        c = TCanvas("c","c",700,450)
+        c.Clear()
+
+        h_bins = "(50,-3.14159265358979312,3.14159265358979312)"
+        nBins = int(h_bins[1:-1].split(',')[0])
+        minBin = float(h_bins[1:-1].split(',')[1])
+        maxBin = float(h_bins[1:-1].split(',')[2])
+
+        base = TH1F("base",title,nBins,minBin,maxBin)
+        base.SetMinimum(plotter.yMin)
+        base.SetMaximum(plotter.yMax)
+        base.Draw("")
+        base.GetXaxis().SetLabelSize(0.05)
+        base.GetYaxis().SetLabelSize(0.05)
+        base.GetXaxis().SetTitleSize(0.05)
+        base.GetYaxis().SetTitleSize(0.05)
+
+        h1 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_gem_sh2(st), ok_gem_copad(st), "same")
+
+        leg = TLegend(0.45,0.2,.75,0.35, "", "brNDC")
+        leg.SetBorderSize(0)
+        leg.SetFillStyle(0)
+        leg.SetTextSize(0.06)
+        leg.AddEntry(h1, "CoPad","l")
+        leg.Draw("same")
+
+        label = drawCSCLabel(gemStations[st].label, 0.87,0.87,0.05)
+        c.Print("%sEff_GEMCoPad_phi_%s%s"%(plotter.targetDir + subdirectory, gemStations[st].labelc,  plotter.ext))
+
+        del c, base, h1, leg, label
