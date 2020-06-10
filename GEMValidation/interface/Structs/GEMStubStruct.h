@@ -101,17 +101,17 @@ namespace gem {
     void init() {
       for (unsigned i = 0 ; i < nStations; i++) {
 
-        has_gem_pad_even[i] = 0;
-        has_gem_pad2_even[i] = 0;
-        has_gem_copad_even[i] = 0;
-        has_gem_cluster_even[i] = 0;
-        has_gem_cluster2_even[i] = 0;
+        has_gem_pad_even[i]= false;
+        has_gem_pad2_even[i]= false;
+        has_gem_copad_even[i]= false;
+        has_gem_cluster_even[i]= false;
+        has_gem_cluster2_even[i]= false;
 
-        has_gem_pad_odd[i] = 0;
-        has_gem_pad2_odd[i] = 0;
-        has_gem_copad_odd[i] = 0;
-        has_gem_cluster_odd[i] = 0;
-        has_gem_cluster2_odd[i] = 0;
+        has_gem_pad_odd[i]= false;
+        has_gem_pad2_odd[i]= false;
+        has_gem_copad_odd[i]= false;
+        has_gem_cluster_odd[i]= false;
+        has_gem_cluster2_odd[i]= false;
 
         pad1_odd[i] = -1;
         pad1_even[i] = -1;
@@ -191,17 +191,17 @@ namespace gem {
 
     void book(TTree* t) {
 
-      t->Branch("has_gem_pad_odd", has_gem_pad_odd, "has_gem_pad_odd[3]/I");
-      t->Branch("has_gem_pad2_odd", has_gem_pad2_odd, "has_gem_pad2_odd[3]/I");
-      t->Branch("has_gem_copad_odd", has_gem_copad_odd, "has_gem_copad_odd[3]/I");
-      t->Branch("has_gem_cluster_odd", has_gem_cluster_odd, "has_gem_cluster_odd[3]/I");
-      t->Branch("has_gem_cluster2_odd", has_gem_cluster2_odd, "has_gem_cluster2_odd[3]/I");
+      t->Branch("has_gem_pad_odd", has_gem_pad_odd, "has_gem_pad_odd[3]/O");
+      t->Branch("has_gem_pad2_odd", has_gem_pad2_odd, "has_gem_pad2_odd[3]/O");
+      t->Branch("has_gem_copad_odd", has_gem_copad_odd, "has_gem_copad_odd[3]/O");
+      t->Branch("has_gem_cluster_odd", has_gem_cluster_odd, "has_gem_cluster_odd[3]/O");
+      t->Branch("has_gem_cluster2_odd", has_gem_cluster2_odd, "has_gem_cluster2_odd[3]/O");
 
-      t->Branch("has_gem_pad_even", has_gem_pad_even, "has_gem_pad_even[3]/I");
-      t->Branch("has_gem_pad2_even", has_gem_pad2_even, "has_gem_pad2_even[3]/I");
-      t->Branch("has_gem_copad_even", has_gem_copad_even, "has_gem_copad_even[3]/I");
-      t->Branch("has_gem_cluster_even", has_gem_cluster_even, "has_gem_cluster_even[3]/I");
-      t->Branch("has_gem_cluster2_even", has_gem_cluster2_even, "has_gem_cluster2_even[3]/I");
+      t->Branch("has_gem_pad_even", has_gem_pad_even, "has_gem_pad_even[3]/O");
+      t->Branch("has_gem_pad2_even", has_gem_pad2_even, "has_gem_pad2_even[3]/O");
+      t->Branch("has_gem_copad_even", has_gem_copad_even, "has_gem_copad_even[3]/O");
+      t->Branch("has_gem_cluster_even", has_gem_cluster_even, "has_gem_cluster_even[3]/O");
+      t->Branch("has_gem_cluster2_even", has_gem_cluster2_even, "has_gem_cluster2_even[3]/O");
 
       t->Branch("pad1_odd", pad1_odd, "pad1_odd[3]/I");
       t->Branch("pad1_even", pad1_even, "pad1_even[3]/I");

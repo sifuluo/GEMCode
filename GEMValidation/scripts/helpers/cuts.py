@@ -48,22 +48,30 @@ def ok_gem_sh2(st):
 
 ## GEM digi
 def ok_gem_dg(st):
-    return TCut("GEMDigi.has_gem_dg_even[st] || GEMDigi.has_gem_dg_odd[st]"%(st,st))
+    return TCut("GEMDigi.has_gem_dg_even[%d] || GEMDigi.has_gem_dg_odd[%d]"%(st,st))
 
 def ok_gem_dg2(st):
-    return TCut("GEMDigi.has_gem_dg2_even[st] || GEMDigi.has_gem_dg2_odd[st]"%(st,st))
+    return TCut("GEMDigi.has_gem_dg2_even[%d] || GEMDigi.has_gem_dg2_odd[%d]"%(st,st))
 
 ## GEM stub
 def ok_gem_pad(st):
-    return TCut("GEMStub.has_gem_pad_even[st] || GEMStub.has_gem_pad_odd[st]"%(st,st))
+    return TCut("GEMStub.has_gem_pad_even[%d] || GEMStub.has_gem_pad_odd[%d]"%(st,st))
 
 def ok_gem_pad2(st):
-    return TCut("GEMStub.has_gem_pad2_even[st] || GEMStub.has_gem_pad2_odd[st]"%(st,st))
+    return TCut("GEMStub.has_gem_pad2_even[%d] || GEMStub.has_gem_pad2_odd[%d]"%(st,st))
 
 def ok_gem_copad(st):
-    return TCut("GEMStub.has_gem_copad_even[st] || GEMStub.has_gem_copad_odd[st]"%(st,st))
+    return TCut("GEMStub.has_gem_copad_even[%d] || GEMStub.has_gem_copad_odd[%d]"%(st,st))
 
 def ok_gem_cluster(st):
-    return TCut("GEMStub.has_gem_cluster_even[st] || GEMStub.has_gem_cluster_odd[st]"%(st,st))
+    return TCut("GEMStub.has_gem_cluster_even[%d] || GEMStub.has_gem_cluster_odd[%d]"%(st,st))
 
 ## L1Mu
+def ok_emtf():
+    return TCut("L1MuStruct.has_emtfTrack")
+
+def ok_emtf():
+    return TCut("L1MuStruct.has_emtfRegCand")
+
+def ok_l1mu():
+    return TCut("L1MuStruct.has_gmtCand")
