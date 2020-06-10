@@ -19,15 +19,10 @@ void CSCDigiAnalyzer::analyze(TreeManager& tree)
     cout << "test digi analysis" << endl;
 
     const int st(gem::detIdToMEStation(id.station(),id.ring()));
-    cout << "use this station? " << st << " "  << endl;
 
     const int nlayers(match_->nLayersWithStripInChamber(d));
-    cout << "use this station " << st << " " << nlayers << " " << minNHitsChamber_ << endl;
 
     if (nlayers < minNHitsChamber_) continue;
-
-    cout << "use this station " << st << " " << nlayers << " " << minNHitsChamber_ << endl;
-    cout << "has strip digis " << endl;
 
     const bool odd(id.chamber()%2==1);
 

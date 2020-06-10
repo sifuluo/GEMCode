@@ -40,47 +40,35 @@ void CSCStubAnalyzer::analyze(TreeManager& tree)
     const bool odd(id.chamber()%2==1);
     const auto& clct = match_->bestClctInChamber(d);
 
-    if (odd) {
-      tree.cscStub().has_clct_odd[st] = true;
-      // tree.cscStub().chamber_dg_odd[st] = id.chamber();
-      tree.cscStub().quality_clct_odd[st] = clct.getQuality();
-      tree.cscStub().bx_clct_odd[st] = clct.getBX();
-      tree.cscStub().hs_clct_odd[st] = clct.getKeyStrip();
-      tree.cscStub().qs_clct_odd[st] = clct.getKeyStrip(4);
-      tree.cscStub().es_clct_odd[st] = clct.getKeyStrip(8);
-      tree.cscStub().slope_clct_odd[st] = getSlope(clct);
-    }
-    else {
-      tree.cscStub().has_clct_even[st] = true;
-      // tree.cscStub().chamber_dg_even[st] = id.chamber();
-      tree.cscStub().quality_clct_even[st] = clct.getQuality();
-      tree.cscStub().bx_clct_even[st] = clct.getBX();
-      tree.cscStub().hs_clct_even[st] = clct.getKeyStrip();
-      tree.cscStub().qs_clct_even[st] = clct.getKeyStrip(4);
-      tree.cscStub().es_clct_even[st] = clct.getKeyStrip(8);
-      tree.cscStub().slope_clct_even[st] = getSlope(clct);
-    }
+    auto& cscStubTree = tree.cscStub();
 
-    // case ME11
-    if (st==1 or st==2){
+    auto fill = [clct, cscStubTree, odd](int st) mutable {
       if (odd) {
-        tree.cscStub().has_clct_odd[0] = true;
-        tree.cscStub().quality_clct_odd[0] = clct.getQuality();
-        tree.cscStub().bx_clct_odd[0] = clct.getBX();
-        tree.cscStub().hs_clct_odd[0] = clct.getKeyStrip();
-        tree.cscStub().qs_clct_odd[0] = clct.getKeyStrip(4);
-        tree.cscStub().es_clct_odd[0] = clct.getKeyStrip(8);
-        tree.cscStub().slope_clct_odd[st] = getSlope(clct);
+        cscStubTree.has_clct_odd[st] = true;
+        // cscStubTree.chamber_dg_odd[st] = id.chamber();
+        cscStubTree.quality_clct_odd[st] = clct.getQuality();
+        cscStubTree.bx_clct_odd[st] = clct.getBX();
+        cscStubTree.hs_clct_odd[st] = clct.getKeyStrip();
+        cscStubTree.qs_clct_odd[st] = clct.getKeyStrip(4);
+        cscStubTree.es_clct_odd[st] = clct.getKeyStrip(8);
+        //        cscStubTree.slope_clct_odd[st] = getSlope(clct);
       }
       else {
-        tree.cscStub().has_clct_even[0] = true;
-        tree.cscStub().quality_clct_even[0] = clct.getQuality();
-        tree.cscStub().bx_clct_even[0] = clct.getBX();
-        tree.cscStub().hs_clct_even[0] = clct.getKeyStrip();
-        tree.cscStub().qs_clct_even[0] = clct.getKeyStrip(4);
-        tree.cscStub().es_clct_even[0] = clct.getKeyStrip(8);
-        tree.cscStub().slope_clct_even[st] = getSlope(clct);
+        cscStubTree.has_clct_even[st] = true;
+        // cscStubTree.chamber_dg_even[st] = id.chamber();
+        cscStubTree.quality_clct_even[st] = clct.getQuality();
+        cscStubTree.bx_clct_even[st] = clct.getBX();
+        cscStubTree.hs_clct_even[st] = clct.getKeyStrip();
+        cscStubTree.qs_clct_even[st] = clct.getKeyStrip(4);
+        cscStubTree.es_clct_even[st] = clct.getKeyStrip(8);
+        //cscStubTree.slope_clct_even[st] = getSlope(clct);
       }
+    };
+
+    fill(st);
+    // case ME11
+    if (st==1 or st==2) {
+      fill(0);
     }
   }
 
@@ -92,127 +80,119 @@ void CSCStubAnalyzer::analyze(TreeManager& tree)
     const bool odd(id.chamber()%2==1);
     const auto& alct = match_->bestAlctInChamber(d);
 
-    if (odd) {
-      tree.cscStub().has_alct_odd[st] = true;
-      // tree.cscStub().wiregroup_odd[st] = alct.getKeyWG();
-      tree.cscStub().quality_alct_odd[st] = alct.getQuality();
-      tree.cscStub().bx_alct_odd[st] = alct.getBX();
-    }
-    else {
-      tree.cscStub().has_alct_even[st] = true;
-      // tree.cscStub().wiregroup_even[st] = alct.getKeyWG();
-      tree.cscStub().quality_alct_even[st] = alct.getQuality();
-      tree.cscStub().bx_alct_even[st] = alct.getBX();
-    }
+    auto& cscStubTree = tree.cscStub();
 
-    // case ME11
-    if (st==1 or st==2){
+    auto fill = [alct, cscStubTree, odd](int st) mutable {
       if (odd) {
-        tree.cscStub().has_alct_odd[0] = true;
-        // tree.cscStub().chamber_dg_odd[0] = id.chamber();
-        // tree.cscStub().wiregroup_odd[0] = alct.getKeyWG();
-        tree.cscStub().quality_alct_odd[0] = alct.getQuality();
-        tree.cscStub().bx_alct_odd[0] = alct.getBX();
+        cscStubTree.has_alct_odd[st] = true;
+        cscStubTree.wg_alct_odd[st] = alct.getKeyWG();
+        cscStubTree.quality_alct_odd[st] = alct.getQuality();
+        cscStubTree.bx_alct_odd[st] = alct.getBX();
       }
       else {
-        tree.cscStub().has_alct_even[0] = true;
-        // tree.cscStub().chamber_dg_even[0] = id.chamber();
-        // tree.cscStub().wiregroup_even[0] = alct.getKeyWG();
-        tree.cscStub().quality_alct_even[0] = alct.getQuality();
-        tree.cscStub().bx_alct_even[0] = alct.getBX();
+        cscStubTree.has_alct_even[st] = true;
+        cscStubTree.wg_alct_even[st] = alct.getKeyWG();
+        cscStubTree.quality_alct_even[st] = alct.getQuality();
+        cscStubTree.bx_alct_even[st] = alct.getBX();
       }
+    };
+
+    fill(st);
+    // case ME11
+    if (st==1 or st==2){
+      fill(0);
+    }
+  }
+
+  // CSC LCTs
+  for(const auto& d: match_->chamberIdsLCT(0)) {
+    CSCDetId id(d);
+    const int st(gem::detIdToMEStation(id.station(),id.ring()));
+    const int gemstation(id.station());
+
+    const auto& lct = match_->bestLctInChamber(d);
+    const GlobalPoint& gp = match_->getGlobalPosition(d, lct);
+
+    const bool odd(id.chamber()%2==1);
+
+    auto& cscStubTree = tree.cscStub();
+
+    auto fill = [lct, gp, cscStubTree, odd](int st) mutable {
+      if (odd) {
+        cscStubTree.has_lct_odd[st] = true;
+        cscStubTree.bend_lct_odd[st] = lct.getPattern();
+        cscStubTree.phi_lct_odd[st] = gp.phi();
+        cscStubTree.eta_lct_odd[st] = gp.eta();
+        cscStubTree.perp_lct_odd[st] = gp.perp();
+        cscStubTree.bx_lct_odd[st] = lct.getBX();
+        cscStubTree.hs_lct_odd[st] = lct.getStrip();
+        cscStubTree.qs_lct_odd[st] = lct.getStrip(4);
+        cscStubTree.es_lct_odd[st] = lct.getStrip(8);
+        cscStubTree.wg_lct_odd[st] = lct.getKeyWG();
+        cscStubTree.quality_lct_odd[st] = lct.getQuality();
+        // cscStubTree.dphi_lct_odd[st] =
+        // reco::deltaPhi(float(cscStubTree.phi_lct_odd[st]),
+        //                float(tree.cscSimHit().phi_csc_sh_odd[st]));
+      }
+      else {
+        cscStubTree.has_lct_even[st] = true;
+        cscStubTree.bend_lct_even[st] = lct.getPattern();
+        cscStubTree.phi_lct_even[st] = gp.phi();
+        cscStubTree.eta_lct_even[st] = gp.eta();
+        cscStubTree.perp_lct_even[st] = gp.perp();
+        cscStubTree.bx_lct_even[st] = lct.getBX();
+        cscStubTree.hs_lct_even[st] = lct.getStrip();
+        cscStubTree.qs_lct_odd[st] = lct.getStrip(4);
+        cscStubTree.es_lct_odd[st] = lct.getStrip(8);
+        cscStubTree.wg_lct_even[st] = lct.getKeyWG();
+        cscStubTree.quality_lct_even[st] = lct.getQuality();
+        // cscStubTree.dphi_lct_even[st] =
+        // reco::deltaPhi(float(cscStubTree.phi_lct_even[st]),
+        //                float(tree.cscSimHit().phi_csc_sh_even[st]));
+      }
+    };
+
+    fill(st);
+    // case ME11
+    if (st==1 or st==2){
+      fill(0);
     }
 
-    // CSC LCTs
-    for(const auto& d: match_->chamberIdsLCT(0)) {
-      CSCDetId id(d);
-      const int st(gem::detIdToMEStation(id.station(),id.ring()));
-      const int gemstation(id.station());
+    // only for ME1/1 and ME2/1
+    if (st==1 or st==2 or st==5) continue;
 
-      const auto& lct = match_->bestLctInChamber(d);
-      const GlobalPoint& gp = match_->getGlobalPosition(d, lct);
+    // require at least one GEM pad present...
+    if (! (tree.gemStub().has_gem_pad_even[gemstation] or
+           tree.gemStub().has_gem_pad_odd[gemstation] ) ) continue;
 
-      const bool odd(id.chamber()%2==1);
+    if (odd) {
+      tree.gemStub().dphi_lct_pad1_odd[gemstation]
+        = reco::deltaPhi(float(tree.gemStub().phi_pad1_odd[st]),
+                         float(tree.cscStub().phi_lct_odd[gemstation]));
+      tree.gemStub().dphi_lct_pad2_odd[gemstation]
+        = reco::deltaPhi(float(tree.gemStub().phi_pad2_odd[st]),
+                         float(tree.cscStub().phi_lct_odd[gemstation]));
+    } else {
+      tree.gemStub().dphi_lct_pad1_even[gemstation]
+        = reco::deltaPhi(float(tree.gemStub().phi_pad1_even[st]),
+                         float(tree.cscStub().phi_lct_even[gemstation]));
+      tree.gemStub().dphi_lct_pad2_even[gemstation]
+        = reco::deltaPhi(float(tree.gemStub().phi_pad2_even[st]),
+                         float(tree.cscStub().phi_lct_even[gemstation]));
+    }
 
-      auto& cscStubTree = tree.cscStub();
+    // require at least one GEM pad present...
+    if (! (tree.gemStub().has_gem_copad_even[gemstation] or
+           tree.gemStub().has_gem_copad_odd[gemstation] ) ) continue;
 
-      auto fill = [lct, gp, cscStubTree, odd](int st) mutable {
-        if (odd) {
-          cscStubTree.has_lct_odd[st] = true;
-          cscStubTree.bend_lct_odd[st] = lct.getPattern();
-          cscStubTree.phi_lct_odd[st] = gp.phi();
-          cscStubTree.eta_lct_odd[st] = gp.eta();
-          cscStubTree.perp_lct_odd[st] = gp.perp();
-          cscStubTree.bx_lct_odd[st] = lct.getBX();
-          cscStubTree.hs_lct_odd[st] = lct.getStrip();
-          cscStubTree.qs_lct_odd[st] = lct.getStrip(4);
-          cscStubTree.es_lct_odd[st] = lct.getStrip(8);
-          cscStubTree.wg_lct_odd[st] = lct.getKeyWG();
-          cscStubTree.quality_lct_odd[st] = lct.getQuality();
-          // cscStubTree.dphi_lct_odd[st] =
-          // reco::deltaPhi(float(cscStubTree.phi_lct_odd[st]),
-          //                float(tree.cscSimHit().phi_csc_sh_odd[st]));
-        }
-        else {
-          cscStubTree.has_lct_even[st] = true;
-          cscStubTree.bend_lct_even[st] = lct.getPattern();
-          cscStubTree.phi_lct_even[st] = gp.phi();
-          cscStubTree.eta_lct_even[st] = gp.eta();
-          cscStubTree.perp_lct_even[st] = gp.perp();
-          cscStubTree.bx_lct_even[st] = lct.getBX();
-          cscStubTree.hs_lct_even[st] = lct.getStrip();
-          cscStubTree.qs_lct_odd[st] = lct.getStrip(4);
-          cscStubTree.es_lct_odd[st] = lct.getStrip(8);
-          cscStubTree.wg_lct_even[st] = lct.getKeyWG();
-          cscStubTree.quality_lct_even[st] = lct.getQuality();
-          // cscStubTree.dphi_lct_even[st] =
-          // reco::deltaPhi(float(cscStubTree.phi_lct_even[st]),
-          //                float(tree.cscSimHit().phi_csc_sh_even[st]));
-        }
-      };
-
-      fill(st);
-      // case ME11
-      if (st==1 or st==2){
-        fill(0);
-      }
-
-      // only for ME1/1 and ME2/1
-      if (st==1 or st==2 or st==5) continue;
-
-      // require at least one GEM pad present...
-      if (! (tree.gemStub().has_gem_pad_even[gemstation] or
-             tree.gemStub().has_gem_pad_odd[gemstation] ) ) continue;
-
-      if (odd) {
-        tree.gemStub().dphi_lct_pad1_odd[gemstation]
-          = reco::deltaPhi(float(tree.gemStub().phi_pad1_odd[st]),
-                           float(tree.cscStub().phi_lct_odd[gemstation]));
-        tree.gemStub().dphi_lct_pad2_odd[gemstation]
-          = reco::deltaPhi(float(tree.gemStub().phi_pad2_odd[st]),
-                           float(tree.cscStub().phi_lct_odd[gemstation]));
-      } else {
-        tree.gemStub().dphi_lct_pad1_even[gemstation]
-          = reco::deltaPhi(float(tree.gemStub().phi_pad1_even[st]),
-                           float(tree.cscStub().phi_lct_even[gemstation]));
-        tree.gemStub().dphi_lct_pad2_even[gemstation]
-          = reco::deltaPhi(float(tree.gemStub().phi_pad2_even[st]),
-                           float(tree.cscStub().phi_lct_even[gemstation]));
-      }
-
-      // require at least one GEM pad present...
-      if (! (tree.gemStub().has_gem_copad_even[gemstation] or
-             tree.gemStub().has_gem_copad_odd[gemstation] ) ) continue;
-
-      if (odd) {
-        tree.gemStub().dphi_lct_copad_odd[gemstation]
-          = reco::deltaPhi(float(tree.gemStub().phi_copad_odd[st]),
-                           float(tree.cscStub().phi_lct_odd[gemstation]));
-      } else {
-        tree.gemStub().dphi_lct_copad_even[gemstation]
-          = reco::deltaPhi(float(tree.gemStub().phi_copad_even[st]),
-                           float(tree.cscStub().phi_lct_even[gemstation]));
-      }
+    if (odd) {
+      tree.gemStub().dphi_lct_copad_odd[gemstation]
+        = reco::deltaPhi(float(tree.gemStub().phi_copad_odd[st]),
+                         float(tree.cscStub().phi_lct_odd[gemstation]));
+    } else {
+      tree.gemStub().dphi_lct_copad_even[gemstation]
+        = reco::deltaPhi(float(tree.gemStub().phi_copad_even[st]),
+                         float(tree.cscStub().phi_lct_even[gemstation]));
     }
   }
 }

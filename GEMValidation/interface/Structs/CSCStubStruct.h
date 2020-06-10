@@ -45,6 +45,9 @@ namespace gem {
     int es_lct_odd[nStations];
     int es_lct_even[nStations];
 
+    int wg_alct_odd[nStations];
+    int wg_alct_even[nStations];
+
     int wg_lct_odd[nStations];
     int wg_lct_even[nStations];
 
@@ -147,8 +150,11 @@ namespace gem {
         fes_clct_odd[i] = -1;
         fes_clct_even[i] = -1;
 
-        wg_lct_odd[i] = 0;
-        wg_lct_even[i] = 0;
+        wg_alct_odd[i] = -1;
+        wg_alct_even[i] = -1;
+
+        wg_lct_odd[i] = -1;
+        wg_lct_even[i] = -1;
 
         eta_lct_odd[i] = -9.;
         eta_lct_even[i] = -9.;
@@ -251,6 +257,9 @@ namespace gem {
 
       t->Branch("fes_clct_odd", fes_clct_odd, "fes_clct_odd[11]/F");
       t->Branch("fes_clct_even", fes_clct_even, "fes_clct_even[11]/F");
+
+      t->Branch("wg_alct_odd", wg_alct_odd, "wg_alct_odd[11]/I");
+      t->Branch("wg_alct_even", wg_alct_even, "wg_alct_even[11]/I");
 
       t->Branch("wg_lct_odd", wg_lct_odd, "wg_lct_odd[11]/I");
       t->Branch("wg_lct_even", wg_lct_even, "wg_lct_even[11]/I");
