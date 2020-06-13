@@ -40,9 +40,7 @@ void CSCStubAnalyzer::analyze(TreeManager& tree)
     const bool odd(id.chamber()%2==1);
     const auto& clct = match_->bestClctInChamber(d);
 
-    auto& cscStubTree = tree.cscStub();
-
-    auto fill = [clct, cscStubTree, odd](int st) mutable {
+    auto fill = [clct, odd](gem::CSCStubStruct& cscStubTree, int st) mutable {
       if (odd) {
         cscStubTree.has_clct_odd[st] = true;
         // cscStubTree.chamber_dg_odd[st] = id.chamber();
@@ -65,10 +63,10 @@ void CSCStubAnalyzer::analyze(TreeManager& tree)
       }
     };
 
-    fill(st);
+    fill(tree.cscStub(), st);
     // case ME11
     if (st==1 or st==2) {
-      fill(0);
+      fill(tree.cscStub(), 0);
     }
   }
 
@@ -80,9 +78,7 @@ void CSCStubAnalyzer::analyze(TreeManager& tree)
     const bool odd(id.chamber()%2==1);
     const auto& alct = match_->bestAlctInChamber(d);
 
-    auto& cscStubTree = tree.cscStub();
-
-    auto fill = [alct, cscStubTree, odd](int st) mutable {
+    auto fill = [alct, odd](gem::CSCStubStruct& cscStubTree, int st) mutable {
       if (odd) {
         cscStubTree.has_alct_odd[st] = true;
         cscStubTree.wg_alct_odd[st] = alct.getKeyWG();
@@ -97,10 +93,10 @@ void CSCStubAnalyzer::analyze(TreeManager& tree)
       }
     };
 
-    fill(st);
+    fill(tree.cscStub(), st);
     // case ME11
     if (st==1 or st==2){
-      fill(0);
+      fill(tree.cscStub(), 0);
     }
   }
 
@@ -115,9 +111,7 @@ void CSCStubAnalyzer::analyze(TreeManager& tree)
 
     const bool odd(id.chamber()%2==1);
 
-    auto& cscStubTree = tree.cscStub();
-
-    auto fill = [lct, gp, cscStubTree, odd](int st) mutable {
+    auto fill = [lct, gp, odd](gem::CSCStubStruct& cscStubTree, int st) mutable {
       if (odd) {
         cscStubTree.has_lct_odd[st] = true;
         cscStubTree.bend_lct_odd[st] = lct.getPattern();
@@ -152,10 +146,10 @@ void CSCStubAnalyzer::analyze(TreeManager& tree)
       }
     };
 
-    fill(st);
+    fill(tree.cscStub(), st);
     // case ME11
     if (st==1 or st==2){
-      fill(0);
+      fill(tree.cscStub(), 0);
     }
 
     // only for ME1/1 and ME2/1
