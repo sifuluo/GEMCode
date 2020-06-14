@@ -55,6 +55,9 @@ GEMCSCAnalyzer::GEMCSCAnalyzer(const edm::ParameterSet& ps) :
   simTrackMinEta_ = simTrack.getParameter<double>("minEta");
   simTrackMaxEta_ = simTrack.getParameter<double>("maxEta");
 
+  edm::Service<TFileService> fs;
+  TTree* tree_ = fs->make<TTree>("Event","Event");
+
   // book the trees
   tree_.reset(new TreeManager());
   tree_->book();
@@ -68,43 +71,46 @@ GEMCSCAnalyzer::GEMCSCAnalyzer(const edm::ParameterSet& ps) :
 
 void GEMCSCAnalyzer::analyze(const edm::Event& ev, const edm::EventSetup& es) {
 
-  // set event and setup
-  matcher_->init(ev, es);
-  analyzer_->init(ev, es);
+  std::vector<Three> threes;
+  tree.Branch("threes", &threes);
 
-  edm::Handle<edm::SimTrackContainer> sim_tracks;
-  ev.getByToken(simTrackInput_, sim_tracks);
-  const edm::SimTrackContainer& sim_track = *sim_tracks.product();
+  // // set event and setup
+  // matcher_->init(ev, es);
+  // analyzer_->init(ev, es);
 
-  edm::Handle<edm::SimVertexContainer> sim_vertices;
-  ev.getByToken(simVertexInput_, sim_vertices);
-  const edm::SimVertexContainer& sim_vert = *sim_vertices.product();
+  // edm::Handle<edm::SimTrackContainer> sim_tracks;
+  // ev.getByToken(simTrackInput_, sim_tracks);
+  // const edm::SimTrackContainer& sim_track = *sim_tracks.product();
 
-  if (verbose_) {
-    std::cout << "Total number of SimTrack in this event: " << sim_track.size() << std::endl;
-  }
+  // edm::Handle<edm::SimVertexContainer> sim_vertices;
+  // ev.getByToken(simVertexInput_, sim_vertices);
+  // const edm::SimVertexContainer& sim_vert = *sim_vertices.product();
 
-  edm::SimTrackContainer sim_track_selected;
-  for (const auto& t : sim_track) {
-    if (!isSimTrackGood(t))
-      continue;
-    sim_track_selected.push_back(t);
-  }
+  // if (verbose_) {
+  //   std::cout << "Total number of SimTrack in this event: " << sim_track.size() << std::endl;
+  // }
 
-  int trk_no = 0;
+  // edm::SimTrackContainer sim_track_selected;
+  // for (const auto& t : sim_track) {
+  //   if (!isSimTrackGood(t))
+  //     continue;
+  //   sim_track_selected.push_back(t);
+  // }
 
-  for (const auto& t : sim_track_selected) {
-    trk_no++;
-    if (verbose_) {
-      std::cout << "Processing selected SimTrack " << trk_no + 1 << std::endl;
-      std::cout << "pT = " << t.momentum().pt()
-                << "GeV, eta = " << t.momentum().eta()
-                << ", phi = " << t.momentum().phi()
-                << ", Q = " << t.charge()
-                << ", PDGiD =  " << t.type() << std::endl;
-    }
-    analyze(t, sim_vert[t.vertIndex()]);
-  }
+  // int trk_no = 0;
+
+  // for (const auto& t : sim_track_selected) {
+  //   trk_no++;
+  //   if (verbose_) {
+  //     std::cout << "Processing selected SimTrack " << trk_no + 1 << std::endl;
+  //     std::cout << "pT = " << t.momentum().pt()
+  //               << "GeV, eta = " << t.momentum().eta()
+  //               << ", phi = " << t.momentum().phi()
+  //               << ", Q = " << t.charge()
+  //               << ", PDGiD =  " << t.type() << std::endl;
+  //   }
+  //   analyze(t, sim_vert[t.vertIndex()]);
+  // }
 }
 
 void GEMCSCAnalyzer::analyze(const SimTrack& track, const SimVertex& v)
