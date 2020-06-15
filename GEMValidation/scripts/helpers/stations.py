@@ -33,9 +33,9 @@ GE11 = Station(1.6, 2.15, 'GE1/1', 'GE11')
 GE21 = Station(1.6, 2.4, 'GE2/1', 'GE21')
 
 gemStations = [
-#    ME0,
+    ME0,
     GE11,
-#    GE21
+    GE21
 ]
 
 ## rpc

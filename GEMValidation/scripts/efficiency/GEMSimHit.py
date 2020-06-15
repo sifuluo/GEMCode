@@ -73,7 +73,7 @@ def GEMSimHitPhi(plotter):
     xTitle = "True muon #phi"
     yTitle = "Efficiency"
     title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
-    toPlot = "TMath::Abs(phi)"
+    toPlot = "phi"
     subdirectory = "efficiency/GEMSimHit/"
 
     for st in range(0,len(gemStations)):

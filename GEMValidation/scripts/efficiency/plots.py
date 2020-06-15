@@ -38,8 +38,6 @@ def makeEfficiencyPlots(plotter):
     CSCAlctClct2(plotter)
     CSCLct(plotter)
     """
-    GEMSimHit(plotter)
-    """
-    GEMDigi(plotter)
+    #GEMSimHit(plotter)
+    #GEMDigi(plotter)
     GEMStub(plotter)
-    """

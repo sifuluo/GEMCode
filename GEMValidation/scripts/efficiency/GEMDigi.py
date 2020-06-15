@@ -72,14 +72,14 @@ def GEMDigiPhi(plotter):
     xTitle = "True muon #phi"
     yTitle = "Efficiency"
     title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
-    toPlot = "TMath::Abs(phi)"
+    toPlot = "phi"
     subdirectory = "efficiency/GEMDigi/"
 
     for st in range(0,len(gemStations)):
         c = TCanvas("c","c",700,450)
         c.Clear()
 
-        h_bins = "(50,-3.14159265358979312,3.14159265358979312)"
+        h_bins = "(50,%f,%f)"%(gemStations[st].phi_min,gemStations[st].phi_max)
         nBins = int(h_bins[1:-1].split(',')[0])
         minBin = float(h_bins[1:-1].split(',')[1])
         maxBin = float(h_bins[1:-1].split(',')[2])
@@ -137,7 +137,7 @@ def GEMDigiEta2(plotter):
         base.GetXaxis().SetTitleSize(0.05)
         base.GetYaxis().SetTitleSize(0.05)
 
-        h1 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_gem_sh(st), ok_gem_dg2(st), "same")
+        h1 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_gem_sh2(st), ok_gem_dg2(st), "same")
 
         leg = TLegend(0.45,0.2,.75,0.35, "", "brNDC")
         leg.SetBorderSize(0)
@@ -162,14 +162,14 @@ def GEMDigiPhi2(plotter):
     xTitle = "True muon #phi"
     yTitle = "Efficiency"
     title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
-    toPlot = "TMath::Abs(phi)"
+    toPlot = "phi"
     subdirectory = "efficiency/GEMDigi/"
 
     for st in range(0,len(gemStations)):
         c = TCanvas("c","c",700,450)
         c.Clear()
 
-        h_bins = "(50,-3.14159265358979312,3.14159265358979312)"
+        h_bins = "(50,%f,%f)"%(gemStations[st].phi_min,gemStations[st].phi_max)
         nBins = int(h_bins[1:-1].split(',')[0])
         minBin = float(h_bins[1:-1].split(',')[1])
         maxBin = float(h_bins[1:-1].split(',')[2])
@@ -183,7 +183,7 @@ def GEMDigiPhi2(plotter):
         base.GetXaxis().SetTitleSize(0.05)
         base.GetYaxis().SetTitleSize(0.05)
 
-        h1 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_gem_sh(st), ok_gem_dg2(st), "same")
+        h1 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_gem_sh2(st), ok_gem_dg2(st), "same")
 
         leg = TLegend(0.45,0.2,.75,0.35, "", "brNDC")
         leg.SetBorderSize(0)
@@ -198,6 +198,8 @@ def GEMDigiPhi2(plotter):
 
         del c, base, h1, leg, label
 
-def GEMDigiEta(plotter):
+def GEMDigi(plotter):
     GEMDigiEta(plotter)
     GEMDigiPhi(plotter)
+    GEMDigiEta2(plotter)
+    GEMDigiPhi2(plotter)

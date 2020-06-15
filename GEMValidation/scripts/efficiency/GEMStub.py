@@ -29,7 +29,7 @@ def GEMPadEta(plotter):
     toPlot = "TMath::Abs(eta)"
     subdirectory = "efficiency/GEMStub/"
 
-    for st in range(1,len(gemStations)):
+    for st in range(0,len(gemStations)):
         c = TCanvas("c","c",700,450)
         c.Clear()
 
@@ -72,14 +72,14 @@ def GEMPadPhi(plotter):
     xTitle = "True muon #phi"
     yTitle = "Efficiency"
     title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
-    toPlot = "TMath::Abs(phi)"
+    toPlot = "phi"
     subdirectory = "efficiency/GEMStub/"
 
-    for st in range(1,len(gemStations)):
+    for st in range(0,len(gemStations)):
         c = TCanvas("c","c",700,450)
         c.Clear()
 
-        h_bins = "(50,-3.2,3.2)"
+        h_bins = "(50,%f,%f)"%(gemStations[st].phi_min,gemStations[st].phi_max)
         nBins = int(h_bins[1:-1].split(',')[0])
         minBin = float(h_bins[1:-1].split(',')[1])
         maxBin = float(h_bins[1:-1].split(',')[2])
@@ -161,14 +161,14 @@ def GEMPadPhi2(plotter):
     xTitle = "True muon #phi"
     yTitle = "Efficiency"
     title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
-    toPlot = "TMath::Abs(phi)"
+    toPlot = "phi"
     subdirectory = "efficiency/GEMStub/"
 
     for st in range(1,len(gemStations)):
         c = TCanvas("c","c",700,450)
         c.Clear()
 
-        h_bins = "(50,-3.2,3.2)"
+        h_bins = "(50,%f,%f)"%(gemStations[st].phi_min,gemStations[st].phi_max)
         nBins = int(h_bins[1:-1].split(',')[0])
         minBin = float(h_bins[1:-1].split(',')[1])
         maxBin = float(h_bins[1:-1].split(',')[2])
@@ -250,14 +250,14 @@ def GEMCoPadPhi(plotter):
     xTitle = "True muon #phi"
     yTitle = "Efficiency"
     title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
-    toPlot = "TMath::Abs(phi)"
+    toPlot = "phi"
     subdirectory = "efficiency/GEMStub/"
 
     for st in range(1,len(gemStations)):
         c = TCanvas("c","c",700,450)
         c.Clear()
 
-        h_bins = "(50,-3.2,3.2)"
+        h_bins = "(50,%f,%f)"%(gemStations[st].phi_min,gemStations[st].phi_max)
         nBins = int(h_bins[1:-1].split(',')[0])
         minBin = float(h_bins[1:-1].split(',')[1])
         maxBin = float(h_bins[1:-1].split(',')[2])
@@ -339,14 +339,14 @@ def GEMClusterPhi(plotter):
     xTitle = "True muon #phi"
     yTitle = "Efficiency"
     title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
-    toPlot = "TMath::Abs(phi)"
+    toPlot = "phi"
     subdirectory = "efficiency/GEMStub/"
 
     for st in range(1,len(gemStations)):
         c = TCanvas("c","c",700,450)
         c.Clear()
 
-        h_bins = "(50,-3.2,3.2)"
+        h_bins = "(50,%f,%f)"%(gemStations[st].phi_min,gemStations[st].phi_max)
         nBins = int(h_bins[1:-1].split(',')[0])
         minBin = float(h_bins[1:-1].split(',')[1])
         maxBin = float(h_bins[1:-1].split(',')[2])
@@ -378,9 +378,10 @@ def GEMClusterPhi(plotter):
 def GEMStub(plotter):
     GEMPadEta(plotter)
     GEMPadPhi(plotter)
-    GEMPadEta2(plotter)
-    GEMPadPhi2(plotter)
-    GEMCoPadEta(plotter)
-    GEMCoPadPhi(plotter)
-    GEMClusterEta(plotter)
-    GEMClusterPhi(plotter)
+    return
+    #GEMPadEta2(plotter)
+    #GEMPadPhi2(plotter)
+    #GEMCoPadEta(plotter)
+    #GEMCoPadPhi(plotter)
+    #GEMClusterEta(plotter)
+    #GEMClusterPhi(plotter)
