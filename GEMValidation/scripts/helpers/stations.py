@@ -6,6 +6,8 @@ class Station:
         self.eta_max = eta_max
         self.label = label
         self.labelc = labelc
+        self.phi_min = -3.2
+        self.phi_max = 3.2
 
 ## csc
 ME11 = Station(1.5, 2.5, 'ME1/1', 'ME11')
@@ -26,14 +28,14 @@ cscStations = [
 ]
 
 ## gem
-ME0 = Station(1.9, 2.9, 'ME0', 'ME0')
-GE11 = Station(1.5, 2.2, 'GE1/1', 'GE11')
-GE21 = Station(1.5, 2.5, 'GE2/1', 'GE21')
+ME0 = Station(2, 2.8, 'ME0', 'ME0')
+GE11 = Station(1.6, 2.15, 'GE1/1', 'GE11')
+GE21 = Station(1.6, 2.4, 'GE2/1', 'GE21')
 
 gemStations = [
-    ME0,
+#    ME0,
     GE11,
-    GE21
+#    GE21
 ]
 
 ## rpc

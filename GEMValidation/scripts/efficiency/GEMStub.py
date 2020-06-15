@@ -373,3 +373,14 @@ def GEMClusterPhi(plotter):
         c.Print("%sEff_GEMCluster_phi_%s%s"%(plotter.targetDir + subdirectory, gemStations[st].labelc,  plotter.ext))
 
         del c, base, h1, leg, label
+
+
+def GEMStub(plotter):
+    GEMPadEta(plotter)
+    GEMPadPhi(plotter)
+    GEMPadEta2(plotter)
+    GEMPadPhi2(plotter)
+    GEMCoPadEta(plotter)
+    GEMCoPadPhi(plotter)
+    GEMClusterEta(plotter)
+    GEMClusterPhi(plotter)

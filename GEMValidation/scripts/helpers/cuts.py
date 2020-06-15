@@ -4,12 +4,12 @@ from logic import ANDtwo, ORtwo, AND, OR
 
 nocut = TCut("")
 
-## simtrack cuts
-eta_min = 1.6
-eta_max = 2.4
-ok_eta_min = TCut("TMath::Abs(eta) > %f"%(eta_min))
-ok_eta_max = TCut("TMath::Abs(eta) < %f"%(eta_max))
-ok_eta = AND(ok_eta_min,ok_eta_max)
+## eta for a station
+def ok_eta(eta_min, eta_max):
+    ok_eta_min = TCut("TMath::Abs(eta) > %f"%(eta_min))
+    ok_eta_max = TCut("TMath::Abs(eta) < %f"%(eta_max))
+    ok_eta = AND(ok_eta_min,ok_eta_max)
+    return ok_eta
 
 ## CSC simhits & digis
 def ok_csc_sh(st):

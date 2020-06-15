@@ -30,7 +30,7 @@ def GEMSimHitEta(plotter):
     toPlot = "TMath::Abs(eta)"
     subdirectory = "efficiency/GEMSimHit/"
 
-    for st in range(1,len(gemStations)):
+    for st in range(0,len(gemStations)):
         c = TCanvas("c","c",700,450)
         c.Clear()
 
@@ -48,7 +48,7 @@ def GEMSimHitEta(plotter):
         base.GetXaxis().SetTitleSize(0.05)
         base.GetYaxis().SetTitleSize(0.05)
 
-        h1 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_eta, ok_gem_sh(st), "same")
+        h1 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_eta(gemStations[st].eta_min, gemStations[st].eta_max), ok_gem_sh(st), "same")
 
         leg = TLegend(0.45,0.2,.75,0.35, "", "brNDC")
         leg.SetBorderSize(0)
@@ -76,11 +76,11 @@ def GEMSimHitPhi(plotter):
     toPlot = "TMath::Abs(phi)"
     subdirectory = "efficiency/GEMSimHit/"
 
-    for st in range(1,len(gemStations)):
+    for st in range(0,len(gemStations)):
         c = TCanvas("c","c",700,450)
         c.Clear()
 
-        h_bins = "(50,-3.14159265358979312,3.14159265358979312)"
+        h_bins = "(50,%f,%f)"%(gemStations[st].phi_min,gemStations[st].phi_max)
         nBins = int(h_bins[1:-1].split(',')[0])
         minBin = float(h_bins[1:-1].split(',')[1])
         maxBin = float(h_bins[1:-1].split(',')[2])
@@ -94,7 +94,7 @@ def GEMSimHitPhi(plotter):
         base.GetXaxis().SetTitleSize(0.05)
         base.GetYaxis().SetTitleSize(0.05)
 
-        h1 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_eta, ok_gem_sh(st), "same")
+        h1 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_eta(gemStations[st].eta_min, gemStations[st].eta_max), ok_gem_sh(st), "same")
 
         leg = TLegend(0.45,0.2,.75,0.35, "", "brNDC")
         leg.SetBorderSize(0)
@@ -110,58 +110,6 @@ def GEMSimHitPhi(plotter):
         del c, base, h1, leg, label
 
 
-
-
-def gemSimTrackToSimHitMatchingLX(plotter):
-  draw_geff(plotter.targetDir, "eff_lx_track_sh_gem_l1_even", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM SimHit in GEMl1;SimTrack localX [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_lx_even", nocut, ok_trk_gL1sh, "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_lx_track_sh_gem_l2_even", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM SimHit in GEMl2;SimTrack localX [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_lx_even", nocut, ok_trk_gL2sh, "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_lx_track_sh_gem_l1or2_even", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM SimHit in GEMl1 or GEMl2;SimTrack localX [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_lx_even", nocut, OR(ok_trk_gL1sh,ok_trk_gL2sh), "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_lx_track_sh_gem_l1and2_even", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM SimHit in GEMl1 and GEMl2;SimTrack localX [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_lx_even", nocut, AND(ok_trk_gL1sh,ok_trk_gL2sh), "P", kBlue)
-
-  draw_geff(plotter.targetDir, "eff_lx_track_sh_gem_l1_odd", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM SimHit in GEMl1;SimTrack localX [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_lx_odd", nocut, ok_trk_gL1sh, "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_lx_track_sh_gem_l2_odd", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM SimHit in GEMl2;SimTrack localX [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_lx_odd", nocut, ok_trk_gL2sh, "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_lx_track_sh_gem_l1or2_odd", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM SimHit in GEMl1 or GEMl2;SimTrack localX [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_lx_odd", nocut, OR(ok_trk_gL1sh,ok_trk_gL2sh), "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_lx_track_sh_gem_l1and2_odd", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM SimHit in GEMl1 and GEMl2;SimTrack localX [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_lx_odd", nocut, AND(ok_trk_gL1sh,ok_trk_gL2sh), "P", kBlue)
-
-def gemSimTrackToSimHitMatchingLY(plotter):
-  draw_geff(plotter.targetDir, "eff_ly_track_sh_gem_l1_even", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM SimHit in GEMl1;SimTrack localy [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_ly_even", ok_lx_even, ok_trk_gL1sh, "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_ly_track_sh_gem_l2_even", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM SimHit in GEMl2;SimTrack localy [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_ly_even", ok_lx_even, ok_trk_gL2sh, "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_ly_track_sh_gem_l1or2_even", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM SimHit in GEMl1 or GEMl2;SimTrack localy [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_ly_even", ok_lx_even, OR(ok_trk_gL1sh,ok_trk_gL2sh), "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_ly_track_sh_gem_l1and2_even", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM SimHit in GEMl1 and GEMl2;SimTrack localy [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_ly_even", ok_lx_even, AND(ok_trk_gL1sh,ok_trk_gL2sh), "P", kBlue)
-
-  draw_geff(plotter.targetDir, "eff_ly_track_sh_gem_l1_odd", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM SimHit in GEMl1;SimTrack localy [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_ly_odd", ok_lx_odd, ok_trk_gL1sh, "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_ly_track_sh_gem_l2_odd", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM SimHit in GEMl2;SimTrack localy [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_ly_odd", ok_lx_odd, ok_trk_gL2sh, "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_ly_track_sh_gem_l1or2_odd", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM SimHit in GEMl1 or GEMl2;SimTrack localy [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_ly_odd", ok_lx_odd, OR(ok_trk_gL1sh,ok_trk_gL2sh), "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_ly_track_sh_gem_l1and2_odd", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM SimHit in GEMl1 and GEMl2;SimTrack localy [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_ly_odd", ok_lx_odd, AND(ok_trk_gL1sh,ok_trk_gL2sh), "P", kBlue)
+def GEMSimHit(plotter):
+    GEMSimHitEta(plotter)
+    GEMSimHitPhi(plotter)

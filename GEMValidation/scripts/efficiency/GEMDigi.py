@@ -29,7 +29,7 @@ def GEMDigiEta(plotter):
     toPlot = "TMath::Abs(eta)"
     subdirectory = "efficiency/GEMDigi/"
 
-    for st in range(1,len(gemStations)):
+    for st in range(0,len(gemStations)):
         c = TCanvas("c","c",700,450)
         c.Clear()
 
@@ -75,7 +75,7 @@ def GEMDigiPhi(plotter):
     toPlot = "TMath::Abs(phi)"
     subdirectory = "efficiency/GEMDigi/"
 
-    for st in range(1,len(gemStations)):
+    for st in range(0,len(gemStations)):
         c = TCanvas("c","c",700,450)
         c.Clear()
 
@@ -119,7 +119,7 @@ def GEMDigiEta2(plotter):
     toPlot = "TMath::Abs(eta)"
     subdirectory = "efficiency/GEMDigi/"
 
-    for st in range(1,len(gemStations)):
+    for st in range(0,len(gemStations)):
         c = TCanvas("c","c",700,450)
         c.Clear()
 
@@ -165,7 +165,7 @@ def GEMDigiPhi2(plotter):
     toPlot = "TMath::Abs(phi)"
     subdirectory = "efficiency/GEMDigi/"
 
-    for st in range(1,len(gemStations)):
+    for st in range(0,len(gemStations)):
         c = TCanvas("c","c",700,450)
         c.Clear()
 
@@ -198,59 +198,6 @@ def GEMDigiPhi2(plotter):
 
         del c, base, h1, leg, label
 
-
-
-
-def simTrackDigiMatchingLX(plotter):
-  draw_geff(plotter.targetDir, "eff_lx_track_dg_gem_l1_even", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM Digi in GEMl1;SimTrack localX [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_lx_even", nocut, ok_trk_gL1dg, "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_lx_track_dg_gem_l2_even", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM Digi in GEMl2;SimTrack localX [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_lx_even", nocut, ok_trk_gL2dg, "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_lx_track_dg_gem_l1or2_even", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM Digi in GEMl1 or GEMl2;SimTrack localX [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_lx_even", nocut, OR(ok_trk_gL1dg,ok_trk_gL2dg), "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_lx_track_dg_gem_l1and2_even", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM Digi in GEMl1 and GEMl2;SimTrack localX [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_lx_even", nocut, AND(ok_trk_gL1dg,ok_trk_gL2dg), "P", kBlue)
-
-  draw_geff(plotter.targetDir, "eff_lx_track_dg_gem_l1_odd", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM Digi in GEMl1;SimTrack localX [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_lx_odd", nocut, ok_trk_gL1dg, "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_lx_track_dg_gem_l2_odd", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM Digi in GEMl2;SimTrack localX [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_lx_odd", nocut, ok_trk_gL2dg, "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_lx_track_dg_gem_l1or2_odd", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM Digi in GEMl1 or GEMl2;SimTrack localX [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_lx_odd", nocut, OR(ok_trk_gL1dg,ok_trk_gL2dg), "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_lx_track_dg_gem_l1and2_odd", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM Digi in GEMl1 and GEMl2;SimTrack localX [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_lx_odd", nocut, AND(ok_trk_gL1dg,ok_trk_gL2dg), "P", kBlue)
-
-def simTrackDigiMatchingLY(plotter):
-  draw_geff(plotter.targetDir, "eff_ly_track_dg_gem_l1_even", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM Digi in GEMl1;SimTrack localy [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_ly_even", nocut, ok_trk_gL1dg, "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_ly_track_dg_gem_l2_even", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM Digi in GEMl2;SimTrack localy [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_ly_even", nocut, ok_trk_gL2dg, "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_ly_track_dg_gem_l1or2_even", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM Digi in GEMl1 or GEMl2;SimTrack localy [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_ly_even", nocut, OR(ok_trk_gL1dg,ok_trk_gL2dg), "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_ly_track_dg_gem_l1and2_even", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM Digi in GEMl1 and GEMl2;SimTrack localy [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_ly_even", nocut, AND(ok_trk_gL1dg,ok_trk_gL2dg), "P", kBlue)
-
-  draw_geff(plotter.targetDir, "eff_ly_track_dg_gem_l1_odd", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM Digi in GEMl1;SimTrack localy [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_ly_odd", nocut, ok_trk_gL1dg, "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_ly_track_dg_gem_l2_odd", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM Digi in GEMl2;SimTrack localy [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_ly_odd", nocut, ok_trk_gL2dg, "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_ly_track_dg_gem_l1or2_odd", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM Digi in GEMl1 or GEMl2;SimTrack localy [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_ly_odd", nocut, OR(ok_trk_gL1dg,ok_trk_gL2dg), "P", kBlue)
-  draw_geff(plotter.targetDir, "eff_ly_track_dg_gem_l1and2_odd", plotter.ext, plotter.treeTracks,
-            "Eff. for a SimTrack to have an associated GEM Digi in GEMl1 and GEMl2;SimTrack localy [cm];Eff.",
-            "h_", "(100,-100,100)", "gem_ly_odd", nocut, AND(ok_trk_gL1dg,ok_trk_gL2dg), "P", kBlue)
+def GEMDigiEta(plotter):
+    GEMDigiEta(plotter)
+    GEMDigiPhi(plotter)

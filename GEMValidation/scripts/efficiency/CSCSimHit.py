@@ -47,7 +47,7 @@ def CSCSimHit(plotter):
         base.GetXaxis().SetTitleSize(0.05)
         base.GetYaxis().SetTitleSize(0.05)
 
-        h1 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_eta, ok_csc_sh(st), "same")
+        h1 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_eta(cscStations[st].eta_min, cscStations[st].eta_max), ok_csc_sh(st), "same")
 
         leg = TLegend(0.45,0.2,.75,0.35, "", "brNDC")
         leg.SetBorderSize(0)
