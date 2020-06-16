@@ -84,7 +84,7 @@ ana.cscLCT.verbose = 0
 useUnpacked = False
 if useUnpacked:
     ana.gemStripDigi.inputTag = "muonGEMDigis"
-    ana.muon.inputTag = cms.InputTag("gmtStage2Digis","Muon"),
+    ana.muon.inputTag = cms.InputTag("gmtStage2Digis","Muon")
 
 process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 

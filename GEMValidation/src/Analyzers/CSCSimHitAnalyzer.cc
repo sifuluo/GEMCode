@@ -92,20 +92,19 @@ void CSCSimHitAnalyzer::analyze(TreeManager& tree)
         tree.cscSimHit().bend_csc_sh_odd[0] = csc_simhits_gv.phi();
       }
     }
-  cout << "Print global z positions for bending angle calculation: " << id << endl;
 
-  const auto& cscid(id);
-  const CSCDetId cscid1(cscid.endcap(), cscid.station(), cscid.ring(), cscid.chamber(), 1);
-  const CSCDetId cscid6(cscid.endcap(), cscid.station(), cscid.ring(), cscid.chamber(), 6);
+    // const auto& cscid(id);
+    // const CSCDetId cscid1(cscid.endcap(), cscid.station(), cscid.ring(), cscid.chamber(), 1);
+    // const CSCDetId cscid6(cscid.endcap(), cscid.station(), cscid.ring(), cscid.chamber(), 6);
 
-  const edm::PSimHitContainer& hits1 =  match_->hitsInDetId(cscid1.rawId());
-  const edm::PSimHitContainer& hits6 =  match_->hitsInDetId(cscid6.rawId());
+    // const edm::PSimHitContainer& hits1 =  match_->hitsInDetId(cscid1.rawId());
+    // const edm::PSimHitContainer& hits6 =  match_->hitsInDetId(cscid6.rawId());
 
-  const GlobalPoint& gp1 =  match_->simHitsMeanPosition( match_->hitsInDetId(cscid1.rawId()));
-  const GlobalPoint& gp6 =  match_->simHitsMeanPosition( match_->hitsInDetId(cscid6.rawId()));
+    // const GlobalPoint& gp1 =  match_->simHitsMeanPosition( match_->hitsInDetId(cscid1.rawId()));
+    // const GlobalPoint& gp6 =  match_->simHitsMeanPosition( match_->hitsInDetId(cscid6.rawId()));
 
-  cout << gp1 << endl;
-  cout << gp6 << endl;
+    // cout << gp1 << endl;
+    // cout << gp6 << endl;
   }
 }
 
