@@ -65,10 +65,11 @@ ana = process.GEMCSCAnalyzer
 ana.simTrack.minEta = 1.2
 ana.simTrack.maxEta = 2.4
 ana.simTrack.minPt = 3
-ana.gemStripDigi.inputTag = "muonGEMDigis"
+ana.gemSimHit.verbose = 0
 ana.gemStripDigi.verbose = 0
 ana.gemStripDigi.matchDeltaStrip = 2
 ana.gemPadDigi.verbose = 0
+ana.gemCoPadDigi.verbose = 0
 ana.gemPadCluster.verbose = 0
 ana.cscComparatorDigi.verbose = 0
 ana.cscWireDigi.verbose = 0
@@ -79,6 +80,11 @@ ana.cscCLCT.verbose = 0
 ana.cscCLCT.minBX = 6
 ana.cscCLCT.maxBX = 8
 ana.cscLCT.verbose = 0
+
+useUnpacked = False
+if useUnpacked:
+    ana.gemStripDigi.inputTag = "muonGEMDigis"
+    ana.muon.inputTag = cms.InputTag("gmtStage2Digis","Muon"),
 
 process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True) )
 
