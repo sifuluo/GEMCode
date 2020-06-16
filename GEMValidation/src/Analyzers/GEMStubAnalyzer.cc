@@ -12,20 +12,23 @@ void GEMStubAnalyzer::setMatcher(const GEMDigiMatcher& match_sh)
 
 void GEMStubAnalyzer::analyze(TreeManager& tree)
 {
-  // GEM pads in single chambers or super chambers
-  for(const auto& d: match_->superChamberIdsPad()) {
+  for(const auto& d: match_->chamberIdsPad()) {
     GEMDetId id(d);
+    GEMDetId scid(id.superChamberId());
+
     const int st = id.station();
     const bool odd(id.chamber()%2==1);
-    const int nlayers(match_->nLayersWithPadsInSuperChamber(d));
-    const int ilayer(id.layer());
 
-    if (nlayers >= 1) {
-      if (odd) tree.gemStub().has_gem_pad_odd[st] = true;
-      else     tree.gemStub().has_gem_pad_even[st] = true;
+    if (match_->padsInChamber(d).size() >= 1) {
+      if (odd) {
+        tree.gemStub().has_gem_pad_odd[st] = true;
+      }
+      else {
+        tree.gemStub().has_gem_pad_even[st] = true;
+      }
     }
 
-    if (nlayers >= 2) {
+    if (match_->nLayersWithPadsInSuperChamber(scid.rawId()) == 2) {
       if (odd) tree.gemStub().has_gem_pad2_odd[st] = true;
       else     tree.gemStub().has_gem_pad2_even[st] = true;
     }
@@ -128,10 +131,8 @@ void GEMStubAnalyzer::analyze(TreeManager& tree)
     const int nlayers(match_->nLayersWithClustersInSuperChamber(d));
     const int ilayer(id.layer());
 
-    if (nlayers >= 1) {
-      if (odd) tree.gemStub().has_gem_cluster_odd[st] = true;
-      else     tree.gemStub().has_gem_cluster_even[st] = true;
-    }
+    if (odd) tree.gemStub().has_gem_cluster_odd[st] = true;
+    else     tree.gemStub().has_gem_cluster_even[st] = true;
 
     if (nlayers >= 2) {
       if (odd) tree.gemStub().has_gem_cluster2_odd[st] = true;

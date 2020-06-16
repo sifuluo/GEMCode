@@ -378,10 +378,9 @@ def GEMClusterPhi(plotter):
 def GEMStub(plotter):
     GEMPadEta(plotter)
     GEMPadPhi(plotter)
-    return
-    #GEMPadEta2(plotter)
-    #GEMPadPhi2(plotter)
-    #GEMCoPadEta(plotter)
-    #GEMCoPadPhi(plotter)
-    #GEMClusterEta(plotter)
-    #GEMClusterPhi(plotter)
+    GEMPadEta2(plotter)
+    GEMPadPhi2(plotter)
+    GEMCoPadEta(plotter)
+    GEMCoPadPhi(plotter)
+    GEMClusterEta(plotter)
+    GEMClusterPhi(plotter)

@@ -16,8 +16,6 @@ void CSCDigiAnalyzer::analyze(TreeManager& tree)
   for(const auto& d: match_->chamberIdsStrip(0)) {
     CSCDetId id(d);
 
-    cout << "test digi analysis" << endl;
-
     const int st(gem::detIdToMEStation(id.station(),id.ring()));
 
     const int nlayers(match_->nLayersWithStripInChamber(d));
