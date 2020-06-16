@@ -58,7 +58,7 @@ def CSCSimHitEta(plotter):
 
         csc = drawCSCLabel(cscStations[st].label, 0.87,0.87,0.05)
 
-        c.Print("%sEff_CSCSimHit_%s%s"%(plotter.targetDir + subdirectory, cscStations[st].labelc,  plotter.ext))
+        c.Print("%sEff_CSCSimHit_eta_%s%s"%(plotter.targetDir + subdirectory, cscStations[st].labelc,  plotter.ext))
 
         del c, base, h1, leg, csc
 
@@ -91,7 +91,7 @@ def CSCSimHitPhi(plotter):
         base.GetXaxis().SetTitleSize(0.05)
         base.GetYaxis().SetTitleSize(0.05)
 
-        h1 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_phi(cscStations[st].phi_min, cscStations[st].phi_max), ok_csc_sh(st), "same")
+        h1 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_eta(cscStations[st].eta_min, cscStations[st].eta_max), ok_csc_sh(st), "same")
 
         leg = TLegend(0.45,0.2,.75,0.35, "", "brNDC")
         leg.SetBorderSize(0)
@@ -102,7 +102,7 @@ def CSCSimHitPhi(plotter):
 
         csc = drawCSCLabel(cscStations[st].label, 0.87,0.87,0.05)
 
-        c.Print("%sEff_CSCSimHit_%s%s"%(plotter.targetDir + subdirectory, cscStations[st].labelc,  plotter.ext))
+        c.Print("%sEff_CSCSimHit_phi_%s%s"%(plotter.targetDir + subdirectory, cscStations[st].labelc,  plotter.ext))
 
         del c, base, h1, leg, csc
 

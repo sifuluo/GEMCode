@@ -82,7 +82,7 @@ def draw_geff(t, title, h_bins, to_draw, den_cut, extra_num_cut,
     t.Draw(to_draw + ">>num", num_cut, "goff")
     t.Draw(to_draw + ">>den", den_cut, "goff")
 
-    debug = True
+    debug = False
     if debug:
         print "Denominator cut", den_cut, den.GetEntries()
         print "Numerator cut", num_cut, num.GetEntries()

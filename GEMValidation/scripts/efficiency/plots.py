@@ -30,14 +30,12 @@ if not os.path.exists("plots"):
             os.mkdir("plots/efficiency/CSCStub")
 
 def makeEfficiencyPlots(plotter):
-    """
     CSCSimHit(plotter)
     CSCStripsWires(plotter)
     CSCStripsWires2(plotter)
     CSCAlctClct(plotter)
     CSCAlctClct2(plotter)
     CSCLct(plotter)
-    """
-    #GEMSimHit(plotter)
+    GEMSimHit(plotter)
     GEMDigi(plotter)
     GEMStub(plotter)

@@ -16,11 +16,11 @@ ME1b = Station(1.5, 2.2, 'ME1/b', 'ME1b')
 ME12 = Station(1.2, 1.6, 'ME1/2', 'ME12')
 ME13 = Station(0.9, 1.2, 'ME1/3', 'ME13')
 ME21 = Station(1.5, 2.5, 'ME2/1', 'ME21')
-ME22 = Station(1.2, 2.5, 'ME2/2', 'ME22')
+ME22 = Station(1, 2.5, 'ME2/2', 'ME22')
 ME31 = Station(1.5, 2.5, 'ME3/1', 'ME31')
-ME32 = Station(1.2, 2.5, 'ME3/2', 'ME32')
+ME32 = Station(1.1, 2.5, 'ME3/2', 'ME32')
 ME41 = Station(1.5, 2.5, 'ME4/1', 'ME41')
-ME42 = Station(1.2, 2.5, 'ME4/2', 'ME42')
+ME42 = Station(1.1, 2.5, 'ME4/2', 'ME42')
 
 cscStations = [
     ME11, ME1a, ME1b, ME12, ME13,

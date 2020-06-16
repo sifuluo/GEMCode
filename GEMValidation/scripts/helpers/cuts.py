@@ -11,6 +11,12 @@ def ok_eta(eta_min, eta_max):
     ok_eta = AND(ok_eta_min,ok_eta_max)
     return ok_eta
 
+def ok_phi(phi_min, phi_max):
+    ok_phi_min = TCut("phi > %f"%(phi_min))
+    ok_phi_max = TCut("phi < %f"%(phi_max))
+    ok_phi = AND(ok_phi_min,ok_phi_max)
+    return ok_phi
+
 ## CSC simhits & digis
 def ok_csc_sh(st):
     return TCut("CSCSimHit.has_csc_sh_even[%d] || CSCSimHit.has_csc_sh_odd[%d]"%(st,st))
