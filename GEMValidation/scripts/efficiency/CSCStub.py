@@ -19,7 +19,7 @@ gStyle.SetPadBottomMargin(0.13)
 gStyle.SetOptStat(0)
 gStyle.SetMarkerStyle(1)
 
-def CSCAlctClct(plotter):
+def CSCALCT(plotter):
 
     ## variables for the plot
     topTitle = " " * 11 + "CSC Stub matching" + " " * 35 + "CMS Simulation Preliminary"
@@ -48,25 +48,68 @@ def CSCAlctClct(plotter):
         base.GetYaxis().SetTitleSize(0.05)
 
         h1 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_csc_sh(st), ok_csc_alct(st), "same", kRed)
-        h11 = draw_geff(plotter.tree, title, h_bins, toPlot, AND(ok_csc_sh(st),ok_csc_wire(st)), ok_csc_alct(st), "same", kOrange+1)
-        h2 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_csc_sh(st), ok_csc_clct(st), "same",kBlue)
-        h21 = draw_geff(plotter.tree, title, h_bins, toPlot, AND(ok_csc_sh(st),ok_csc_strip(st)), ok_csc_clct(st), "same",kGreen+1)
+        #h11 = draw_geff(plotter.tree, title, h_bins, toPlot, AND(ok_csc_sh(st),ok_csc_wire(st)), ok_csc_alct(st), "same", kOrange+1)
 
         leg = TLegend(0.45,0.2,.75,0.5, "", "brNDC");
         leg.SetBorderSize(0)
         leg.SetFillStyle(0)
         leg.SetTextSize(0.06)
         leg.AddEntry(h1, "ALCT","l")
-        leg.AddEntry(h11, "ALCT and wires","l")
-        leg.AddEntry(h2, "CLCT","l")
-        leg.AddEntry(h21, "CLCT and strips","l")
+        #leg.AddEntry(h11, "ALCT and wires","l")
         leg.Draw("same");
 
         csc = drawCSCLabel(cscStations[st].label, 0.87,0.87,0.05)
 
-        c.Print("%sEff_CSCStub_%s%s"%(plotter.targetDir + subdirectory, cscStations[st].labelc,  plotter.ext))
+        c.Print("%sEff_CSCALCT_%s%s"%(plotter.targetDir + subdirectory, cscStations[st].labelc,  plotter.ext))
 
-        del c, base, h1, leg, csc, h2, h11, h21
+        del c, base, h1, leg, csc
+
+
+def CSCCLCT(plotter):
+
+    ## variables for the plot
+    topTitle = " " * 11 + "CSC Stub matching" + " " * 35 + "CMS Simulation Preliminary"
+    xTitle = "True muon #eta"
+    yTitle = "Efficiency"
+    title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
+    toPlot = "TMath::Abs(eta)"
+    subdirectory = "efficiency/CSCStub/"
+
+    for st in range(0,len(cscStations)):
+
+        h_bins = "(50,%f,%f)"%(cscStations[st].eta_min,cscStations[st].eta_max)
+        nBins = int(h_bins[1:-1].split(',')[0])
+        minBin = float(h_bins[1:-1].split(',')[1])
+        maxBin = float(h_bins[1:-1].split(',')[2])
+
+        c = TCanvas("c","c",700,450)
+        c.Clear()
+        base  = TH1F("base",title,nBins,minBin,maxBin)
+        base.SetMinimum(plotter.yMin)
+        base.SetMaximum(plotter.yMax)
+        base.Draw("")
+        base.GetXaxis().SetLabelSize(0.05)
+        base.GetYaxis().SetLabelSize(0.05)
+        base.GetXaxis().SetTitleSize(0.05)
+        base.GetYaxis().SetTitleSize(0.05)
+
+        h2 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_csc_sh(st), ok_csc_clct(st), "same",kBlue)
+        #h21 = draw_geff(plotter.tree, title, h_bins, toPlot, AND(ok_csc_sh(st),ok_csc_strip(st)), ok_csc_clct(st), "same",kGreen+1)
+
+        leg = TLegend(0.45,0.2,.75,0.5, "", "brNDC");
+        leg.SetBorderSize(0)
+        leg.SetFillStyle(0)
+        leg.SetTextSize(0.06)
+        leg.AddEntry(h2, "CLCT","l")
+        #leg.AddEntry(h21, "CLCT and strips","l")
+        leg.Draw("same");
+
+        csc = drawCSCLabel(cscStations[st].label, 0.87,0.87,0.05)
+
+        c.Print("%sEff_CSCCLCT_%s%s"%(plotter.targetDir + subdirectory, cscStations[st].labelc,  plotter.ext))
+
+        del c, base, h2, leg, csc
+
 
 
 def CSCAlctClct2(plotter):
@@ -121,7 +164,7 @@ def CSCAlctClct2(plotter):
         del c, base, h1, leg, csc, h2, h11, h21
 
 
-def CSCLct(plotter):
+def CSCLCT(plotter):
 
     ## variables for the plot
     topTitle = " " * 11 + "CSC Stub matching" + " " * 35 + "CMS Simulation Preliminary"
@@ -155,7 +198,7 @@ def CSCLct(plotter):
             else:
                 return  ok_csc_lct(st)
 
-        h1 = draw_geff(plotter.tree, title, h_bins, toPlot, AND(ok_csc_sh(st), ok_csc_alct(st), ok_csc_clct(st)), ok_csc_lct(st), "same", kRed)
+#        h1 = draw_geff(plotter.tree, title, h_bins, toPlot, AND(ok_csc_sh(st), ok_csc_alct(st), ok_csc_clct(st)), ok_csc_lct(st), "same", kRed)
         h2 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_csc_sh(st), ok_csc_lct(st), "same", kBlue)
 
         leg = TLegend(0.10,0.2,.75,0.35, "", "brNDC");
@@ -163,15 +206,20 @@ def CSCLct(plotter):
         leg.SetFillStyle(0)
         leg.SetTextSize(0.04)
         if st<=2:
-            leg.AddEntry(h1, "LCT matched to ALCT and (CLCT or GEM)","l")
+ #           leg.AddEntry(h1, "LCT matched to ALCT and (CLCT or GEM)","l")
             leg.AddEntry(h2, "LCT","l")
         else:
-            leg.AddEntry(h1, "LCT matched to ALCT and CLCT","l")
+  #          leg.AddEntry(h1, "LCT matched to ALCT and CLCT","l")
             leg.AddEntry(h2, "LCT","l")
         leg.Draw("same");
 
         csc = drawCSCLabel(cscStations[st].label, 0.87,0.87,0.05)
 
-        c.Print("%sEff_CSCStub3_%s%s"%(plotter.targetDir + subdirectory, cscStations[st].labelc,  plotter.ext))
+        c.Print("%sEff_CSCLCT_%s%s"%(plotter.targetDir + subdirectory, cscStations[st].labelc,  plotter.ext))
 
-        del c, base, h1, leg, csc, h2
+        del c, base, leg, csc, h2
+
+def CSCStub(plotter):
+    CSCALCT(plotter)
+    CSCCLCT(plotter)
+    CSCLCT(plotter)
