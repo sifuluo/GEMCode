@@ -41,7 +41,6 @@ void GEMStubAnalyzer::analyze(TreeManager& tree)
     const bool odd(id.chamber()%2==1);
     const int ilayer(id.layer());
 
-    /*
     // best matching pad
     const auto& bestP(bestPad(id, match_->padsInChamber(id)).first);
     const auto& bestGP(bestPad(id, match_->padsInChamber(id)).second);
@@ -90,7 +89,6 @@ void GEMStubAnalyzer::analyze(TreeManager& tree)
                          float(tree.gemSimHit().phi_gem_sh_even[st]));
       }
     }
-  */
   }
 
   // best matching coincidence pads
@@ -151,14 +149,20 @@ GEMStubAnalyzer::bestPad(const GEMDetId& id,
   GEMPadDigi bestDigi;
   GlobalPoint bestGP;
   for(const auto& d: match_->padsInChamber(id.rawId())) {
-    const GlobalPoint& gp = match_->getGlobalPointPad(id, d);
-    const float dPhi = reco::deltaPhi(float(gp.phi()),float(mean.phi()));
-    if (dPhi < bestDPhi) {
-      bestDigi = d;
-      bestDPhi = dPhi;
-      bestGP = gp;
+    // does not work for GE2/1!!!
+    for (int partition = 1; partition <= 8; ++partition) {
+
+      GEMDetId partId(id.region(), 1, id.station(), id.layer(), id.chamber(), partition);
+
+      const GlobalPoint& gp = match_->getGlobalPointPad(partId, d);
+      const float dPhi = reco::deltaPhi(float(gp.phi()),float(mean.phi()));
+      if (dPhi < bestDPhi) {
+        bestDigi = d;
+        bestDPhi = dPhi;
+        bestGP = gp;
     }
   }
+}
   return std::make_pair(bestDigi, bestGP);
 }
 
