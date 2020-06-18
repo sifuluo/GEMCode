@@ -19,7 +19,51 @@ gStyle.SetPadBottomMargin(0.13)
 gStyle.SetOptStat(0)
 gStyle.SetMarkerStyle(1)
 
-def CSCStripsWires(plotter):
+def CSCComp(plotter):
+
+    ## variables for the plot
+    topTitle = " " * 11 + "CSC Digi matching" + " " * 35 + "CMS Simulation Preliminary"
+    xTitle = "True muon #eta"
+    yTitle = "Efficiency"
+    title = "%s;%s;%s"%(topTitle,xTitle,yTitle)
+    toPlot = "TMath::Abs(eta)"
+    subdirectory = "efficiency/CSCDigi/"
+
+
+    for st in range(0,len(cscStations)):
+
+        h_bins = "(50,%f,%f)"%(cscStations[st].eta_min,cscStations[st].eta_max)
+        nBins = int(h_bins[1:-1].split(',')[0])
+        minBin = float(h_bins[1:-1].split(',')[1])
+        maxBin = float(h_bins[1:-1].split(',')[2])
+
+        c = TCanvas("c","c",700,450)
+        c.Clear()
+        base  = TH1F("base",title,nBins,minBin,maxBin)
+        base.SetMinimum(plotter.yMin)
+        base.SetMaximum(plotter.yMax)
+        base.Draw("")
+        base.GetXaxis().SetLabelSize(0.05)
+        base.GetYaxis().SetLabelSize(0.05)
+        base.GetXaxis().SetTitleSize(0.05)
+        base.GetYaxis().SetTitleSize(0.05)
+
+        h2 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_csc_sh(st), ok_csc_strip(st), "same")
+
+        leg = TLegend(0.45,0.2,.75,0.35, "", "brNDC")
+        leg.SetBorderSize(0)
+        leg.SetFillStyle(0)
+        leg.SetTextSize(0.06)
+        leg.AddEntry(h2, "Comparators","l")
+        leg.Draw("same")
+
+        csc = drawCSCLabel(cscStations[st].label, 0.87,0.87,0.05)
+
+        c.Print("%sEff_CSCComp_%s%s"%(plotter.targetDir + subdirectory, cscStations[st].labelc,  plotter.ext))
+
+        del c, base, leg, csc, h2
+
+def CSCWire(plotter):
 
     ## variables for the plot
     topTitle = " " * 11 + "CSC Digi matching" + " " * 35 + "CMS Simulation Preliminary"
@@ -49,23 +93,21 @@ def CSCStripsWires(plotter):
         base.GetYaxis().SetTitleSize(0.05)
 
         h1 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_csc_sh(st), ok_csc_wire(st), "same", kRed)
-        h2 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_csc_sh(st), ok_csc_strip(st), "same")
 
         leg = TLegend(0.45,0.2,.75,0.35, "", "brNDC")
         leg.SetBorderSize(0)
         leg.SetFillStyle(0)
         leg.SetTextSize(0.06)
         leg.AddEntry(h1, "Wires","l")
-        leg.AddEntry(h2, "Strips","l")
         leg.Draw("same")
 
         csc = drawCSCLabel(cscStations[st].label, 0.87,0.87,0.05)
 
-        c.Print("%sEff_CSCDigi_%s%s"%(plotter.targetDir + subdirectory, cscStations[st].labelc,  plotter.ext))
+        c.Print("%sEff_CSCWire_%s%s"%(plotter.targetDir + subdirectory, cscStations[st].labelc,  plotter.ext))
 
-        del c, base, leg, csc, h1, h2
+        del c, base, leg, csc, h1
 
-def CSCStripsWires2(plotter):
+def CSCCompWire(plotter):
 
     ## variables for the plot
     topTitle = " " * 11 + "CSC Digi matching" + " " * 35 + "CMS Simulation Preliminary"
@@ -94,19 +136,22 @@ def CSCStripsWires2(plotter):
         base.GetXaxis().SetTitleSize(0.05)
         base.GetYaxis().SetTitleSize(0.05)
 
-        h1 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_csc_sh(st), OR(ok_csc_wire(st), ok_csc_strip(st)), "same", kRed)
         h2 = draw_geff(plotter.tree, title, h_bins, toPlot, ok_csc_sh(st), AND(ok_csc_wire(st), ok_csc_strip(st)), "same")
 
         leg = TLegend(0.45,0.2,.75,0.35, "", "brNDC");
         leg.SetBorderSize(0)
         leg.SetFillStyle(0)
         leg.SetTextSize(0.06)
-        leg.AddEntry(h1, "Wires OR strips","l")
-        leg.AddEntry(h2, "Wires AND strips","l")
+        leg.AddEntry(h2, "Wires and comparators","l")
         leg.Draw("same");
 
         csc = drawCSCLabel(cscStations[st].label, 0.87,0.87,0.05)
 
-        c.Print("%sEff_CSCDigi2_%s%s"%(plotter.targetDir + subdirectory, cscStations[st].labelc,  plotter.ext))
+        c.Print("%sEff_CSCCompWire_%s%s"%(plotter.targetDir + subdirectory, cscStations[st].labelc,  plotter.ext))
 
-        del c, base, leg, csc, h1, h2
+        del c, base, leg, csc, h2
+
+def CSCDigi(plotter):
+    CSCComp(plotter)
+    CSCWire(plotter)
+    CSCCompWire(plotter)

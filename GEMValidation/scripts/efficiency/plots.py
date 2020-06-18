@@ -31,8 +31,7 @@ if not os.path.exists("plots"):
 
 def makeEfficiencyPlots(plotter):
     CSCSimHit(plotter)
-    CSCStripsWires(plotter)
-    CSCStripsWires2(plotter)
+    CSCDigi(plotter)
     CSCStub(plotter)
     GEMSimHit(plotter)
     GEMDigi(plotter)
