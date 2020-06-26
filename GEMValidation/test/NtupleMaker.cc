@@ -84,6 +84,7 @@
 #include "Geometry/CommonTopologies/interface/PixelGeomDetType.h"
 #include "Geometry/TrackerGeometryBuilder/interface/PixelTopologyBuilder.h"
 #include "Geometry/Records/interface/StackedTrackerGeometryRecord.h"
+#include "Geometry/CommonDetUnit/interface/TrackingGeometry.h"
 
 using namespace std;
 using namespace edm;
@@ -122,6 +123,7 @@ private:
   edm::EDGetTokenT<edm::SimVertexContainer> simVertexInput_;
 
   edm::EDGetTokenT<CSCCorrelatedLCTDigiCollection> lctToken_;
+  edm::EDGetTokenT<GEMDigiCollection> gemDigiToken_;
 
   // Ntuple
   TTree* eventTree;
@@ -161,6 +163,20 @@ private:
   std::vector<float>* m_BMTF_muon_phi;
   std::vector<int>*   m_BMTF_muon_c;
 
+  std::vector<float>* m_cscSimHit_phi;
+  std::vector<float>* m_cscSimHit_eta;
+  std::vector<float>* m_cscSimHit_z;
+  std::vector<float>* m_cscSimHit_r;
+  std::vector<int>*   m_cscSimHit_station;
+  std::vector<int>*   m_cscSimHit_matchTp;
+
+  std::vector<float>* m_gemSimHit_phi;
+  std::vector<float>* m_gemSimHit_eta;
+  std::vector<float>* m_gemSimHit_z;
+  std::vector<float>* m_gemSimHit_r;
+  std::vector<int>*   m_gemSimHit_station;
+  std::vector<int>*   m_gemSimHit_matchTp;
+
   std::vector<float>* m_matchmuon_pt;
   std::vector<float>* m_matchmuon_eta;
   std::vector<float>* m_matchmuon_phi;
@@ -168,27 +184,37 @@ private:
   std::vector<int>*   m_matchmuon_type;
   std::vector<int>*   m_matchmuon_quality;
 
-  std::vector<float>* m_AllcscStubsLCT_phi;
-  std::vector<float>* m_AllcscStubsLCT_eta;
-  std::vector<float>* m_AllcscStubsLCT_z;
-  std::vector<bool>*  m_AllcscStubsLCT_matched;
+  std::vector<float>* m_allCscStubsLCT_phi;
+  std::vector<float>* m_allCscStubsLCT_eta;
+  std::vector<float>* m_allCscStubsLCT_z;
+  std::vector<float>* m_allCscStubsLCT_r;
+  std::vector<float>* m_allCscStubsLCT_bend;
+  std::vector<float>* m_allCscStubsLCT_pattern;
+
+  std::vector<float>* m_allGemDigi_phi;
+  std::vector<float>* m_allGemDigi_eta;
+  std::vector<float>* m_allGemDigi_z;
+  std::vector<float>* m_allGemDigi_r;
 
   //CSCStubs
-  std::vector<float>* m_cscStubsLCT_phi;
-  std::vector<float>* m_cscStubsLCT_eta;
-  std::vector<float>* m_cscStubsLCT_z;
-  std::vector<bool>*  m_cscStubsLCT_matched;
+  std::vector<float>* m_matchCscStubsLCT_phi;
+  std::vector<float>* m_matchCscStubsLCT_eta;
+  std::vector<float>* m_matchCscStubsLCT_z;
+  std::vector<float>* m_matchCscStubsLCT_r;
+  std::vector<float>* m_matchCscStubsLCT_bend;
+  std::vector<float>* m_matchCscStubsLCT_pattern;
+  std::vector<int>*   m_matchCscStubsLCT_matchTp;
 
   // GEMDigi Variables
-  std::vector<float>* m_gemDigi_phi;
-  std::vector<float>* m_gemDigi_eta;
-  std::vector<float>* m_gemDigi_z;
-  std::vector<float>* m_gemDigi_xx_err;
-  std::vector<float>* m_gemDigi_xy_err;
-  std::vector<float>* m_gemDigi_yy_err;
+  std::vector<float>* m_matchGemDigi_phi;
+  std::vector<float>* m_matchGemDigi_eta;
+  std::vector<float>* m_matchGemDigi_z;
+  std::vector<float>* m_matchGemDigi_r;
+  std::vector<int>*   m_matchGemDigi_matchTp;
 
   std::unique_ptr<MatcherManager> match;
 
+  const TrackingGeometry* geometry_;
 };
 
 
@@ -211,8 +237,11 @@ config(iConfig)
   const auto& simVertex = iConfig.getParameter<edm::ParameterSet>("simVertex");
   simVertexInput_ = consumes<edm::SimVertexContainer>(simVertex.getParameter<edm::InputTag>("inputTag"));
 
-  const auto& cscLCT = iConfig.getParameter<edm::ParameterSet>("cscLCT");
-  lctToken_ = consumes<CSCCorrelatedLCTDigiCollection>(cscLCT.getParameter<edm::InputTag>("inputTag"));
+  const auto& P_cscLCT = iConfig.getParameter<edm::ParameterSet>("cscLCT");
+  lctToken_ = consumes<CSCCorrelatedLCTDigiCollection>(P_cscLCT.getParameter<edm::InputTag>("inputTag"));
+
+  const auto& P_gemDigi = iConfig.getParameter<edm::ParameterSet>("gemStripDigi");
+  gemDigiToken_ = consumes<GEMDigiCollection>(P_gemDigi.getParameter<edm::InputTag>("inputTag"));
 
   match.reset(new MatcherManager(iConfig, consumesCollector()));
 }
@@ -265,6 +294,20 @@ void NtupleMaker::beginJob()
   m_BMTF_muon_phi = new std::vector<float>;
   m_BMTF_muon_c = new std::vector<int>;
 
+  m_cscSimHit_phi = new std::vector<float>;
+  m_cscSimHit_eta = new std::vector<float>;
+  m_cscSimHit_z = new std::vector<float>;
+  m_cscSimHit_r = new std::vector<float>;
+  m_cscSimHit_station = new std::vector<int>;
+  m_cscSimHit_matchTp = new std::vector<int>;
+
+  m_gemSimHit_phi = new std::vector<float>;
+  m_gemSimHit_eta = new std::vector<float>;
+  m_gemSimHit_z = new std::vector<float>;
+  m_gemSimHit_r = new std::vector<float>;
+  m_gemSimHit_station = new std::vector<int>;
+  m_gemSimHit_matchTp = new std::vector<int>;
+
   m_matchmuon_pt     = new std::vector<float>;
   m_matchmuon_eta    = new std::vector<float>;
   m_matchmuon_phi    = new std::vector<float>;
@@ -272,22 +315,31 @@ void NtupleMaker::beginJob()
   m_matchmuon_type   = new std::vector<int>;
   m_matchmuon_quality= new std::vector<int>;
 
-  m_AllcscStubsLCT_phi = new std::vector<float>;
-  m_AllcscStubsLCT_eta = new std::vector<float>;
-  m_AllcscStubsLCT_z = new std::vector<float>;
-  m_AllcscStubsLCT_matched = new std::vector<bool>;
+  m_allCscStubsLCT_phi = new std::vector<float>;
+  m_allCscStubsLCT_eta = new std::vector<float>;
+  m_allCscStubsLCT_z = new std::vector<float>;
+  m_allCscStubsLCT_r = new std::vector<float>;
+  m_allCscStubsLCT_bend = new std::vector<float>;
+  m_allCscStubsLCT_pattern = new std::vector<float>;
 
-  m_cscStubsLCT_phi = new std::vector<float>;
-  m_cscStubsLCT_eta = new std::vector<float>;
-  m_cscStubsLCT_z = new std::vector<float>;
-  m_cscStubsLCT_matched = new std::vector<bool>;
+  m_allGemDigi_phi = new std::vector<float>;
+  m_allGemDigi_eta = new std::vector<float>;
+  m_allGemDigi_z = new std::vector<float>;
+  m_allGemDigi_r = new std::vector<float>;
 
-  m_gemDigi_phi = new std::vector<float>;
-  m_gemDigi_eta = new std::vector<float>;
-  m_gemDigi_z = new std::vector<float>;
-  m_gemDigi_xx_err = new std::vector<float>;
-  m_gemDigi_xy_err = new std::vector<float>;
-  m_gemDigi_yy_err = new std::vector<float>;
+  m_matchCscStubsLCT_phi = new std::vector<float>;
+  m_matchCscStubsLCT_eta = new std::vector<float>;
+  m_matchCscStubsLCT_z = new std::vector<float>;
+  m_matchCscStubsLCT_r = new std::vector<float>;
+  m_matchCscStubsLCT_bend = new std::vector<float>;
+  m_matchCscStubsLCT_pattern = new std::vector<float>;
+  m_matchCscStubsLCT_matchTp = new std::vector<int>;
+
+  m_matchGemDigi_phi = new std::vector<float>;
+  m_matchGemDigi_eta = new std::vector<float>;
+  m_matchGemDigi_z = new std::vector<float>;
+  m_matchGemDigi_r = new std::vector<float>;
+  m_matchGemDigi_matchTp = new std::vector<int>;
 
   eventTree = fs->make<TTree>("eventTree", "Event tree");
 
@@ -324,6 +376,20 @@ void NtupleMaker::beginJob()
   eventTree->Branch("BMTF_muon_phi", 	 &m_BMTF_muon_phi);
   eventTree->Branch("BMTF_muon_c", 	 &m_BMTF_muon_c);
 
+  eventTree->Branch("cscSimHit_phi",&m_cscSimHit_phi);
+  eventTree->Branch("cscSimHit_eta",&m_cscSimHit_eta);
+  eventTree->Branch("cscSimHit_z",&m_cscSimHit_z);
+  eventTree->Branch("cscSimHit_r",&m_cscSimHit_r);
+  eventTree->Branch("cscSimHit_station",&m_cscSimHit_station);
+  eventTree->Branch("cscSimHit_matchTp",&m_cscSimHit_matchTp);
+
+  eventTree->Branch("gemSimHit_phi",&m_gemSimHit_phi);
+  eventTree->Branch("gemSimHit_eta",&m_gemSimHit_eta);
+  eventTree->Branch("gemSimHit_z",&m_gemSimHit_z);
+  eventTree->Branch("gemSimHit_r",&m_gemSimHit_r);
+  eventTree->Branch("gemSimHit_station",&m_gemSimHit_station);
+  eventTree->Branch("gemSimHit_matchTp",&m_gemSimHit_matchTp);
+
   eventTree->Branch("matchmuon_pt", &m_matchmuon_pt);
   eventTree->Branch("matchmuon_eta", &m_matchmuon_eta);
   eventTree->Branch("matchmuon_phi", &m_matchmuon_phi);
@@ -331,24 +397,31 @@ void NtupleMaker::beginJob()
   eventTree->Branch("matchmuon_type",&m_matchmuon_type);
   eventTree->Branch("matchmuon_quality",&m_matchmuon_quality);
 
-  eventTree->Branch("AllcscStubsLCT_phi", &m_AllcscStubsLCT_phi);
-  eventTree->Branch("AllcscStubsLCT_eta", &m_AllcscStubsLCT_eta);
-  eventTree->Branch("AllcscStubsLCT_z", &m_AllcscStubsLCT_z);
-  eventTree->Branch("AllcscStubsLCT_matched", &m_AllcscStubsLCT_matched);
+  eventTree->Branch("allCscStubsLCT_phi", &m_allCscStubsLCT_phi);
+  eventTree->Branch("allCscStubsLCT_eta", &m_allCscStubsLCT_eta);
+  eventTree->Branch("allCscStubsLCT_z", &m_allCscStubsLCT_z);
+  eventTree->Branch("allCscStubsLCT_r", &m_allCscStubsLCT_r);
+  eventTree->Branch("allCscStubsLCT_bend", &m_allCscStubsLCT_bend);
+  eventTree->Branch("allCscStubsLCT_pattern", &m_allCscStubsLCT_pattern);
 
-  // cscStubs
-  eventTree->Branch("cscStubsLCT_phi", &m_cscStubsLCT_phi);
-  eventTree->Branch("cscStubsLCT_eta", &m_cscStubsLCT_eta);
-  eventTree->Branch("cscStubsLCT_z", &m_cscStubsLCT_z);
-  eventTree->Branch("cscStubsLCT_matched", &m_cscStubsLCT_matched);
+  eventTree->Branch("allGemDigi_phi", &m_allGemDigi_phi);
+  eventTree->Branch("allGemDigi_eta", &m_allGemDigi_eta);
+  eventTree->Branch("allGemDigi_z", &m_allGemDigi_z);
+  eventTree->Branch("allGemDigi_r", &m_allGemDigi_r);
 
-  // GemDigi
-  eventTree->Branch("gemDigi_phi", &m_gemDigi_phi);
-  eventTree->Branch("gemDigi_eta", &m_gemDigi_eta);
-  eventTree->Branch("gemDigi_z", &m_gemDigi_z);
-  eventTree->Branch("gemDigi_xx_err", &m_gemDigi_xx_err);
-  eventTree->Branch("gemDigi_xy_err", &m_gemDigi_xy_err);
-  eventTree->Branch("gemDigi_yy_err", &m_gemDigi_yy_err);
+  eventTree->Branch("matchCscStubsLCT_phi", &m_matchCscStubsLCT_phi);
+  eventTree->Branch("matchCscStubsLCT_eta", &m_matchCscStubsLCT_eta);
+  eventTree->Branch("matchCscStubsLCT_z", &m_matchCscStubsLCT_z);
+  eventTree->Branch("matchCscStubsLCT_r", &m_matchCscStubsLCT_r);
+  eventTree->Branch("matchCscStubsLCT_bend", &m_matchCscStubsLCT_bend);
+  eventTree->Branch("matchCscStubsLCT_pattern", &m_matchCscStubsLCT_pattern);
+  eventTree->Branch("matchCscStubsLCT_matchTp", &m_matchCscStubsLCT_matchTp);
+
+  eventTree->Branch("matchGemDigi_phi", &m_matchGemDigi_phi);
+  eventTree->Branch("matchGemDigi_eta", &m_matchGemDigi_eta);
+  eventTree->Branch("matchGemDigi_z", &m_matchGemDigi_z);
+  eventTree->Branch("matchGemDigi_r", &m_matchGemDigi_r);
+  eventTree->Branch("matchGemDigi_matchTp", &m_matchGemDigi_matchTp);
 
 }
 
@@ -392,6 +465,20 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   m_BMTF_muon_phi->clear();
   m_BMTF_muon_c->clear();
 
+  m_cscSimHit_phi->clear();
+  m_cscSimHit_eta->clear();
+  m_cscSimHit_z->clear();
+  m_cscSimHit_r->clear();
+  m_cscSimHit_station->clear();
+  m_cscSimHit_matchTp->clear();
+
+  m_gemSimHit_phi->clear();
+  m_gemSimHit_eta->clear();
+  m_gemSimHit_z->clear();
+  m_gemSimHit_r->clear();
+  m_gemSimHit_station->clear();
+  m_gemSimHit_matchTp->clear();
+
   m_matchmuon_pt->clear();
   m_matchmuon_eta->clear();
   m_matchmuon_phi->clear();
@@ -399,22 +486,31 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   m_matchmuon_type->clear();
   m_matchmuon_quality->clear();
 
-  m_AllcscStubsLCT_phi->clear();
-  m_AllcscStubsLCT_eta->clear();
-  m_AllcscStubsLCT_z->clear();
-  m_AllcscStubsLCT_matched->clear();
+  m_allCscStubsLCT_phi->clear();
+  m_allCscStubsLCT_eta->clear();
+  m_allCscStubsLCT_z->clear();
+  m_allCscStubsLCT_r->clear();
+  m_allCscStubsLCT_bend->clear();
+  m_allCscStubsLCT_pattern->clear();
 
-  m_cscStubsLCT_phi->clear();
-  m_cscStubsLCT_eta->clear();
-  m_cscStubsLCT_z->clear();
-  m_cscStubsLCT_matched->clear();
+  m_allGemDigi_phi->clear();
+  m_allGemDigi_eta->clear();
+  m_allGemDigi_z->clear();
+  m_allGemDigi_r->clear();
 
-  m_gemDigi_phi->clear();
-  m_gemDigi_eta->clear();
-  m_gemDigi_z->clear();
-  m_gemDigi_xx_err->clear();
-  m_gemDigi_xy_err->clear();
-  m_gemDigi_yy_err->clear();
+  m_matchCscStubsLCT_phi->clear();
+  m_matchCscStubsLCT_eta->clear();
+  m_matchCscStubsLCT_z->clear();
+  m_matchCscStubsLCT_r->clear();
+  m_matchCscStubsLCT_bend->clear();
+  m_matchCscStubsLCT_pattern->clear();
+  m_matchCscStubsLCT_matchTp->clear();
+
+  m_matchGemDigi_phi->clear();
+  m_matchGemDigi_eta->clear();
+  m_matchGemDigi_z->clear();
+  m_matchGemDigi_r->clear();
+  m_matchGemDigi_matchTp->clear();
 
   edm::Handle< std::vector< TrackingParticle > > TrackingParticleHandle;
   iEvent.getByToken(TrackingParticleToken_, TrackingParticleHandle);
@@ -432,11 +528,10 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   iEvent.getByToken(simVertexInput_, sim_vertices);
   const edm::SimVertexContainer & sim_vert = *sim_vertices.product();
 
-  int this_tp = 0;
+  int tp_index = 0;
   std::vector< TrackingParticle >::const_iterator iterTP;
   for (iterTP = TrackingParticleHandle->begin(); iterTP != TrackingParticleHandle->end(); ++iterTP) {
-    edm::Ptr< TrackingParticle > tp_ptr(TrackingParticleHandle, this_tp);
-    this_tp++;
+    edm::Ptr< TrackingParticle > tp_ptr(TrackingParticleHandle, tp_index);
 
     int tmp_eventid = iterTP->eventId().event();
     if (MyProcess != 1 && tmp_eventid > 0) continue; //only care about tracking particles from the primary interaction (except for MyProcess==1, i.e. looking at all TPs)
@@ -504,13 +599,53 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
     m_tp_eventid->push_back(tmp_eventid);
     m_tp_charge->push_back(tmp_tp_charge);
 
+    match->init(iEvent,iSetup);
 
     const SimTrack& t(tp_ptr->g4Tracks()[0]);
     if(abs(t.type())==13){
       const SimVertex v = (t.vertIndex() < int(sim_vert.size())) ? sim_vert[t.vertIndex()] : SimVertex();
 
-      match->init(iEvent,iSetup);
+
       match->match(t, v);
+
+      auto cscsimhits = match->cscSimHits();
+      auto gemsimhits = match->gemSimHits();
+
+      for (int istation = 1; istation < 5; ++istation) {
+        const auto& cscIds = cscsimhits->chamberIdsStation(istation);
+        for (const auto& p1 : cscIds) {
+          const auto& hits = cscsimhits->hitsInChamber(p1);
+          for (auto& hit : hits) {
+            PSimHitContainer hitc;
+            hitc.push_back(hit);
+            GlobalPoint gp = cscsimhits->simHitsMeanPosition(hitc);
+            m_cscSimHit_phi->push_back(gp.phi());
+            m_cscSimHit_eta->push_back(gp.eta());
+            m_cscSimHit_z->push_back(gp.z());
+            m_cscSimHit_r->push_back(gp.perp());
+            m_cscSimHit_station->push_back(istation);
+            m_cscSimHit_matchTp->push_back(tp_index);
+          }
+        }
+      }
+
+      const auto& gemIds = gemsimhits->detIds();
+      for (const auto&p1 :gemIds) {
+        GEMDetId id1(p1);
+        int istation = id1.station();
+        const auto& hits = gemsimhits->hitsInDetId(p1);
+        for (auto& hit : hits) {
+          PSimHitContainer hitc;
+          hitc.push_back(hit);
+          GlobalPoint gp = gemsimhits->simHitsMeanPosition(hits);
+          m_gemSimHit_phi->push_back(gp.phi());
+          m_gemSimHit_eta->push_back(gp.eta());
+          m_gemSimHit_z->push_back(gp.z());
+          m_gemSimHit_r->push_back(gp.perp());
+          m_gemSimHit_station->push_back(istation);
+          m_gemSimHit_matchTp->push_back(tp_index);
+        }
+      }
 
       auto muonCandidate = match->l1Muons()->emtfCand();
       if(muonCandidate){
@@ -534,26 +669,31 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 
       //CSCStubMatcher
       auto cscStubs = match->cscStubs();
-      cout << "chambers:" << cscStubs->chamberIdsAllLCT(0).size()<<endl;
-      for (int detid_int : cscStubs->chamberIdsAllLCT(0)) {
+      cout << "chambers:" << cscStubs->chamberIdsLCT(0).size()<<endl;
+      for (int detid_int : cscStubs->chamberIdsLCT(0)) {
         CSCDetId detid_(detid_int);
-        for (auto digi_ : cscStubs->allLCTsInChamber(detid_) ){
+        for (auto digi_ : cscStubs->lctsInChamber(detid_) ){
           auto gp = cscStubs->getGlobalPosition(detid_,digi_);
-          m_cscStubsLCT_phi->push_back(gp.phi());
-          m_cscStubsLCT_eta->push_back(gp.eta());
-          m_cscStubsLCT_z->push_back(gp.z());
-          m_cscStubsLCT_matched->push_back(cscStubs->lctInChamber(detid_, digi_));
+          m_matchCscStubsLCT_phi->push_back(gp.phi());
+          m_matchCscStubsLCT_eta->push_back(gp.eta());
+          m_matchCscStubsLCT_z->push_back(gp.z());
+          m_matchCscStubsLCT_r->push_back(gp.perp());
+          m_matchCscStubsLCT_bend->push_back(digi_.getBend());
+          m_matchCscStubsLCT_pattern->push_back(digi_.getPattern());
+          m_matchCscStubsLCT_matchTp->push_back(tp_index);
         }
       }
 
-      auto gemDigi = match->gemDigis();
-      const auto& detidsDigi = gemDigi->detIdsDigi();
+      auto gemDigis_ = match->gemDigis();
+      const auto& detidsDigi = gemDigis_->detIdsDigi();
       for (const auto& id : detidsDigi) {
-        for (auto gemdigi : gemDigi->digisInDetId(id) ){
-          auto gp = gemDigi->getGlobalPointDigi(id, gemdigi);
-          m_gemDigi_phi->push_back(gp.phi());
-          m_gemDigi_eta->push_back(gp.eta());
-          m_gemDigi_z->push_back(gp.z());
+        for (auto gemdigi : gemDigis_->digisInDetId(id) ){
+          auto gp = gemDigis_->getGlobalPointDigi(id, gemdigi);
+          m_matchGemDigi_phi->push_back(gp.phi());
+          m_matchGemDigi_eta->push_back(gp.eta());
+          m_matchGemDigi_z->push_back(gp.z());
+          m_matchGemDigi_r->push_back(gp.perp());
+          m_matchGemDigi_matchTp->push_back(tp_index);
         }
       }
     } // End of Muon Loop
@@ -567,6 +707,7 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
       m_matchmuon_quality->push_back(-999);
     }
 
+    tp_index++;
   } // End of Tracking Particle Loop
 
   Handle< BXVector<l1t::RegionalMuonCand> > emtfs;
@@ -620,18 +761,39 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   }
   m_BMTF_muon_n->push_back(nBMTF);
 
+  // All CSCStubs
   edm::Handle<CSCCorrelatedLCTDigiCollection> lctsH_;
   iEvent.getByToken(lctToken_, lctsH_);
   const CSCCorrelatedLCTDigiCollection& lcts = *lctsH_.product();
 
   for (auto it = lcts.begin(); it != lcts.end(); ++it) {
     const auto& digivec = (*it).second;
-    const auto& detid = (*it).first;
+    const CSCDetId& detid = (*it).first;
     for (auto itdigi = digivec.first; itdigi != digivec.second; ++itdigi) {
-      auto gp = match->cscStubs()->getGlobalPosition(detid, *itdigi);
-      m_AllcscStubsLCT_phi->push_back(gp.phi());
-      m_AllcscStubsLCT_eta->push_back(gp.eta());
-      m_AllcscStubsLCT_z->push_back(gp.z());
+      auto gp = match->cscStubs()->getGlobalPosition(detid.rawId(), *itdigi);
+      m_allCscStubsLCT_phi->push_back(gp.phi());
+      m_allCscStubsLCT_eta->push_back(gp.eta());
+      m_allCscStubsLCT_z->push_back(gp.z());
+      m_allCscStubsLCT_r->push_back(gp.perp());
+      m_allCscStubsLCT_bend->push_back((*itdigi).getBend());
+      m_allCscStubsLCT_pattern->push_back((*itdigi).getPattern());
+    }
+  }
+
+  // All GEMDigis
+  edm::Handle<GEMDigiCollection> gemDigisH_;
+  iEvent.getByToken(gemDigiToken_,gemDigisH_);
+  const GEMDigiCollection& gems = *gemDigisH_.product();
+
+  for (auto it = gems.begin(); it != gems.end(); ++it) {
+    const auto& digivec = (*it).second;
+    const GEMDetId& detid = (*it).first;
+    for (auto itdigi = digivec.first; itdigi != digivec.second; ++itdigi) {
+      auto gp = match->gemDigis()->getGlobalPointDigi(detid.rawId(), *itdigi);
+      m_allGemDigi_phi->push_back(gp.phi());
+      m_allGemDigi_eta->push_back(gp.eta());
+      m_allGemDigi_z->push_back(gp.z());
+      m_allGemDigi_r->push_back(gp.perp());
     }
   }
 
