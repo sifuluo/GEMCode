@@ -4,19 +4,18 @@
 # Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v
 # with command line options: repr --processName=REPR --python_filename=reprocess_test_10_5_0_pre1.py --no_exec -s L1 --datatier GEN-SIM-DIGI-RAW -n 2 --era Phase2 --eventcontent FEVTDEBUGHLT --filein root://cms-xrd-global.cern.ch//store/mc/PhaseIIMTDTDRAutumn18DR/DYToLL_M-50_14TeV_pythia8/FEVT/PU200_pilot_103X_upgrade2023_realistic_v2_ext4-v1/280000/FF5C31D5-D96E-5E48-B97F-61A0E00DF5C4.root --conditions 103X_upgrade2023_realistic_v2 --beamspot HLLHC14TeV --geometry Extended2023D28 --fileout file:step2_2ev_reprocess_slim.root
 import FWCore.ParameterSet.Config as cms
+# from Configuration.StandardSequences.Eras import eras
 from Configuration.Eras.Era_Run3_cff import Run3
 
 import os
 import sys
 import FWCore.ParameterSet.VarParsing as VarParsing
 
-from Validation.MuonHits.muonSimHitMatcherPSet import muonSimHitMatcherPSet
-from Validation.MuonCSCDigis.muonCSCDigiPSet import muonCSCDigiPSet
-from Validation.MuonCSCDigis.muonCSCStubPSet import muonCSCStubPSet
-from Validation.MuonGEMDigis.muonGEMDigiPSet import muonGEMDigiPSet
-from Validation.MuonGEMRecHits.muonGEMRecHitPSet import gemRecHit
-
 process = cms.Process('REPR',Run3)
+# process = cms.Process('REPR',eras.Phase2C9)
+#process = cms.Process('REPR',eras.Phase2C4_timing_layer_bar)
+
+
 
 options = VarParsing.VarParsing ('standard')
 options.register('ifile', 0, VarParsing.VarParsing.multiplicity.singleton, VarParsing.VarParsing.varType.int, "input file name")
@@ -27,13 +26,16 @@ print("process number: ", ifile)
 # if ifile >=len(resublist):
     # quit()
 # ifile = resublist[ifile]
-inputFile = ""
-with open("/afs/cern.ch/user/s/siluo/Work/Muon/filenames/DYToLL.txt") as filenames:
-    for i, line in enumerate(filenames):
-        if i == options.ifile:
-            inputFile = line
-            break
-inputFile = inputFile.strip('\n')
+# inputFile = ""
+# with open("/afs/cern.ch/user/s/siluo/Work/Muon/filenames/DYToLL.txt") as filenames:
+#     for i, line in enumerate(filenames):
+#         if i == options.ifile:
+#             inputFile = line
+#             break
+# inputFile = inputFile.strip('\n')
+
+inputFile = 'file:step2bis'+str(ifile)+'.root';
+
 # import of standard configurations
 process.load('Configuration.StandardSequences.Services_cff')
 process.load('SimGeneral.HepPDTESSource.pythiapdt_cfi')
@@ -53,9 +55,16 @@ process.load('TrackPropagation.SteppingHelixPropagator.SteppingHelixPropagatorAl
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
+
+
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(100)
+    input = cms.untracked.int32(-1)
 )
+
+#process.Timing = cms.Service("Timing",
+          #summaryOnly = cms.untracked.bool(False),
+          #useJobReport = cms.untracked.bool(True)
+#)
 
 # Input source
 process.source = cms.Source("PoolSource",
@@ -67,8 +76,8 @@ process.source = cms.Source("PoolSource",
     # fileNames = cms.untracked.vstring('root://cms-xrd-global.cern.ch//store/mc/PhaseIITDRSpring19DR/DarkSUSY_mH_125_mGammaD_20_cT_1_TuneCP5_14TeV_pythia8/GEN-SIM-DIGI-RAW/PU200_106X_upgrade2023_realistic_v3-v2/20000/567B5C3B-984E-F94E-99B6-E63DE07E1C60.root'),
     # fileNames = cms.untracked.vstring('/store/mc/PhaseIITDRSpring19DR/DarkSUSY_mH_125_mGammaD_20_cT_1_TuneCP5_14TeV_pythia8/GEN-SIM-DIGI-RAW/PU200_106X_upgrade2023_realistic_v3-v2/20000/8124D852-95B1-C344-891C-20163A2E5A95.root'),
     # fileNames = cms.untracked.vstring('root://cms-xrd-global.cern.ch//store/mc/PhaseIITDRSpring19DR/Mu_FlatPt2to100-pythia8-gun/GEN-SIM-DIGI-RAW/NoPU_106X_upgrade2023_realistic_v3-v1/60000/E0D5C6A5-B855-D14F-9124-0B2C9B28D0EA.root'),
-    # fileNames = cms.untracked.vstring(inputFile),
-    fileNames = cms.untracked.vstring('file:step2bis.root'),
+    fileNames = cms.untracked.vstring(inputFile),
+    # fileNames = cms.untracked.vstring('file:step2bis.root'),
     secondaryFileNames = cms.untracked.vstring()
 )
 
@@ -78,20 +87,31 @@ process.options = cms.untracked.PSet(
 
 # Production Info
 process.configurationMetadata = cms.untracked.PSet(
-    annotation = cms.untracked.string('repr nevts:2'),
+    annotation = cms.untracked.string('Ntuplize nevts:2'),
     name = cms.untracked.string('Applications'),
     version = cms.untracked.string('$Revision: 1.19 $')
 )
+
+# Output definition
+
+# process.FEVTDEBUGHLToutput = cms.OutputModule("PoolOutputModule",
+#     dataset = cms.untracked.PSet(
+#         dataTier = cms.untracked.string('GEN-SIM-DIGI-RAW'),
+#         filterName = cms.untracked.string('')
+#     ),
+#     fileName = cms.untracked.string('file:step2_2ev_reprocess_slim.root'),
+#     outputCommands = process.FEVTDEBUGHLTEventContent.outputCommands,
+#     splitLevel = cms.untracked.int32(0)
+# )
+
+# Additional output definition
+
 
 # Other statements
 from Configuration.AlCa.GlobalTag import GlobalTag
 process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase1_2021_realistic', '')
 
-process.load('SimCalorimetry.HcalTrigPrimProducers.hcaltpdigi_cff')
-process.load('CalibCalorimetry.CaloTPG.CaloTPGTranscoder_cfi')
-
 process.TFileService = cms.Service("TFileService", fileName = cms.string('out/out_'+str(ifile)+'.root'), closeFileFast = cms.untracked.bool(True))
-
 
 from GEMCode.GEMValidation.simTrackMatching_cfi import simTrackPSet
 process.NtupleMaker = cms.EDAnalyzer('NtupleMaker',
@@ -130,16 +150,20 @@ ana.gemStripDigi.inputTag = cms.InputTag("muonGEMDigis")
 process.ana = cms.Path(ana)
 
 process.endjob_step = cms.EndPath(process.endOfProcess)
+# process.FEVTDEBUGHLToutput_step = cms.EndPath(process.FEVTDEBUGHLToutput)
 
+# process.schedule = cms.Schedule(process.TTTracksEmulationWithTruth,process.ana)
+# process.schedule = cms.Schedule(process.L1simulation_step,process.TTTracksEmulationWithTruth,process.ana)
+# process.schedule = cms.Schedule(process.L1simulation_step,process.TTTracksEmulationWithTruth,process.CSCRecHit, process.CSCStub, process.GEMRecHit, process.ana)
+# process.schedule = cms.Schedule(process.L1simulation_step,process.ana)
 process.schedule = cms.Schedule(process.ana)
 
 
 # Schedule definition
+#process.schedule = cms.Schedule(process.L1simulation_step,process.endjob_step,process.FEVTDEBUGHLToutput_step)
+# process.schedule = cms.Schedule(process.L1simulation_step,process.endjob_step)
 from PhysicsTools.PatAlgos.tools.helpers import associatePatAlgosToolsTask
 associatePatAlgosToolsTask(process)
-
-
-# Customisation from command line
 
 
 # Add early deletion of temporary data products to reduce peak memory need
