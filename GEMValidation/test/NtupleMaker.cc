@@ -669,7 +669,7 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 
       //CSCStubMatcher
       auto cscStubs = match->cscStubs();
-      cout << "chambers:" << cscStubs->chamberIdsLCT(0).size()<<endl;
+      // cout << "chambers:" << cscStubs->chamberIdsLCT(0).size()<<endl;
       for (int detid_int : cscStubs->chamberIdsLCT(0)) {
         CSCDetId detid_(detid_int);
         for (auto digi_ : cscStubs->lctsInChamber(detid_) ){
