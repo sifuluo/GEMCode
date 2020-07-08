@@ -10,17 +10,17 @@ class Station:
         self.phi_max = 3.2
 
 ## csc
-ME11 = Station(1.5, 2.5, 'ME1/1', 'ME11')
-ME1a = Station(2.1, 2.5, 'ME1/a', 'ME1a')
+ME11 = Station(1.55, 2.4, 'ME1/1', 'ME11')
+ME1a = Station(2.1, 2.4, 'ME1/a', 'ME1a')
 ME1b = Station(1.5, 2.2, 'ME1/b', 'ME1b')
-ME12 = Station(1.2, 1.6, 'ME1/2', 'ME12')
-ME13 = Station(0.9, 1.2, 'ME1/3', 'ME13')
-ME21 = Station(1.5, 2.5, 'ME2/1', 'ME21')
-ME22 = Station(1, 2.5, 'ME2/2', 'ME22')
-ME31 = Station(1.5, 2.5, 'ME3/1', 'ME31')
-ME32 = Station(1.1, 2.5, 'ME3/2', 'ME32')
-ME41 = Station(1.5, 2.5, 'ME4/1', 'ME41')
-ME42 = Station(1.1, 2.5, 'ME4/2', 'ME42')
+ME12 = Station(1.25, 1.6, 'ME1/2', 'ME12')
+ME13 = Station(0.9, 1.1, 'ME1/3', 'ME13')
+ME21 = Station(1.6, 2.4, 'ME2/1', 'ME21')
+ME22 = Station(1.05, 1.55, 'ME2/2', 'ME22')
+ME31 = Station(1.75, 2.4, 'ME3/1', 'ME31')
+ME32 = Station(1.15, 1.65, 'ME3/2', 'ME32')
+ME41 = Station(1.85, 2.4, 'ME4/1', 'ME41')
+ME42 = Station(1.2, 1.75, 'ME4/2', 'ME42')
 
 cscStations = [
     ME11, ME1a, ME1b, ME12, ME13,

@@ -1,1 +1,1 @@
-## position resolutio
+## position resolution
