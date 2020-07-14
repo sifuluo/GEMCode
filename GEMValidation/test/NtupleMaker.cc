@@ -86,6 +86,9 @@
 #include "Geometry/Records/interface/StackedTrackerGeometryRecord.h"
 #include "Geometry/CommonDetUnit/interface/TrackingGeometry.h"
 
+#include "DataFormats/CSCDigi/interface/CSCALCTDigi.h"
+#include "DataFormats/CSCDigi/interface/CSCCLCTDigi.h"
+
 using namespace std;
 using namespace edm;
 
@@ -123,6 +126,8 @@ private:
   edm::EDGetTokenT<edm::SimVertexContainer> simVertexInput_;
 
   edm::EDGetTokenT<CSCCorrelatedLCTDigiCollection> lctToken_;
+  edm::EDGetTokenT<CSCALCTDigiCollection> alctToken_;
+  edm::EDGetTokenT<CSCCLCTDigiCollection> clctToken_;
   edm::EDGetTokenT<GEMDigiCollection> gemDigiToken_;
 
   // Ntuple
@@ -190,13 +195,25 @@ private:
   std::vector<float>* m_allCscStubsLCT_r;
   std::vector<float>* m_allCscStubsLCT_bend;
   std::vector<float>* m_allCscStubsLCT_pattern;
+  std::vector<int>*   m_allCscStubsLCT_detId;
+  std::vector<int>*   m_allCscStubsLCT_keywire;
+  std::vector<int>*   m_allCscStubsLCT_strip;
+  // std::vector< std::vector< std::vector<unsigned short> > >* m_allCscStubsLCT_WireContainer;
+  // std::vector< std::vector< std::vector<unsigned short> > >* m_allCscStubsLCT_ComparatorContainer;
+  // std::vector< CSCALCTDigi::WireContainer >* m_allCscStubsLCT_WireContainer;
+  // std::vector< CSCCLCTDigi::ComparatorContainer >* m_allCscStubsLCT_ComparatorContainer;
+
+  std::vector<int>*   m_allCscStubsALCT_detId;
+  std::vector<int>*   m_allCscStubsALCT_keywire;
+
+  std::vector<int>*   m_allCscStubsCLCT_detId;
+  std::vector<int>*   m_allCscStubsCLCT_strip;
 
   std::vector<float>* m_allGemDigi_phi;
   std::vector<float>* m_allGemDigi_eta;
   std::vector<float>* m_allGemDigi_z;
   std::vector<float>* m_allGemDigi_r;
 
-  //CSCStubs
   std::vector<float>* m_matchCscStubsLCT_phi;
   std::vector<float>* m_matchCscStubsLCT_eta;
   std::vector<float>* m_matchCscStubsLCT_z;
@@ -205,7 +222,6 @@ private:
   std::vector<float>* m_matchCscStubsLCT_pattern;
   std::vector<int>*   m_matchCscStubsLCT_matchTp;
 
-  // GEMDigi Variables
   std::vector<float>* m_matchGemDigi_phi;
   std::vector<float>* m_matchGemDigi_eta;
   std::vector<float>* m_matchGemDigi_z;
@@ -239,6 +255,12 @@ config(iConfig)
 
   const auto& P_cscLCT = iConfig.getParameter<edm::ParameterSet>("cscLCT");
   lctToken_ = consumes<CSCCorrelatedLCTDigiCollection>(P_cscLCT.getParameter<edm::InputTag>("inputTag"));
+
+  const auto& P_cscALCT = iConfig.getParameter<edm::ParameterSet>("cscALCT");
+  alctToken_ = consumes<CSCALCTDigiCollection>(P_cscALCT.getParameter<edm::InputTag>("inputTag"));
+
+  const auto& P_cscCLCT = iConfig.getParameter<edm::ParameterSet>("cscCLCT");
+  clctToken_ = consumes<CSCCLCTDigiCollection>(P_cscCLCT.getParameter<edm::InputTag>("inputTag"));
 
   const auto& P_gemDigi = iConfig.getParameter<edm::ParameterSet>("gemStripDigi");
   gemDigiToken_ = consumes<GEMDigiCollection>(P_gemDigi.getParameter<edm::InputTag>("inputTag"));
@@ -321,6 +343,19 @@ void NtupleMaker::beginJob()
   m_allCscStubsLCT_r = new std::vector<float>;
   m_allCscStubsLCT_bend = new std::vector<float>;
   m_allCscStubsLCT_pattern = new std::vector<float>;
+  m_allCscStubsLCT_detId = new std::vector<int>;
+  m_allCscStubsLCT_keywire = new std::vector<int>;
+  m_allCscStubsLCT_strip = new std::vector<int>;
+  // m_allCscStubsLCT_WireContainer = new std::vector< CSCALCTDigi::WireContainer >;
+  // m_allCscStubsLCT_ComparatorContainer = new std::vector< CSCCLCTDigi::ComparatorContainer >;
+  // m_allCscStubsLCT_WireContainer = new std::vector< std::vector< std::vector<unsigned short> > >;
+  // m_allCscStubsLCT_ComparatorContainer = new std::vector< std::vector< std::vector<unsigned short> > >;
+
+  m_allCscStubsALCT_detId = new std::vector<int>;
+  m_allCscStubsALCT_keywire = new std::vector<int>;
+
+  m_allCscStubsCLCT_detId = new std::vector<int>;
+  m_allCscStubsCLCT_strip = new std::vector<int>;
 
   m_allGemDigi_phi = new std::vector<float>;
   m_allGemDigi_eta = new std::vector<float>;
@@ -403,6 +438,17 @@ void NtupleMaker::beginJob()
   eventTree->Branch("allCscStubsLCT_r", &m_allCscStubsLCT_r);
   eventTree->Branch("allCscStubsLCT_bend", &m_allCscStubsLCT_bend);
   eventTree->Branch("allCscStubsLCT_pattern", &m_allCscStubsLCT_pattern);
+  eventTree->Branch("allCscStubsLCT_detId", &m_allCscStubsLCT_detId);
+  eventTree->Branch("allCscStubsLCT_keywire", &m_allCscStubsLCT_keywire);
+  eventTree->Branch("allCscStubsLCT_strip", &m_allCscStubsLCT_strip);
+  // eventTree->Branch("allCscStubsLCT_WireContainer", &m_allCscStubsLCT_WireContainer);
+  // eventTree->Branch("allCscStubsLCT_ComparatorContainer", &m_allCscStubsLCT_ComparatorContainer);
+
+  eventTree->Branch("allCscStubsALCT_detId", &m_allCscStubsALCT_detId);
+  eventTree->Branch("allCscStubsALCT_keywire", &m_allCscStubsALCT_keywire);
+
+  eventTree->Branch("allCscStubsCLCT_detId", &m_allCscStubsCLCT_detId);
+  eventTree->Branch("allCscStubsCLCT_strip", &m_allCscStubsCLCT_strip);
 
   eventTree->Branch("allGemDigi_phi", &m_allGemDigi_phi);
   eventTree->Branch("allGemDigi_eta", &m_allGemDigi_eta);
@@ -492,6 +538,17 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   m_allCscStubsLCT_r->clear();
   m_allCscStubsLCT_bend->clear();
   m_allCscStubsLCT_pattern->clear();
+  m_allCscStubsLCT_detId->clear();
+  m_allCscStubsLCT_keywire->clear();
+  m_allCscStubsLCT_strip->clear();
+  // m_allCscStubsLCT_WireContainer->clear();
+  // m_allCscStubsLCT_ComparatorContainer->clear();
+
+  m_allCscStubsALCT_detId->clear();
+  m_allCscStubsALCT_keywire->clear();
+
+  m_allCscStubsCLCT_detId->clear();
+  m_allCscStubsCLCT_strip->clear();
 
   m_allGemDigi_phi->clear();
   m_allGemDigi_eta->clear();
@@ -769,6 +826,7 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   for (auto it = lcts.begin(); it != lcts.end(); ++it) {
     const auto& digivec = (*it).second;
     const CSCDetId& detid = (*it).first;
+    int digi_index = 0;
     for (auto itdigi = digivec.first; itdigi != digivec.second; ++itdigi) {
       auto gp = match->cscStubs()->getGlobalPosition(detid.rawId(), *itdigi);
       m_allCscStubsLCT_phi->push_back(gp.phi());
@@ -777,9 +835,61 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
       m_allCscStubsLCT_r->push_back(gp.perp());
       m_allCscStubsLCT_bend->push_back((*itdigi).getBend());
       m_allCscStubsLCT_pattern->push_back((*itdigi).getPattern());
+      m_allCscStubsLCT_detId->push_back(detid.rawId());
+      m_allCscStubsLCT_keywire->push_back((*itdigi).getKeyWG());
+      m_allCscStubsLCT_strip->push_back((*itdigi).getStrip());
+      std::vector< std::vector<unsigned short> > alcthits = ((*itdigi).getALCT().getHits());
+      std::vector< std::vector<unsigned short> > clcthits = ((*itdigi).getCLCT().getHits());
+      cout << "DetId: "<< detid.rawId() <<", Digi Index:" << digi_index << endl;
+      cout <<" ALCTs:" <<endl;
+      for (unsigned itlayer = 0; itlayer < alcthits.size() ; ++itlayer) {
+        cout << "layer: " << itlayer << " : ";
+        for (unsigned itwidth = 0; itwidth < alcthits.at(itlayer).size(); ++itwidth) {
+          cout << " " << alcthits.at(itlayer).at(itwidth) << ",";
+        }
+        cout << endl;
+      }
+      cout << " CLCTs:" <<endl;
+      for (unsigned itlayer = 0; itlayer < clcthits.size() ; ++itlayer) {
+        cout << "layer: " << itlayer << " : ";
+        for (unsigned itwidth = 0; itwidth < clcthits.at(itlayer).size(); ++itwidth) {
+          cout << " " << clcthits.at(itlayer).at(itwidth) << ",";
+        }
+        cout << endl;
+      }
+      // m_allCscStubsLCT_WireContainer->push_back(alcthits);
+      // m_allCscStubsLCT_ComparatorContainer->push_back(clcthits);
+      // m_allCscStubsLCT_WireContainer->push_back((*itdigi).getALCT().getHits());
+      // m_allCscStubsLCT_ComparatorContainer->push_back((*itdigi).getCLCT().getHits());
+    }
+    cout << "End of a chamber" <<endl;
+  }
+  cout << "End of a Event" <<endl;
+  cout <<endl;
+
+  edm::Handle<CSCALCTDigiCollection> alctsH_;
+  iEvent.getByToken(alctToken_, alctsH_);
+  const CSCALCTDigiCollection& alcts = *alctsH_.product();
+  for (auto it = alcts.begin(); it != alcts.end(); ++it) {
+    const auto& digivec = (*it).second;
+    const auto& detid = (*it).first;
+    for (auto itdigi = digivec.first; itdigi != digivec.second; ++itdigi) {
+      m_allCscStubsALCT_detId->push_back(detid.rawId());
+      m_allCscStubsALCT_keywire->push_back((*itdigi).getKeyWG());
     }
   }
 
+  edm::Handle<CSCCLCTDigiCollection> clctsH_;
+  iEvent.getByToken(clctToken_, clctsH_);
+  const CSCCLCTDigiCollection& clcts = *clctsH_.product();
+  for (auto it = clcts.begin(); it != clcts.end(); ++it) {
+    const auto& digivec = (*it).second;
+    const auto& detid = (*it).first;
+    for (auto itdigi = digivec.first; itdigi != digivec.second; ++itdigi) {
+      m_allCscStubsCLCT_detId->push_back(detid.rawId());
+      m_allCscStubsCLCT_strip->push_back((*itdigi).getStrip());
+    }
+  }
   // All GEMDigis
   edm::Handle<GEMDigiCollection> gemDigisH_;
   iEvent.getByToken(gemDigiToken_,gemDigisH_);
@@ -798,7 +908,6 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   }
 
   eventTree->Fill();
-
 } // End of analyze
 
 
