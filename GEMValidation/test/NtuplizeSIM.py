@@ -15,7 +15,7 @@ process = cms.Process('ReL1',Run3)
 
 options = VarParsing.VarParsing ('standard')
 options.register('ifile', 0, VarParsing.VarParsing.multiplicity.singleton, VarParsing.VarParsing.varType.int, "input file index")
-options.register('dataset', "H30", VarParsing.VarParsing.multiplicity.singleton, VarParsing.VarParsing.varType.string, "input dataset name")
+options.register('dataset', "DY", VarParsing.VarParsing.multiplicity.singleton, VarParsing.VarParsing.varType.string, "input dataset name")
 options.parseArguments()
 ifile = options.ifile
 datatag = options.dataset
@@ -43,10 +43,10 @@ process.load('Configuration.StandardSequences.SimL1Emulator_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
-process.MessageLogger.cerr.FwkReport.reportEvery = 1000
+process.MessageLogger.cerr.FwkReport.reportEvery = 100
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(100),
+    input = cms.untracked.int32(-1),
     output = cms.optional.untracked.allowed(cms.int32,cms.PSet)
 )
 
@@ -109,12 +109,13 @@ process.SimL1Emulator = cms.Sequence(process.simMuonGEMPadDigis * process.simMuo
 process.simMuonGEMPadDigis.InputCollection = "muonGEMDigis"
 
 # NtupleMaker
-process.TFileService = cms.Service("TFileService", fileName = cms.string('/eos/user/s/siluo/Muon/'+datatag+'/out_'+str(ifile)+'.root'), closeFileFast = cms.untracked.bool(True))
+process.TFileService = cms.Service("TFileService", fileName = cms.string('/eos/user/s/siluo/Muon/InProgress/'+datatag+'/out_'+str(ifile)+'.root'), closeFileFast = cms.untracked.bool(True))
+# process.TFileService = cms.Service("TFileService", fileName = cms.string('out/out.root'), closeFileFast = cms.untracked.bool(True))
 
 from GEMCode.GEMValidation.simTrackMatching_cfi import simTrackPSet
 process.NtupleMaker = cms.EDAnalyzer('NtupleMaker',
                                        simTrackPSet,
-                                       verbose = cms.untracked.int32(1),
+                                       verbose = cms.untracked.int32(0),
                                        cscStations = cms.vstring("CSC_ALL","CSC_ME11", "CSC_ME1a", "CSC_ME1b", "CSC_ME12", "CSC_ME13",
                                                                  "CSC_ME21", "CSC_ME22", "CSC_ME31", "CSC_ME32", "CSC_ME41", "CSC_ME42"),
                                        MyProcess = cms.int32(1),
@@ -122,6 +123,11 @@ process.NtupleMaker = cms.EDAnalyzer('NtupleMaker',
                                        TP_minPt = cms.double(2.0),       # only save TPs with pt > X GeV
                                        TP_maxEta = cms.double(2.5),      # only save TPs with |eta| < X
                                        TP_maxZ0 = cms.double(30000.0),      # only save TPs with |z0| < X cm
+                                       Print_matchCscStubs = cms.bool(False),
+                                       Print_allCscStubs = cms.bool(False),
+                                       Print_all = cms.bool(False),
+                                       Print_ALCT = cms.bool(False),
+                                       Print_CLCT = cms.bool(False),
                                        TrackingParticleInputTag = cms.InputTag("mix", "MergedTrackTruth"),
                                        )
 ana = process.NtupleMaker

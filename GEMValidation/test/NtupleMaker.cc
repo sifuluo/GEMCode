@@ -51,6 +51,7 @@
 #include <vector>
 #include <set>
 #include <sstream>
+#include <stdexcept>
 
 // Unclear headers
 #include "DataFormats/Common/interface/Handle.h"
@@ -101,6 +102,19 @@ public:
   virtual void endJob();
   virtual void analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup);
 
+  struct DigiContent{
+    int detid;
+    int strip;
+    int wire;
+    int quality;
+    std::vector<std::vector<int> > hits2D;
+    std::vector<int> hits;
+    std::vector<int> positions;
+  };
+  virtual void PrintHits(int iset, int idigi = -1);
+  virtual int SaveHitMatrix(std::vector< std::vector<unsigned short> > hits, std::vector<int>* b_hit, std::vector<int>* b_pos, bool doprint = false, bool isclct = false);
+  virtual std::vector<int> IntsToBinary(int n);
+
 protected:
 
 private:
@@ -112,6 +126,13 @@ private:
   double TP_minPt;
   double TP_maxEta;
   double TP_maxZ0;
+  bool Print_matchCscStubs;
+  bool Print_allCscStubs;
+  bool Print_all;
+  bool Print_ALCT;
+  bool Print_CLCT;
+
+  int nEventMultiHitLayer;
 
   edm::InputTag TrackingParticleInputTag;
 
@@ -195,24 +216,29 @@ private:
   std::vector<float>* m_allCscStubsLCT_r;
   std::vector<float>* m_allCscStubsLCT_bend;
   std::vector<float>* m_allCscStubsLCT_pattern;
+  std::vector<int>*   m_allCscStubsLCT_quality;
   std::vector<int>*   m_allCscStubsLCT_detId;
   std::vector<int>*   m_allCscStubsLCT_keywire;
   std::vector<int>*   m_allCscStubsLCT_strip;
-  // std::vector< std::vector< std::vector<unsigned short> > >* m_allCscStubsLCT_WireContainer;
-  // std::vector< std::vector< std::vector<unsigned short> > >* m_allCscStubsLCT_ComparatorContainer;
-  // std::vector< CSCALCTDigi::WireContainer >* m_allCscStubsLCT_WireContainer;
-  // std::vector< CSCCLCTDigi::ComparatorContainer >* m_allCscStubsLCT_ComparatorContainer;
+
+  std::vector<int>*   m_allCscStubsALCT_detId;
+  std::vector<int>*   m_allCscStubsALCT_keywire;
+  std::vector<int>*   m_allCscStubsALCT_hit;
+  std::vector<int>*   m_allCscStubsALCT_position;
+
+  std::vector<int>*   m_allCscStubsCLCT_detId;
+  std::vector<int>*   m_allCscStubsCLCT_strip;
+  std::vector<int>*   m_allCscStubsCLCT_hit;
+  std::vector<int>*   m_allCscStubsCLCT_position;
 
   std::vector<int>*   m_allALCT_detId;
   std::vector<int>*   m_allALCT_keywire;
   std::vector<int>*   m_allALCT_hit;
-  std::vector<int>*   m_allALCT_layer;
   std::vector<int>*   m_allALCT_position;
 
   std::vector<int>*   m_allCLCT_detId;
   std::vector<int>*   m_allCLCT_strip;
   std::vector<int>*   m_allCLCT_hit;
-  std::vector<int>*   m_allCLCT_layer;
   std::vector<int>*   m_allCLCT_position;
 
   std::vector<float>* m_allGemDigi_phi;
@@ -227,6 +253,20 @@ private:
   std::vector<float>* m_matchCscStubsLCT_bend;
   std::vector<float>* m_matchCscStubsLCT_pattern;
   std::vector<int>*   m_matchCscStubsLCT_matchTp;
+  std::vector<int>*   m_matchCscStubsLCT_quality;
+  std::vector<int>*   m_matchCscStubsLCT_detId;
+  std::vector<int>*   m_matchCscStubsLCT_keywire;
+  std::vector<int>*   m_matchCscStubsLCT_strip;
+
+  std::vector<int>*   m_matchCscStubsALCT_detId;
+  std::vector<int>*   m_matchCscStubsALCT_keywire;
+  std::vector<int>*   m_matchCscStubsALCT_hit;
+  std::vector<int>*   m_matchCscStubsALCT_position;
+
+  std::vector<int>*   m_matchCscStubsCLCT_detId;
+  std::vector<int>*   m_matchCscStubsCLCT_strip;
+  std::vector<int>*   m_matchCscStubsCLCT_hit;
+  std::vector<int>*   m_matchCscStubsCLCT_position;
 
   std::vector<float>* m_matchGemDigi_phi;
   std::vector<float>* m_matchGemDigi_eta;
@@ -248,8 +288,13 @@ config(iConfig)
   TP_minPt         = iConfig.getParameter< double >("TP_minPt");
   TP_maxEta        = iConfig.getParameter< double >("TP_maxEta");
   TP_maxZ0         = iConfig.getParameter< double >("TP_maxZ0");
-  TrackingParticleInputTag = iConfig.getParameter<edm::InputTag>("TrackingParticleInputTag");
+  Print_matchCscStubs = iConfig.getParameter< bool >("Print_matchCscStubs");
+  Print_allCscStubs   = iConfig.getParameter< bool >("Print_allCscStubs");
+  Print_all         = iConfig.getParameter< bool >("Print_all");
+  Print_ALCT        = iConfig.getParameter< bool >("Print_ALCT");
+  Print_CLCT        = iConfig.getParameter< bool >("Print_CLCT");
 
+  TrackingParticleInputTag = iConfig.getParameter<edm::InputTag>("TrackingParticleInputTag");
   TrackingParticleToken_ = consumes< std::vector< TrackingParticle > >(TrackingParticleInputTag);
 
   m_emtfToken = consumes<l1t::RegionalMuonCandBxCollection>(edm::InputTag("simEmtfDigis","EMTF"));
@@ -280,12 +325,15 @@ NtupleMaker::~NtupleMaker()
 
 void NtupleMaker::endJob()
 {
+  cerr << "Number of event with layers having multiple hits: " << nEventMultiHitLayer <<endl;
   cerr << "NtupleMaker::endJob" << endl;
 }
 
 void NtupleMaker::beginJob()
 {
   cerr << "NtupleMaker::beginJob" << endl;
+
+  nEventMultiHitLayer = 0;
 
   edm::Service<TFileService> fs;
 
@@ -349,25 +397,30 @@ void NtupleMaker::beginJob()
   m_allCscStubsLCT_r = new std::vector<float>;
   m_allCscStubsLCT_bend = new std::vector<float>;
   m_allCscStubsLCT_pattern = new std::vector<float>;
+  m_allCscStubsLCT_quality = new std::vector<int>;
   m_allCscStubsLCT_detId = new std::vector<int>;
   m_allCscStubsLCT_keywire = new std::vector<int>;
   m_allCscStubsLCT_strip = new std::vector<int>;
-  // m_allCscStubsLCT_WireContainer = new std::vector< CSCALCTDigi::WireContainer >;
-  // m_allCscStubsLCT_ComparatorContainer = new std::vector< CSCCLCTDigi::ComparatorContainer >;
-  // m_allCscStubsLCT_WireContainer = new std::vector< std::vector< std::vector<unsigned short> > >;
-  // m_allCscStubsLCT_ComparatorContainer = new std::vector< std::vector< std::vector<unsigned short> > >;
+
+  m_allCscStubsALCT_detId = new std::vector<int>;
+  m_allCscStubsALCT_keywire = new std::vector<int>;
+  m_allCscStubsALCT_hit = new std::vector<int>;
+  m_allCscStubsALCT_position = new std::vector<int>;
+
+  m_allCscStubsCLCT_detId = new std::vector<int>;
+  m_allCscStubsCLCT_strip = new std::vector<int>;
+  m_allCscStubsCLCT_hit = new std::vector<int>;
+  m_allCscStubsCLCT_position = new std::vector<int>;
 
   m_allALCT_detId = new std::vector<int>;
   m_allALCT_keywire = new std::vector<int>;
-  m_allALCT_hit =  = new std::vector<int>;
-  m_allALCT_layer =  = new std::vector<int>;
-  m_allALCT_position =  = new std::vector<int>;
+  m_allALCT_hit = new std::vector<int>;
+  m_allALCT_position = new std::vector<int>;
 
   m_allCLCT_detId = new std::vector<int>;
   m_allCLCT_strip = new std::vector<int>;
-  m_allCLCT_hit =  = new std::vector<int>;
-  m_allCLCT_layer =  = new std::vector<int>;
-  m_allCLCT_position =  = new std::vector<int>;
+  m_allCLCT_hit = new std::vector<int>;
+  m_allCLCT_position = new std::vector<int>;
 
   m_allGemDigi_phi = new std::vector<float>;
   m_allGemDigi_eta = new std::vector<float>;
@@ -381,6 +434,20 @@ void NtupleMaker::beginJob()
   m_matchCscStubsLCT_bend = new std::vector<float>;
   m_matchCscStubsLCT_pattern = new std::vector<float>;
   m_matchCscStubsLCT_matchTp = new std::vector<int>;
+  m_matchCscStubsLCT_quality = new std::vector<int>;
+  m_matchCscStubsLCT_detId = new std::vector<int>;
+  m_matchCscStubsLCT_keywire = new std::vector<int>;
+  m_matchCscStubsLCT_strip = new std::vector<int>;
+
+  m_matchCscStubsALCT_detId = new std::vector<int>;
+  m_matchCscStubsALCT_keywire = new std::vector<int>;
+  m_matchCscStubsALCT_hit = new std::vector<int>;
+  m_matchCscStubsALCT_position = new std::vector<int>;
+
+  m_matchCscStubsCLCT_detId = new std::vector<int>;
+  m_matchCscStubsCLCT_strip = new std::vector<int>;
+  m_matchCscStubsCLCT_hit = new std::vector<int>;
+  m_matchCscStubsCLCT_position = new std::vector<int>;
 
   m_matchGemDigi_phi = new std::vector<float>;
   m_matchGemDigi_eta = new std::vector<float>;
@@ -450,22 +517,29 @@ void NtupleMaker::beginJob()
   eventTree->Branch("allCscStubsLCT_r", &m_allCscStubsLCT_r);
   eventTree->Branch("allCscStubsLCT_bend", &m_allCscStubsLCT_bend);
   eventTree->Branch("allCscStubsLCT_pattern", &m_allCscStubsLCT_pattern);
+  eventTree->Branch("allCscStubsLCT_quality", &m_allCscStubsLCT_quality);
   eventTree->Branch("allCscStubsLCT_detId", &m_allCscStubsLCT_detId);
   eventTree->Branch("allCscStubsLCT_keywire", &m_allCscStubsLCT_keywire);
   eventTree->Branch("allCscStubsLCT_strip", &m_allCscStubsLCT_strip);
-  // eventTree->Branch("allCscStubsLCT_WireContainer", &m_allCscStubsLCT_WireContainer);
-  // eventTree->Branch("allCscStubsLCT_ComparatorContainer", &m_allCscStubsLCT_ComparatorContainer);
+
+  eventTree->Branch("allCscStubsALCT_detId", &m_allCscStubsALCT_detId);
+  eventTree->Branch("allCscStubsALCT_keywire", &m_allCscStubsALCT_keywire);
+  eventTree->Branch("allCscStubsALCT_hit", &m_allCscStubsALCT_hit);
+  eventTree->Branch("allCscStubsALCT_position", &m_allCscStubsALCT_position);
+
+  eventTree->Branch("allCscStubsCLCT_detId", &m_allCscStubsCLCT_detId);
+  eventTree->Branch("allCscStubsCLCT_strip", &m_allCscStubsCLCT_strip);
+  eventTree->Branch("allCscStubsCLCT_hit", &m_allCscStubsCLCT_hit);
+  eventTree->Branch("allCscStubsCLCT_position", &m_allCscStubsCLCT_position);
 
   eventTree->Branch("allALCT_detId", &m_allALCT_detId);
   eventTree->Branch("allALCT_keywire", &m_allALCT_keywire);
   eventTree->Branch("allALCT_hit", &m_allALCT_hit);
-  eventTree->Branch("allALCT_layer", &m_allALCT_layer);
   eventTree->Branch("allALCT_position", &m_allALCT_position);
 
   eventTree->Branch("allCLCT_detId", &m_allCLCT_detId);
   eventTree->Branch("allCLCT_strip", &m_allCLCT_strip);
   eventTree->Branch("allCLCT_hit", &m_allCLCT_hit);
-  eventTree->Branch("allCLCT_layer", &m_allCLCT_layer);
   eventTree->Branch("allCLCT_position", &m_allCLCT_position);
 
   eventTree->Branch("allGemDigi_phi", &m_allGemDigi_phi);
@@ -480,6 +554,20 @@ void NtupleMaker::beginJob()
   eventTree->Branch("matchCscStubsLCT_bend", &m_matchCscStubsLCT_bend);
   eventTree->Branch("matchCscStubsLCT_pattern", &m_matchCscStubsLCT_pattern);
   eventTree->Branch("matchCscStubsLCT_matchTp", &m_matchCscStubsLCT_matchTp);
+  eventTree->Branch("matchCscStubsLCT_quality", &m_matchCscStubsLCT_quality);
+  eventTree->Branch("matchCscStubsLCT_detId", &m_matchCscStubsLCT_detId);
+  eventTree->Branch("matchCscStubsLCT_keywire", &m_matchCscStubsLCT_keywire);
+  eventTree->Branch("matchCscStubsLCT_strip", &m_matchCscStubsLCT_strip);
+
+  eventTree->Branch("matchCscStubsALCT_detId", &m_matchCscStubsALCT_detId);
+  eventTree->Branch("matchCscStubsALCT_keywire", &m_matchCscStubsALCT_keywire);
+  eventTree->Branch("matchCscStubsALCT_hit", &m_matchCscStubsALCT_hit);
+  eventTree->Branch("matchCscStubsALCT_position", &m_matchCscStubsALCT_position);
+
+  eventTree->Branch("matchCscStubsCLCT_detId", &m_matchCscStubsCLCT_detId);
+  eventTree->Branch("matchCscStubsCLCT_strip", &m_matchCscStubsCLCT_strip);
+  eventTree->Branch("matchCscStubsCLCT_hit", &m_matchCscStubsCLCT_hit);
+  eventTree->Branch("matchCscStubsCLCT_position", &m_matchCscStubsCLCT_position);
 
   eventTree->Branch("matchGemDigi_phi", &m_matchGemDigi_phi);
   eventTree->Branch("matchGemDigi_eta", &m_matchGemDigi_eta);
@@ -491,6 +579,7 @@ void NtupleMaker::beginJob()
 
 void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
+  if (DebugMode) cout << "analyze began" << endl;
   if (!(MyProcess==13 || MyProcess==11 || MyProcess==211 || MyProcess==6 || MyProcess==15 || MyProcess==1)) {
     cout << "The specified MyProcess is invalid! Exiting..." << endl;
     return;
@@ -556,22 +645,29 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   m_allCscStubsLCT_r->clear();
   m_allCscStubsLCT_bend->clear();
   m_allCscStubsLCT_pattern->clear();
+  m_allCscStubsLCT_quality->clear();
   m_allCscStubsLCT_detId->clear();
   m_allCscStubsLCT_keywire->clear();
   m_allCscStubsLCT_strip->clear();
-  // m_allCscStubsLCT_WireContainer->clear();
-  // m_allCscStubsLCT_ComparatorContainer->clear();
+
+  m_allCscStubsALCT_detId->clear();
+  m_allCscStubsALCT_keywire->clear();
+  m_allCscStubsALCT_hit->clear();
+  m_allCscStubsALCT_position->clear();
+
+  m_allCscStubsCLCT_detId->clear();
+  m_allCscStubsCLCT_strip->clear();
+  m_allCscStubsCLCT_hit->clear();
+  m_allCscStubsCLCT_position->clear();
 
   m_allALCT_detId->clear();
   m_allALCT_keywire->clear();
   m_allALCT_hit->clear();
-  m_allALCT_layer->clear();
   m_allALCT_position->clear();
 
   m_allCLCT_detId->clear();
   m_allCLCT_strip->clear();
   m_allCLCT_hit->clear();
-  m_allCLCT_layer->clear();
   m_allCLCT_position->clear();
 
   m_allGemDigi_phi->clear();
@@ -586,12 +682,29 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   m_matchCscStubsLCT_bend->clear();
   m_matchCscStubsLCT_pattern->clear();
   m_matchCscStubsLCT_matchTp->clear();
+  m_matchCscStubsLCT_quality->clear();
+  m_matchCscStubsLCT_detId->clear();
+  m_matchCscStubsLCT_keywire->clear();
+  m_matchCscStubsLCT_strip->clear();
+
+
+  m_matchCscStubsALCT_detId->clear();
+  m_matchCscStubsALCT_keywire->clear();
+  m_matchCscStubsALCT_hit->clear();
+  m_matchCscStubsALCT_position->clear();
+
+  m_matchCscStubsCLCT_detId->clear();
+  m_matchCscStubsCLCT_strip->clear();
+  m_matchCscStubsCLCT_hit->clear();
+  m_matchCscStubsCLCT_position->clear();
 
   m_matchGemDigi_phi->clear();
   m_matchGemDigi_eta->clear();
   m_matchGemDigi_z->clear();
   m_matchGemDigi_r->clear();
   m_matchGemDigi_matchTp->clear();
+
+  if (DebugMode) cout << "Finished branch initialization" << endl;
 
   edm::Handle< std::vector< TrackingParticle > > TrackingParticleHandle;
   iEvent.getByToken(TrackingParticleToken_, TrackingParticleHandle);
@@ -604,6 +717,7 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 
   edm::ESHandle<TrackerGeometry> tGeomHandle;
   iSetup.get<TrackerDigiGeometryRecord>().get(tGeomHandle);
+  match->init(iEvent,iSetup);
 
   edm::Handle<edm::SimVertexContainer> sim_vertices;
   iEvent.getByToken(simVertexInput_, sim_vertices);
@@ -611,6 +725,7 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 
   int tp_index = 0;
   std::vector< TrackingParticle >::const_iterator iterTP;
+  if (DebugMode) cout << "Started TP iteration" << endl;
   for (iterTP = TrackingParticleHandle->begin(); iterTP != TrackingParticleHandle->end(); ++iterTP) {
     edm::Ptr< TrackingParticle > tp_ptr(TrackingParticleHandle, tp_index);
 
@@ -680,7 +795,7 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
     m_tp_eventid->push_back(tmp_eventid);
     m_tp_charge->push_back(tmp_tp_charge);
 
-    match->init(iEvent,iSetup);
+    if (DebugMode) cout << "  Finished TP information and started matcher" <<endl;
 
     const SimTrack& t(tp_ptr->g4Tracks()[0]);
     if(abs(t.type())==13){
@@ -750,11 +865,13 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 
       //CSCStubMatcher
       auto cscStubs = match->cscStubs();
-      // cout << "chambers:" << cscStubs->chamberIdsLCT(0).size()<<endl;
       for (int detid_int : cscStubs->chamberIdsLCT(0)) {
         CSCDetId detid_(detid_int);
+        int digi_index = 0;
+        bool doprinta = Print_matchCscStubs && Print_ALCT;
+        bool doprintc = Print_matchCscStubs && Print_CLCT;
         for (auto digi_ : cscStubs->lctsInChamber(detid_) ){
-          auto gp = cscStubs->getGlobalPosition(detid_,digi_);
+          auto gp = cscStubs->getGlobalPosition(detid_int,digi_);
           m_matchCscStubsLCT_phi->push_back(gp.phi());
           m_matchCscStubsLCT_eta->push_back(gp.eta());
           m_matchCscStubsLCT_z->push_back(gp.z());
@@ -762,6 +879,28 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
           m_matchCscStubsLCT_bend->push_back(digi_.getBend());
           m_matchCscStubsLCT_pattern->push_back(digi_.getPattern());
           m_matchCscStubsLCT_matchTp->push_back(tp_index);
+          m_matchCscStubsLCT_quality->push_back(digi_.getQuality());
+          m_matchCscStubsLCT_detId->push_back(detid_.rawId());
+          m_matchCscStubsLCT_keywire->push_back(digi_.getKeyWG());
+          m_matchCscStubsLCT_strip->push_back(digi_.getStrip());
+          if (Print_matchCscStubs) cout << "detid_int = " <<detid_int<<", detid = " << int(detid_) << ", rawId = " << detid_.rawId() << endl;
+
+          const auto& alctDigi = digi_.getALCT();
+          std::vector< std::vector<unsigned short> > alcthits = alctDigi.getHits();
+          if (doprinta) cout << "For matchCscStubsALCTs; DetId: "<< detid_.rawId() <<", Digi Index: " << digi_index << ", keywire: "<< alctDigi.getKeyWG()<<" , lctDigiWire = "<<digi_.getKeyWG()<<endl;
+          if (alctDigi.getKeyWG() != digi_.getKeyWG() && doprinta) cout << "Inconsistent keywire: alctDigiWire = "<< alctDigi.getKeyWG() <<" , lctDigiWire = "<<digi_.getKeyWG()<<endl;
+          SaveHitMatrix(alcthits, m_matchCscStubsALCT_hit, m_matchCscStubsALCT_position,doprinta,false);
+          m_matchCscStubsALCT_detId->push_back(detid_.rawId());
+          m_matchCscStubsALCT_keywire->push_back(alctDigi.getKeyWG());
+
+          const auto& clctDigi = digi_.getCLCT();
+          std::vector< std::vector<unsigned short> > clcthits = clctDigi.getHits();
+          if (doprintc) cout << "For matchCscStubsCLCTs; DetId: "<< detid_.rawId() <<", Digi Index: " << digi_index << ", strip: "<< clctDigi.getStrip() <<" , lctDigiStrip = "<< digi_.getStrip()<<endl;
+          if (clctDigi.getStrip() != digi_.getStrip() && doprintc) cout << "Inconsistent strip: clctDigiStrip = "<< clctDigi.getStrip() <<" , lctDigiStrip = "<< digi_.getStrip() <<endl;
+          SaveHitMatrix(clcthits, m_matchCscStubsCLCT_hit, m_matchCscStubsCLCT_position,doprintc,true);
+          m_matchCscStubsCLCT_detId->push_back(detid_.rawId());
+          m_matchCscStubsCLCT_strip->push_back(clctDigi.getStrip());
+
         }
       }
 
@@ -790,6 +929,8 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 
     tp_index++;
   } // End of Tracking Particle Loop
+
+  if (DebugMode) cout << "Finished TP Iteration" << endl;
 
   Handle< BXVector<l1t::RegionalMuonCand> > emtfs;
   Handle< BXVector<l1t::RegionalMuonCand> > omtfs;
@@ -842,15 +983,17 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   }
   m_BMTF_muon_n->push_back(nBMTF);
 
-  // All CSCStubs
+  if (DebugMode) cout << "Finished regional Muons started allCscStubs" << endl;
+
   edm::Handle<CSCCorrelatedLCTDigiCollection> lctsH_;
   iEvent.getByToken(lctToken_, lctsH_);
   const CSCCorrelatedLCTDigiCollection& lcts = *lctsH_.product();
-
   for (auto it = lcts.begin(); it != lcts.end(); ++it) {
     const auto& digivec = (*it).second;
     const CSCDetId& detid = (*it).first;
     int digi_index = 0;
+    bool doprinta = Print_allCscStubs && Print_ALCT;
+    bool doprintc = Print_allCscStubs && Print_CLCT;
     for (auto itdigi = digivec.first; itdigi != digivec.second; ++itdigi) {
       auto gp = match->cscStubs()->getGlobalPosition(detid.rawId(), *itdigi);
       m_allCscStubsLCT_phi->push_back(gp.phi());
@@ -859,34 +1002,36 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
       m_allCscStubsLCT_r->push_back(gp.perp());
       m_allCscStubsLCT_bend->push_back((*itdigi).getBend());
       m_allCscStubsLCT_pattern->push_back((*itdigi).getPattern());
+      m_allCscStubsLCT_quality->push_back((*itdigi).getQuality());
       m_allCscStubsLCT_detId->push_back(detid.rawId());
       m_allCscStubsLCT_keywire->push_back((*itdigi).getKeyWG());
       m_allCscStubsLCT_strip->push_back((*itdigi).getStrip());
-      std::vector< std::vector<unsigned short> > alcthits = ((*itdigi).getALCT().getHits());
-      std::vector< std::vector<unsigned short> > clcthits = ((*itdigi).getCLCT().getHits());
-      cout << "For CorrelatedLCTs; DetId: "<< detid.rawId() <<", Digi Index:" << digi_index << endl;
+      // allCscStubsALCTs
+      const auto& alctDigi = (*itdigi).getALCT();
+      std::vector< std::vector<unsigned short> > alcthits = alctDigi.getHits();
+      if (doprinta) cout << "For allCscStubsALCTs; DetId: "<< detid.rawId() <<", Digi Index: " << digi_index << ", keywire: "<< alctDigi.getKeyWG()<<" , lctDigiWire = "<<(*itdigi).getKeyWG() << endl;
+      if (alctDigi.getKeyWG() != (*itdigi).getKeyWG() && doprinta) cout << "Inconsistence keywire: alctDigiWire = "<< alctDigi.getKeyWG() <<" , lctDigiWire = "<<(*itdigi).getKeyWG()<<endl;
+      SaveHitMatrix(alcthits, m_allCscStubsALCT_hit, m_allCscStubsALCT_position,doprinta,false);
+      m_allCscStubsALCT_detId->push_back(detid.rawId());
+      m_allCscStubsALCT_keywire->push_back(alctDigi.getKeyWG());
+
+      // allCscStubsCLCTs
+      const auto& clctDigi = (*itdigi).getCLCT();
+      std::vector< std::vector<unsigned short> > clcthits = clctDigi.getHits();
+      if (doprintc) cout << "For allCscStubsCLCTs; DetId: "<< detid.rawId() <<", Digi Index:" << digi_index << ", strip: "<< clctDigi.getStrip() <<" , lctDigiStrip = "<< (*itdigi).getStrip()<<endl;
+      if (clctDigi.getStrip() != (*itdigi).getStrip() && doprintc) cout << "Inconsistence strip: clctDigiStrip = "<< clctDigi.getStrip() <<" , lctDigiStrip = "<< (*itdigi).getStrip() <<endl;
+      SaveHitMatrix(clcthits, m_allCscStubsCLCT_hit, m_allCscStubsCLCT_position,doprintc,true);
+      m_allCscStubsCLCT_detId->push_back(detid.rawId());
+      m_allCscStubsCLCT_strip->push_back(clctDigi.getStrip());
+
       ++digi_index;
-      cout <<" ALCTs:" <<endl;
-      for (unsigned itlayer = 0; itlayer < alcthits.size() ; ++itlayer) {
-        cout << "layer: " << itlayer << " : ";
-        for (unsigned itwidth = 0; itwidth < alcthits.at(itlayer).size(); ++itwidth) {
-          cout << " " << alcthits.at(itlayer).at(itwidth) << ",";
-        }
-        cout << endl;
-      }
-      cout << " CLCTs:" <<endl;
-      for (unsigned itlayer = 0; itlayer < clcthits.size() ; ++itlayer) {
-        cout << "layer: " << itlayer << " : ";
-        for (unsigned itwidth = 0; itwidth < clcthits.at(itlayer).size(); ++itwidth) {
-          cout << " " << clcthits.at(itlayer).at(itwidth) << ",";
-        }
-        cout << endl;
-      }
     }
-    cout << "End of a chamber" <<endl;
   }
 
+  if (DebugMode) cout << "Finished allCscStubs, started allA/CLCT" << endl;
 
+  bool multihit = false;
+  // allALCTs
   int digi_index = 0;
   edm::Handle<CSCALCTDigiCollection> alctsH_;
   iEvent.getByToken(alctToken_, alctsH_);
@@ -896,19 +1041,16 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
     const auto& detid = (*it).first;
     for (auto itdigi = digivec.first; itdigi != digivec.second; ++itdigi) {
       std::vector< std::vector<unsigned short> > alcthits = ((*itdigi).getHits());
-      cout << "For ALCTs; DetId: "<< detid.rawId() <<", Digi Index:" << digi_index << endl;
-      ++digi_index;
-      for (unsigned itlayer = 0; itlayer < alcthits.size() ; ++itlayer) {
-        cout << "layer: " << itlayer << " : ";
-        for (unsigned itwidth = 0; itwidth < alcthits.at(itlayer).size(); ++itwidth) {
-          cout << " " << alcthits.at(itlayer).at(itwidth) << ",";
-        }
-        cout << endl;
-      }
+      if (Print_all) cout << "For allALCTs; DetId: "<< detid.rawId() <<", Digi Index:" << digi_index << ", keywire: "<< (*itdigi).getKeyWG()<< endl;
+      int alctmultihit = SaveHitMatrix(alcthits, m_allALCT_hit, m_allALCT_position,Print_all&&Print_ALCT,false);
+      if (alctmultihit) multihit = true;
       m_allALCT_detId->push_back(detid.rawId());
       m_allALCT_keywire->push_back((*itdigi).getKeyWG());
+      ++digi_index;
     }
   }
+
+  // allCLCTs
   digi_index = 0;
   edm::Handle<CSCCLCTDigiCollection> clctsH_;
   iEvent.getByToken(clctToken_, clctsH_);
@@ -918,22 +1060,26 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
     const auto& detid = (*it).first;
     for (auto itdigi = digivec.first; itdigi != digivec.second; ++itdigi) {
       std::vector< std::vector<unsigned short> > clcthits = ((*itdigi).getHits());
-      cout << "For CLCTs; DetId: "<< detid.rawId() <<", Digi Index:" << digi_index << endl;
-      ++digi_index;
-      for (unsigned itlayer = 0; itlayer < clcthits.size() ; ++itlayer) {
-        cout << "layer: " << itlayer << " : ";
-        for (unsigned itwidth = 0; itwidth < clcthits.at(itlayer).size(); ++itwidth) {
-          cout << " " << clcthits.at(itlayer).at(itwidth) << ",";
-        }
-        cout << endl;
-      }
+      if (Print_all) cout << "For allCLCTs; DetId: "<< detid.rawId() <<", Digi Index:" << digi_index<< ", strip: "<< (*itdigi).getStrip() << endl;
+      int clctmultihit = SaveHitMatrix(clcthits, m_allCLCT_hit, m_allCLCT_position,Print_all&&Print_CLCT,true);
+      if (clctmultihit) multihit = true;
       m_allCLCT_detId->push_back(detid.rawId());
       m_allCLCT_strip->push_back((*itdigi).getStrip());
+      ++digi_index;
     }
   }
+  if (multihit) nEventMultiHitLayer++;
+  // if (floor(double(m_allCLCT_hit->size()) / 6.0 ) != m_allCLCT_detId->size()) {
+  //   throw std::runtime_error("Hit size mismatch Digi size");
+  // }
 
-  cout << "End of a Event" <<endl;
-  cout <<endl;
+  // 0 for allA/CLCT, 1 for allCscStubsA/CLCT, 2 for matchCscStubsA/CLCT
+  if (Print_all) PrintHits(0);
+  if (Print_allCscStubs) PrintHits(1);
+  if (Print_matchCscStubs) PrintHits(2);
+  // PrintHits(0);
+  // PrintHits(1);
+  // PrintHits(2);
 
   // All GEMDigis
   edm::Handle<GEMDigiCollection> gemDigisH_;
@@ -954,6 +1100,136 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 
   eventTree->Fill();
 } // End of analyze
+
+
+void NtupleMaker::PrintHits(int iset, int idigi) {
+  vector<vector<int> > SavedallCscStubs{*m_allCscStubsALCT_hit, *m_allCscStubsALCT_position, *m_allCscStubsALCT_detId, *m_allCscStubsALCT_keywire, *m_allCscStubsCLCT_hit, *m_allCscStubsCLCT_position, *m_allCscStubsCLCT_detId, *m_allCscStubsCLCT_strip, *m_allCscStubsLCT_detId, *m_allCscStubsLCT_keywire, *m_allCscStubsLCT_strip};
+  vector<vector<int> > SavedmatchCscStubs{*m_matchCscStubsALCT_hit, *m_matchCscStubsALCT_position, *m_matchCscStubsALCT_detId, *m_matchCscStubsALCT_keywire, *m_matchCscStubsCLCT_hit, *m_matchCscStubsCLCT_position, *m_matchCscStubsCLCT_detId, *m_matchCscStubsCLCT_strip, *m_matchCscStubsLCT_detId, *m_matchCscStubsLCT_keywire, *m_matchCscStubsLCT_strip};
+  vector<vector<int> > Savedall{*m_allALCT_hit, *m_allALCT_position, *m_allALCT_detId, *m_allALCT_keywire, *m_allCLCT_hit, *m_allCLCT_position, *m_allCLCT_detId, *m_allCLCT_strip};
+  vector<string> printtitle{"hits","positions","detids","keywires","hits","positions","detids","strips","LCT Digi detids","LCT Digi keywires","LCT Digi strips"};
+  vector<vector<int> > printinfo;
+  cout <<endl;
+  if (iset == 0) {
+    cout << "Saved info in allALCT and allCLCT" <<endl;
+    printinfo = Savedall;
+  }
+  else if (iset == 1){
+    cout << "Saved info in allCscStubsALCT and allCscStubsCLCT" <<endl;
+    printinfo = SavedallCscStubs;
+  }
+  else if (iset == 2){
+    cout << "Saved info in matchCscStubsALCT and matchCscStubsCLCT" <<endl;
+    printinfo = SavedmatchCscStubs;
+  }
+
+  if (idigi == -1) {
+    for (unsigned iprint = 0; iprint < printinfo.size(); ++iprint) {
+      if ((!Print_ALCT) && iprint < 4) continue;
+      if ((!Print_CLCT) && iprint >= 4 && iprint < 8) continue;
+      if (iprint == 0) cout << "Saved ALCT hits format:" <<endl;
+      if (iprint == 4) cout << "Saved CLCT hits format:" <<endl;
+      if (iprint == 8) cout << "Saved LCT format:" <<endl;
+      cout << printtitle.at(iprint) << ": {";
+      vector<int>& vals = printinfo.at(iprint);
+      bool printbracket = false;
+      if (printtitle.at(iprint) == "hits" || printtitle.at(iprint) == "positions") printbracket = true;
+      for (unsigned ival = 0; ival < vals.size(); ++ival) {
+        if (ival % 6 == 0 && printbracket) cout << "(";
+        cout << vals.at(ival);
+        if (ival % 6 == 5 && printbracket) cout << ")";
+        if (ival != vals.size() - 1) cout <<", ";
+      }
+      cout <<"}"<<endl;
+    }
+  }
+
+}
+
+int NtupleMaker::SaveHitMatrix(std::vector< std::vector<unsigned short> > hits, std::vector<int>* b_hit, std::vector<int>* b_pos, bool doprint, bool isclct) {
+  std::vector<int> tmp_hit;
+  std::vector<int> tmp_pos;
+  int multihit = 0; // number of layers that have more than 1 hits
+  if (hits.size() != 6) {
+    cout << "nLayer != 6" <<endl;
+    int ExceptionCode = -3;
+    for (unsigned itlayer = 0; itlayer < 6; ++itlayer) {
+      b_hit->push_back(ExceptionCode);
+      b_pos->push_back(ExceptionCode);
+      if (doprint) {
+        tmp_hit.push_back(ExceptionCode);
+        tmp_pos.push_back(ExceptionCode);
+      }
+    }
+    return ExceptionCode;
+  }
+
+  for (unsigned itlayer = 0; itlayer < hits.size() ; ++itlayer) {
+    if (doprint) cout << "layer: " << itlayer << " : ";
+    int ncount = 0;
+    bool haszero = false;
+    bool printzero = false;
+    for (unsigned itpos = 0; itpos < hits.at(itlayer).size(); ++itpos) {
+      int hitval = hits.at(itlayer).at(itpos);
+      if (doprint) cout << " " << hitval << ",";
+      if (hitval == 0 && isclct) haszero = true;
+      if (hitval != 65535 && hitval != 0) {
+        if (ncount == 0) {
+          b_hit->push_back(hitval);
+          b_pos->push_back(itpos);
+          if (doprint) {
+            tmp_hit.push_back(hitval);
+            tmp_pos.push_back(itpos);
+          }
+        }
+        else {
+          int ExceptionCode = -2;
+          cout << " Layer with more than 1 hits" <<endl;
+          b_hit->back() = ExceptionCode;
+          b_pos->back() = ExceptionCode;
+          if (doprint) {
+            tmp_hit.back() = ExceptionCode;
+            tmp_pos.back() = ExceptionCode;
+          }
+        }
+        ncount++;
+      }
+    }
+    if (haszero && printzero) cout << "Emergency!!!!!! CLCT hits contains 0!!!!!!";
+    if (ncount > 1) ++multihit;
+    if (ncount == 0) {
+      b_hit->push_back(-1);
+      b_pos->push_back(-1);
+      if (doprint) {
+        tmp_hit.push_back(-1);
+        tmp_pos.push_back(-1);
+      }
+    }
+    if (doprint) cout << endl;
+  }
+
+  if (doprint) {
+    cout << "Saved Hit for this Digi:";
+    for (unsigned iv = 0; iv < tmp_hit.size(); ++ iv) {
+      cout <<" "<<tmp_hit.at(iv)<<",";
+    }
+    if (tmp_hit.size() != 6) cout << "This Digi does not has 6 layers!!!";
+    cout <<endl;
+    cout << "Saved Position for this Digi:";
+    for (unsigned iv = 0; iv < tmp_pos.size(); ++ iv) {
+      cout <<" "<<tmp_pos.at(iv)<<",";
+    }
+    if (tmp_hit.size() != 6) cout << "This Digi does not has 6 layers!!!";
+    cout <<endl;
+  }
+  return multihit;
+}
+
+std::vector<int> NtupleMaker::IntsToBinary(int n) {
+  std::vector<int> binary_;
+  if ( n / 2 != 0) binary_ = IntsToBinary(n/2);
+  binary_.push_back(n%2);
+  return binary_;
+}
 
 
 DEFINE_FWK_MODULE(NtupleMaker);
