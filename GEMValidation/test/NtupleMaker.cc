@@ -220,26 +220,32 @@ private:
   std::vector<int>*   m_allCscStubsLCT_detId;
   std::vector<int>*   m_allCscStubsLCT_keywire;
   std::vector<int>*   m_allCscStubsLCT_strip;
+  std::vector<bool>*  m_allCscStubsLCT_valid;
+  std::vector<int>*   m_allCscStubsLCT_type;
 
   std::vector<int>*   m_allCscStubsALCT_detId;
   std::vector<int>*   m_allCscStubsALCT_keywire;
   std::vector<int>*   m_allCscStubsALCT_hit;
   std::vector<int>*   m_allCscStubsALCT_position;
+  std::vector<bool>*  m_allCscStubsALCT_valid;
 
   std::vector<int>*   m_allCscStubsCLCT_detId;
   std::vector<int>*   m_allCscStubsCLCT_strip;
   std::vector<int>*   m_allCscStubsCLCT_hit;
   std::vector<int>*   m_allCscStubsCLCT_position;
+  std::vector<bool>*  m_allCscStubsCLCT_valid;
 
   std::vector<int>*   m_allALCT_detId;
   std::vector<int>*   m_allALCT_keywire;
   std::vector<int>*   m_allALCT_hit;
   std::vector<int>*   m_allALCT_position;
+  std::vector<bool>*  m_allALCT_valid;
 
   std::vector<int>*   m_allCLCT_detId;
   std::vector<int>*   m_allCLCT_strip;
   std::vector<int>*   m_allCLCT_hit;
   std::vector<int>*   m_allCLCT_position;
+  std::vector<bool>*  m_allCLCT_valid;
 
   std::vector<float>* m_allGemDigi_phi;
   std::vector<float>* m_allGemDigi_eta;
@@ -257,16 +263,20 @@ private:
   std::vector<int>*   m_matchCscStubsLCT_detId;
   std::vector<int>*   m_matchCscStubsLCT_keywire;
   std::vector<int>*   m_matchCscStubsLCT_strip;
+  std::vector<bool>*  m_matchCscStubsLCT_valid;
+  std::vector<int>*   m_matchCscStubsLCT_type;
 
   std::vector<int>*   m_matchCscStubsALCT_detId;
   std::vector<int>*   m_matchCscStubsALCT_keywire;
   std::vector<int>*   m_matchCscStubsALCT_hit;
   std::vector<int>*   m_matchCscStubsALCT_position;
+  std::vector<bool>*  m_matchCscStubsALCT_valid;
 
   std::vector<int>*   m_matchCscStubsCLCT_detId;
   std::vector<int>*   m_matchCscStubsCLCT_strip;
   std::vector<int>*   m_matchCscStubsCLCT_hit;
   std::vector<int>*   m_matchCscStubsCLCT_position;
+  std::vector<bool>*  m_matchCscStubsCLCT_valid;
 
   std::vector<float>* m_matchGemDigi_phi;
   std::vector<float>* m_matchGemDigi_eta;
@@ -401,26 +411,32 @@ void NtupleMaker::beginJob()
   m_allCscStubsLCT_detId = new std::vector<int>;
   m_allCscStubsLCT_keywire = new std::vector<int>;
   m_allCscStubsLCT_strip = new std::vector<int>;
+  m_allCscStubsLCT_valid = new std::vector<bool>;
+  m_allCscStubsLCT_type = new std::vector<int>;
 
   m_allCscStubsALCT_detId = new std::vector<int>;
   m_allCscStubsALCT_keywire = new std::vector<int>;
   m_allCscStubsALCT_hit = new std::vector<int>;
   m_allCscStubsALCT_position = new std::vector<int>;
+  m_allCscStubsALCT_valid = new std::vector<bool>;
 
   m_allCscStubsCLCT_detId = new std::vector<int>;
   m_allCscStubsCLCT_strip = new std::vector<int>;
   m_allCscStubsCLCT_hit = new std::vector<int>;
   m_allCscStubsCLCT_position = new std::vector<int>;
+  m_allCscStubsCLCT_valid = new std::vector<bool>;
 
   m_allALCT_detId = new std::vector<int>;
   m_allALCT_keywire = new std::vector<int>;
   m_allALCT_hit = new std::vector<int>;
   m_allALCT_position = new std::vector<int>;
+  m_allALCT_valid = new std::vector<bool>;
 
   m_allCLCT_detId = new std::vector<int>;
   m_allCLCT_strip = new std::vector<int>;
   m_allCLCT_hit = new std::vector<int>;
   m_allCLCT_position = new std::vector<int>;
+  m_allCLCT_valid = new std::vector<bool>;
 
   m_allGemDigi_phi = new std::vector<float>;
   m_allGemDigi_eta = new std::vector<float>;
@@ -438,16 +454,20 @@ void NtupleMaker::beginJob()
   m_matchCscStubsLCT_detId = new std::vector<int>;
   m_matchCscStubsLCT_keywire = new std::vector<int>;
   m_matchCscStubsLCT_strip = new std::vector<int>;
+  m_matchCscStubsLCT_valid = new std::vector<bool>;
+  m_matchCscStubsLCT_type = new std::vector<int>;
 
   m_matchCscStubsALCT_detId = new std::vector<int>;
   m_matchCscStubsALCT_keywire = new std::vector<int>;
   m_matchCscStubsALCT_hit = new std::vector<int>;
   m_matchCscStubsALCT_position = new std::vector<int>;
+  m_matchCscStubsALCT_valid = new std::vector<bool>;
 
   m_matchCscStubsCLCT_detId = new std::vector<int>;
   m_matchCscStubsCLCT_strip = new std::vector<int>;
   m_matchCscStubsCLCT_hit = new std::vector<int>;
   m_matchCscStubsCLCT_position = new std::vector<int>;
+  m_matchCscStubsCLCT_valid = new std::vector<bool>;
 
   m_matchGemDigi_phi = new std::vector<float>;
   m_matchGemDigi_eta = new std::vector<float>;
@@ -521,26 +541,32 @@ void NtupleMaker::beginJob()
   eventTree->Branch("allCscStubsLCT_detId", &m_allCscStubsLCT_detId);
   eventTree->Branch("allCscStubsLCT_keywire", &m_allCscStubsLCT_keywire);
   eventTree->Branch("allCscStubsLCT_strip", &m_allCscStubsLCT_strip);
+  eventTree->Branch("allCscStubsLCT_valid", &m_allCscStubsLCT_valid);
+  eventTree->Branch("allCscStubsLCT_type", &m_allCscStubsLCT_type);
 
   eventTree->Branch("allCscStubsALCT_detId", &m_allCscStubsALCT_detId);
   eventTree->Branch("allCscStubsALCT_keywire", &m_allCscStubsALCT_keywire);
   eventTree->Branch("allCscStubsALCT_hit", &m_allCscStubsALCT_hit);
   eventTree->Branch("allCscStubsALCT_position", &m_allCscStubsALCT_position);
+  eventTree->Branch("allCscStubsALCT_valid", &m_allCscStubsALCT_valid);
 
   eventTree->Branch("allCscStubsCLCT_detId", &m_allCscStubsCLCT_detId);
   eventTree->Branch("allCscStubsCLCT_strip", &m_allCscStubsCLCT_strip);
   eventTree->Branch("allCscStubsCLCT_hit", &m_allCscStubsCLCT_hit);
   eventTree->Branch("allCscStubsCLCT_position", &m_allCscStubsCLCT_position);
+  eventTree->Branch("allCscStubsCLCT_valid", &m_allCscStubsCLCT_valid);
 
   eventTree->Branch("allALCT_detId", &m_allALCT_detId);
   eventTree->Branch("allALCT_keywire", &m_allALCT_keywire);
   eventTree->Branch("allALCT_hit", &m_allALCT_hit);
   eventTree->Branch("allALCT_position", &m_allALCT_position);
+  eventTree->Branch("allALCT_valid", &m_allALCT_valid);
 
   eventTree->Branch("allCLCT_detId", &m_allCLCT_detId);
   eventTree->Branch("allCLCT_strip", &m_allCLCT_strip);
   eventTree->Branch("allCLCT_hit", &m_allCLCT_hit);
   eventTree->Branch("allCLCT_position", &m_allCLCT_position);
+  eventTree->Branch("allCLCT_valid", &m_allCLCT_valid);
 
   eventTree->Branch("allGemDigi_phi", &m_allGemDigi_phi);
   eventTree->Branch("allGemDigi_eta", &m_allGemDigi_eta);
@@ -558,16 +584,20 @@ void NtupleMaker::beginJob()
   eventTree->Branch("matchCscStubsLCT_detId", &m_matchCscStubsLCT_detId);
   eventTree->Branch("matchCscStubsLCT_keywire", &m_matchCscStubsLCT_keywire);
   eventTree->Branch("matchCscStubsLCT_strip", &m_matchCscStubsLCT_strip);
+  eventTree->Branch("matchCscStubsLCT_valid", &m_matchCscStubsLCT_valid);
+  eventTree->Branch("matchCscStubsLCT_type", &m_matchCscStubsLCT_type);
 
   eventTree->Branch("matchCscStubsALCT_detId", &m_matchCscStubsALCT_detId);
   eventTree->Branch("matchCscStubsALCT_keywire", &m_matchCscStubsALCT_keywire);
   eventTree->Branch("matchCscStubsALCT_hit", &m_matchCscStubsALCT_hit);
   eventTree->Branch("matchCscStubsALCT_position", &m_matchCscStubsALCT_position);
+  eventTree->Branch("matchCscStubsALCT_valid", &m_matchCscStubsALCT_valid);
 
   eventTree->Branch("matchCscStubsCLCT_detId", &m_matchCscStubsCLCT_detId);
   eventTree->Branch("matchCscStubsCLCT_strip", &m_matchCscStubsCLCT_strip);
   eventTree->Branch("matchCscStubsCLCT_hit", &m_matchCscStubsCLCT_hit);
   eventTree->Branch("matchCscStubsCLCT_position", &m_matchCscStubsCLCT_position);
+  eventTree->Branch("matchCscStubsCLCT_valid", &m_matchCscStubsCLCT_valid);
 
   eventTree->Branch("matchGemDigi_phi", &m_matchGemDigi_phi);
   eventTree->Branch("matchGemDigi_eta", &m_matchGemDigi_eta);
@@ -649,26 +679,32 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   m_allCscStubsLCT_detId->clear();
   m_allCscStubsLCT_keywire->clear();
   m_allCscStubsLCT_strip->clear();
+  m_allCscStubsLCT_valid->clear();
+  m_allCscStubsLCT_type->clear();
 
   m_allCscStubsALCT_detId->clear();
   m_allCscStubsALCT_keywire->clear();
   m_allCscStubsALCT_hit->clear();
   m_allCscStubsALCT_position->clear();
+  m_allCscStubsALCT_valid->clear();
 
   m_allCscStubsCLCT_detId->clear();
   m_allCscStubsCLCT_strip->clear();
   m_allCscStubsCLCT_hit->clear();
   m_allCscStubsCLCT_position->clear();
+  m_allCscStubsCLCT_valid->clear();
 
   m_allALCT_detId->clear();
   m_allALCT_keywire->clear();
   m_allALCT_hit->clear();
   m_allALCT_position->clear();
+  m_allALCT_valid->clear();
 
   m_allCLCT_detId->clear();
   m_allCLCT_strip->clear();
   m_allCLCT_hit->clear();
   m_allCLCT_position->clear();
+  m_allCLCT_valid->clear();
 
   m_allGemDigi_phi->clear();
   m_allGemDigi_eta->clear();
@@ -686,17 +722,21 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   m_matchCscStubsLCT_detId->clear();
   m_matchCscStubsLCT_keywire->clear();
   m_matchCscStubsLCT_strip->clear();
+  m_matchCscStubsLCT_valid->clear();
+  m_matchCscStubsLCT_type->clear();
 
 
   m_matchCscStubsALCT_detId->clear();
   m_matchCscStubsALCT_keywire->clear();
   m_matchCscStubsALCT_hit->clear();
   m_matchCscStubsALCT_position->clear();
+  m_matchCscStubsALCT_valid->clear();
 
   m_matchCscStubsCLCT_detId->clear();
   m_matchCscStubsCLCT_strip->clear();
   m_matchCscStubsCLCT_hit->clear();
   m_matchCscStubsCLCT_position->clear();
+  m_matchCscStubsCLCT_valid->clear();
 
   m_matchGemDigi_phi->clear();
   m_matchGemDigi_eta->clear();
@@ -883,6 +923,8 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
           m_matchCscStubsLCT_detId->push_back(detid_.rawId());
           m_matchCscStubsLCT_keywire->push_back(digi_.getKeyWG());
           m_matchCscStubsLCT_strip->push_back(digi_.getStrip());
+          m_matchCscStubsLCT_valid->push_back(digi_.isValid());
+          m_matchCscStubsLCT_type->push_back(digi_.getType());
           if (Print_matchCscStubs) cout << "detid_int = " <<detid_int<<", detid = " << int(detid_) << ", rawId = " << detid_.rawId() << endl;
 
           const auto& alctDigi = digi_.getALCT();
@@ -892,6 +934,7 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
           SaveHitMatrix(alcthits, m_matchCscStubsALCT_hit, m_matchCscStubsALCT_position,doprinta,false);
           m_matchCscStubsALCT_detId->push_back(detid_.rawId());
           m_matchCscStubsALCT_keywire->push_back(alctDigi.getKeyWG());
+          m_matchCscStubsALCT_valid->push_back(alctDigi.isValid());
 
           const auto& clctDigi = digi_.getCLCT();
           std::vector< std::vector<unsigned short> > clcthits = clctDigi.getHits();
@@ -900,6 +943,7 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
           SaveHitMatrix(clcthits, m_matchCscStubsCLCT_hit, m_matchCscStubsCLCT_position,doprintc,true);
           m_matchCscStubsCLCT_detId->push_back(detid_.rawId());
           m_matchCscStubsCLCT_strip->push_back(clctDigi.getStrip());
+          m_matchCscStubsCLCT_valid->push_back(clctDigi.getStrip());
 
         }
       }
@@ -1006,6 +1050,8 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
       m_allCscStubsLCT_detId->push_back(detid.rawId());
       m_allCscStubsLCT_keywire->push_back((*itdigi).getKeyWG());
       m_allCscStubsLCT_strip->push_back((*itdigi).getStrip());
+      m_allCscStubsLCT_valid->push_back((*itdigi).isValid());
+      m_allCscStubsLCT_type->push_back((*itdigi).getType());
       // allCscStubsALCTs
       const auto& alctDigi = (*itdigi).getALCT();
       std::vector< std::vector<unsigned short> > alcthits = alctDigi.getHits();
@@ -1014,6 +1060,7 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
       SaveHitMatrix(alcthits, m_allCscStubsALCT_hit, m_allCscStubsALCT_position,doprinta,false);
       m_allCscStubsALCT_detId->push_back(detid.rawId());
       m_allCscStubsALCT_keywire->push_back(alctDigi.getKeyWG());
+      m_allCscStubsALCT_valid->push_back(alctDigi.isValid());
 
       // allCscStubsCLCTs
       const auto& clctDigi = (*itdigi).getCLCT();
@@ -1023,6 +1070,7 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
       SaveHitMatrix(clcthits, m_allCscStubsCLCT_hit, m_allCscStubsCLCT_position,doprintc,true);
       m_allCscStubsCLCT_detId->push_back(detid.rawId());
       m_allCscStubsCLCT_strip->push_back(clctDigi.getStrip());
+      m_allCscStubsCLCT_valid->push_back(clctDigi.isValid());
 
       ++digi_index;
     }
@@ -1046,6 +1094,7 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
       if (alctmultihit) multihit = true;
       m_allALCT_detId->push_back(detid.rawId());
       m_allALCT_keywire->push_back((*itdigi).getKeyWG());
+      m_allALCT_valid->push_back((*itdigi).isValid());
       ++digi_index;
     }
   }
@@ -1065,6 +1114,7 @@ void NtupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
       if (clctmultihit) multihit = true;
       m_allCLCT_detId->push_back(detid.rawId());
       m_allCLCT_strip->push_back((*itdigi).getStrip());
+      m_allCLCT_valid->push_back((*itdigi).isValid());
       ++digi_index;
     }
   }
